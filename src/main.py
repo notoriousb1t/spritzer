@@ -9,18 +9,29 @@ if __name__ == "__main__":
     
     root = tk.Tk()
     root.withdraw()
-
+    print('Prompting user for their ROM file')
     input_file = filedialog.askopenfilename(filetypes = [('Zelda3', '*.sfc')])
     output_path = input_file.replace('.sfc', '-randomized.sfc')
 
     local_rom = LocalRom(input_file)
     spritzer = Spritzer(Random())
+    print('Loading from file')
     spritzer.load(local_rom.read_byte)
+    print ('Loaded file')
     
+    print('Enabling Killable Thieves')
     spritzer.enable_killable_thieves()
+    print('Enabling Shadow Bees')
     spritzer.enable_shadow_bees()
+    print('Enabling Sprite Shuffle: Simple')
     spritzer.enable_sprite_shuffle_simple()
+    print('Saving to file')
     spritzer.save(local_rom.write_byte)
-    
     local_rom.write_to_file(output_path)
+    print('Saved to file')
+    print('---------------------------------------------------')
+    print()
     print(f'Your random adventure begins! {output_path}')
+    print()
+    print('---------------------------------------------------')
+    input("Press Enter to close this window...")

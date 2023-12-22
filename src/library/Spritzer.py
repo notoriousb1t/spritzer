@@ -35,10 +35,10 @@ class Spritzer:
         areas = list(self.context.overworld_areas.values())
         areas.sort(key=lambda it: it.id)
 
-        for area in areas:
-            print(
-                f" {hex(area.sprite_blockset_address)} | {hex(area.id.value)} | {area.id} | {area.blockset_id}"
-            )
+        # for area in areas:
+        #     print(
+        #         f" {hex(area.sprite_blockset_address)} | {hex(area.id.value)} | {area.id} | {area.blockset_id}"
+        #     )
 
     def enable_sprite_shuffle_simple(self) -> None:
         self.context.assert_loaded()
