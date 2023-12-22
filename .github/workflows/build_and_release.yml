@@ -26,13 +26,13 @@ jobs:
     - name: Packaging
       run: pyinstaller src/main.py -F -n=spritzer
     - name: Archiving
-      run: py -m zipfile -c dist/spritzer.zip dist
+      run: tar -cvzf ./dist/spritzer.tar.gz ./dist/spritzer-cli.exe
     - name: Uploading
       uses: actions/upload-artifact@v2
       with:
-        path: dist/spritzer.zip
+        path: dist/spritzer.tar.gz
     - name: Release
       uses: softprops/action-gh-release@v1
       if: startsWith(github.ref, 'refs/tags/')
       with:
-        files: dist/spritzer.zip
+        files: dist/spritzer.tar.gz
