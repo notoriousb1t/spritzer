@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ['windows-latest', 'ubuntu-latest', 'macos-latest']
+        os: ['windows-latest']
     permissions:
       contents: write
     steps:
@@ -24,13 +24,15 @@ jobs:
     - name: Installing Requirements
       run: pip install -r src/requirements.txt pyinstaller
     - name: Packaging
-      run: pyinstaller src/main.py -F -n=spritzer-${{ env.RELEASE_VERSION }}
+      run: pyinstaller src/main.py -F -n=spritzer
+    - name: Archiving
+      run: py -m zipfile -c dist/spritzer.zip dist
     - name: Uploading
       uses: actions/upload-artifact@v2
       with:
-        path: dist/*
+        path: dist/spritzer.zip
     - name: Release
       uses: softprops/action-gh-release@v1
       if: startsWith(github.ref, 'refs/tags/')
       with:
-        files: dist/*
+        files: dist/spritzer.zip
