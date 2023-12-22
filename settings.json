@@ -1,0 +1,68 @@
+{
+    "files.exclude": {
+        "out": true,
+        "dist": true,
+        "**/*.pyc": true,
+        ".nyc_output": true,
+        "obj": true,
+        "bin": true,
+        "**/__pycache__": true,
+        "**/node_modules": true,
+        ".vscode-test": false,
+        ".vscode test": false,
+        "**/.mypy_cache/**": true
+    },
+    "search.exclude": {
+        "out": true,
+        "dist": true,
+        "**/node_modules": true,
+        "coverage": true,
+        "languageServer*/**": true,
+        ".vscode-test": true,
+        ".vscode test": true
+    },
+    "[python]": {
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.fixAll.eslint": "explicit",
+            "source.organizeImports.isort": "explicit"
+        },
+        "editor.defaultFormatter": "ms-python.black-formatter"
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true
+    },
+    "[JSON]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true
+    },
+    "[YAML]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true
+    },
+    "javascript.preferences.quoteStyle": "single",
+    "prettier.printWidth": 120,
+    "prettier.singleQuote": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit"
+    },
+    "python.languageServer": "Default",
+    "typescript.preferences.importModuleSpecifier": "relative",
+    "git.branchRandomName.enable": true,
+    "git.branchProtection": [
+        "main",
+        "release/*"
+    ],
+    "git.pullBeforeCheckout": true,
+    "git.mergeEditor": true,
+    "python.testing.pytestArgs": [
+        "pythonFiles/tests"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true
+}
