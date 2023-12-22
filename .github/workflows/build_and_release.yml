@@ -3,7 +3,7 @@ on:
     tags:
       - 'v*.*.*'
 
-      
+
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -24,7 +24,7 @@ jobs:
     - name: Installing Requirements
       run: pip install -r src/requirements.txt pyinstaller
     - name: Packaging
-      run: pyinstaller src/main.py -F -n=spritzer-{{ env.RELEASE_VERSION }} # Package CLI
+      run: pyinstaller src/main.py -F -n=spritzer-${{ env.RELEASE_VERSION }}
     - name: Uploading
       uses: actions/upload-artifact@v2
       with:
