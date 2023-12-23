@@ -2,6 +2,7 @@ from attr import dataclass
 from random import Random
 from typing import Dict
 
+
 from ..Model import (
     DungeonRoomId,
     DungeonRoom,
@@ -12,7 +13,6 @@ from ..Model import (
     SpriteId,
     Sprite,
 )
-
 
 @dataclass
 class Context:

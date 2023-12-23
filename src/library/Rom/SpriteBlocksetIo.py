@@ -1,18 +1,14 @@
-from typing import Callable, List, Dict
+from typing import List, Dict
 
+from .LocalRom import LocalRom
 from ..Model import SpriteBlocksetId, SpriteBlockset
 
-_sprite_blockset_address = 0x5B97
 
-
-def _read_sprite_blockset(
-    id: SpriteBlocksetId,
-    read: Callable[[int], int],
-) -> List[SpriteBlockset]:
-    set0 = read(_sprite_blockset_address + (id * 4))
-    set1 = read(_sprite_blockset_address + (id * 4) + 1)
-    set2 = read(_sprite_blockset_address + (id * 4) + 2)
-    set3 = read(_sprite_blockset_address + (id * 4) + 3)
+def _read_sprite_blockset(rom: LocalRom, id: SpriteBlocksetId) -> List[SpriteBlockset]:
+    set0 = rom.read_address(rom.sprite_blockset_address + (id * 4))
+    set1 = rom.read_address(rom.sprite_blockset_address + (id * 4) + 1)
+    set2 = rom.read_address(rom.sprite_blockset_address + (id * 4) + 2)
+    set3 = rom.read_address(rom.sprite_blockset_address + (id * 4) + 3)
     return SpriteBlockset(
         id=id,
         set0=set0,
@@ -22,18 +18,16 @@ def _read_sprite_blockset(
     )
 
 
-def read_sprite_blocksets(
-    read: Callable[[int, int], int]
-) -> Dict[SpriteBlocksetId, SpriteBlockset]:
-    return {id: _read_sprite_blockset(id, read) for id in list(SpriteBlocksetId)}
+def read_sprite_blocksets(rom: LocalRom) -> Dict[SpriteBlocksetId, SpriteBlockset]:
+    return {id: _read_sprite_blockset(rom, id) for id in list(SpriteBlocksetId)}
 
 
 def write_sprite_blocksets(
+    rom: LocalRom,
     blocksets: Dict[SpriteBlocksetId, SpriteBlockset],
-    write: Callable[[int, int], None],
 ) -> None:
     for id, blockset in blocksets.items():
-        write(_sprite_blockset_address + (id * 4), blockset.set0)
-        write(_sprite_blockset_address + (id * 4) + 1, blockset.set1)
-        write(_sprite_blockset_address + (id * 4) + 2, blockset.set2)
-        write(_sprite_blockset_address + (id * 4) + 3, blockset.set3)
+        rom.write_address(rom.sprite_blockset_address + (id * 4), blockset.set0)
+        rom.write_address(rom.sprite_blockset_address + (id * 4) + 1, blockset.set1)
+        rom.write_address(rom.sprite_blockset_address + (id * 4) + 2, blockset.set2)
+        rom.write_address(rom.sprite_blockset_address + (id * 4) + 3, blockset.set3)

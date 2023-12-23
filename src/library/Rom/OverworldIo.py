@@ -1,4 +1,6 @@
-from typing import Callable, Dict
+from typing import Dict
+
+from .LocalRom import LocalRom, resolve_address
 
 from ..Model import (
     OverworldAreaId,
@@ -7,10 +9,7 @@ from ..Model import (
     SpriteBlocksetId,
     SpriteId,
 )
-from .Utils import resolve_address
 
-_bank_address = 0x09
-_sprite_pointer_table_address = 0x04C901
 _stop_marker = 0xFF
 
 
@@ -34,19 +33,17 @@ def _resolve_gfx_address(id: OverworldAreaId) -> int:
     return 0x007A81 + id
 
 
-def _load_area(
-    id: OverworldAreaId, read_address: Callable[[int], int]
-) -> OverworldArea:
+def _load_area(rom: LocalRom, id: OverworldAreaId) -> OverworldArea:
     """Reads an Area from the ROM and returns it as a data class."""
     # Resolve the address of this Dungeon RoomArea and read the graphics block into memory.
     sprite_blockset_address = _resolve_gfx_address(id)
-    gfx = SpriteBlocksetId(read_address(sprite_blockset_address))
+    gfx = SpriteBlocksetId(rom.read_address(sprite_blockset_address))
 
     # Find the base address of Overworld Sprites in this Overworld Area.
     sprite_table_base_address = resolve_address(
-        read_address(_sprite_pointer_table_address + (id * 2)),
-        read_address(_sprite_pointer_table_address + (id * 2) + 1),
-        _bank_address,
+        rom.read_address(rom.overworld_sprite_pointer_table_address + (id * 2)),
+        rom.read_address(rom.overworld_sprite_pointer_table_address + (id * 2) + 1),
+        rom.overworld_sprite_bank,
     )
 
     index = 0
@@ -59,7 +56,7 @@ def _load_area(
         # This happens when there are no more Overworld Sprites in the Overworld Area.
         # More data appears to be after this marker, so this should remain
         # a fixed length.
-        if read_address(address) == _stop_marker:
+        if rom.read_address(address) == _stop_marker:
             break
         if remaining_max_bytes == 0:
             raise "Maximum bytes exceeded. Aborting to prevent infinite loop"
@@ -67,9 +64,9 @@ def _load_area(
         overworld_sprites.append(
             OverworldSprite(
                 address,
-                y=read_address(address),
-                x=read_address(address + 1),
-                id=SpriteId(read_address(address + 2)),
+                y=rom.read_address(address),
+                x=rom.read_address(address + 1),
+                id=SpriteId(rom.read_address(address + 2)),
             )
         )
         index += 3
@@ -77,25 +74,23 @@ def _load_area(
     return OverworldArea(id, gfx, overworld_sprites, sprite_blockset_address)
 
 
-def write_overworld_areas(
-    read_address: Callable[[int], int]
-) -> Dict[OverworldAreaId, OverworldArea]:
+def read_overworld_areas(rom: LocalRom) -> Dict[OverworldAreaId, OverworldArea]:
     """Returns AreaBlocks for each Area based on the ROM."""
-    return {id: _load_area(id, read_address) for id in list(OverworldAreaId)}
+    return {id: _load_area(rom, id) for id in list(OverworldAreaId)}
 
 
-def read_overworld_areas(
+def write_overworld_areas(
+    rom: LocalRom,
     overworld_area_dict: Dict[OverworldAreaId, OverworldArea],
-    write_address: Callable[[int, int], None],
 ) -> None:
     """Writes AreaBlocks back to the ROM data."""
 
     for id, overworld_area in overworld_area_dict.items():
         # Write the new graphics block back to the Overworld Area address.
-        write_address(_resolve_gfx_address(id), overworld_area.blockset_id)
+        rom.write_address(_resolve_gfx_address(id), overworld_area.blockset_id)
 
         # Rewrite Overworld Sprites back into the same spots.
         for overworld_sprite in overworld_area.overworld_sprites:
-            write_address(overworld_sprite._address, overworld_sprite.y)
-            write_address(overworld_sprite._address + 1, overworld_sprite.x)
-            write_address(overworld_sprite._address + 2, overworld_sprite.id)
+            rom.write_address(overworld_sprite._address, overworld_sprite.y)
+            rom.write_address(overworld_sprite._address + 1, overworld_sprite.x)
+            rom.write_address(overworld_sprite._address + 2, overworld_sprite.id)
