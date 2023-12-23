@@ -21,7 +21,7 @@ def resolve_address(byte0: int, byte1: int, bank: int) -> int:
 class LocalRom:
     read_address: Callable[[int], int]
     write_address: Callable[[int, int], None]
-    dungeon_room_bank = 0x04
+    room_header_bank = 0x04
     dungeon_room_pointer_header_address = 0x271E2
     dungeon_sprite_bank = 0x09
     dungeon_sprite_ptr_table_address = 0x4D62E
@@ -65,5 +65,6 @@ class LocalRom:
 
 
 def get_local_rom(read: Callable[[int], int]) -> LocalRom:
-    # TODO: Do Rom detection here.
-    return LocalRom(read)
+    rom = LocalRom(read)
+    rom.room_header_bank = read(0x0B5E7) # Vanilla = 0x04 | Enemizer = 0x36
+    return rom
