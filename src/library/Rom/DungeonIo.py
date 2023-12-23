@@ -78,39 +78,44 @@ def _load_room_entities(rom: LocalRom, base_address: int) -> List[DungeonSprite]
 
 def _read_room(rom: LocalRom, id: DungeonRoomId) -> DungeonRoom:
     # Find the address of the Dungeon Room and read in graphics block and tags.
-    address = resolve_address(
+    header_address = resolve_address(
         rom.read_address(rom.dungeon_room_pointer_header_address + (id * 2)),
         rom.read_address(rom.dungeon_room_pointer_header_address + (id * 2) + 1),
         rom.dungeon_room_bank,
     )
     # Read in the graphics block which controls the spritesheets
     # and tags which declare behaviors.
-    lights_out = bool(rom.read_address(address) & 0b1 == 0b1)
-    palette_id = rom.read_address(address + 1)
-    tileset_id = DungeonRoomTilesetId(rom.read_address(address + 2))
-    blockset_id = SpriteBlocksetId.from_room_value(rom.read_address(address + 3))
-    effect = rom.read_address(address + 4)
-    tag1 = DungeonTag(rom.read_address(address + 5))
-    tag2 = DungeonTag(rom.read_address(address + 6))
+    lights_out_effect = bool(rom.read_address(header_address) & 0b1 == 0b1)
+    palette_id = rom.read_address(header_address + 1)
+    tileset_id = DungeonRoomTilesetId(rom.read_address(header_address + 2))
+    blockset_id = SpriteBlocksetId.from_room_value(rom.read_address(header_address + 3))
+    effect = rom.read_address(header_address + 4)
+    tag1 = DungeonTag(rom.read_address(header_address + 5))
+    tag2 = DungeonTag(rom.read_address(header_address + 6))
 
+    dungeon_sprite_pointer_address = rom.dungeon_sprite_ptr_table_address + (id * 2)
+
+    sprite_ptr = (
+        rom.read_address(dungeon_sprite_pointer_address),
+        rom.read_address(dungeon_sprite_pointer_address + 1),
+    )
     sprite_table_base_snes_address = resolve_address(
-        rom.read_address(rom.dungeon_sprite_pointer_table_address + (id * 2)),
-        rom.read_address(rom.dungeon_sprite_pointer_table_address + (id * 2) + 1),
-        rom.dungeon_sprite_bank,
+        sprite_ptr[0], sprite_ptr[1], rom.dungeon_sprite_bank
     )
 
     dungeon_sprites = _load_room_entities(rom, sprite_table_base_snes_address)
 
     return DungeonRoom(
-        address,
-        id,
-        lights_out_effect=lights_out,
+        header_address=header_address,
+        id=id,
+        lights_out_effect=lights_out_effect,
         palette_id=palette_id,
         tileset_id=tileset_id,
         blockset_id=blockset_id,
         effect=effect,
         tag1=tag1,
         tag2=tag2,
+        sprite_ptr=sprite_ptr,
         dungeon_sprites=dungeon_sprites,
     )
 
@@ -123,18 +128,23 @@ def write_dungeon_rooms(
     rom: LocalRom,
     dungeon_room_dict: Dict[DungeonRoomId, DungeonRoom],
 ) -> None:
-    for dungeon_room in dungeon_room_dict.values():
-        rom.write_address(dungeon_room._address + 1, dungeon_room.palette_id)
-        rom.write_address(dungeon_room._address + 2, dungeon_room.tileset_id)
+    for room in dungeon_room_dict.values():
+        rom.write_address(room.header_address + 1, room.palette_id)
+        rom.write_address(room.header_address + 2, room.tileset_id)
         rom.write_address(
-            dungeon_room._address + 3, dungeon_room.blockset_id.get_room_value()
+            room.header_address + 3,
+            room.blockset_id.get_room_value(),
         )
-        rom.write_address(dungeon_room._address + 4, dungeon_room.effect)
-        rom.write_address(dungeon_room._address + 5, dungeon_room.tag1)
-        rom.write_address(dungeon_room._address + 6, dungeon_room.tag2)
+        rom.write_address(room.header_address + 4, room.effect)
+        rom.write_address(room.header_address + 5, room.tag1)
+        rom.write_address(room.header_address + 6, room.tag2)
+
+        sprite_ptr_address = rom.dungeon_sprite_ptr_table_address + (room.id * 2)
+        rom.write_address(sprite_ptr_address, room.sprite_ptr[0]),
+        rom.write_address(sprite_ptr_address + 1, room.sprite_ptr[1])
 
         # Rewrite new Dungeon Sprites.
-        for dungeon_sprite in dungeon_room.dungeon_sprites:
+        for dungeon_sprite in room.dungeon_sprites:
             rom.write_address(
                 dungeon_sprite._address,
                 dungeon_sprite.y | _has_subtype

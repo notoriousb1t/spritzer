@@ -24,7 +24,7 @@ class LocalRom:
     dungeon_room_bank = 0x04
     dungeon_room_pointer_header_address = 0x271E2
     dungeon_sprite_bank = 0x09
-    dungeon_sprite_pointer_table_address = 0x4D62E
+    dungeon_sprite_ptr_table_address = 0x4D62E
     overworld_sprite_bank = 0x09
     overworld_sprite_pointer_table_address = 0x04C901
     sprite_blockset_address = 0x5B97

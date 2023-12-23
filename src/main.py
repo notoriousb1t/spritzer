@@ -19,9 +19,9 @@ if __name__ == "__main__":
     spritzer.load(local_file.read_byte)
     print("Loaded file")
 
-    print("Enabling Killable Thieves")
+    # print("Enabling Killable Thieves")
     spritzer.enable_killable_thieves()
-    print("Enabling Shadow Bees")
+    # print("Enabling Shadow Bees")
     spritzer.enable_shadow_bees()
     print("Enabling Sprite Shuffle: Simple")
     spritzer.enable_sprite_shuffle_simple()

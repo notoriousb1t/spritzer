@@ -139,13 +139,42 @@ def _compute_choices(dungeon_dict: Dict[DungeonRoomId, DungeonRoom]) -> List[Spr
     return gfx_choices
 
 
-def reroll_dungeons(context: Context) -> None:
+def reroll_dungeon_bosses(context: Context) -> None:
+    # Test case during development.
+    keys = list(context.dungeon_rooms.keys())
+    keys.sort()
+
+    output = []
+    for key in keys:
+        val = context.dungeon_rooms[key].sprite_ptr[0] | (
+            context.dungeon_rooms[key].sprite_ptr[1] << 8
+        )
+        count = len(context.dungeon_rooms[key].dungeon_sprites)
+        output.append(
+            f"{val}={val+(count * 3) + 1} contains {count} = {(count * 3) + 1} in {context.dungeon_rooms[key].id}"
+        )
+
+    output.sort()
+    for o in output:
+        print(o)
+
+
+def reroll_dungeon_sprites(context: Context) -> None:
     gfx_choices = _compute_choices(context.dungeon_rooms)
 
-    # Randomize using Entities that occur anywhere in that Dungeon Room.
     for dungeon_room in context.dungeon_rooms.values():
+        # Randomize using Entities that occur anywhere in that Dungeon Room.
+        if any(
+            it
+            for it in dungeon_room.dungeon_sprites
+            if it.sprite_id.role == SpriteType.BOSS
+        ):
+            # Skip all boss rooms, we shouldn't try to reroll those through this option.
+            continue
+
         choices = gfx_choices[dungeon_room.blockset_id]
         if len(choices) < 1:
+            # Skip if there is nothing to switch.
             continue
 
         placement = (

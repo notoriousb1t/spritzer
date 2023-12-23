@@ -1,7 +1,7 @@
 from random import Random
 from typing import Callable
 
-from .Model.Sprites import SpriteId
+from .Model import SpriteId, SpriteType
 from .Rom import (
     LocalRom,
     get_local_rom,
@@ -14,9 +14,12 @@ from .Rom import (
     read_sprites,
     write_sprite_settings,
 )
-from .Transform.Context import Context
-from .Transform.DungeonShuffle import reroll_dungeons
-from .Transform.OverworldShuffle import reroll_overworld
+from .Transform import (
+    Context,
+    reroll_dungeon_bosses,
+    reroll_dungeon_sprites,
+    reroll_overworld,
+)
 
 
 class Spritzer:
@@ -37,19 +40,18 @@ class Spritzer:
         self.context.dungeon_rooms = read_dungeon_rooms(self.rom)
         self.context.loaded = True
 
-        areas = list(self.context.overworld_areas.values())
-        areas.sort(key=lambda it: it.id)
-
     def enable_sprite_shuffle_simple(self) -> None:
         self.context.assert_loaded()
 
         reroll_overworld(self.context)
-        reroll_dungeons(self.context)
+        reroll_dungeon_sprites(self.context)
+        reroll_dungeon_bosses(self.context)
 
     def enable_sprite_shuffle_dungeonssimple(self) -> None:
         self.context.assert_loaded()
 
-        reroll_dungeons(self.context)
+        reroll_dungeon_sprites(self.context)
+        reroll_dungeon_bosses(self.context)
 
     def enable_killable_thieves(self) -> None:
         self.context.assert_loaded()
@@ -58,7 +60,7 @@ class Spritzer:
         thief.hp = 4  # Almost no health.
         # TODO: modify weapon damage table so they can actually get hit
 
-    def enable_shadow_bees(self) -> None:        
+    def enable_shadow_bees(self) -> None:
         self.context.assert_loaded()
 
         bees = self.context.sprites[SpriteId.x79_BEE]

@@ -337,10 +337,10 @@ class DungeonSprite:
 
 @dataclass
 class DungeonRoom:
-    _address: int
-    """The ROM address of the Dungeon Room. DO NOT MODIFY."""
     id: DungeonRoomId
     """The Dungeon Room this block of data describes. DO NOT MODIFY."""
+    header_address: int
+    """The ROM address of the Dungeon Room. DO NOT MODIFY."""
     lights_out_effect: bool
     """True if the lights are out for this Dungeon Room."""
     palette_id: int
@@ -355,4 +355,7 @@ class DungeonRoom:
     """The first tag. This provides data such as kill conditions."""
     tag2: DungeonTag
     """The second tag. This provides data such as kill conditions."""
+    sprite_ptr: (int, int)
+    """Used for dungeon room swaps. DO NOT MODIFY"""
     dungeon_sprites: List[DungeonSprite]
+    """List of sprites in this Dungeon Room."""
