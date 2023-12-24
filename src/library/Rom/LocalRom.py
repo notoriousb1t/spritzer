@@ -49,11 +49,11 @@ class LocalRom:
 
     @property
     def dungeon_sprite_ptr_table_address(self) -> int:
-        return compute_snes_address([self.room_header_bank, 0xD6, 0x2E])  # 0x04D62E
+        return compute_snes_address([0x4, 0xD6, 0x2E])  # 0x04D62E
 
     @property
     def overworld_sprite_ptr_table_address(self) -> int:
-        return compute_snes_address([self.room_header_bank, 0xC9, 0x01])  # 0x04C901
+        return compute_snes_address([0x4, 0xC9, 0x01])  # 0x04C901
 
     @property
     def sprite_setting_0_address(self) -> int:

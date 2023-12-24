@@ -18,6 +18,7 @@ from .Transform import (
     Context,
     reroll_dungeon_bosses,
     reroll_dungeon_palette,
+    reroll_dungeon_tilesets,
     reroll_dungeon_sprites,
     reroll_overworld,
 )
@@ -44,6 +45,10 @@ class Spritzer:
     def enable_dungeon_palette_swap(self) -> None:
         self.context.assert_loaded()
         reroll_dungeon_palette(self.context)
+
+    def enable_tileset_swap(self) -> None:
+        self.context.assert_loaded()
+        reroll_dungeon_tilesets(self.context)
 
     def enable_sprite_shuffle_simple(self) -> None:
         self.context.assert_loaded()

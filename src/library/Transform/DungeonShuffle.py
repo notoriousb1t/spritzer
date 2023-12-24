@@ -140,19 +140,6 @@ def _compute_choices(dungeon_dict: Dict[DungeonRoomId, DungeonRoom]) -> List[Spr
     return gfx_choices
 
 
-def reroll_dungeon_palette(context: Context) -> None:
-    palette_dict: Dict[DungeonPaletteId, List[DungeonRoom]] = {
-        it: list() for it in list(DungeonPaletteId)
-    }
-    for room in context.dungeon_rooms.values():
-        palette_dict[room.palette_id].append(room)
-
-    for room_list in palette_dict.values():
-        new_palette_id = context.random.choice(list(DungeonPaletteId))
-        for room in room_list:
-            room.palette_id = new_palette_id
-
-
 def reroll_dungeon_bosses(context: Context) -> None:
     pass
 
