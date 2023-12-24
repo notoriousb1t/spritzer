@@ -22,7 +22,7 @@ if __name__ == "__main__":
 
     print("Enabling Killable Thieves")
     # spritzer.add_killable_thieves()
-    
+
     print("Enable dungeon palette swap")
     spritzer.add_dungeon_palette_swap()
 
@@ -31,6 +31,9 @@ if __name__ == "__main__":
 
     print("Enabling Shadow Bees")
     # spritzer.add_shadow_bees()
+
+    print("Enabling Mushroom Shuffle")
+    spritzer.add_mushroom_shuffle()
 
     print("Enabling Sprite Shuffle: Simple")
     spritzer.add_sprite_shuffle_simple()

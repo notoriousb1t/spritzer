@@ -21,6 +21,7 @@ from .Transform import (
     reroll_dungeon_palette,
     reroll_dungeon_tilesets,
     reroll_dungeon_sprites,
+    reroll_lost_woods_mushroom,
     reroll_overworld,
 )
 
@@ -48,6 +49,9 @@ class Spritzer:
 
     def add_dungeon_palette_swap(self) -> None:
         self.transform_list.append(reroll_dungeon_palette)
+        
+    def add_mushroom_shuffle(self) -> None:
+        self.transform_list.append(reroll_lost_woods_mushroom)
 
     def add_tileset_swap(self) -> None:
         self.transform_list.append(reroll_dungeon_tilesets)
