@@ -17,6 +17,7 @@ from .Rom import (
 from .Transform import (
     Context,
     reroll_dungeon_bosses,
+    reroll_dungeon_palette,
     reroll_dungeon_sprites,
     reroll_overworld,
 )
@@ -39,6 +40,10 @@ class Spritzer:
         self.context.overworld_areas = read_overworld_areas(self.rom)
         self.context.dungeon_rooms = read_dungeon_rooms(self.rom)
         self.context.loaded = True
+
+    def enable_dungeon_palette_swap(self) -> None:
+        self.context.assert_loaded()
+        reroll_dungeon_palette(self.context)
 
     def enable_sprite_shuffle_simple(self) -> None:
         self.context.assert_loaded()

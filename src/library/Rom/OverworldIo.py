@@ -41,9 +41,11 @@ def _load_area(rom: LocalRom, id: OverworldAreaId) -> OverworldArea:
 
     # Find the base address of Overworld Sprites in this Overworld Area.
     sprite_table_base_address = resolve_address(
-        rom.read_address(rom.overworld_sprite_pointer_table_address + (id * 2)),
-        rom.read_address(rom.overworld_sprite_pointer_table_address + (id * 2) + 1),
-        rom.overworld_sprite_bank,
+        [
+            rom.overworld_sprite_bank,
+            rom.read_address(rom.overworld_sprite_ptr_table_address + (id * 2) + 1),
+            rom.read_address(rom.overworld_sprite_ptr_table_address + (id * 2)),
+        ]
     )
 
     index = 0

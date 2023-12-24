@@ -1,8 +1,9 @@
-from typing import Callable, List, Dict
+from typing import List, Dict
 
 from .LocalRom import LocalRom, resolve_address
 
 from ..Model import (
+    DungeonPaletteId,
     DungeonRoomId,
     DungeonRoom,
     DungeonSprite,
@@ -34,7 +35,7 @@ def _peek_item(rom: LocalRom, sprite_address: int) -> SpriteId:
     return None
 
 
-def _load_room_entities(rom: LocalRom, base_address: int) -> List[DungeonSprite]:
+def _read_room_sprites(rom: LocalRom, base_address: int) -> List[DungeonSprite]:
     index = 1  # byte 0 handles sprite ordering, there is no reason to modify this.
     dungeon_room_sprites = []
     remaining_max_bytes = 10000
@@ -79,14 +80,16 @@ def _load_room_entities(rom: LocalRom, base_address: int) -> List[DungeonSprite]
 def _read_room(rom: LocalRom, id: DungeonRoomId) -> DungeonRoom:
     # Find the address of the Dungeon Room and read in graphics block and tags.
     header_address = resolve_address(
-        rom.read_address(rom.dungeon_room_pointer_header_address + (id * 2)),
-        rom.read_address(rom.dungeon_room_pointer_header_address + (id * 2) + 1),
-        rom.room_header_bank,
+        [
+            rom.room_header_bank,
+            rom.read_address(rom.dungeon_room_pointer_header_address + (id * 2) + 1),
+            rom.read_address(rom.dungeon_room_pointer_header_address + (id * 2)),
+        ]
     )
     # Read in the graphics block which controls the spritesheets
     # and tags which declare behaviors.
     lights_out_effect = bool(rom.read_address(header_address) & 0b1 == 0b1)
-    palette_id = rom.read_address(header_address + 1)
+    palette_id = DungeonPaletteId(rom.read_address(header_address + 1))
     tileset_id = DungeonRoomTilesetId(rom.read_address(header_address + 2))
     blockset_id = SpriteBlocksetId.from_room_value(rom.read_address(header_address + 3))
     effect = rom.read_address(header_address + 4)
@@ -100,10 +103,14 @@ def _read_room(rom: LocalRom, id: DungeonRoomId) -> DungeonRoom:
         rom.read_address(dungeon_sprite_pointer_address + 1),
     )
     sprite_table_base_snes_address = resolve_address(
-        sprite_ptr[0], sprite_ptr[1], rom.dungeon_sprite_bank
+        [
+            rom.dungeon_sprite_bank,
+            sprite_ptr[1],
+            sprite_ptr[0],
+        ]
     )
-
-    dungeon_sprites = _load_room_entities(rom, sprite_table_base_snes_address)
+    
+    dungeon_sprites = _read_room_sprites(rom, sprite_table_base_snes_address)
 
     return DungeonRoom(
         header_address=header_address,

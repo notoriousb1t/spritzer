@@ -5,6 +5,7 @@ from typing import List, Dict, Set, Tuple
 from .Context import Context
 from .Placement import Placement, is_compatible
 from ..Model import (
+    DungeonPaletteId,
     DungeonRoomId,
     DungeonRoom,
     DungeonSprite,
@@ -139,24 +140,21 @@ def _compute_choices(dungeon_dict: Dict[DungeonRoomId, DungeonRoom]) -> List[Spr
     return gfx_choices
 
 
+def reroll_dungeon_palette(context: Context) -> None:
+    palette_dict: Dict[DungeonPaletteId, List[DungeonRoom]] = {
+        it: list() for it in list(DungeonPaletteId)
+    }
+    for room in context.dungeon_rooms.values():
+        palette_dict[room.palette_id].append(room)
+
+    for room_list in palette_dict.values():
+        new_palette_id = context.random.choice(list(DungeonPaletteId))
+        for room in room_list:
+            room.palette_id = new_palette_id
+
+
 def reroll_dungeon_bosses(context: Context) -> None:
-    # Test case during development.
-    keys = list(context.dungeon_rooms.keys())
-    keys.sort()
-
-    output = []
-    for key in keys:
-        val = context.dungeon_rooms[key].sprite_ptr[0] | (
-            context.dungeon_rooms[key].sprite_ptr[1] << 8
-        )
-        count = len(context.dungeon_rooms[key].dungeon_sprites)
-        output.append(
-            f"{val}={val+(count * 3) + 1} contains {count} = {(count * 3) + 1} in {context.dungeon_rooms[key].id}"
-        )
-
-    output.sort()
-    for o in output:
-        print(o)
+    pass
 
 
 def reroll_dungeon_sprites(context: Context) -> None:

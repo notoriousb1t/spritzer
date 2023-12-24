@@ -289,7 +289,7 @@ class DungeonRoomId(IntEnum):
     x113_KING_S_TOMB = 275
     x114_WISHING_WELL_CAVE_0X114 = 276
     x115_WISHING_WELL_BIG_FAIRY = 277
-    x116_FAT_FAIRY = 278
+    x116_GREATEST_FAIRY = 278
     x117_SPIKE_CAVE = 279
     x118_SHOP_0X118 = 280
     x119_BLIND_S_HOUSE = 281
@@ -308,6 +308,53 @@ class DungeonRoomId(IntEnum):
     x126_CHECKER_BOARD_CAVE = 294
     x127_HAMMER_PEG_CAVE = 295
 
+    def __str__(self) -> str:
+        return self.name
+
+
+class DungeonPaletteId(IntEnum):
+    x00_HYRULE_CASTLE = 0
+    x01_BLUE_CAVES = 1
+    x02_HOUSES = 2
+    x03_GREEN_DUNGEON = 3
+    x04_ICE_DUNGEON = 4
+    x05_DESERT_DUNGEON = 5
+    x06_TOWER_OF_HERA = 6
+    x07_CAVE = 7
+    x08_SWAMP_PALACE = 8
+    x09_DESERT_PALACE = 9
+    x0A_SWAMP_PALACE = 10
+    x0B_MISERY_MIRE = 11
+    x0C_AGAHNIMS_TOWER = 12
+    x0D_SKULL_WOODS = 13
+    x0E_CHURCH_SANCTUARY = 14
+    x0F_PALACE_OF_DARKNESS = 15
+    x10_PALACE_OF_DARKNESS_HELMASAUR = 16
+    x11_MISERY_MIRE = 17
+    x12_MISERY_MIRE_VITREUS = 18
+    x13_ICE_PALACE = 19
+    x14_ICE_PALACE_KHOLDSTARE = 20
+    x15_LINKS_HOUSE = 21
+    x16_FREESPACE = 22
+    x17_THIEVES_TOWN = 23
+    x18_TURTLE_ROCK = 24
+    x19_TURTLE_ROCK_TRINEXX = 25
+    x1A_GANONS_TOWER = 26
+    x1B_GANONS_TOWER = 27
+    x1C_SAHASRAHLAS_HOUSE = 28
+    x1D_SANCTUARY = 29
+    x1E_SHOP = 30
+    x1F_SHOP = 31
+    x20_CAVE = 32
+    x21_GANON = 33
+    x22_GREAT_FAIRY = 34
+    x23_BLIND = 35
+    x24_GANONS_TOWER = 36
+    x25_GANONS_TOWER = 37
+    x26_AGAHNIMS_TOWER = 38
+    x27_MIMICS_CAVE = 39
+    x28_GANONS_TOWER = 40
+    
     def __str__(self) -> str:
         return self.name
 
@@ -343,7 +390,7 @@ class DungeonRoom:
     """The ROM address of the Dungeon Room. DO NOT MODIFY."""
     lights_out_effect: bool
     """True if the lights are out for this Dungeon Room."""
-    palette_id: int
+    palette_id: DungeonPaletteId
     """The palette to load for the Dungeon Room."""
     tileset_id: DungeonRoomTilesetId
     """Unused for now, probably the graphics id associated with the tileset."""
