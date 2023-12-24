@@ -21,16 +21,16 @@ if __name__ == "__main__":
     print("Loaded file")
 
     print("Enabling Killable Thieves")
-    spritzer.add_killable_thieves()
+    # spritzer.add_killable_thieves()
     
     print("Enable dungeon palette swap")
     spritzer.add_dungeon_palette_swap()
 
     print("Enable tileset palette swap")
-    spritzer.add_tileset_swap()
+    # spritzer.add_tileset_swap()
 
     print("Enabling Shadow Bees")
-    spritzer.add_shadow_bees()
+    # spritzer.add_shadow_bees()
 
     print("Enabling Sprite Shuffle: Simple")
     spritzer.add_sprite_shuffle_simple()
