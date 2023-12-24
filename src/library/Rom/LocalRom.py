@@ -1,3 +1,4 @@
+from enum import Enum, auto
 from typing import Callable, List
 from math import floor
 
@@ -36,8 +37,14 @@ def resolve_snes_pointer(pc_address: int) -> List[int]:
     snes_address = pc_address_to_snes_address(pc_address)
     return snes_address_to_bytes(snes_address)
 
+class RomMode(Enum):
+    READ = auto()
+    LOCKED = auto()
+    WRITE = auto()
 
 class LocalRom:
+    mode = RomMode.READ
+
     read_address: Callable[[int], int]
     write_address: Callable[[int, int], None]
     room_header_bank = 0x04
@@ -83,8 +90,14 @@ class LocalRom:
         self.read_address = read_address
         self.write_address = None
 
-    def enable_write_mode(self, write_address: Callable[[int, int], None]) -> None:
+    def set_locked(self) -> None:
+        self.mode = RomMode.LOCKED
+        self.read_address = None
+        self.write_address = None
+
+    def start_write(self, write_address: Callable[[int, int], None]) -> None:
         # Remove reading to prevent interleaving reads and writes.
+        self.mode = RomMode.WRITE
         self.read_address = None
         self.write_address = write_address
 
