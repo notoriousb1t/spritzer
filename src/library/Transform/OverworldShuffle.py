@@ -1,8 +1,12 @@
 from random import Random
 from typing import List, Dict, Set
 
+from ..Model.SpriteBlocksetId import SpriteBlocksetId
+
+from ..Model.OverworldSprite import OverworldSprite
+
 from . import Context, Placement, is_compatible
-from ..Model import OverworldArea, OverworldSprite, SpriteBlocksetId, SpriteId
+from ..Model import OverworldArea, SpriteId
 
 
 def _reroll_overworld_sprites(

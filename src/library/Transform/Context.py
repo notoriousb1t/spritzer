@@ -2,16 +2,20 @@ from attr import dataclass
 from random import Random
 from typing import Dict
 
+from ..Model.Sprite import Sprite
+
+from ..Model.SpriteBlocksetId import SpriteBlocksetId
+
+from ..Model.OverworldAreaId import OverworldAreaId
+
+from ..Model.DungeonRoomId import DungeonRoomId
+
 
 from ..Model import (
-    DungeonRoomId,
     DungeonRoom,
-    OverworldAreaId,
     OverworldArea,
-    SpriteBlocksetId,
     SpriteBlockset,
     SpriteId,
-    Sprite,
 )
 
 @dataclass

@@ -1,6 +1,8 @@
 from enum import Enum
 
-from ..Model import SpriteId, SpriteSettings
+from ..Model.SpriteSettings import SpriteSettings
+
+from ..Model import SpriteId
 
 
 class Placement(Enum):

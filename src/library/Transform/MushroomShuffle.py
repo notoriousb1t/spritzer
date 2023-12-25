@@ -1,7 +1,8 @@
+from ..Model.OverworldAreaId import OverworldAreaId
 from .Context import Context
 
 
-from ..Model import OverworldAreaId, SpriteId
+from ..Model import SpriteId
 
 
 def reroll_lost_woods_mushroom(context: Context) -> None:

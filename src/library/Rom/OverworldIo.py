@@ -1,12 +1,15 @@
 from typing import Dict
 
+from ..Model.SpriteBlocksetId import SpriteBlocksetId
+
+from ..Model.OverworldSprite import OverworldSprite
+
+from ..Model.OverworldAreaId import OverworldAreaId
+
 from .LocalRom import LocalRom, resolve_address
 
 from ..Model import (
-    OverworldAreaId,
     OverworldArea,
-    OverworldSprite,
-    SpriteBlocksetId,
     SpriteId,
 )
 

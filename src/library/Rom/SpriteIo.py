@@ -1,7 +1,13 @@
 from typing import Dict
 
+from ..Model.Sprite import Sprite
+
+from ..Model.SpriteFlags3 import SpriteFlags3
+
+from ..Model.SpriteFlags0 import SpriteFlags0
+
 from .LocalRom import LocalRom
-from ..Model import SpriteId, Sprite, Flags0, Flags3
+from ..Model import SpriteId
 
 
 def _read_sprite(rom: LocalRom, id: SpriteId) -> Sprite:
@@ -12,8 +18,8 @@ def _read_sprite(rom: LocalRom, id: SpriteId) -> Sprite:
     hp = rom.read_address(rom.sprite_health_address + id)
     # The amount of damage the sprite does to link.
     damage = rom.read_address(rom.sprite_damage_address + id)
-    flags_0 = Flags0(rom.read_address(rom.sprite_setting_0_address + id))
-    flags_3 = Flags3(rom.read_address(rom.sprite_setting_3_address + id))
+    flags_0 = SpriteFlags0(rom.read_address(rom.sprite_setting_0_address + id))
+    flags_3 = SpriteFlags3(rom.read_address(rom.sprite_setting_3_address + id))
     settings_4 = rom.read_address(rom.sprite_setting_4_address + id)
     settings_5 = rom.read_address(rom.sprite_setting_5_address + id)
 

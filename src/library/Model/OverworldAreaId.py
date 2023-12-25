@@ -1,9 +1,4 @@
-from attr import dataclass
 from enum import IntEnum
-from typing import List
-
-from .SpriteBlockset import SpriteBlocksetId
-from .Sprites import SpriteId
 
 
 class OverworldAreaId(IntEnum):
@@ -287,26 +282,3 @@ class OverworldAreaId(IntEnum):
 
     def __str__(self) -> str:
         return self.name
-
-
-@dataclass
-class OverworldSprite:
-    _address: int
-    """The ROM address of the Sprite in an Overworld Area. DO NOT MODIFY."""
-    id: SpriteId
-    """The Sprite placed in the Overworld Area."""
-    x: int
-    """The x coordinate of the Sprite in the Overworld Area."""
-    y: int
-    """The y coordinate of the Sprite in the Overworld Area."""
-
-
-@dataclass
-class OverworldArea:
-    id: OverworldAreaId
-    """The Area this block describes. DO NOT MODIFY."""
-    blockset_id: SpriteBlocksetId
-    """The graphics block associated. This constrains which Entities can appear in this Area."""
-    overworld_sprites: List[OverworldSprite]
-    """The Entities in this Overworld Area. The size of this list MUST remain fixed."""
-    sprite_blockset_address: int

@@ -2,15 +2,20 @@ from math import floor
 from random import Random
 from typing import List, Dict, Set, Tuple
 
+from ..Model.SpriteType import SpriteType
+
+from ..Model.SpriteBlocksetId import SpriteBlocksetId
+
+from ..Model.DungeonSprite import DungeonSprite
+
+from ..Model.DungeonRoomId import DungeonRoomId
+
+from ..Model.PaletteId import PaletteId
+
 from .Context import Context
 from .Placement import Placement, is_compatible
 from ..Model import (
-    DungeonPaletteId,
-    DungeonRoomId,
     DungeonRoom,
-    DungeonSprite,
-    SpriteBlocksetId,
-    SpriteType,
     SpriteId,
 )
 

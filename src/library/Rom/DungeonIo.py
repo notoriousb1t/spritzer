@@ -1,16 +1,20 @@
 from typing import List, Dict
 
+from ..Model.SpriteBlocksetId import SpriteBlocksetId
+
+from ..Model.DungeonSprite import DungeonSprite
+
+from ..Model.DungeonRoomId import DungeonRoomId
+
+from ..Model.PaletteId import PaletteId
+
 from .LocalRom import LocalRom, resolve_address
 
 from ..Model import (
-    DungeonPaletteId,
-    DungeonRoomId,
     DungeonRoom,
-    DungeonSprite,
     DungeonRoomTilesetId,
     DungeonRoomTilesetId,
     DungeonTag,
-    SpriteBlocksetId,
     SpriteId,
 )
 
@@ -89,7 +93,7 @@ def _read_room(rom: LocalRom, id: DungeonRoomId) -> DungeonRoom:
     # Read in the graphics block which controls the spritesheets
     # and tags which declare behaviors.
     lights_out_effect = bool(rom.read_address(header_address) & 0b1 == 0b1)
-    palette_id = DungeonPaletteId(rom.read_address(header_address + 1))
+    palette_id = PaletteId(rom.read_address(header_address + 1))
     tileset_id = DungeonRoomTilesetId(rom.read_address(header_address + 2))
     blockset_id = SpriteBlocksetId.from_room_value(rom.read_address(header_address + 3))
     effect = rom.read_address(header_address + 4)
