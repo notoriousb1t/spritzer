@@ -17,15 +17,13 @@ _cool_dungeons = [
     DungeonPaletteId.x08_SWAMP_PALACE,
     DungeonPaletteId.x0A_SWAMP_PALACE,
     DungeonPaletteId.x0C_AGAHNIMS_TOWER,
+    DungeonPaletteId.x0D_SKULL_WOODS,
     DungeonPaletteId.x13_ICE_PALACE,
     DungeonPaletteId.x14_ICE_PALACE_KHOLDSTARE,
-    DungeonPaletteId.x17_THIEVES_TOWN,
     DungeonPaletteId.x18_TURTLE_ROCK,
     DungeonPaletteId.x19_TURTLE_ROCK_TRINEXX,
     DungeonPaletteId.x23_BLIND,
     DungeonPaletteId.x26_AGAHNIMS_TOWER,
-    DungeonPaletteId.x0D_SKULL_WOODS,
-    DungeonPaletteId.x0D_SKULL_WOODS,
 ]
 _neutral_dungeons = [
     DungeonPaletteId.x05_DESERT_DUNGEON,
@@ -35,7 +33,6 @@ _neutral_dungeons = [
     DungeonPaletteId.x10_PALACE_OF_DARKNESS_HELMASAUR,
     DungeonPaletteId.x11_MISERY_MIRE,
     DungeonPaletteId.x12_MISERY_MIRE_VITREUS,
-    DungeonPaletteId.x11_MISERY_MIRE,
     DungeonPaletteId.x12_MISERY_MIRE_VITREUS,
     DungeonPaletteId.x1A_GANONS_TOWER,
     DungeonPaletteId.x1B_GANONS_TOWER,
@@ -49,17 +46,15 @@ _warm_dungeons = [
     DungeonPaletteId.x03_GREEN_DUNGEON,
     DungeonPaletteId.x05_DESERT_DUNGEON,
     DungeonPaletteId.x09_DESERT_PALACE,
-    DungeonPaletteId.x00_HYRULE_CASTLE,
-    DungeonPaletteId.x03_GREEN_DUNGEON,
 ]
 
 _houses_and_shops = [
     DungeonPaletteId.x02_HOUSES,
     DungeonPaletteId.x15_LINKS_HOUSE,
+    DungeonPaletteId.x17_THIEVES_TOWN,
     DungeonPaletteId.x1C_SAHASRAHLAS_HOUSE,
     DungeonPaletteId.x1E_SHOP,
     DungeonPaletteId.x1F_SHOP,
-    DungeonPaletteId.x1D_SANCTUARY,
 ]
 
 _palette_lists = [

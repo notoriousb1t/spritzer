@@ -49,7 +49,7 @@ class Spritzer:
 
     def add_dungeon_palette_swap(self) -> None:
         self.transform_list.append(reroll_dungeon_palette)
-        
+
     def add_mushroom_shuffle(self) -> None:
         self.transform_list.append(reroll_lost_woods_mushroom)
 
@@ -78,8 +78,18 @@ class Spritzer:
         for transform in self.transform_list:
             transform(self._context)
 
+        # Permanent hook for debugging.
+        self._debug()
+
         self._rom.start_write(write)
         write_sprite_settings(self._rom, self._context.sprites)
         write_sprite_blocksets(self._rom, self._context.sprite_blocksets)
         write_overworld_areas(self._rom, self._context.overworld_areas)
         write_dungeon_rooms(self._rom, self._context.dungeon_rooms)
+
+    def _debug(self) -> None:
+        context = self._context
+        for dungeon_room in context.dungeon_rooms.values():
+            print(
+                f"{dungeon_room.id} | palette={dungeon_room.palette_id} | tileset={dungeon_room.tileset_id}"
+            )
