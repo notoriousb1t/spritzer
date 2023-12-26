@@ -12,6 +12,7 @@ from .Rom import (
     write_sprite_blocksets,
     read_sprites,
     write_sprite_settings,
+    FileIo,
 )
 from .Transform import (
     Context,
@@ -93,3 +94,40 @@ class Spritzer:
             print(
                 f"{dungeon_room.id} | palette={dungeon_room.palette_id} | tileset={dungeon_room.tileset_id}"
             )
+
+def patch_rom(input_path: str, output_path: str) -> None:
+    local_file = FileIo(input_path)
+    spritzer = Spritzer(Random())
+    print("Loading from file")
+
+    spritzer.load(local_file.read_byte)
+    print("Loaded file")
+
+    print("Enabling Killable Thieves")
+    # spritzer.add_killable_thieves()
+
+    print("Enable dungeon palette swap")
+    spritzer.add_dungeon_palette_swap()
+
+    print("Enable tileset palette swap")
+    spritzer.add_tileset_swap()
+
+    print("Enabling Shadow Bees")
+    spritzer.add_shadow_bees()
+
+    print("Enabling Mushroom Shuffle")
+    spritzer.add_mushroom_shuffle()
+
+    print("Enabling Sprite Shuffle: Simple")
+    spritzer.add_sprite_shuffle_simple()
+
+    print("Saving to file")
+    spritzer.save(local_file.write_byte)
+
+    local_file.write_to_file(output_path)
+    print("Saved to file")
+    print("---------------------------------------------------")
+    print()
+    print(f"Your random adventure begins! {output_path}")
+    print()
+    print("---------------------------------------------------")
