@@ -95,7 +95,17 @@ class Spritzer:
                 f"{dungeon_room.id} | palette={dungeon_room.palette_id} | tileset={dungeon_room.tileset_id}"
             )
 
-def patch_rom(input_path: str, output_path: str) -> None:
+
+def patch_rom(
+    input_path: str,
+    output_path: str,
+    dungeon_palette_shuffle=False,
+    dungeon_tileset_shuffle=False,
+    killable_thieves=False,
+    mushroom_shuffle=False,
+    shadow_bees=False,
+    sprite_shuffle=False,
+) -> None:
     local_file = FileIo(input_path)
     spritzer = Spritzer(Random())
     print("Loading from file")
@@ -103,23 +113,29 @@ def patch_rom(input_path: str, output_path: str) -> None:
     spritzer.load(local_file.read_byte)
     print("Loaded file")
 
-    print("Enabling Killable Thieves")
-    # spritzer.add_killable_thieves()
+    if killable_thieves:
+        print("Enabling Killable Thieves")
+        spritzer.add_killable_thieves()
 
-    print("Enable dungeon palette swap")
-    spritzer.add_dungeon_palette_swap()
+    if dungeon_palette_shuffle:
+        print("Enable dungeon palette swap")
+        spritzer.add_dungeon_palette_swap()
 
-    print("Enable tileset palette swap")
-    spritzer.add_tileset_swap()
+    if dungeon_tileset_shuffle:
+        print("Enable tileset palette swap")
+        spritzer.add_tileset_swap()
 
-    print("Enabling Shadow Bees")
-    spritzer.add_shadow_bees()
+    if shadow_bees:
+        print("Enabling Shadow Bees")
+        spritzer.add_shadow_bees()
 
-    print("Enabling Mushroom Shuffle")
-    spritzer.add_mushroom_shuffle()
+    if mushroom_shuffle:
+        print("Enabling Mushroom Shuffle")
+        spritzer.add_mushroom_shuffle()
 
-    print("Enabling Sprite Shuffle: Simple")
-    spritzer.add_sprite_shuffle_simple()
+    if sprite_shuffle:
+        print("Enabling Sprite Shuffle: Simple")
+        spritzer.add_sprite_shuffle_simple()
 
     print("Saving to file")
     spritzer.save(local_file.write_byte)
