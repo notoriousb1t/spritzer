@@ -8,7 +8,7 @@ base = "Win32GUI" if sys.platform == "win32" else None
 build_options = {
     "packages": [],
     "excludes": [],
-    "build_exe": "..\dist",
+    "build_exe": "../build",
 }
 
 executables = [Executable("main.py", base=base, target_name="spritzer-ui")]

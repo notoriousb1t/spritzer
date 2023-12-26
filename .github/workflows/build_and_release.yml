@@ -22,19 +22,19 @@ jobs:
       with:
         python-version: 3.11
     - name: Installing Requirements
-      run: pip install -r src/requirements.txt cx_freeze
+      run: pip install -r src/requirements.txt cx_freeze 
     - name: Moving into src
       run: cd ./src
     - name: Packaging
-      run: python src/setup.py build
+      run: python setup.py build
     - name: Moving out of src
       run: cd ..
     - name: Archiving
-      run: tar -cvzf spritzer.tar.gz ./dist
+      run: mkdir dist; tar -cvzf ./dist/spritzer.tar.gz ./build
     - name: Uploading
       uses: actions/upload-artifact@v2
       with:
-        path: spritzer.tar.gz
+        path: dist/spritzer.tar.gz
     - name: Release
       uses: softprops/action-gh-release@v1
       if: startsWith(github.ref, 'refs/tags/')
