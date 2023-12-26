@@ -344,7 +344,10 @@ def get_dungeon_room_groups() -> Dict[DungeonRoomGroupId, DungeonRoomGroup]:
                 DungeonRoomId.xCE_ICE_PALACE_HOLE_TO_KHOLDSTARE_ROOM,
                 DungeonRoomId.xDE_ICE_PALACE_KHOLDSTARE_BOSS,
             ],
-            tilesets=[],
+            tilesets=[
+                # Freezors restrict this to only this tileset unless we patch tiles.
+                DungeonRoomTilesetId.xB_ICE_PALACE
+            ],
         ),
         DungeonRoomGroupId.MISERY_MIRE: DungeonRoomGroup(
             rooms=[
@@ -367,34 +370,58 @@ def get_dungeon_room_groups() -> Dict[DungeonRoomGroupId, DungeonRoomGroup]:
                 DungeonRoomId.xD1_MISERY_MIRE_CONVEYOR_SLUG_BIG_KEY_ROOM,
                 DungeonRoomId.xD2_MISERY_MIRE_MIRE02_WIZZROBES_ROOM,
             ],
-            tilesets=[],
+            tilesets=[
+                DungeonRoomTilesetId.x5_EASTERN_PALACE,
+                DungeonRoomTilesetId.x7_TOWER_HERA,
+                DungeonRoomTilesetId.xB_ICE_PALACE,
+                DungeonRoomTilesetId.xC_MISERY_MIRE,
+                DungeonRoomTilesetId.x12_FAIRY_CAVE,
+            ],
         ),
         DungeonRoomGroupId.THIEVES_TOWN_ENTRANCE: DungeonRoomGroup(
             rooms=[
-                DungeonRoomId.xAC_THIEVES_TOWN_BLIND_THE_THIEF_BOSS,
+                # The light effect makes this not possible to switch.
+                # DungeonRoomId.xAC_THIEVES_TOWN_BLIND_THE_THIEF_BOSS,
                 DungeonRoomId.xCB_THIEVES_TOWN_NORTH_WEST_ENTRANCE_ROOM,
                 DungeonRoomId.xCC_THIEVES_TOWN_NORTH_EAST_ENTRANCE_ROOM,
                 DungeonRoomId.xDB_THIEVES_TOWN_MAIN_SOUTH_WEST_ENTRANCE_ROOM,
                 DungeonRoomId.xDC_THIEVES_TOWN_SOUTH_EAST_ENTRANCE_ROOM,
+                DungeonRoomId.xBB_THIEVES_TOWN_HELLWAY,
+                DungeonRoomId.xBC_THIEVES_TOWN_CONVEYOR_TOILET,
+                DungeonRoomId.xAB_THIEVES_TOWN_MOVING_SPIKES_KEY_POT_ROOM,
             ],
-            tilesets=[],
+            tilesets=[
+                DungeonRoomTilesetId.x7_TOWER_HERA,
+                DungeonRoomTilesetId.x9_SKULL_WOODS,
+                DungeonRoomTilesetId.xA_THIEVES_TOWN,
+                DungeonRoomTilesetId.xB_ICE_PALACE,
+                DungeonRoomTilesetId.xC_MISERY_MIRE,
+                DungeonRoomTilesetId.xE_DESERT_PALACE,
+            ],
         ),
         DungeonRoomGroupId.THIEVES_TOWN_ATTIC: DungeonRoomGroup(
             rooms=[
                 DungeonRoomId.x64_THIEVES_TOWN_WEST_ATTIC_ROOM,
                 DungeonRoomId.x65_THIEVES_TOWN_EAST_ATTIC_ROOM,
             ],
-            tilesets=[],
+            tilesets=[
+                # Shafts of light make a switch not possible
+                DungeonRoomTilesetId.xA_THIEVES_TOWN,
+            ],
         ),
         DungeonRoomGroupId.THIEVES_TOWN_BASEMENT: DungeonRoomGroup(
             rooms=[
                 DungeonRoomId.x44_THIEVES_TOWN_BIG_CHEST_ROOM,
                 DungeonRoomId.x45_THIEVES_TOWN_JAIL_CELLS_ROOM,
-                DungeonRoomId.xAB_THIEVES_TOWN_MOVING_SPIKES_KEY_POT_ROOM,
-                DungeonRoomId.xBB_THIEVES_TOWN_HELLWAY,
-                DungeonRoomId.xBC_THIEVES_TOWN_CONVEYOR_TOILET,
             ],
-            tilesets=[],
+            tilesets=[
+                DungeonRoomTilesetId.x7_TOWER_HERA,
+                DungeonRoomTilesetId.x9_SKULL_WOODS,
+                DungeonRoomTilesetId.xA_THIEVES_TOWN,
+                DungeonRoomTilesetId.xB_ICE_PALACE,
+                DungeonRoomTilesetId.xC_MISERY_MIRE,
+                DungeonRoomTilesetId.xE_DESERT_PALACE,
+            ],
         ),
         DungeonRoomGroupId.TURTLE_ROCK: DungeonRoomGroup(
             rooms=[

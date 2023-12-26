@@ -2,17 +2,9 @@ from typing import Dict, List
 
 from ..Model.PaletteId import PaletteId
 
-from ..Model import DungeonRoom
+from ..Model import DungeonRoom, DungeonRoomId, SpriteType
 from .Context import Context
 
-
-_caves = [
-    PaletteId.x01_BLUE_CAVES,
-    PaletteId.x07_CAVE,
-    PaletteId.x20_CAVE,
-    PaletteId.x22_GREAT_FAIRY,
-    PaletteId.x27_MIMICS_CAVE,
-]
 _cool_dungeons = [
     PaletteId.x04_ICE_DUNGEON,
     PaletteId.x06_TOWER_OF_HERA,
@@ -50,19 +42,8 @@ _warm_dungeons = [
     PaletteId.x09_DESERT_PALACE,
 ]
 
-_houses_and_shops = [
-    PaletteId.x02_HOUSES,
-    PaletteId.x15_LINKS_HOUSE,
-    PaletteId.x17_THIEVES_TOWN,
-    PaletteId.x1C_SAHASRAHLAS_HOUSE,
-    PaletteId.x1E_SHOP,
-    PaletteId.x1F_SHOP,
-]
-
 _palette_lists = [
-    _caves,
     _cool_dungeons,
-    _houses_and_shops,
     _neutral_dungeons,
     _warm_dungeons,
 ]
@@ -87,4 +68,11 @@ def reroll_dungeon_palette(context: Context) -> None:
 
         new_palette_id = context.random.choice(matching_palettes)
         for room in room_list:
+            if any(
+                it
+                for it in room.dungeon_sprites
+                if it.sprite_id.meta().role in [SpriteType.BOSS, SpriteType.NPC]
+            ):
+                # Boss randomizer should handle palette swapping for boss rooms.
+                continue
             room.palette_id = new_palette_id

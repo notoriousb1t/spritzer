@@ -27,7 +27,7 @@ if __name__ == "__main__":
     spritzer.add_dungeon_palette_swap()
 
     print("Enable tileset palette swap")
-    # spritzer.add_tileset_swap()
+    spritzer.add_tileset_swap()
 
     print("Enabling Shadow Bees")
     # spritzer.add_shadow_bees()
