@@ -30,7 +30,7 @@ if __name__ == "__main__":
     spritzer.add_tileset_swap()
 
     print("Enabling Shadow Bees")
-    # spritzer.add_shadow_bees()
+    spritzer.add_shadow_bees()
 
     print("Enabling Mushroom Shuffle")
     spritzer.add_mushroom_shuffle()
