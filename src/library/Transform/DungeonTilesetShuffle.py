@@ -5,35 +5,6 @@ from ..Model.DungeonRoomId import DungeonRoomId
 from ..Model import DungeonRoom, DungeonRoomTilesetId
 from .Context import Context
 
-# Eastern Palace
-_set2 = [
-    DungeonRoomTilesetId.x0_CASTLE,
-    DungeonRoomTilesetId.x1_DUNGEON,
-    DungeonRoomTilesetId.x2_AGAHNIM,
-    DungeonRoomTilesetId.x4_SANTUARY,
-    DungeonRoomTilesetId.x5_EASTERN_PALACE,
-    DungeonRoomTilesetId.x6_TOWER1,
-    DungeonRoomTilesetId.x7_TOWER_HERA,
-    DungeonRoomTilesetId.x8_SWAMP_PALACE,
-    DungeonRoomTilesetId.x9_SKULL_WOODS,
-    DungeonRoomTilesetId.xA_THIEVES_TOWN,
-    DungeonRoomTilesetId.xB_ICE_PALACE,
-    DungeonRoomTilesetId.xC_MISERY_MIRE,
-    DungeonRoomTilesetId.xD_TURTLE_ROCK,
-    DungeonRoomTilesetId.xE_DESERT_PALACE,
-    DungeonRoomTilesetId.xF_SAHASRAHLA,
-    DungeonRoomTilesetId.x14_CAVE,
-]
-
-# Desert Palace
-_set1 = [
-    DungeonRoomTilesetId.x5_EASTERN_PALACE,
-    DungeonRoomTilesetId.x7_TOWER_HERA,
-    DungeonRoomTilesetId.xA_THIEVES_TOWN,
-    DungeonRoomTilesetId.x12_FAIRY_CAVE,
-]
-
-
 _caves = [
     DungeonRoomTilesetId.xD_TURTLE_ROCK,
     DungeonRoomTilesetId.x12_FAIRY_CAVE,
