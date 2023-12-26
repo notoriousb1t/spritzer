@@ -3,7 +3,7 @@ from enum import Enum, auto
 from typing import Dict, List
 from .DungeonRoomId import DungeonRoomId
 from .DungeonRoomTilesetId import DungeonRoomTilesetId
-from .SpriteBlockset import SpriteBlockset
+from .PaletteId import PaletteId
 
 
 class DungeonRoomGroupId(Enum):
@@ -41,6 +41,7 @@ class DungeonRoomGroup:
 
     rooms: List[DungeonRoomId] = []
     tilesets: List[DungeonRoomTilesetId] = []
+    palettes: List[PaletteId] = []
 
 
 def get_dungeon_room_groups() -> Dict[DungeonRoomGroupId, DungeonRoomGroup]:
@@ -55,7 +56,22 @@ def get_dungeon_room_groups() -> Dict[DungeonRoomGroupId, DungeonRoomGroup]:
                 DungeonRoomId.x61_HYRULE_CASTLE_MAIN_ENTRANCE_ROOM,
                 DungeonRoomId.x62_HYRULE_CASTLE_EAST_ENTRANCE_ROOM,
             ],
-            tilesets=[],
+            tilesets=[
+                DungeonRoomTilesetId.x0_CASTLE,
+                DungeonRoomTilesetId.x1_DUNGEON,
+                DungeonRoomTilesetId.x2_AGAHNIM,
+                DungeonRoomTilesetId.x5_EASTERN_PALACE,
+                DungeonRoomTilesetId.x7_TOWER_HERA,
+                DungeonRoomTilesetId.x8_SWAMP_PALACE,
+                DungeonRoomTilesetId.x9_SKULL_WOODS,
+                DungeonRoomTilesetId.xA_THIEVES_TOWN,
+                DungeonRoomTilesetId.xB_ICE_PALACE,
+                DungeonRoomTilesetId.xC_MISERY_MIRE,
+                DungeonRoomTilesetId.xD_TURTLE_ROCK,
+                DungeonRoomTilesetId.xE_DESERT_PALACE,
+                DungeonRoomTilesetId.x12_FAIRY_CAVE,
+                DungeonRoomTilesetId.x13_GANON,
+            ],
         ),
         DungeonRoomGroupId.HYRULE_CASTLE_DUNGEON: DungeonRoomGroup(
             rooms=[
@@ -68,7 +84,24 @@ def get_dungeon_room_groups() -> Dict[DungeonRoomGroupId, DungeonRoomGroup]:
                 DungeonRoomId.x81_HYRULE_CASTLE_NEXT_TO_CHASM_ROOM,
                 DungeonRoomId.x82_HYRULE_CASTLE_BASEMENT_CHASM_ROOM,
             ],
-            tilesets=[],
+            tilesets=[
+                DungeonRoomTilesetId.x0_CASTLE,
+                DungeonRoomTilesetId.x1_DUNGEON,
+                DungeonRoomTilesetId.x2_AGAHNIM,
+                DungeonRoomTilesetId.x5_EASTERN_PALACE,
+                DungeonRoomTilesetId.x6_TOWER1,
+                DungeonRoomTilesetId.x7_TOWER_HERA,
+                DungeonRoomTilesetId.x8_SWAMP_PALACE,
+                DungeonRoomTilesetId.x9_SKULL_WOODS,
+                DungeonRoomTilesetId.xA_THIEVES_TOWN,
+                DungeonRoomTilesetId.xB_ICE_PALACE,
+                DungeonRoomTilesetId.xC_MISERY_MIRE,
+                DungeonRoomTilesetId.xD_TURTLE_ROCK,
+                DungeonRoomTilesetId.xE_DESERT_PALACE,
+                DungeonRoomTilesetId.x12_FAIRY_CAVE,
+                DungeonRoomTilesetId.x13_GANON,
+                DungeonRoomTilesetId.x14_CAVE,
+            ],
         ),
         DungeonRoomGroupId.HYRULE_CASTLE_ESCAPE: DungeonRoomGroup(
             rooms=[
@@ -78,14 +111,33 @@ def get_dungeon_room_groups() -> Dict[DungeonRoomGroupId, DungeonRoomGroup]:
                 DungeonRoomId.x32_HYRULE_CASTLE_SEWER_KEY_CHEST_ROOM,
                 DungeonRoomId.x42_HYRULE_CASTLE_6_ROPES_ROOM,
             ],
-            tilesets=[],
+            tilesets=[
+                DungeonRoomTilesetId.x0_CASTLE,
+                DungeonRoomTilesetId.x1_DUNGEON,
+                DungeonRoomTilesetId.x2_AGAHNIM,
+                DungeonRoomTilesetId.x5_EASTERN_PALACE,
+                DungeonRoomTilesetId.x6_TOWER1,
+                DungeonRoomTilesetId.x7_TOWER_HERA,
+                DungeonRoomTilesetId.x8_SWAMP_PALACE,
+                DungeonRoomTilesetId.x9_SKULL_WOODS,
+                DungeonRoomTilesetId.xA_THIEVES_TOWN,
+                DungeonRoomTilesetId.xB_ICE_PALACE,
+                DungeonRoomTilesetId.xC_MISERY_MIRE,
+                DungeonRoomTilesetId.xD_TURTLE_ROCK,
+                DungeonRoomTilesetId.xE_DESERT_PALACE,
+                DungeonRoomTilesetId.x12_FAIRY_CAVE,
+                DungeonRoomTilesetId.x13_GANON,
+                DungeonRoomTilesetId.x14_CAVE,
+            ],
         ),
         DungeonRoomGroupId.SANCTUARY: DungeonRoomGroup(
             rooms=[
                 DungeonRoomId.x02_HYRULE_CASTLE_SWITCH_ROOM,
                 DungeonRoomId.x12_SANCTUARY,
             ],
-            tilesets=[],
+            tilesets=[
+                DungeonRoomTilesetId.x4_SANTUARY,
+            ],
         ),
         DungeonRoomGroupId.DESERT_PALACE_FRONT: DungeonRoomGroup(
             rooms=[
@@ -106,17 +158,23 @@ def get_dungeon_room_groups() -> Dict[DungeonRoomGroupId, DungeonRoomGroup]:
         ),
         DungeonRoomGroupId.DESERT_PALACE_FRONT: DungeonRoomGroup(
             rooms=[
-                DungeonRoomId.x63_DESERT_PALACE_FINAL_SECTION_ENTRANCE_ROOM,
-                DungeonRoomId.x53_DESERT_PALACE_POPOS_2_BEAMOS_HELLWAY_ROOM,
-                DungeonRoomId.x43_DESERT_PALACE_TORCH_PUZZLE_MOVING_WALL_ROOM,
                 DungeonRoomId.x33_DESERT_PALACE_LANMOLAS_BOSS,
+                DungeonRoomId.x43_DESERT_PALACE_TORCH_PUZZLE_MOVING_WALL_ROOM,
+                DungeonRoomId.x53_DESERT_PALACE_POPOS_2_BEAMOS_HELLWAY_ROOM,
+                DungeonRoomId.x63_DESERT_PALACE_FINAL_SECTION_ENTRANCE_ROOM,
             ],
             tilesets=[
+                DungeonRoomTilesetId.x1_DUNGEON,
                 DungeonRoomTilesetId.x5_EASTERN_PALACE,
+                DungeonRoomTilesetId.x6_TOWER1,
                 DungeonRoomTilesetId.x7_TOWER_HERA,
-                DungeonRoomTilesetId.xA_THIEVES_TOWN,
+                DungeonRoomTilesetId.x8_SWAMP_PALACE,
+                DungeonRoomTilesetId.x9_SKULL_WOODS,
+                DungeonRoomTilesetId.xB_ICE_PALACE,
+                DungeonRoomTilesetId.xC_MISERY_MIRE,
                 DungeonRoomTilesetId.xE_DESERT_PALACE,
                 DungeonRoomTilesetId.x12_FAIRY_CAVE,
+                DungeonRoomTilesetId.x13_GANON,
             ],
         ),
         DungeonRoomGroupId.EASTERN_PALACE: DungeonRoomGroup(
@@ -164,19 +222,37 @@ def get_dungeon_room_groups() -> Dict[DungeonRoomGroupId, DungeonRoomGroup]:
                 DungeonRoomId.x87_TOWER_OF_HERA_TILE_ROOM,
                 DungeonRoomId.xA7_TOWER_OF_HERA_FAIRY_ROOM,
             ],
-            tilesets=[],
+            tilesets=[
+                DungeonRoomTilesetId.x0_CASTLE,
+                DungeonRoomTilesetId.x1_DUNGEON,
+                DungeonRoomTilesetId.x2_AGAHNIM,
+                DungeonRoomTilesetId.x5_EASTERN_PALACE,
+                DungeonRoomTilesetId.x7_TOWER_HERA,
+                DungeonRoomTilesetId.x8_SWAMP_PALACE,
+                DungeonRoomTilesetId.x9_SKULL_WOODS,
+                DungeonRoomTilesetId.xA_THIEVES_TOWN,
+                DungeonRoomTilesetId.xB_ICE_PALACE,
+                DungeonRoomTilesetId.xC_MISERY_MIRE,
+                DungeonRoomTilesetId.xE_DESERT_PALACE,
+                DungeonRoomTilesetId.x12_FAIRY_CAVE,
+                DungeonRoomTilesetId.x13_GANON,
+            ],
         ),
         DungeonRoomGroupId.AGAHNIMS_TOWER: DungeonRoomGroup(
             rooms=[
-                DungeonRoomId.x20_AGAHNIM_S_TOWER_AGAHNIM_BOSS,
-                DungeonRoomId.x30_AGAHNIM_S_TOWER_MAIDEN_SACRIFICE_CHAMBER,
+                # No compatible sets for these two
+                # DungeonRoomId.x20_AGAHNIM_S_TOWER_AGAHNIM_BOSS,
+                # DungeonRoomId.x30_AGAHNIM_S_TOWER_MAIDEN_SACRIFICE_CHAMBER,
                 DungeonRoomId.x40_AGAHNIM_S_TOWER_FINAL_BRIDGE_ROOM,
                 DungeonRoomId.xB0_AGAHNIM_S_TOWER_CIRCLE_OF_POTS,
                 DungeonRoomId.xC0_AGAHNIM_S_TOWER_DARK_BRIDGE_ROOM,
                 DungeonRoomId.xD0_AGAHNIM_S_TOWER_DARK_MAZE,
                 DungeonRoomId.xE0_AGAHNIM_S_TOWER_ENTRANCE_ROOM,
             ],
-            tilesets=[],
+            tilesets=[
+                DungeonRoomTilesetId.x2_AGAHNIM,
+                DungeonRoomTilesetId.x9_SKULL_WOODS,
+            ],
         ),
         DungeonRoomGroupId.PALACE_OF_DARKNESS: DungeonRoomGroup(
             rooms=[
@@ -186,7 +262,8 @@ def get_dungeon_room_groups() -> Dict[DungeonRoomGroupId, DungeonRoomGroup]:
                 DungeonRoomId.x19_PALACE_OF_DARKNESS_DARK_MAZE,
                 DungeonRoomId.x1A_PALACE_OF_DARKNESS_BIG_CHEST_ROOM,
                 DungeonRoomId.x1B_PALACE_OF_DARKNESS_MIMICS_MOVING_WALL_ROOM,
-                DungeonRoomId.x2A_PALACE_OF_DARKNESS_BIG_HUB_ROOM,
+                # Tileset must be x7 otherwise the hop tiles break.
+                # DungeonRoomId.x2A_PALACE_OF_DARKNESS_BIG_HUB_ROOM,
                 DungeonRoomId.x2B_PALACE_OF_DARKNESS_MAP_CHEST_FAIRY_ROOM,
                 DungeonRoomId.x3A_PALACE_OF_DARKNESS_BOMBABLE_FLOOR_ROOM,
                 DungeonRoomId.x3B_PALACE_OF_DARKNESS_SPIKE_BLOCK_CONVEYOR_ROOM,
@@ -195,7 +272,13 @@ def get_dungeon_room_groups() -> Dict[DungeonRoomGroupId, DungeonRoomGroup]:
                 DungeonRoomId.x5A_PALACE_OF_DARKNESS_HELMASAUR_KING_BOSS,
                 DungeonRoomId.x6A_PALACE_OF_DARKNESS_RUPEE_ROOM,
             ],
-            tilesets=[],
+            tilesets=[
+                DungeonRoomTilesetId.x5_EASTERN_PALACE,
+                DungeonRoomTilesetId.x7_TOWER_HERA,
+                DungeonRoomTilesetId.xB_ICE_PALACE,
+                DungeonRoomTilesetId.xC_MISERY_MIRE,
+                DungeonRoomTilesetId.x12_FAIRY_CAVE,
+            ],
         ),
         DungeonRoomGroupId.SWAMP_PALACE: DungeonRoomGroup(
             rooms=[
@@ -213,7 +296,10 @@ def get_dungeon_room_groups() -> Dict[DungeonRoomGroupId, DungeonRoomGroup]:
                 DungeonRoomId.x66_SWAMP_PALACE_HIDDEN_CHEST_HIDDEN_DOOR_ROOM,
                 DungeonRoomId.x76_SWAMP_PALACE_WATER_DRAIN_ROOM,
             ],
-            tilesets=[],
+            tilesets=[
+                # Nothing else works for this without removing decorative vents.
+                DungeonRoomTilesetId.x8_SWAMP_PALACE
+            ],
         ),
         DungeonRoomGroupId.SKULL_WOODS: DungeonRoomGroup(
             rooms=[
@@ -227,7 +313,11 @@ def get_dungeon_room_groups() -> Dict[DungeonRoomGroupId, DungeonRoomGroup]:
                 DungeonRoomId.x67_SKULL_WOODS_COMPASS_CHEST_ROOM,
                 DungeonRoomId.x68_SKULL_WOODS_KEY_CHEST_TRAP_ROOM,
             ],
-            tilesets=[],
+            tilesets=[
+                DungeonRoomTilesetId.x0_CASTLE,
+                DungeonRoomTilesetId.x2_AGAHNIM,
+                DungeonRoomTilesetId.x9_SKULL_WOODS,
+            ],
         ),
         DungeonRoomGroupId.ICE_PALACE: DungeonRoomGroup(
             rooms=[
@@ -360,113 +450,3 @@ def get_dungeon_room_groups() -> Dict[DungeonRoomGroupId, DungeonRoomGroup]:
             tilesets=[],
         ),
     }
-
-
-# List of remaining rooms to group.
-_all_items = [
-    DungeonRoomId.x03_HOULIHAN_ROOM,
-    DungeonRoomId.x08_CAVE_HEALING_FAIRY,
-    DungeonRoomId.x10_GANON_EVACUATION_ROUTE,
-    DungeonRoomId.x18_BIG_FAIRY_DROP_ENTRANCE_CAVE,
-    DungeonRoomId.x2C_HOOKSHOT_CAVE_BACKDOOR_BIG_FAIRY,
-    DungeonRoomId.x2F_CAVE_KAKARIKO_WELL_HP,
-    DungeonRoomId.x3C_HOOKSHOT_CAVE,
-    DungeonRoomId.xDF__TOP_OF_BACKWARD_DEATH_MOUNTAIN_CAVE,
-    DungeonRoomId.xE1_CAVE_LOST_WOODS_HP,
-    DungeonRoomId.xE2_CAVE_LUMBERJACK_S_TREE_HP,
-    DungeonRoomId.xE3_CAVE_1_2_MAGIC,
-    DungeonRoomId.xE4_CAVE_LOST_OLD_MAN_HOUSE_CAVE,
-    DungeonRoomId.xE5_CAVE_LOST_OLD_MAN_HOUSE_CAVE_BACK,
-    DungeonRoomId.xE6_CAVE_WITH_A_BUNCH_OF_KEESE,
-    DungeonRoomId.xE7_CAVE_WITH_A_BUNCH_OF_KEESE_2,
-    DungeonRoomId.xE8_SUPER_BUNNY_CAVE_EXIT,
-    DungeonRoomId.xEA_CAVE_INSIDE_SPECTACLE_ROCK_HP,
-    DungeonRoomId.xEB_BUMPER_CAVE_ENTRANCE1,
-    DungeonRoomId.xED_CAVE_NO_CLUE,
-    DungeonRoomId.xEE_CAVE_SPIRAL_CAVE,
-    DungeonRoomId.xEF_CAVE_CRYSTAL_SWITCH_5_CHESTS_ROOM,
-    DungeonRoomId.xF0_CAVE_LOST_OLD_MAN_STARTING_CAVE_ENTRANCE,
-    DungeonRoomId.xF1_CAVE_LOST_OLD_MAN_STARTING_CAVE_EXIT,
-    DungeonRoomId.xF2_HOUSE_OLD_WOMAN_NEXT_DOOR,
-    DungeonRoomId.xF3_HOUSE_OLD_WOMAN_SAHASRAHLA_S_WIFE,
-    DungeonRoomId.xF4_HOUSE_ANGRY_BROTHERS_EXIT_TO_MAZE_GAME,
-    DungeonRoomId.xF5_HOUSE_ANGRY_BROTHERS_ENTRANCE,
-    DungeonRoomId.xF8_SUPER_BUNNY_CAVE_ENTRANCE_AND_CHESTS,
-    DungeonRoomId.xF9_SPECTICAL_ROCK_CAVE_EXIT_AFTER_FALLING_FROM_TOP_ENTRANCE,
-    DungeonRoomId.xFA_SPECTICAL_ROCK_CAVE_ENTRANCE_AFTER_JUMPING_TO_GET_TO_HP,
-    DungeonRoomId.xFB_BUMPER_CAVE_ENTRANCE2,
-    DungeonRoomId.xFD_SOME_CAVE_ON_DEATH_MOUNTAIN,
-    DungeonRoomId.xFE_SPIRAL_CAVE_EXIT_AFTER_FALLING,
-    DungeonRoomId.xFF_UPSIDE_DOWN_CAVE_MIDDLE_ENTRANCE,
-    DungeonRoomId.x100_SHOP_IN_LOST_WOODS_0X100,
-    DungeonRoomId.x101_SCARED_LADIES_HOUSES,
-    DungeonRoomId.x102_SICK_KID,
-    DungeonRoomId.x103_INN_BUSH_HOUSE,
-    DungeonRoomId.x104_LINK_S_HOUSE,
-    DungeonRoomId.x105_SAHASRAHLA_S_HOUSE,
-    DungeonRoomId.x11A_MUTANT_HUT,
-    DungeonRoomId.x106_CHEST_GAME_OUTCAST_VILLAGE_BOMB_HOUSE,
-    DungeonRoomId.x107_LIBRARY_BOMB_FARM_ROOM,
-    DungeonRoomId.x108_CHICKEN_HOUSE,
-    DungeonRoomId.x109_WITCH_HUT,
-    DungeonRoomId.x10A_AGINAH_S_CAVE,
-    DungeonRoomId.x10B_SWAMP_FLOODWAY_ROOM,
-    DungeonRoomId.x10C_MIMIC_CAVE,
-    DungeonRoomId.x10D_CAVE_OUTSIDE_MISERY_MIRE,
-    DungeonRoomId.x10E_CAVE_0X10E_2_UNKNOWN_CAVES,
-    DungeonRoomId.x10F_SHOP_0X10F,
-    DungeonRoomId.x110_SHOP_0X110,
-    DungeonRoomId.x111_ARCHER_GAME,
-    DungeonRoomId.x112_CAVE_SHOP_0X112,
-    DungeonRoomId.x113_KING_S_TOMB,
-    DungeonRoomId.x114_WISHING_WELL_CAVE_0X114,
-    DungeonRoomId.x115_WISHING_WELL_BIG_FAIRY,
-    DungeonRoomId.x116_GREATEST_FAIRY,
-    DungeonRoomId.x117_SPIKE_CAVE,
-    DungeonRoomId.x118_SHOP_0X118,
-    DungeonRoomId.x119_BLIND_S_HOUSE,
-    DungeonRoomId.x11B_MIRROR_CAVES_SOUTH_OF_TREE_BOY_ABOVE_KINGS_TOMB,
-    DungeonRoomId.x11C_BOMB_SHOP,
-    DungeonRoomId.x11D_BLIND_S_BASEMENT,
-    DungeonRoomId.x11E_HYPE_CAVE,
-    DungeonRoomId.x11F_SHOP_0X11F,
-    DungeonRoomId.x120_ICE_ROD_CAVE,
-    DungeonRoomId.x121_SMITHS_HOUSE,
-    DungeonRoomId.x122_FORTUNE_TELLER_S,
-    DungeonRoomId.x123_MINI_MOLDORM_CAVE,
-    DungeonRoomId.x124_UNKNOWN_CAVE_BONK_CAVE,
-    DungeonRoomId.x125_CAVE_0X125,
-    DungeonRoomId.x126_CHECKER_BOARD_CAVE,
-    DungeonRoomId.x127_HAMMER_PEG_CAVE,
-    DungeonRoomId.x2D_EMPTY_CLONE_ROOM,
-    DungeonRoomId.x05_EMPTY_CLONE_ROOM1,
-    DungeonRoomId.x0F_EMPTY_CLONE_ROOM2,
-    DungeonRoomId.x25_EMPTY_CLONE_ROOM3,
-    DungeonRoomId.x47_EMPTY_CLONE_ROOM4,
-    DungeonRoomId.x48_EMPTY_CLONE_ROOM5,
-    DungeonRoomId.x69_EMPTY_CLONE_ROOM6,
-    DungeonRoomId.x6F_EMPTY_CLONE_ROOM7,
-    DungeonRoomId.x78_EMPTY_CLONE_ROOM8,
-    DungeonRoomId.x79_EMPTY_CLONE_ROOM9,
-    DungeonRoomId.x7A_EMPTY_CLONE_ROOM10,
-    DungeonRoomId.x86_EMPTY_CLONE_ROOM11,
-    DungeonRoomId.x88_EMPTY_CLONE_ROOM12,
-    DungeonRoomId.x8A_EMPTY_CLONE_ROOM13,
-    DungeonRoomId.x8F_EMPTY_CLONE_ROOM14,
-    DungeonRoomId.x94_EMPTY_CLONE_ROOM15,
-    DungeonRoomId.x9A_EMPTY_CLONE_ROOM16,
-    DungeonRoomId.xAD_EMPTY_CLONE_ROOM17,
-    DungeonRoomId.xBD_EMPTY_CLONE_ROOM18,
-    DungeonRoomId.xCD_EMPTY_CLONE_ROOM19,
-    DungeonRoomId.xCF_EMPTY_CLONE_ROOM20,
-    DungeonRoomId.xD3_EMPTY_CLONE_ROOM21,
-    DungeonRoomId.xD4_EMPTY_CLONE_ROOM22,
-    DungeonRoomId.xD7_EMPTY_CLONE_ROOM23,
-    DungeonRoomId.xDD_EMPTY_CLONE_ROOM24,
-    DungeonRoomId.xE9_EMPTY_CLONE_ROOM25,
-    DungeonRoomId.xEC_EMPTY_CLONE_ROOM26,
-    DungeonRoomId.xF6_EMPTY_CLONE_ROOM27,
-    DungeonRoomId.xF7_EMPTY_CLONE_ROOM28,
-    DungeonRoomId.xFC_EMPTY_CLONE_ROOM29,
-    DungeonRoomId.xCA_UNUSED_ROOM,
-]
