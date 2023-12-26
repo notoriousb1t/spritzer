@@ -114,10 +114,9 @@ class Adjuster:
 
     def patch_rom(self) -> None:
         input_path = filedialog.askopenfilename(filetypes=[("Zelda3 JPN", "*.sfc")])
-        output_path = input_path.replace(".sfc", "-randomized.sfc")
         patch_rom(
             input_path=input_path,
-            output_path=output_path,
+            output_path=input_path,
             dungeon_palette_shuffle=self.enable_dungeon_palette_shuffle.get(),
             dungeon_tileset_shuffle=self.enable_dungeon_tileset_shuffle.get(),
             killable_thieves=self.enable_killable_thieves.get(),
@@ -125,7 +124,7 @@ class Adjuster:
             shadow_bees=self.enable_shadow_bees.get(),
             sprite_shuffle=self.enable_sprite_shuffle.get(),
         )
-        message = messagebox.Message(self.app, message="Great success!")
+        message = messagebox.Message(self.app, message="Have a wonderful journey!")
         message.show()
 
     def start(self) -> None:
