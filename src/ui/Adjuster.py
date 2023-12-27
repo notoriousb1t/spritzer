@@ -196,6 +196,9 @@ class Adjuster:
         options.shadow_bees = self.enable_shadow_bees.get()
 
         input_path = filedialog.askopenfilename(filetypes=[("Zelda3 JPN", "*.sfc")])
+        if not input_path:
+            return
+
         patch_file(
             options=options,
             input_path=input_path,
