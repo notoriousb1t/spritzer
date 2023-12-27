@@ -38,12 +38,8 @@ def is_compatible(
     if not _is_classification_compatible(source_meta, target_meta):
         return False
 
-    if (
-        placement == Placement.AREA
-        and source_meta.can_shuffle_in_area
-        and target_meta.can_shuffle_in_area
-    ):
-        return True
+    if placement == Placement.AREA:
+        return source_meta.can_shuffle_in_area and target_meta.can_shuffle_in_area
 
     if not (source_meta.can_shuffle_in_room and target_meta.can_shuffle_in_room):
         return False

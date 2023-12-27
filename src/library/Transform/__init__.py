@@ -1,4 +1,5 @@
 from .Context import *
+from .BossShuffle import *
 from .DungeonShuffle import *
 from .DungeonPaletteShuffle import *
 from .DungeonTilesetShuffle import *

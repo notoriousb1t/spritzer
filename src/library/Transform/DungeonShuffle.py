@@ -19,6 +19,9 @@ from ..Model import (
     SpriteId,
 )
 
+_block_list = [
+    DungeonRoomId.x24_TURTLE_ROCK_DOUBLE_HOKKU_BOKKU_BIG_CHEST_ROOM
+]
 
 def _find_distance(start: Tuple[int, int], end: Tuple[int, int]) -> int:
     return ((start[0] - end[0]) ** 2 + (start[1] - start[1]) ** 2) ** 0.5
@@ -145,14 +148,14 @@ def _compute_choices(dungeon_dict: Dict[DungeonRoomId, DungeonRoom]) -> List[Spr
     return gfx_choices
 
 
-def reroll_dungeon_bosses(context: Context) -> None:
-    pass
-
-
 def reroll_dungeon_sprites(context: Context) -> None:
     gfx_choices = _compute_choices(context.dungeon_rooms)
 
     for dungeon_room in context.dungeon_rooms.values():
+        if dungeon_room.id in _block_list:
+            # Ignore rooms that are problematic (for example, kill room logic isn't working)
+            continue
+
         # Randomize using Entities that occur anywhere in that Dungeon Room.
         if any(
             it
