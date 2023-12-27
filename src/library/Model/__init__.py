@@ -1,5 +1,6 @@
 from .DungeonRoom import *
 from .DungeonRoomGroup import *
+from .DungeonRoomFloorId import *
 from .DungeonRoomId import *
 from .BlocksetId import *
 from .DungeonSprite import *

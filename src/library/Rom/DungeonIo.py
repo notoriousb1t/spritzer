@@ -1,21 +1,17 @@
 from typing import List, Dict
 
-from ..Model.SpritesetId import SpritesetId
-
-from ..Model.DungeonSprite import DungeonSprite
-
-from ..Model.DungeonRoomId import DungeonRoomId
-
-from ..Model.PaletteId import PaletteId
-
 from .LocalRom import LocalRom, resolve_address
 
 from ..Model import (
+    BlocksetId,
     DungeonRoom,
-    BlocksetId,
-    BlocksetId,
+    DungeonRoomFloorId,
+    DungeonRoomId,
+    DungeonSprite,
     DungeonTag,
+    PaletteId,
     SpriteId,
+    SpritesetId,
 )
 
 
@@ -99,8 +95,8 @@ def _read_room(rom: LocalRom, id: DungeonRoomId) -> DungeonRoom:
     bgmove = rom.read_address(header_address + 4)
     tag1 = DungeonTag(rom.read_address(header_address + 5))
     tag2 = DungeonTag(rom.read_address(header_address + 6))
-    plane1 = rom.read_address(header_address + 7)
-    plane2 = rom.read_address(header_address + 8)
+    floor_upper = DungeonRoomFloorId(rom.read_address(header_address + 7))
+    floor_lower = DungeonRoomFloorId(rom.read_address(header_address + 8))
     warp = DungeonRoomId(rom.read_address(header_address + 9))
     stairs0 = DungeonRoomId(rom.read_address(header_address + 10))
     stairs1 = DungeonRoomId(rom.read_address(header_address + 11))
@@ -120,7 +116,7 @@ def _read_room(rom: LocalRom, id: DungeonRoomId) -> DungeonRoom:
             sprite_ptr[0],
         ]
     )
-    
+
     dungeon_sprites = _read_room_sprites(rom, sprite_table_base_snes_address)
 
     return DungeonRoom(
@@ -133,8 +129,8 @@ def _read_room(rom: LocalRom, id: DungeonRoomId) -> DungeonRoom:
         bgmove=bgmove,
         tag1=tag1,
         tag2=tag2,
-        plane1=plane1,
-        plane2=plane2,
+        floor_upper=floor_upper,
+        floor_lower=floor_lower,
         warp=warp,
         stairs0=stairs0,
         stairs1=stairs1,
@@ -164,8 +160,8 @@ def write_dungeon_rooms(
         rom.write_address(room.header_address + 4, room.bgmove)
         rom.write_address(room.header_address + 5, room.tag1)
         rom.write_address(room.header_address + 6, room.tag2)
-        rom.write_address(room.header_address + 7, room.plane1)
-        rom.write_address(room.header_address + 8, room.plane2)
+        rom.write_address(room.header_address + 7, room.floor_upper)
+        rom.write_address(room.header_address + 8, room.floor_lower)
         rom.write_address(room.header_address + 9, room.warp)
         rom.write_address(room.header_address + 10, room.stairs0)
         rom.write_address(room.header_address + 11, room.stairs1)

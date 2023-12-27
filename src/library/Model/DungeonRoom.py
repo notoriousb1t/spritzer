@@ -1,8 +1,9 @@
 from attr import dataclass
 from typing import List
 
-from .DungeonRoomId import DungeonRoomId
 from .BlocksetId import BlocksetId
+from .DungeonRoomFloorId import DungeonRoomFloorId
+from .DungeonRoomId import DungeonRoomId
 from .DungeonSprite import DungeonSprite
 from .DungeonTag import DungeonTag
 from .PaletteId import PaletteId
@@ -29,9 +30,9 @@ class DungeonRoom:
     """The first tag. This provides data such as kill conditions."""
     tag2: DungeonTag
     """The second tag. This provides data such as kill conditions."""
-    plane1: int
+    floor_upper: DungeonRoomFloorId
     """The pattern/type of the top floor. (Water, Tiled, etc.)"""
-    plane2: int
+    floor_lower: DungeonRoomFloorId
     """The pattern/type of the bottom floor. (Water, Tiled, etc.)"""
     warp: DungeonRoomId
     """The destination for pit warping"""

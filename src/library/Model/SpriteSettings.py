@@ -49,10 +49,10 @@ class SpriteSettings:
             ]
         )
         self.can_shuffle_in_area = (
-            can_shuffle_in_area if can_shuffle_in_area != None else can_shuffle
+            can_shuffle if can_shuffle_in_area == None else can_shuffle_in_area
         )
         self.can_shuffle_in_room = (
-            can_shuffle_in_room if can_shuffle_in_room != None else can_shuffle
+            can_shuffle if can_shuffle_in_room == None else can_shuffle_in_room
         )
 
         if role == SpriteType.ENEMY or role == SpriteType.BOSS:
