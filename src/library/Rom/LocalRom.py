@@ -1,5 +1,5 @@
-from enum import Enum, auto
-from typing import Callable, List
+from enum import IntEnum, auto
+from typing import List
 from math import floor
 
 
@@ -37,16 +37,25 @@ def resolve_snes_pointer(pc_address: int) -> List[int]:
     snes_address = pc_address_to_snes_address(pc_address)
     return snes_address_to_bytes(snes_address)
 
-class RomMode(Enum):
+
+class RomMode(IntEnum):
+    """This enforces architecture: read -> transform -> write"""
+
     READ = auto()
     LOCKED = auto()
     WRITE = auto()
+    CRC = auto()
+
+    def next(self, value) -> None:
+        if RomMode(self.value + 1) != RomMode(value):
+            raise "Not a valid phase change"
+        return value
+
 
 class LocalRom:
-    mode = RomMode.READ
+    _buffer: bytearray
+    _mode = RomMode.READ
 
-    read_address: Callable[[int], int]
-    write_address: Callable[[int, int], None]
     room_header_bank = 0x04
     dungeon_room_pointer_header_address = 0x271E2
     dungeon_sprite_bank = 0x09
@@ -86,24 +95,35 @@ class LocalRom:
     def sprite_setting_5_address(self) -> int:
         return self.sprite_setting_address + (0xF3 * 5)
 
-    def __init__(self, read_address: Callable[[int], int]) -> None:
-        self.read_address = read_address
-        self.write_address = None
+    def __init__(self, buffer: bytearray) -> None:
+        self._buffer = buffer
 
-    def set_locked(self) -> None:
-        self.mode = RomMode.LOCKED
-        self.read_address = None
-        self.write_address = None
+    def set_mode(self, mode: RomMode) -> None:
+        self._mode = self._mode.next(mode)
 
-    def start_write(self, write_address: Callable[[int, int], None]) -> None:
-        # Remove reading to prevent interleaving reads and writes.
-        self.mode = RomMode.WRITE
-        self.read_address = None
-        self.write_address = write_address
+    def read_address(self, address: int) -> int:
+        if self._mode != RomMode.READ:
+            raise "Wrong phase, cannot read"
+        return self._buffer[address]
+
+    def write_address(self, address: int, value: int) -> None:
+        if self._mode != RomMode.WRITE:
+            raise "Wrong phase, cannot write"
+        self._buffer[address] = value
+
+    def write_crc(self):
+        if self._mode != RomMode.CRC:
+            raise "Wrong phase, cannot add CRC"
+        crc = (sum(self._buffer[:0x7FDC] + self._buffer[0x7FE0:]) + 0x01FE) & 0xFFFF
+
+        inv = crc ^ 0xFFFF
+        crc_bytes = [inv & 0xFF, (inv >> 8) & 0xFF, crc & 0xFF, (crc >> 8) & 0xFF]
+        for i, value in enumerate(crc_bytes):
+            self._buffer[0x7FDC + i] = value
 
 
-def get_local_rom(read: Callable[[int], int]) -> LocalRom:
-    rom = LocalRom(read)
-    rom.room_header_bank = read(0x0B5E7)  # Vanilla = 0x04 | Enemizer = 0x36
+def get_local_rom(buffer: bytearray) -> LocalRom:
+    rom = LocalRom(buffer)
+    rom.room_header_bank = rom.read_address(0x0B5E7)  # Vanilla = 0x04 | Enemizer = 0x36
     print(hex(rom.overworld_sprite_ptr_table_address))
     return rom

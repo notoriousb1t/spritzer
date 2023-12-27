@@ -1,6 +1,6 @@
 from typing import List, Dict
 
-from ..Model.SpriteBlocksetId import SpriteBlocksetId
+from ..Model.SpritesetId import SpritesetId
 
 from ..Model.DungeonSprite import DungeonSprite
 
@@ -12,8 +12,8 @@ from .LocalRom import LocalRom, resolve_address
 
 from ..Model import (
     DungeonRoom,
-    DungeonRoomTilesetId,
-    DungeonRoomTilesetId,
+    BlocksetId,
+    BlocksetId,
     DungeonTag,
     SpriteId,
 )
@@ -92,13 +92,20 @@ def _read_room(rom: LocalRom, id: DungeonRoomId) -> DungeonRoom:
     )
     # Read in the graphics block which controls the spritesheets
     # and tags which declare behaviors.
-    lights_out_effect = bool(rom.read_address(header_address) & 0b1 == 0b1)
+    bg2_property = rom.read_address(header_address)
     palette_id = PaletteId(rom.read_address(header_address + 1))
-    tileset_id = DungeonRoomTilesetId(rom.read_address(header_address + 2))
-    blockset_id = SpriteBlocksetId.from_room_value(rom.read_address(header_address + 3))
-    effect = rom.read_address(header_address + 4)
+    blockset_id = BlocksetId(rom.read_address(header_address + 2))
+    spriteset_id = SpritesetId.from_room_value(rom.read_address(header_address + 3))
+    bgmove = rom.read_address(header_address + 4)
     tag1 = DungeonTag(rom.read_address(header_address + 5))
     tag2 = DungeonTag(rom.read_address(header_address + 6))
+    plane1 = rom.read_address(header_address + 7)
+    plane2 = rom.read_address(header_address + 8)
+    warp = DungeonRoomId(rom.read_address(header_address + 9))
+    stairs0 = DungeonRoomId(rom.read_address(header_address + 10))
+    stairs1 = DungeonRoomId(rom.read_address(header_address + 11))
+    stairs2 = DungeonRoomId(rom.read_address(header_address + 12))
+    stairs3 = DungeonRoomId(rom.read_address(header_address + 13))
 
     dungeon_sprite_pointer_address = rom.dungeon_sprite_ptr_table_address + (id * 2)
 
@@ -119,13 +126,20 @@ def _read_room(rom: LocalRom, id: DungeonRoomId) -> DungeonRoom:
     return DungeonRoom(
         header_address=header_address,
         id=id,
-        lights_out_effect=lights_out_effect,
+        bg2_property=bg2_property,
         palette_id=palette_id,
-        tileset_id=tileset_id,
         blockset_id=blockset_id,
-        effect=effect,
+        spriteset_id=spriteset_id,
+        bgmove=bgmove,
         tag1=tag1,
         tag2=tag2,
+        plane1=plane1,
+        plane2=plane2,
+        warp=warp,
+        stairs0=stairs0,
+        stairs1=stairs1,
+        stairs2=stairs2,
+        stairs3=stairs3,
         sprite_ptr=sprite_ptr,
         dungeon_sprites=dungeon_sprites,
     )
@@ -140,15 +154,23 @@ def write_dungeon_rooms(
     dungeon_room_dict: Dict[DungeonRoomId, DungeonRoom],
 ) -> None:
     for room in dungeon_room_dict.values():
+        rom.write_address(room.header_address, room.bg2_property)
         rom.write_address(room.header_address + 1, room.palette_id)
-        rom.write_address(room.header_address + 2, room.tileset_id)
+        rom.write_address(room.header_address + 2, room.blockset_id)
         rom.write_address(
             room.header_address + 3,
-            room.blockset_id.get_room_value(),
+            room.spriteset_id.get_room_value(),
         )
-        rom.write_address(room.header_address + 4, room.effect)
+        rom.write_address(room.header_address + 4, room.bgmove)
         rom.write_address(room.header_address + 5, room.tag1)
         rom.write_address(room.header_address + 6, room.tag2)
+        rom.write_address(room.header_address + 7, room.plane1)
+        rom.write_address(room.header_address + 8, room.plane2)
+        rom.write_address(room.header_address + 9, room.warp)
+        rom.write_address(room.header_address + 10, room.stairs0)
+        rom.write_address(room.header_address + 11, room.stairs1)
+        rom.write_address(room.header_address + 12, room.stairs2)
+        rom.write_address(room.header_address + 13, room.stairs3)
 
         sprite_ptr_address = rom.dungeon_sprite_ptr_table_address + (room.id * 2)
         rom.write_address(sprite_ptr_address, room.sprite_ptr[0]),

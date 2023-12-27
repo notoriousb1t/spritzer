@@ -4,7 +4,7 @@ from typing import List, Dict, Set, Tuple
 
 from ..Model.SpriteType import SpriteType
 
-from ..Model.SpriteBlocksetId import SpriteBlocksetId
+from ..Model.SpritesetId import SpritesetId
 
 from ..Model.DungeonSprite import DungeonSprite
 
@@ -116,15 +116,15 @@ def _generate_sprite_selections(
 
 def _compute_choices(dungeon_dict: Dict[DungeonRoomId, DungeonRoom]) -> List[SpriteId]:
     # Group Dungeon Rooms by graphics blockset.
-    gfx_groups: Dict[SpriteBlocksetId, List[DungeonRoom]] = {
-        it: list() for it in list(SpriteBlocksetId)
+    gfx_groups: Dict[SpritesetId, List[DungeonRoom]] = {
+        it: list() for it in list(SpritesetId)
     }
     for dungeon_room in dungeon_dict.values():
-        gfx_groups[dungeon_room.blockset_id].append(dungeon_room)
+        gfx_groups[dungeon_room.spriteset_id].append(dungeon_room)
 
     # Create a dictionary of Entities which occur in that graphics blocks in these Dungeon Rooms.
-    gfx_choices: Dict[SpriteBlocksetId, List[SpriteId]] = {
-        it: list() for it in list(SpriteBlocksetId)
+    gfx_choices: Dict[SpritesetId, List[SpriteId]] = {
+        it: list() for it in list(SpritesetId)
     }
     for id, dungeon_rooms in gfx_groups.items():
         # Capture possible sprites in this graphics block.
@@ -162,7 +162,7 @@ def reroll_dungeon_sprites(context: Context) -> None:
             # Skip all boss rooms, we shouldn't try to reroll those through this option.
             continue
 
-        choices = gfx_choices[dungeon_room.blockset_id]
+        choices = gfx_choices[dungeon_room.spriteset_id]
         if len(choices) < 1:
             # Skip if there is nothing to switch.
             continue

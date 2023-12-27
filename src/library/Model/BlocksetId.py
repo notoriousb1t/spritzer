@@ -1,7 +1,7 @@
 from enum import IntEnum
 
 
-class DungeonRoomTilesetId(IntEnum):
+class BlocksetId(IntEnum):
     """The resource id of walls, floors, etc. of the Dungeon Room."""
 
     x0_CASTLE = 0

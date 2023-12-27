@@ -1,7 +1,7 @@
 from random import Random
 from typing import List, Dict, Set
 
-from ..Model.SpriteBlocksetId import SpriteBlocksetId
+from ..Model.SpritesetId import SpritesetId
 
 from ..Model.OverworldSprite import OverworldSprite
 
@@ -43,15 +43,15 @@ def reroll_overworld(context: Context) -> None:
     overworld_area_dict = context.overworld_areas
 
     # Group Overworld Areas by graphics block.
-    gfx_groups: Dict[SpriteBlocksetId, List[OverworldArea]] = {
-        it: list() for it in list(SpriteBlocksetId)
+    gfx_groups: Dict[SpritesetId, List[OverworldArea]] = {
+        it: list() for it in list(SpritesetId)
     }
     for overworld_area in overworld_area_dict.values():
         gfx_groups[overworld_area.blockset_id].append(overworld_area)
 
     # Create a dictionary of Entities which occur in that graphics blocks in these Overworld Areas.
-    gfx_choices: Dict[SpriteBlocksetId, List[SpriteId]] = {
-        it: list() for it in list(SpriteBlocksetId)
+    gfx_choices: Dict[SpritesetId, List[SpriteId]] = {
+        it: list() for it in list(SpritesetId)
     }
     for gfx, overworld_areas in gfx_groups.items():
         # Capture possible Overworld Sprites in this graphics block.

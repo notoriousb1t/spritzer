@@ -1,6 +1,6 @@
 from typing import Dict
 
-from ..Model.SpriteBlocksetId import SpriteBlocksetId
+from ..Model.SpritesetId import SpritesetId
 
 from ..Model.OverworldSprite import OverworldSprite
 
@@ -40,7 +40,7 @@ def _load_area(rom: LocalRom, id: OverworldAreaId) -> OverworldArea:
     """Reads an Area from the ROM and returns it as a data class."""
     # Resolve the address of this Dungeon RoomArea and read the graphics block into memory.
     sprite_blockset_address = _resolve_gfx_address(id)
-    gfx = SpriteBlocksetId(rom.read_address(sprite_blockset_address))
+    gfx = SpritesetId(rom.read_address(sprite_blockset_address))
 
     # Find the base address of Overworld Sprites in this Overworld Area.
     sprite_table_base_address = resolve_address(
