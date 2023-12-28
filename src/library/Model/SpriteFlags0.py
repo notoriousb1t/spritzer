@@ -7,6 +7,6 @@ class SpriteFlags0(IntFlag):
     DISPLAY_2 = auto()
     DISPLAY_3 = auto()
     DISPLAY_4 = auto()
-    RETREAT = auto()
+    HITBOX_ALT = auto()
     MASTER_SWORD_ONLY = auto()
     HARMLESS = auto()

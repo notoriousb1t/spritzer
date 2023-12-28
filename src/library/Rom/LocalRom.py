@@ -57,43 +57,36 @@ class LocalRom:
     _mode = RomMode.READ
 
     room_header_bank = 0x04
-    dungeon_room_pointer_header_address = 0x271E2
     dungeon_sprite_bank = 0x09
     overworld_sprite_bank = 0x09
+
+    dungeon_room_pointer_header_address = 0x271E2
     sprite_blockset_address = 0x5B97
-    sprite_setting_address = 0x06B080
-
-    @property
-    def dungeon_sprite_ptr_table_address(self) -> int:
-        return compute_snes_address([0x4, 0xD6, 0x2E])  # 0x04D62E
-
-    @property
-    def overworld_sprite_ptr_table_address(self) -> int:
-        return compute_snes_address([0x4, 0xC9, 0x01])  # 0x04C901
-
-    @property
-    def sprite_setting_0_address(self) -> int:
-        return self.sprite_setting_address
+    damage_table_snes_address = 0x06F42D
+    overworld_sprite_ptr_table_address = 0x4_C901
+    dungeon_sprite_ptr_table_address = 0x4_D62E
+    sprite_setting_address = 0xD_B080
+    weapon_damage_snes_address = 0xD_B8F1
 
     @property
     def sprite_health_address(self) -> int:
-        return self.sprite_setting_address + 0xF3
+        return self.sprite_setting_address + 0xF3 # 0xD_B173
 
     @property
     def sprite_damage_address(self) -> int:
-        return self.sprite_setting_address + (0xF3 * 2)
+        return self.sprite_setting_address + (0xF3 * 2) # 0xD_B266
 
     @property
     def sprite_setting_3_address(self) -> int:
-        return self.sprite_setting_address + (0xF3 * 3)
+        return self.sprite_setting_address + (0xF3 * 3) # 0xD_B359
 
     @property
     def sprite_setting_4_address(self) -> int:
-        return self.sprite_setting_address + (0xF3 * 4)
+        return self.sprite_setting_address + (0xF3 * 4) # 0xD_B44C
 
     @property
     def sprite_setting_5_address(self) -> int:
-        return self.sprite_setting_address + (0xF3 * 5)
+        return self.sprite_setting_address + (0xF3 * 5) # 0xD_B53F
 
     def __init__(self, buffer: bytearray) -> None:
         self._buffer = buffer
@@ -106,10 +99,16 @@ class LocalRom:
             raise "Wrong phase, cannot read"
         return self._buffer[address]
 
+    def read_snes_address(self, snes_address: int) -> int:
+        return self.read_address(compute_pc_address(snes_address))
+
     def write_address(self, address: int, value: int) -> None:
         if self._mode != RomMode.WRITE:
             raise "Wrong phase, cannot write"
         self._buffer[address] = value
+
+    def write_snes_address(self, snes_address: int, value: int) -> None:
+        return self.write_address(compute_pc_address(snes_address), value)
 
     def write_crc(self):
         if self._mode != RomMode.CRC:
@@ -125,5 +124,4 @@ class LocalRom:
 def get_local_rom(buffer: bytearray) -> LocalRom:
     rom = LocalRom(buffer)
     rom.room_header_bank = rom.read_address(0x0B5E7)  # Vanilla = 0x04 | Enemizer = 0x36
-    print(hex(rom.overworld_sprite_ptr_table_address))
     return rom

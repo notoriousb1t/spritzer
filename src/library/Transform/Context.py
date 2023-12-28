@@ -4,6 +4,7 @@ from typing import Dict
 
 
 from ..Model import (
+    DamageTable,
     DungeonRoom,
     DungeonRoomId,
     OverworldArea,
@@ -12,6 +13,8 @@ from ..Model import (
     SpritesetId,
     SpriteId,
     Sprite,
+    SpriteSubclass,
+    SpriteSubclassId,
 )
 
 
@@ -19,7 +22,9 @@ from ..Model import (
 class Context:
     random: Random
     loaded = False
+    damage_table: DamageTable = None
     dungeon_rooms: Dict[DungeonRoomId, DungeonRoom] = {}
     overworld_areas: Dict[OverworldAreaId, OverworldArea] = {}
     spritesets: Dict[SpritesetId, Spriteset] = {}
     sprites: Dict[SpriteId, Sprite] = {}
+    sprite_subclasses: Dict[SpriteSubclassId, SpriteSubclass] = {}

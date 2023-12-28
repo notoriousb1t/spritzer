@@ -4,15 +4,19 @@ from typing import Callable, List
 
 from library.Rom import (
     get_local_rom,
+    read_damage_table,
     read_dungeon_rooms,
     read_overworld_areas,
     read_sprites,
     read_spritesets,
+    read_sprite_subclasses,
     RomMode,
+    write_damage_table,
     write_dungeon_rooms,
     write_overworld_areas,
     write_sprite_blocksets,
     write_sprite_settings,
+    write_sprite_subclasses,
 )
 from library.Transform import (
     Context,
@@ -64,11 +68,20 @@ def patch_buffer(buffer: bytearray, options: Options, random=Random()) -> None:
     # Read the rom and load all models.
     rom = get_local_rom(buffer)
     context = Context(random=random)
+    context.damage_table = read_damage_table(rom)
+
+    context.sprite_subclasses = read_sprite_subclasses(rom)
     context.spritesets = read_spritesets(rom)
     context.sprites = read_sprites(rom)
     context.overworld_areas = read_overworld_areas(rom)
     context.dungeon_rooms = read_dungeon_rooms(rom)
     context.loaded = True
+
+    for id, val in context.sprites.items():
+        print(f"{val.subclass if val.subclass != None else 'XX'} {id}")
+
+    for id, val in context.sprite_subclasses.items():
+        print(f"{id} {val}")
 
     # Lock the rom and apply all transformations.
     rom.set_mode(RomMode.LOCKED)
@@ -77,6 +90,9 @@ def patch_buffer(buffer: bytearray, options: Options, random=Random()) -> None:
 
     # Write the data back to the ROM.
     rom.set_mode(RomMode.WRITE)
+
+    write_sprite_subclasses(rom, context.sprite_subclasses)
+    write_damage_table(rom, context.damage_table)
     write_sprite_settings(rom, context.sprites)
     write_sprite_blocksets(rom, context.spritesets)
     write_overworld_areas(rom, context.overworld_areas)
