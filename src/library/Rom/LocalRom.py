@@ -70,11 +70,11 @@ class LocalRom:
     weapon_damage_snes_address = 0xDB8F1
 
     @property
-    def sprite_health_address(self) -> int:
+    def sprite_setting_1_address(self) -> int:
         return self.sprite_setting_0_address + 0xF3 # 0xD_B173
 
     @property
-    def sprite_damage_address(self) -> int:
+    def sprite_setting_2_address(self) -> int:
         return self.sprite_setting_0_address + (0xF3 * 2) # 0xD_B266
 
     @property
@@ -94,7 +94,7 @@ class LocalRom:
         return self.sprite_setting_0_address + (0xF3 * 6) # 0xD_B632
     
     @property
-    def sprite_setting_6_address(self) -> int:
+    def sprite_setting_7_address(self) -> int:
         return self.sprite_setting_0_address + (0xF3 * 7) # 0xD_B725
 
     def __init__(self, buffer: bytearray) -> None:

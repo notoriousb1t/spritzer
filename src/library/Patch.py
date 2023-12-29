@@ -79,14 +79,16 @@ def patch_buffer(buffer: bytearray, options: Options, random=Random()) -> None:
     context.sprites = read_sprites(rom)
     context.overworld_areas = read_overworld_areas(rom)
     context.dungeon_rooms = read_dungeon_rooms(rom)
-    
+
+    tuple1 = (rom.read_snes_address(0x1DC25D), rom.read_snes_address(0x1DC25D + 1))
+
     for sprite_id in list(SpriteId):
         v0 = rom.read_snes_address(rom.damage_ptr_table_address + sprite_id + 0)
         v1 = rom.read_snes_address(rom.damage_ptr_table_address + sprite_id + 1)
         v2 = rom.read_snes_address(rom.damage_ptr_table_address + sprite_id + 2)
         v3 = rom.read_snes_address(rom.damage_ptr_table_address + sprite_id + 3)
-        print(f'{sprite_id}: {hex(v0)} {hex(v1)} {hex(v2)} {hex(v3)}')
-    
+        print(f"{sprite_id}: {hex(v0)} {hex(v1)} {hex(v2)} {hex(v3)}")
+
     context.loaded = True
 
     for id, val in context.sprites.items():
@@ -102,6 +104,9 @@ def patch_buffer(buffer: bytearray, options: Options, random=Random()) -> None:
 
     # Write the data back to the ROM.
     rom.set_mode(RomMode.WRITE)
+
+    rom.write_snes_address(0x1DC245, tuple1[0])
+    rom.write_snes_address(0x1DC245 + 1, tuple1[1])
 
     write_sprite_subclasses(rom, context.sprite_subclasses)
     write_damage_table(rom, context.damage_table)
