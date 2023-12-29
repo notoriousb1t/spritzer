@@ -12,8 +12,6 @@ from .OverworldAreaId import *
 from .OverworldSprite import *
 from .PaletteId import *
 from .Sprite import *
-from .SpriteFlags0 import *
-from .SpriteFlags3 import *
 from .SpriteId import *
 from .Spriteset import *
 from .SpritesetId import *

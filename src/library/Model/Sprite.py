@@ -1,9 +1,8 @@
 from attr import dataclass
 
-from .SpriteFlags0 import SpriteFlags0
-from .SpriteFlags3 import SpriteFlags3
 from .SpriteId import SpriteId
 from .SpriteSubclassId import SpriteSubclassId
+
 
 @dataclass
 class Sprite:
@@ -21,18 +20,46 @@ class Sprite:
     """True if the creature is not deleted as part of boss prep."""
     subclass: SpriteSubclassId = None
     """Damage profile (determines damage table)."""
-    flags_0: int = None
-    flags_3: int = None
-    settings_4: int = None
-    settings_5: int = None
+    display_allocation: int = None
+    """oam allocation"""
+    collisions_alt: bool = None
+    """Reduces hitbox collisions, etc."""
+    master_sword_only: bool = None
+    """Only used by the master sword animation."""
+    harmless: bool = None
+    """Considered harmless (changes collisions)."""
+    name_table: int = None
+    """Copied to OAM"""
+    palette: int = None
+    """Copied to OAM"""
+    impervious: bool = None
+    """Cannot take any damage"""
+    big_shadow: bool = None
+    """Enable large shadow"""
+    draw_shadow: bool = None
+    """Has a visible shadow"""
+    custom_death_animation: bool = None
+    """Has custom logic on death. Octoballoon for example."""
+    hitbox: int = None
+    """Size of the hitbox."""
+    preserved_offscreen: bool = None
+    """True if moving off camera should NOT kill the Sprite."""
+    statis: bool = None
+    """True if the Sprite should be ignored for kill rooms count."""
+    collision_on_single_layer: bool = None
+    """Only process collisions on a single layer (canonballs, etc.)"""
+    allow_pits: bool = None
+    """Thrown sprites ignore pits and crash on pits. Non-thrown sprites fall."""
+    boss_death_animation: bool = None
+    """Plays a boss death animation on death."""
+    slashable: bool = None
+    """Special flag for non-harmable sprites who should react to slashing"""
+    deflect_arrows: bool = None
+    """True if arrows should bounce off the Sprite."""
+    tile_hitbox: int = None
 
     def set_invisible(self) -> None:
-        self.flags_0 &= ~(
-            SpriteFlags0.DISPLAY_0
-            | SpriteFlags0.DISPLAY_1
-            | SpriteFlags0.DISPLAY_2
-            | SpriteFlags0.DISPLAY_3
-        )
+        self.display_allocation = 0
 
     def set_invincible(self) -> None:
-        self.flags_3 |= SpriteFlags3.INVINCIBLE
+        self.impervious = True

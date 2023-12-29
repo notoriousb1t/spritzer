@@ -28,6 +28,7 @@ from library.Transform import (
     reroll_dungeon_tilesets,
     reroll_lost_woods_mushroom,
     reroll_overworld,
+    patch_invulnerable_sprites,
 )
 
 
@@ -48,6 +49,7 @@ def patch_buffer(buffer: bytearray, options: Options, random=Random()) -> None:
     """Patch a buffer containing Zelda3. It must have the smc header removed."""
     # Setup all transforms. The order is signficant.
     transform_list: List[Callable[[Context], None]] = list()
+    transform_list.append(patch_invulnerable_sprites)
     if options.killable_thieves:
         transform_list.append(patch_thief_killable)
     if options.shadow_bees:

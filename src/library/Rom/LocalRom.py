@@ -65,28 +65,28 @@ class LocalRom:
     damage_table_snes_address = 0x06F42D
     overworld_sprite_ptr_table_address = 0x4_C901
     dungeon_sprite_ptr_table_address = 0x4_D62E
-    sprite_setting_address = 0xD_B080
+    sprite_setting_0_address = 0xD_B080
     weapon_damage_snes_address = 0xD_B8F1
 
     @property
     def sprite_health_address(self) -> int:
-        return self.sprite_setting_address + 0xF3 # 0xD_B173
+        return self.sprite_setting_0_address + 0xF3 # 0xD_B173
 
     @property
     def sprite_damage_address(self) -> int:
-        return self.sprite_setting_address + (0xF3 * 2) # 0xD_B266
+        return self.sprite_setting_0_address + (0xF3 * 2) # 0xD_B266
 
     @property
     def sprite_setting_3_address(self) -> int:
-        return self.sprite_setting_address + (0xF3 * 3) # 0xD_B359
+        return self.sprite_setting_0_address + (0xF3 * 3) # 0xD_B359
 
     @property
     def sprite_setting_4_address(self) -> int:
-        return self.sprite_setting_address + (0xF3 * 4) # 0xD_B44C
+        return self.sprite_setting_0_address + (0xF3 * 4) # 0xD_B44C
 
     @property
     def sprite_setting_5_address(self) -> int:
-        return self.sprite_setting_address + (0xF3 * 5) # 0xD_B53F
+        return self.sprite_setting_0_address + (0xF3 * 5) # 0xD_B53F
 
     def __init__(self, buffer: bytearray) -> None:
         self._buffer = buffer
