@@ -63,10 +63,11 @@ class LocalRom:
     dungeon_room_pointer_header_address = 0x271E2
     sprite_blockset_address = 0x5B97
     damage_table_snes_address = 0x06F42D
-    overworld_sprite_ptr_table_address = 0x4_C901
-    dungeon_sprite_ptr_table_address = 0x4_D62E
-    sprite_setting_0_address = 0xD_B080
-    weapon_damage_snes_address = 0xD_B8F1
+    damage_ptr_table_address = 0x36F33
+    overworld_sprite_ptr_table_address = 0x4C901
+    dungeon_sprite_ptr_table_address = 0x4D62E
+    sprite_setting_0_address = 0xDB080
+    weapon_damage_snes_address = 0xDB8F1
 
     @property
     def sprite_health_address(self) -> int:
@@ -87,6 +88,14 @@ class LocalRom:
     @property
     def sprite_setting_5_address(self) -> int:
         return self.sprite_setting_0_address + (0xF3 * 5) # 0xD_B53F
+    
+    @property
+    def sprite_setting_6_address(self) -> int:
+        return self.sprite_setting_0_address + (0xF3 * 6) # 0xD_B632
+    
+    @property
+    def sprite_setting_6_address(self) -> int:
+        return self.sprite_setting_0_address + (0xF3 * 7) # 0xD_B725
 
     def __init__(self, buffer: bytearray) -> None:
         self._buffer = buffer

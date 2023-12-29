@@ -58,8 +58,3 @@ class Sprite:
     """True if arrows should bounce off the Sprite."""
     tile_hitbox: int = None
 
-    def set_invisible(self) -> None:
-        self.display_allocation = 0
-
-    def set_invincible(self) -> None:
-        self.impervious = True

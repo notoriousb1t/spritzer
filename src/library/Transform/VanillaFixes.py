@@ -1,12 +1,14 @@
 # This file contains patches inconsistencies in Vanilla that affect randomization.
 from .Context import Context
-from ..Model import SpriteId, SpriteType, SpriteVulnerability
+from ..Model import SpriteType, SpriteVulnerability
 
 
 def patch_invulnerable_sprites(context: Context) -> None:
-    for sprite_id in list(SpriteId):
+    """This makes sure the game and randomizer are aligned on what is killable."""
+    for sprite in context.sprites.values():
+        meta = sprite.id.meta()
         if (
-            sprite_id.meta().role == SpriteType.HAZARD
-            or sprite_id.meta().vulnerability == SpriteVulnerability.INVULNERABLE
+            meta.role == SpriteType.HAZARD
+            or meta.vulnerability == SpriteVulnerability.INVULNERABLE
         ):
-            context.sprites[sprite_id].statis = True
+            sprite.statis = True
