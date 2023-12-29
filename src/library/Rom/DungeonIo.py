@@ -82,8 +82,8 @@ def _read_room(rom: LocalRom, id: DungeonRoomId) -> DungeonRoom:
     header_address = resolve_address(
         [
             rom.room_header_bank,
-            rom.read_address(rom.dungeon_room_pointer_header_address + (id * 2) + 1),
-            rom.read_address(rom.dungeon_room_pointer_header_address + (id * 2)),
+            rom.read_snes_address(rom.dungeon_room_pointer_header_address + (id * 2) + 1),
+            rom.read_snes_address(rom.dungeon_room_pointer_header_address + (id * 2)),
         ]
     )
     # Read in the graphics block which controls the spritesheets

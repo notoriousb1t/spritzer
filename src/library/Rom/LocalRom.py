@@ -60,10 +60,9 @@ class LocalRom:
     dungeon_sprite_bank = 0x09
     overworld_sprite_bank = 0x09
 
-    dungeon_room_pointer_header_address = 0x271E2
+    dungeon_room_pointer_header_address = 0x4F1E2
     sprite_blockset_address = 0x5B97
     damage_table_snes_address = 0x06F42D
-    damage_ptr_table_address = 0x36F33
     overworld_sprite_ptr_table_address = 0x4C901
     dungeon_sprite_ptr_table_address = 0x4D62E
     sprite_setting_0_address = 0xDB080
