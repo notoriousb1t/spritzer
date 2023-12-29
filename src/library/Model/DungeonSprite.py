@@ -12,12 +12,14 @@ class DungeonSprite:
     """The y coordinate of the Sprite in the Dungeon Room. and some settings."""
     x: int
     """The x coordinate of the Sprite in the Dungeon Room. and some settings."""
-    is_overlord: bool
-    """True if this Sprite has the overlord bits set."""
-    is_subtype: bool
-    """True if this Sprite has the subtype bits set."""
+    lower_layer: bool
+    """True if this sprite is rendered on the bottom layer."""
     item: SpriteId
     """Contains another Sprite. This should be a key or big key."""
+    aux0: int
+    """Subtype information about the sprite. Varies per sprite"""
+    aux1: int
+    """A non-zero value indicates an overlord or key usually."""
     distance_from_midpoint: int = 0
     """May be set when performing shuffling/randomization to evaluate distance from the center of a group of enemies."""
 

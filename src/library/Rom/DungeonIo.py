@@ -16,10 +16,6 @@ from ..Model import (
 
 
 _stop_marker = 0xFF
-_remove_subtype = 0b10011111
-_remove_overlord = 0b00011111
-_has_subtype = 0b01100000
-_has_overlord = 0b11100000
 _overlord_offset = 0x100
 
 
@@ -50,15 +46,18 @@ def _read_room_sprites(rom: LocalRom, base_address: int) -> List[DungeonSprite]:
             break
         if remaining_max_bytes < 1:
             raise "Maximum bytes exceeded. Aborting to prevent infinite loop"
-
+        # Read from byte 0 lssyyyyy
         byte0 = rom.read_address(sprite_address)
+        lower_layer = bool(byte0 & 0b1000_0000)
+        aux0 = (byte0 & 0b0110_0000) >> 5
+        y = byte0 & 0b0001_1111
+
         byte1 = rom.read_address(sprite_address + 1)
-        y = byte0 & _remove_subtype
-        x = byte1 & _remove_overlord
-        is_subtype = byte0 & _has_subtype == _has_subtype
-        is_overlord = byte1 & _has_overlord == _has_overlord
+        x = byte1 & 0b0001_1111
+        aux1 = (byte1 & 0b1110_0000) >> 5
+
         sprite_value = rom.read_address(sprite_address + 2)
-        type = SpriteId(sprite_value + (_overlord_offset if is_overlord else 0))
+        type = SpriteId(sprite_value + (_overlord_offset if aux1 == 0b111 else 0))
         item = _peek_item(rom, sprite_address)
 
         dungeon_room_sprites.append(
@@ -67,8 +66,9 @@ def _read_room_sprites(rom: LocalRom, base_address: int) -> List[DungeonSprite]:
                 sprite_id=type,
                 y=y,
                 x=x,
-                is_overlord=is_overlord,
-                is_subtype=is_subtype,
+                lower_layer=lower_layer,
+                aux0=aux0,
+                aux1=aux1,
                 item=item,
             )
         )
@@ -82,7 +82,9 @@ def _read_room(rom: LocalRom, id: DungeonRoomId) -> DungeonRoom:
     header_address = resolve_address(
         [
             rom.room_header_bank,
-            rom.read_snes_address(rom.dungeon_room_pointer_header_address + (id * 2) + 1),
+            rom.read_snes_address(
+                rom.dungeon_room_pointer_header_address + (id * 2) + 1
+            ),
             rom.read_snes_address(rom.dungeon_room_pointer_header_address + (id * 2)),
         ]
     )
@@ -145,6 +147,26 @@ def read_dungeon_rooms(rom: LocalRom) -> Dict[DungeonRoomId, DungeonRoom]:
     return {id: _read_room(rom, id) for id in list(DungeonRoomId)}
 
 
+def _write_dungeon_sprites(rom: LocalRom, room: DungeonRoom) -> None:
+    # Rewrite new Dungeon Sprites.
+    for dungeon_sprite in room.dungeon_sprites:
+        rom.write_address(
+            dungeon_sprite._address,
+            (0b1000_0000 if dungeon_sprite.lower_layer else 0)
+            | ((dungeon_sprite.aux0 & 0b11) << 5)
+            | dungeon_sprite.y,
+        )
+        rom.write_address(
+            dungeon_sprite._address + 1,
+            dungeon_sprite.x | ((dungeon_sprite.aux1 & 0b111) << 5)
+        )
+        rom.write_address(
+            dungeon_sprite._address + 2,
+            dungeon_sprite.sprite_id
+            - (_overlord_offset if dungeon_sprite.sprite_id >= _overlord_offset else 0),
+        )
+
+
 def write_dungeon_rooms(
     rom: LocalRom,
     dungeon_room_dict: Dict[DungeonRoomId, DungeonRoom],
@@ -172,26 +194,4 @@ def write_dungeon_rooms(
         rom.write_address(sprite_ptr_address, room.sprite_ptr[0]),
         rom.write_address(sprite_ptr_address + 1, room.sprite_ptr[1])
 
-        # Rewrite new Dungeon Sprites.
-        for dungeon_sprite in room.dungeon_sprites:
-            rom.write_address(
-                dungeon_sprite._address,
-                dungeon_sprite.y | _has_subtype
-                if dungeon_sprite.sprite_id == SpriteId.xE4_KEY
-                else dungeon_sprite.y,
-            )
-            rom.write_address(
-                dungeon_sprite._address + 1,
-                dungeon_sprite.x | _has_overlord
-                if dungeon_sprite.sprite_id >= _overlord_offset
-                else dungeon_sprite.x,
-            )
-            rom.write_address(
-                dungeon_sprite._address + 2,
-                dungeon_sprite.sprite_id
-                - (
-                    _overlord_offset
-                    if dungeon_sprite.sprite_id >= _overlord_offset
-                    else 0
-                ),
-            )
+        _write_dungeon_sprites(rom, room)

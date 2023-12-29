@@ -190,7 +190,11 @@ def reroll_dungeon_sprites(context: Context) -> None:
             )
 
             for dungeon_sprite in dungeon_sprites:
-                dungeon_sprite.sprite_id = distance_map[
+                next_sprite_id = distance_map[
                     dungeon_sprite.distance_from_midpoint
                 ]
-                dungeon_sprite.sprite_id = dungeon_sprite.sprite_id
+                if next_sprite_id != dungeon_sprite.sprite_id:
+                    # Clear aux data because it may be unpredictable.
+                    dungeon_sprite.aux0 = 0
+                    dungeon_sprite.aux1 = 0
+                dungeon_sprite.sprite_id = next_sprite_id

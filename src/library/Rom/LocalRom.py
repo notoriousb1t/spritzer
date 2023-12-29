@@ -1,3 +1,4 @@
+from attr import dataclass
 from enum import IntEnum, auto
 from typing import List
 from math import floor
@@ -38,6 +39,17 @@ def resolve_snes_pointer(pc_address: int) -> List[int]:
     return snes_address_to_bytes(snes_address)
 
 
+@dataclass
+class RomDelta:
+    pc_address: int
+    snes_address: int
+    original_value: int
+    current_value: int
+
+    def __str__(self) -> str:
+        return f"Modified {hex(self.snes_address)} ({self.pc_address}): {hex(self.original_value)} -> {hex(self.current_value)}"
+
+
 class RomMode(IntEnum):
     """This enforces architecture: read -> transform -> write"""
 
@@ -53,6 +65,8 @@ class RomMode(IntEnum):
 
 
 class LocalRom:
+    _original_buffer: bytearray
+    _buffer: bytearray
     _buffer: bytearray
     _mode = RomMode.READ
 
@@ -70,33 +84,34 @@ class LocalRom:
 
     @property
     def sprite_setting_1_address(self) -> int:
-        return self.sprite_setting_0_address + 0xF3 # 0xD_B173
+        return self.sprite_setting_0_address + 0xF3  # 0xD_B173
 
     @property
     def sprite_setting_2_address(self) -> int:
-        return self.sprite_setting_0_address + (0xF3 * 2) # 0xD_B266
+        return self.sprite_setting_0_address + (0xF3 * 2)  # 0xD_B266
 
     @property
     def sprite_setting_3_address(self) -> int:
-        return self.sprite_setting_0_address + (0xF3 * 3) # 0xD_B359
+        return self.sprite_setting_0_address + (0xF3 * 3)  # 0xD_B359
 
     @property
     def sprite_setting_4_address(self) -> int:
-        return self.sprite_setting_0_address + (0xF3 * 4) # 0xD_B44C
+        return self.sprite_setting_0_address + (0xF3 * 4)  # 0xD_B44C
 
     @property
     def sprite_setting_5_address(self) -> int:
-        return self.sprite_setting_0_address + (0xF3 * 5) # 0xD_B53F
-    
+        return self.sprite_setting_0_address + (0xF3 * 5)  # 0xD_B53F
+
     @property
     def sprite_setting_6_address(self) -> int:
-        return self.sprite_setting_0_address + (0xF3 * 6) # 0xD_B632
-    
+        return self.sprite_setting_0_address + (0xF3 * 6)  # 0xD_B632
+
     @property
     def sprite_setting_7_address(self) -> int:
-        return self.sprite_setting_0_address + (0xF3 * 7) # 0xD_B725
+        return self.sprite_setting_0_address + (0xF3 * 7)  # 0xD_B725
 
     def __init__(self, buffer: bytearray) -> None:
+        self._original_buffer = buffer.copy()
         self._buffer = buffer
 
     def set_mode(self, mode: RomMode) -> None:
@@ -127,6 +142,22 @@ class LocalRom:
         crc_bytes = [inv & 0xFF, (inv >> 8) & 0xFF, crc & 0xFF, (crc >> 8) & 0xFF]
         for i, value in enumerate(crc_bytes):
             self._buffer[0x7FDC + i] = value
+
+    def get_deltas(self) -> List[RomDelta]:
+        deltas: List[RomDelta] = []
+        for i, _ in enumerate(self._original_buffer):
+            original_value = self._original_buffer[i]
+            current_value = self._buffer[i]
+            if current_value != original_value:
+                deltas.append(
+                    RomDelta(
+                        pc_address=i,
+                        snes_address=pc_address_to_snes_address(i),
+                        original_value=original_value,
+                        current_value=current_value,
+                    )
+                )
+        return deltas
 
 
 def get_local_rom(buffer: bytearray) -> LocalRom:

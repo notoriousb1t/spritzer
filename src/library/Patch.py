@@ -2,8 +2,6 @@ from attr import dataclass
 from random import Random
 from typing import Callable, List
 
-from library.Model import SpriteId
-
 from library.Rom import (
     get_local_rom,
     read_damage_table,
@@ -100,6 +98,9 @@ def patch_buffer(buffer: bytearray, options: Options, random=Random()) -> None:
     rom.set_mode(RomMode.CRC)
     rom.write_crc()
 
+    # NOTE: uncomment to see all deltas
+    # for delta in rom.get_deltas():
+    #     print(delta)
 
 def patch_file(options: Options, input_path: str, output_path: str) -> None:
     """Patch a file. This is intended for the included GUI's use"""
