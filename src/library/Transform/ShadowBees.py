@@ -4,10 +4,9 @@ from ..Model import SpriteId, SpriteType
 
 def patch_shadow_bees(context: Context) -> None:
     bees = context.sprites[SpriteId.x79_BEE]
-    bees.preserved_offscreen = True
-    bees.impervious = True
+    bees.display_allocation = 0
+    bees.draw_shadow = True
+    bees.statis = True
+    bees.boss_damage_sfx = True
+    bees.hp = 0x20
 
-    for sprites in [it.overworld_sprites for it in context.overworld_areas.values()]:
-        for sprite in sprites:
-            if sprite.id.meta().role == SpriteType.CONSUMABLE:
-                sprite.id = SpriteId.x79_BEE

@@ -1,4 +1,5 @@
 from attr import dataclass
+from enum import StrEnum
 from random import Random
 from typing import Callable, List
 
@@ -32,17 +33,22 @@ from library.Transform import (
 )
 
 
+class SpriteShuffle(StrEnum):
+    VANILLA = "vanilla"
+    SIMPLE = "simple"
+    DUNGEONSSIMPLE = "dungeonssimple"
+
+
 @dataclass
 class Options:
     seed: str = None
     boss_shuffle = False
     dungeon_palette_shuffle = False
-    dungeon_sprite_shuffle = False
     dungeon_tileset_shuffle = False
     killable_thieves = False
     mushroom_shuffle = False
-    overworld_sprite_shuffle = False
     shadow_bees = False
+    sprite_shuffle: SpriteShuffle = SpriteShuffle.VANILLA
 
 
 def patch_buffer(buffer: bytearray, options: Options, random=Random()) -> None:
@@ -62,10 +68,12 @@ def patch_buffer(buffer: bytearray, options: Options, random=Random()) -> None:
         transform_list.append(reroll_dungeon_palette)
     if options.boss_shuffle:
         transform_list.append(reroll_dungeon_bosses)
-    if options.dungeon_sprite_shuffle:
-        transform_list.append(reroll_dungeon_sprites)
-    if options.overworld_sprite_shuffle:
-        transform_list.append(reroll_overworld)
+    if options.sprite_shuffle != None:
+        if options.sprite_shuffle == SpriteShuffle.SIMPLE:
+            transform_list.append(reroll_dungeon_sprites)
+            transform_list.append(reroll_overworld)
+        elif options.sprite_shuffle == SpriteShuffle.DUNGEONSSIMPLE:
+            transform_list.append(reroll_dungeon_sprites)
 
     # Read the rom and load all models.
     rom = get_local_rom(buffer)
@@ -101,6 +109,7 @@ def patch_buffer(buffer: bytearray, options: Options, random=Random()) -> None:
     # NOTE: uncomment to see all deltas
     # for delta in rom.get_deltas():
     #     print(delta)
+
 
 def patch_file(options: Options, input_path: str, output_path: str) -> None:
     """Patch a file. This is intended for the included GUI's use"""
