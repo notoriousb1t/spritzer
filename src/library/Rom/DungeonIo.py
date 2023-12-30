@@ -82,10 +82,8 @@ def _read_room(rom: LocalRom, id: DungeonRoomId) -> DungeonRoom:
     header_address = resolve_address(
         [
             rom.room_header_bank,
-            rom.read_snes_address(
-                rom.dungeon_room_pointer_header_address + (id * 2) + 1
-            ),
-            rom.read_snes_address(rom.dungeon_room_pointer_header_address + (id * 2)),
+            rom.read_snes_address(rom.room_header_pointers_snes + (id * 2) + 1),
+            rom.read_snes_address(rom.room_header_pointers_snes + (id * 2)),
         ]
     )
     # Read in the graphics block which controls the spritesheets
@@ -105,11 +103,9 @@ def _read_room(rom: LocalRom, id: DungeonRoomId) -> DungeonRoom:
     stairs2 = DungeonRoomId(rom.read_address(header_address + 12))
     stairs3 = DungeonRoomId(rom.read_address(header_address + 13))
 
-    dungeon_sprite_pointer_address = rom.dungeon_sprite_ptr_table_address + (id * 2)
-
     sprite_ptr = (
-        rom.read_address(dungeon_sprite_pointer_address),
-        rom.read_address(dungeon_sprite_pointer_address + 1),
+        rom.read_snes_address(rom.room_sprite_pointers_snes + (id * 2)),
+        rom.read_snes_address(rom.room_sprite_pointers_snes + (id * 2) + 1),
     )
     sprite_table_base_snes_address = resolve_address(
         [
@@ -158,7 +154,7 @@ def _write_dungeon_sprites(rom: LocalRom, room: DungeonRoom) -> None:
         )
         rom.write_address(
             dungeon_sprite._address + 1,
-            dungeon_sprite.x | ((dungeon_sprite.aux1 & 0b111) << 5)
+            dungeon_sprite.x | ((dungeon_sprite.aux1 & 0b111) << 5),
         )
         rom.write_address(
             dungeon_sprite._address + 2,
@@ -190,8 +186,13 @@ def write_dungeon_rooms(
         rom.write_address(room.header_address + 12, room.stairs2)
         rom.write_address(room.header_address + 13, room.stairs3)
 
-        sprite_ptr_address = rom.dungeon_sprite_ptr_table_address + (room.id * 2)
-        rom.write_address(sprite_ptr_address, room.sprite_ptr[0]),
-        rom.write_address(sprite_ptr_address + 1, room.sprite_ptr[1])
+        rom.write_snes_address(
+            rom.room_sprite_pointers_snes + (room.id * 2),
+            room.sprite_ptr[0],
+        )
+        rom.write_snes_address(
+            rom.room_sprite_pointers_snes + (room.id * 2) + 1,
+            room.sprite_ptr[1],
+        )
 
         _write_dungeon_sprites(rom, room)

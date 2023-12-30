@@ -9,17 +9,17 @@ def _read_sprite(rom: LocalRom, id: SpriteId) -> Sprite:
         # Addresses above this value are overlords, this is not applicable.
         return Sprite(id=id)
 
-    settings_0_byte = rom.read_snes_address(rom.sprite_setting_0_address + id)
+    settings_0_byte = rom.read_snes_address(rom.sprite_settings0_snes + id)
     display_allocation = settings_0_byte & 0b1_1111
     collisions_alt = bool(settings_0_byte & 0b10_0000)
     master_sword_only = bool(settings_0_byte & 0b100_0000)
     harmless = bool(settings_0_byte & 0b1000_0000)
 
     # Read from health points table. 0xFF is interpreted as None.
-    hp = rom.read_snes_address(rom.sprite_setting_1_address + id)
+    hp = rom.read_snes_address(rom.sprite_settings1_snes + id)
 
     # The damage settings of a sprite
-    settings_2_byte = rom.read_snes_address(rom.sprite_setting_2_address + id)
+    settings_2_byte = rom.read_snes_address(rom.sprite_settings2_snes + id)
     subclass = SpriteSubclassId(settings_2_byte & 0b1111)
     boss_prep_preserved = bool(settings_2_byte & 0b1_0000)
     immune_to_powder = bool(settings_2_byte & 0b10_0000)
@@ -27,7 +27,7 @@ def _read_sprite(rom: LocalRom, id: SpriteId) -> Sprite:
     ignore_recoil_collision = bool(settings_2_byte & 0b1000_0000)
 
     # Draw flags and imperviousness
-    settings_3_byte = rom.read_snes_address(rom.sprite_setting_3_address + id)
+    settings_3_byte = rom.read_snes_address(rom.sprite_settings3_snes + id)
     name_table = bool(settings_3_byte & 0b1)
     palette = (settings_3_byte & 0b1110) >> 1
     draw_shadow = settings_3_byte & 0b1_0000
@@ -36,14 +36,14 @@ def _read_sprite(rom: LocalRom, id: SpriteId) -> Sprite:
     custom_death_animation = settings_3_byte & 0b1000_0000
 
     # Collision, kill room, killed off screen, hitbox
-    settings_4_byte = rom.read_snes_address(rom.sprite_setting_4_address + id)
+    settings_4_byte = rom.read_snes_address(rom.sprite_settings4_snes + id)
     hitbox = settings_4_byte & 0b1_1111
     preserved_offscreen = bool(settings_4_byte & 0b10_0000)
     stasis = bool(settings_4_byte & 0b100_0000)
     collision_on_single_layer = bool(settings_4_byte & 0b1000_0000)
 
     # Settings group 5
-    settings_5_byte = rom.read_snes_address(rom.sprite_setting_5_address + id)
+    settings_5_byte = rom.read_snes_address(rom.sprite_settings5_snes + id)
     allow_pits = bool(settings_5_byte & 0b1)
     boss_death_animation = bool(settings_5_byte & 0b10)
     slashable = bool(settings_5_byte & 0b0100)
@@ -51,7 +51,7 @@ def _read_sprite(rom: LocalRom, id: SpriteId) -> Sprite:
     tile_hitbox = (settings_5_byte & 0b1111_0000) >> 4
 
     # Settings group 6
-    settings_6_byte = rom.read_snes_address(rom.sprite_setting_6_address + id)
+    settings_6_byte = rom.read_snes_address(rom.sprite_settings6_snes + id)
     prize_pack = settings_6_byte & 0b1111
     boss_damage_sfx = bool(settings_6_byte & 0b1_0000)
     blockable = bool(settings_6_byte & 0b10_0000)
@@ -59,7 +59,7 @@ def _read_sprite(rom: LocalRom, id: SpriteId) -> Sprite:
     ignore_floor = bool(settings_6_byte & 0b1000_0000)
 
     # Settings group 7
-    settings_7_byte = rom.read_snes_address(rom.sprite_setting_7_address + id)
+    settings_7_byte = rom.read_snes_address(rom.sprite_settings7_snes + id)
     stay_active_offscreen = bool(settings_7_byte & 0b1)
     die_off_screen = bool(settings_7_byte & 0b10)
     moveable_unused = bool(settings_7_byte & 0b100)
@@ -123,15 +123,15 @@ def write_sprite_settings(rom: LocalRom, sprite_dict: Dict[SpriteId, Sprite]) ->
             continue
 
         rom.write_snes_address(
-            rom.sprite_setting_0_address + id,
+            rom.sprite_settings0_snes + id,
             (sprite.display_allocation)
             | (0b10_0000 if sprite.collisions_alt else 0)
             | (0b100_0000 if sprite.master_sword_only else 0)
             | (0b1000_0000 if sprite.harmless else 0),
         )
-        rom.write_snes_address(rom.sprite_setting_1_address + id, sprite.hp)
+        rom.write_snes_address(rom.sprite_settings1_snes + id, sprite.hp)
         rom.write_snes_address(
-            rom.sprite_setting_2_address + id,
+            rom.sprite_settings2_snes + id,
             (sprite.subclass)
             | (0b1_0000 if sprite.boss_prep_preserved else 0)
             | (0b10_0000 if sprite.immune_to_powder else 0)
@@ -139,7 +139,7 @@ def write_sprite_settings(rom: LocalRom, sprite_dict: Dict[SpriteId, Sprite]) ->
             | (0b1000_0000 if sprite.ignore_recoil_collision else 0),
         )
         rom.write_snes_address(
-            rom.sprite_setting_3_address + id,
+            rom.sprite_settings3_snes + id,
             (sprite.name_table)
             | (sprite.palette << 1)
             | (0b1_0000 if sprite.draw_shadow else 0)
@@ -148,14 +148,14 @@ def write_sprite_settings(rom: LocalRom, sprite_dict: Dict[SpriteId, Sprite]) ->
             | (0b1000_0000 if sprite.custom_death_animation else 0),
         )
         rom.write_snes_address(
-            rom.sprite_setting_4_address + id,
+            rom.sprite_settings4_snes + id,
             (sprite.hitbox & 0b11111)
             | (0b10_0000 if sprite.preserved_offscreen else 0)
             | (0b100_0000 if sprite.statis else 0)
             | (0b1000_0000 if sprite.collision_on_single_layer else 0),
         )
         rom.write_snes_address(
-            rom.sprite_setting_5_address + id,
+            rom.sprite_settings5_snes + id,
             (0b1 if sprite.allow_pits else 0)
             | (0b10 if sprite.boss_death_animation else 0)
             | (0b100 if sprite.slashable else 0)
@@ -163,7 +163,7 @@ def write_sprite_settings(rom: LocalRom, sprite_dict: Dict[SpriteId, Sprite]) ->
             | ((sprite.tile_hitbox & 0b1111) << 4),
         )
         rom.write_snes_address(
-            rom.sprite_setting_6_address + id,
+            rom.sprite_settings6_snes + id,
             (sprite.prize_pack & 0b1111)
             | (0b1_0000 if sprite.boss_damage_sfx else 0)
             | (0b10_0000 if sprite.blockable else 0)
@@ -171,7 +171,7 @@ def write_sprite_settings(rom: LocalRom, sprite_dict: Dict[SpriteId, Sprite]) ->
             | (0b1000_0000 if sprite.ignore_floor else 0),
         )
         rom.write_snes_address(
-            rom.sprite_setting_7_address + id,
+            rom.sprite_settings7_snes + id,
             (0b1 if sprite.stay_active_offscreen else 0)
             | (0b10 if sprite.die_off_screen else 0)
             | (0b100 if sprite.moveable_unused else 0)

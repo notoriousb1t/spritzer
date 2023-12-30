@@ -65,54 +65,63 @@ class RomMode(IntEnum):
 
 
 class LocalRom:
+    """Manages reading and writing to the Rom data.
+    
+          NOTE: The following conventions are used for pointers/byte address:
+                suffix of snes (preferred) indicates an SNES address
+                suffix of pc indicates a PC address
+                suffix of bank indicates an SNES bank
+    """
     _original_buffer: bytearray
-    _buffer: bytearray
-    _buffer: bytearray
+    _current_buffer: bytearray
     _mode = RomMode.READ
 
     room_header_bank = 0x04
     dungeon_sprite_bank = 0x09
     overworld_sprite_bank = 0x09
 
-    dungeon_room_pointer_header_address = 0x4F1E2
-    sprite_blockset_address = 0x5B97
-    damage_table_snes_address = 0x06F42D
-    overworld_sprite_ptr_table_address = 0x4C901
-    dungeon_sprite_ptr_table_address = 0x4D62E
-    sprite_setting_0_address = 0xDB080
-    weapon_damage_snes_address = 0xDB8F1
+    sprite_blockset_snes = 0x00DB97
+    room_header_pointers_snes = 0x4F1E2
+    area_sprite_pointers_snes = 0x9C901
+    room_sprite_pointers_snes = 0x9D62E
+    damage_table_snes = 0x06F42D
+    weapon_damage_snes = 0xDB8F1
+    
+    @property
+    def sprite_settings0_snes(self) -> int:
+        return 0xDB080
 
     @property
-    def sprite_setting_1_address(self) -> int:
-        return self.sprite_setting_0_address + 0xF3  # 0xD_B173
+    def sprite_settings1_snes(self) -> int:
+        return self.sprite_settings0_snes + 0xF3  # 0xD_B173
 
     @property
-    def sprite_setting_2_address(self) -> int:
-        return self.sprite_setting_0_address + (0xF3 * 2)  # 0xD_B266
+    def sprite_settings2_snes(self) -> int:
+        return self.sprite_settings0_snes + (0xF3 * 2)  # 0xD_B266
 
     @property
-    def sprite_setting_3_address(self) -> int:
-        return self.sprite_setting_0_address + (0xF3 * 3)  # 0xD_B359
+    def sprite_settings3_snes(self) -> int:
+        return self.sprite_settings0_snes + (0xF3 * 3)  # 0xD_B359
 
     @property
-    def sprite_setting_4_address(self) -> int:
-        return self.sprite_setting_0_address + (0xF3 * 4)  # 0xD_B44C
+    def sprite_settings4_snes(self) -> int:
+        return self.sprite_settings0_snes + (0xF3 * 4)  # 0xD_B44C
 
     @property
-    def sprite_setting_5_address(self) -> int:
-        return self.sprite_setting_0_address + (0xF3 * 5)  # 0xD_B53F
+    def sprite_settings5_snes(self) -> int:
+        return self.sprite_settings0_snes + (0xF3 * 5)  # 0xD_B53F
 
     @property
-    def sprite_setting_6_address(self) -> int:
-        return self.sprite_setting_0_address + (0xF3 * 6)  # 0xD_B632
+    def sprite_settings6_snes(self) -> int:
+        return self.sprite_settings0_snes + (0xF3 * 6)  # 0xD_B632
 
     @property
-    def sprite_setting_7_address(self) -> int:
-        return self.sprite_setting_0_address + (0xF3 * 7)  # 0xD_B725
+    def sprite_settings7_snes(self) -> int:
+        return self.sprite_settings0_snes + (0xF3 * 7)  # 0xD_B725
 
     def __init__(self, buffer: bytearray) -> None:
         self._original_buffer = buffer.copy()
-        self._buffer = buffer
+        self._current_buffer = buffer
 
     def set_mode(self, mode: RomMode) -> None:
         self._mode = self._mode.next(mode)
@@ -120,7 +129,7 @@ class LocalRom:
     def read_address(self, address: int) -> int:
         if self._mode != RomMode.READ:
             raise "Wrong phase, cannot read"
-        return self._buffer[address]
+        return self._current_buffer[address]
 
     def read_snes_address(self, snes_address: int) -> int:
         return self.read_address(compute_pc_address(snes_address))
@@ -128,7 +137,7 @@ class LocalRom:
     def write_address(self, address: int, value: int) -> None:
         if self._mode != RomMode.WRITE:
             raise "Wrong phase, cannot write"
-        self._buffer[address] = value
+        self._current_buffer[address] = value
 
     def write_snes_address(self, snes_address: int, value: int) -> None:
         return self.write_address(compute_pc_address(snes_address), value)
@@ -136,18 +145,18 @@ class LocalRom:
     def write_crc(self):
         if self._mode != RomMode.CRC:
             raise "Wrong phase, cannot add CRC"
-        crc = (sum(self._buffer[:0x7FDC] + self._buffer[0x7FE0:]) + 0x01FE) & 0xFFFF
+        crc = (sum(self._current_buffer[:0x7FDC] + self._current_buffer[0x7FE0:]) + 0x01FE) & 0xFFFF
 
         inv = crc ^ 0xFFFF
         crc_bytes = [inv & 0xFF, (inv >> 8) & 0xFF, crc & 0xFF, (crc >> 8) & 0xFF]
         for i, value in enumerate(crc_bytes):
-            self._buffer[0x7FDC + i] = value
+            self._current_buffer[0x7FDC + i] = value
 
     def get_deltas(self) -> List[RomDelta]:
         deltas: List[RomDelta] = []
         for i, _ in enumerate(self._original_buffer):
             original_value = self._original_buffer[i]
-            current_value = self._buffer[i]
+            current_value = self._current_buffer[i]
             if current_value != original_value:
                 deltas.append(
                     RomDelta(

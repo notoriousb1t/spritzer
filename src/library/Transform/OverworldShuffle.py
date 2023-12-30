@@ -47,7 +47,7 @@ def reroll_overworld(context: Context) -> None:
         it: list() for it in list(SpritesetId)
     }
     for overworld_area in overworld_area_dict.values():
-        gfx_groups[overworld_area.blockset_id].append(overworld_area)
+        gfx_groups[overworld_area.spriteset_id].append(overworld_area)
 
     # Create a dictionary of Entities which occur in that graphics blocks in these Overworld Areas.
     gfx_choices: Dict[SpritesetId, List[SpriteId]] = {
@@ -66,5 +66,5 @@ def reroll_overworld(context: Context) -> None:
         # Reroll all Overworld Areas using the choices collected from related Overworld Areas.
         for overworld_area in overworld_area_dict:
             # Get the possibly Overworld Sprites from the current graphics block
-            choices = gfx_choices[overworld_area.blockset_id]
+            choices = gfx_choices[overworld_area.spriteset_id]
             _reroll_overworld_sprites(random, overworld_area.overworld_sprites, choices)
