@@ -26,7 +26,7 @@ from library.Transform import (
     reroll_dungeon_bosses,
     reroll_dungeon_palette,
     reroll_dungeon_sprites,
-    reroll_dungeon_tilesets,
+    reroll_dungeon_blocksets,
     reroll_lost_woods_mushroom,
     reroll_overworld,
     patch_invulnerable_sprites,
@@ -101,7 +101,7 @@ def patch_buffer(
     if options.mushroom_shuffle:
         transform_list.append(reroll_lost_woods_mushroom)
     if options.dungeon_tileset_shuffle:
-        transform_list.append(reroll_dungeon_tilesets)
+        transform_list.append(reroll_dungeon_blocksets)
     if options.dungeon_palette_shuffle:
         transform_list.append(reroll_dungeon_palette)
     if options.boss_shuffle:

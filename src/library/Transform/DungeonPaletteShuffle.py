@@ -22,11 +22,8 @@ _dungeon_palettes = [
     PaletteId.x0F_PALACE_OF_DARKNESS,
     PaletteId.x0F_PALACE_OF_DARKNESS, # Weight POD higher.
     PaletteId.x11_MISERY_MIRE,
-    PaletteId.x12_MISERY_MIRE_VITREUS,
     PaletteId.x13_ICE_PALACE,
-    PaletteId.x14_ICE_PALACE_KHOLDSTARE,
     PaletteId.x18_TURTLE_ROCK,
-    PaletteId.x19_TURTLE_ROCK_TRINEXX,
     PaletteId.x1A_GANONS_TOWER,
     PaletteId.x1B_GANONS_TOWER,
     PaletteId.x21_GANON,

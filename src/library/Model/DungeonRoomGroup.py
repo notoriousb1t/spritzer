@@ -40,7 +40,7 @@ class DungeonRoomGroup:
     """A group of Dungeon Rooms. This may be related rooms or an entire dungeon."""
 
     rooms: List[DungeonRoomId] = []
-    tilesets: List[BlocksetId] = []
+    blocksets: List[BlocksetId] = []
     palettes: List[PaletteId] = []
 
 
@@ -56,7 +56,7 @@ def get_dungeon_room_groups() -> Dict[DungeonRoomGroupId, DungeonRoomGroup]:
                 DungeonRoomId.x61_HYRULE_CASTLE_MAIN_ENTRANCE_ROOM,
                 DungeonRoomId.x62_HYRULE_CASTLE_EAST_ENTRANCE_ROOM,
             ],
-            tilesets=[
+            blocksets=[
                 BlocksetId.x0_CASTLE,
                 BlocksetId.x1_DUNGEON,
                 BlocksetId.x2_AGAHNIM,
@@ -84,7 +84,7 @@ def get_dungeon_room_groups() -> Dict[DungeonRoomGroupId, DungeonRoomGroup]:
                 DungeonRoomId.x81_HYRULE_CASTLE_NEXT_TO_CHASM_ROOM,
                 DungeonRoomId.x82_HYRULE_CASTLE_BASEMENT_CHASM_ROOM,
             ],
-            tilesets=[
+            blocksets=[
                 BlocksetId.x0_CASTLE,
                 BlocksetId.x1_DUNGEON,
                 BlocksetId.x2_AGAHNIM,
@@ -111,7 +111,7 @@ def get_dungeon_room_groups() -> Dict[DungeonRoomGroupId, DungeonRoomGroup]:
                 DungeonRoomId.x32_HYRULE_CASTLE_SEWER_KEY_CHEST_ROOM,
                 DungeonRoomId.x42_HYRULE_CASTLE_6_ROPES_ROOM,
             ],
-            tilesets=[
+            blocksets=[
                 BlocksetId.x0_CASTLE,
                 BlocksetId.x1_DUNGEON,
                 BlocksetId.x2_AGAHNIM,
@@ -135,7 +135,7 @@ def get_dungeon_room_groups() -> Dict[DungeonRoomGroupId, DungeonRoomGroup]:
                 DungeonRoomId.x02_HYRULE_CASTLE_SWITCH_ROOM,
                 DungeonRoomId.x12_SANCTUARY,
             ],
-            tilesets=[
+            blocksets=[
                 BlocksetId.x4_SANTUARY,
             ],
         ),
@@ -148,7 +148,7 @@ def get_dungeon_room_groups() -> Dict[DungeonRoomGroupId, DungeonRoomGroup]:
                 DungeonRoomId.x84_DESERT_PALACE_MAIN_ENTRANCE_ROOM,
                 DungeonRoomId.x85_DESERT_PALACE_EAST_ENTRANCE_ROOM,
             ],
-            tilesets=[
+            blocksets=[
                 BlocksetId.x5_EASTERN_PALACE,
                 BlocksetId.x7_TOWER_HERA,
                 BlocksetId.xA_THIEVES_TOWN,
@@ -163,7 +163,7 @@ def get_dungeon_room_groups() -> Dict[DungeonRoomGroupId, DungeonRoomGroup]:
                 DungeonRoomId.x53_DESERT_PALACE_POPOS_2_BEAMOS_HELLWAY_ROOM,
                 DungeonRoomId.x63_DESERT_PALACE_FINAL_SECTION_ENTRANCE_ROOM,
             ],
-            tilesets=[
+            blocksets=[
                 BlocksetId.x1_DUNGEON,
                 BlocksetId.x5_EASTERN_PALACE,
                 BlocksetId.x6_TOWER1,
@@ -193,7 +193,7 @@ def get_dungeon_room_groups() -> Dict[DungeonRoomGroupId, DungeonRoomGroup]:
                 DungeonRoomId.xD9_EASTERN_PALACE_CANONBALL_ROOM,
                 DungeonRoomId.xDA_EASTERN_PALACE_2_BUBBLE_WITH_SWITCH_UNDER_POT,
             ],
-            tilesets=[
+            blocksets=[
                 BlocksetId.x0_CASTLE,
                 BlocksetId.x1_DUNGEON,
                 BlocksetId.x2_AGAHNIM,
@@ -222,7 +222,7 @@ def get_dungeon_room_groups() -> Dict[DungeonRoomGroupId, DungeonRoomGroup]:
                 DungeonRoomId.x87_TOWER_OF_HERA_TILE_ROOM,
                 DungeonRoomId.xA7_TOWER_OF_HERA_FAIRY_ROOM,
             ],
-            tilesets=[
+            blocksets=[
                 BlocksetId.x0_CASTLE,
                 BlocksetId.x1_DUNGEON,
                 BlocksetId.x2_AGAHNIM,
@@ -249,7 +249,7 @@ def get_dungeon_room_groups() -> Dict[DungeonRoomGroupId, DungeonRoomGroup]:
                 DungeonRoomId.xD0_AGAHNIM_S_TOWER_DARK_MAZE,
                 DungeonRoomId.xE0_AGAHNIM_S_TOWER_ENTRANCE_ROOM,
             ],
-            tilesets=[
+            blocksets=[
                 BlocksetId.x2_AGAHNIM,
                 BlocksetId.x9_SKULL_WOODS,
             ],
@@ -272,7 +272,7 @@ def get_dungeon_room_groups() -> Dict[DungeonRoomGroupId, DungeonRoomGroup]:
                 DungeonRoomId.x5A_PALACE_OF_DARKNESS_HELMASAUR_KING_BOSS,
                 DungeonRoomId.x6A_PALACE_OF_DARKNESS_RUPEE_ROOM,
             ],
-            tilesets=[
+            blocksets=[
                 BlocksetId.x5_EASTERN_PALACE,
                 BlocksetId.x7_TOWER_HERA,
                 BlocksetId.xB_ICE_PALACE,
@@ -296,7 +296,7 @@ def get_dungeon_room_groups() -> Dict[DungeonRoomGroupId, DungeonRoomGroup]:
                 DungeonRoomId.x66_SWAMP_PALACE_HIDDEN_CHEST_HIDDEN_DOOR_ROOM,
                 DungeonRoomId.x76_SWAMP_PALACE_WATER_DRAIN_ROOM,
             ],
-            tilesets=[
+            blocksets=[
                 # Nothing else works for this without removing decorative vents.
                 BlocksetId.x8_SWAMP_PALACE
             ],
@@ -313,7 +313,7 @@ def get_dungeon_room_groups() -> Dict[DungeonRoomGroupId, DungeonRoomGroup]:
                 DungeonRoomId.x67_SKULL_WOODS_COMPASS_CHEST_ROOM,
                 DungeonRoomId.x68_SKULL_WOODS_KEY_CHEST_TRAP_ROOM,
             ],
-            tilesets=[
+            blocksets=[
                 BlocksetId.x0_CASTLE,
                 BlocksetId.x2_AGAHNIM,
                 BlocksetId.x9_SKULL_WOODS,
@@ -344,7 +344,7 @@ def get_dungeon_room_groups() -> Dict[DungeonRoomGroupId, DungeonRoomGroup]:
                 DungeonRoomId.xCE_ICE_PALACE_HOLE_TO_KHOLDSTARE_ROOM,
                 DungeonRoomId.xDE_ICE_PALACE_KHOLDSTARE_BOSS,
             ],
-            tilesets=[
+            blocksets=[
                 # Freezors restrict this to only this tileset unless we patch tiles.
                 BlocksetId.xB_ICE_PALACE
             ],
@@ -370,7 +370,7 @@ def get_dungeon_room_groups() -> Dict[DungeonRoomGroupId, DungeonRoomGroup]:
                 DungeonRoomId.xD1_MISERY_MIRE_CONVEYOR_SLUG_BIG_KEY_ROOM,
                 DungeonRoomId.xD2_MISERY_MIRE_MIRE02_WIZZROBES_ROOM,
             ],
-            tilesets=[
+            blocksets=[
                 BlocksetId.x5_EASTERN_PALACE,
                 BlocksetId.x7_TOWER_HERA,
                 BlocksetId.xB_ICE_PALACE,
@@ -390,7 +390,7 @@ def get_dungeon_room_groups() -> Dict[DungeonRoomGroupId, DungeonRoomGroup]:
                 DungeonRoomId.xBC_THIEVES_TOWN_CONVEYOR_TOILET,
                 DungeonRoomId.xAB_THIEVES_TOWN_MOVING_SPIKES_KEY_POT_ROOM,
             ],
-            tilesets=[
+            blocksets=[
                 BlocksetId.x7_TOWER_HERA,
                 BlocksetId.x9_SKULL_WOODS,
                 BlocksetId.xA_THIEVES_TOWN,
@@ -404,7 +404,7 @@ def get_dungeon_room_groups() -> Dict[DungeonRoomGroupId, DungeonRoomGroup]:
                 DungeonRoomId.x64_THIEVES_TOWN_WEST_ATTIC_ROOM,
                 DungeonRoomId.x65_THIEVES_TOWN_EAST_ATTIC_ROOM,
             ],
-            tilesets=[
+            blocksets=[
                 # Shafts of light make a switch not possible
                 BlocksetId.xA_THIEVES_TOWN,
             ],
@@ -414,7 +414,7 @@ def get_dungeon_room_groups() -> Dict[DungeonRoomGroupId, DungeonRoomGroup]:
                 DungeonRoomId.x44_THIEVES_TOWN_BIG_CHEST_ROOM,
                 DungeonRoomId.x45_THIEVES_TOWN_JAIL_CELLS_ROOM,
             ],
-            tilesets=[
+            blocksets=[
                 BlocksetId.x7_TOWER_HERA,
                 BlocksetId.x9_SKULL_WOODS,
                 BlocksetId.xA_THIEVES_TOWN,
@@ -443,7 +443,7 @@ def get_dungeon_room_groups() -> Dict[DungeonRoomGroupId, DungeonRoomGroup]:
                 DungeonRoomId.xD5_TURTLE_ROCK_LASER_KEY_ROOM,
                 DungeonRoomId.xD6_TURTLE_ROCK_ENTRANCE_ROOM,
             ],
-            tilesets=[],
+            blocksets=[],
         ),
         DungeonRoomGroupId.GANONS_TOWER: DungeonRoomGroup(
             rooms=[
@@ -474,6 +474,6 @@ def get_dungeon_room_groups() -> Dict[DungeonRoomGroupId, DungeonRoomGroup]:
                 DungeonRoomId.xA5_GANON_S_TOWER_WIZZROBES_ROOMS,
                 DungeonRoomId.xA6_GANON_S_TOWER_MOLDORM_FALL_ROOM,
             ],
-            tilesets=[],
+            blocksets=[],
         ),
     }
