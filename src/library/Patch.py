@@ -51,7 +51,45 @@ class Options:
     sprite_shuffle: SpriteShuffle = SpriteShuffle.VANILLA
 
 
-def patch_buffer(buffer: bytearray, options: Options, random=Random()) -> None:
+def patch(
+    buffer: bytearray,
+    random: Random,
+    transform_list: List[Callable[[Context], None]],
+) -> None:
+    rom = get_local_rom(buffer)
+    context = Context(random=random)
+    # Read the rom and load all models.
+    context.damage_table = read_damage_table(rom)
+    context.sprite_subclasses = read_sprite_subclasses(rom)
+    context.spritesets = read_spritesets(rom)
+    context.sprites = read_sprites(rom)
+    context.overworld_areas = read_overworld_areas(rom)
+    context.dungeon_rooms = read_dungeon_rooms(rom)
+    # Remove reading to enforce this is transactional.
+    rom.set_mode(RomMode.LOCKED)
+    for transform in transform_list:
+        transform(context)
+    # Write the data back to the ROM.
+    rom.set_mode(RomMode.WRITE)
+    write_sprite_subclasses(rom, context.sprite_subclasses)
+    write_damage_table(rom, context.damage_table)
+    write_sprite_settings(rom, context.sprites)
+    write_sprite_blocksets(rom, context.spritesets)
+    write_overworld_areas(rom, context.overworld_areas)
+    write_dungeon_rooms(rom, context.dungeon_rooms)
+    # Write CRC to the ROM.
+    rom.set_mode(RomMode.CRC)
+    rom.write_crc()
+    # NOTE: uncomment to see all deltas
+    # for delta in rom.get_deltas():
+    #     print(delta)
+
+
+def patch_buffer(
+    buffer: bytearray,
+    options: Options,
+    random=Random(),
+) -> None:
     """Patch a buffer containing Zelda3. It must have the smc header removed."""
     # Setup all transforms. The order is signficant.
     transform_list: List[Callable[[Context], None]] = list()
@@ -75,43 +113,18 @@ def patch_buffer(buffer: bytearray, options: Options, random=Random()) -> None:
         elif options.sprite_shuffle == SpriteShuffle.DUNGEONSSIMPLE:
             transform_list.append(reroll_dungeon_sprites)
 
-    # Read the rom and load all models.
-    rom = get_local_rom(buffer)
-    context = Context(random=random)
-    context.damage_table = read_damage_table(rom)
-
-    context.sprite_subclasses = read_sprite_subclasses(rom)
-    context.spritesets = read_spritesets(rom)
-    context.sprites = read_sprites(rom)
-    context.overworld_areas = read_overworld_areas(rom)
-    context.dungeon_rooms = read_dungeon_rooms(rom)
-    context.loaded = True
-
-    # Lock the rom and apply all transformations.
-    rom.set_mode(RomMode.LOCKED)
-    for transform in transform_list:
-        transform(context)
-
-    # Write the data back to the ROM.
-    rom.set_mode(RomMode.WRITE)
-
-    write_sprite_subclasses(rom, context.sprite_subclasses)
-    write_damage_table(rom, context.damage_table)
-    write_sprite_settings(rom, context.sprites)
-    write_sprite_blocksets(rom, context.spritesets)
-    write_overworld_areas(rom, context.overworld_areas)
-    write_dungeon_rooms(rom, context.dungeon_rooms)
-
-    # Write CRC to the ROM.
-    rom.set_mode(RomMode.CRC)
-    rom.write_crc()
-
-    # NOTE: uncomment to see all deltas
-    # for delta in rom.get_deltas():
-    #     print(delta)
+    patch(
+        buffer=buffer,
+        random=random,
+        transform_list=transform_list,
+    )
 
 
-def patch_file(options: Options, input_path: str, output_path: str) -> None:
+def patch_file(
+    options: Options,
+    input_path: str,
+    output_path: str,
+) -> None:
     """Patch a file. This is intended for the included GUI's use"""
     with open(input_path, "rb") as stream:
         buffer = bytearray(stream.read())

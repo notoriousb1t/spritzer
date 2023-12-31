@@ -1,6 +1,6 @@
 # This file contains patches inconsistencies in Vanilla that affect randomization.
 from .Context import Context
-from ..Model import SpriteType, SpriteVulnerability
+from ..Model import SpriteType, SpriteVulnerability, SpriteId
 
 
 def patch_invulnerable_sprites(context: Context) -> None:
@@ -10,5 +10,6 @@ def patch_invulnerable_sprites(context: Context) -> None:
         if (
             meta.role == SpriteType.HAZARD
             or meta.vulnerability == SpriteVulnerability.INVULNERABLE
+            or sprite.id == SpriteId.xD8_GREEN_BOMB
         ):
             sprite.statis = True
