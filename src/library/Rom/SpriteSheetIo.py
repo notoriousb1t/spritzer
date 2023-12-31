@@ -6,7 +6,7 @@ from .LocalRom import LocalRom
 from ..Model import Spriteset
 
 
-def _read_sprite_blockset(rom: LocalRom, id: SpritesetId) -> List[Spriteset]:
+def _read_spriteset(rom: LocalRom, id: SpritesetId) -> List[Spriteset]:
     set0 = rom.read_snes_address(rom.sprite_blockset_snes + (id * 4) + 0)
     set1 = rom.read_snes_address(rom.sprite_blockset_snes + (id * 4) + 1)
     set2 = rom.read_snes_address(rom.sprite_blockset_snes + (id * 4) + 2)
@@ -21,10 +21,10 @@ def _read_sprite_blockset(rom: LocalRom, id: SpritesetId) -> List[Spriteset]:
 
 
 def read_spritesets(rom: LocalRom) -> Dict[SpritesetId, Spriteset]:
-    return {id: _read_sprite_blockset(rom, id) for id in list(SpritesetId)}
+    return {id: _read_spriteset(rom, id) for id in list(SpritesetId)}
 
 
-def write_sprite_blocksets(
+def write_spritesets(
     rom: LocalRom,
     blocksets: Dict[SpritesetId, Spriteset],
 ) -> None:

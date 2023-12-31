@@ -15,7 +15,7 @@ from library.Rom import (
     write_damage_table,
     write_dungeon_rooms,
     write_overworld_areas,
-    write_sprite_blocksets,
+    write_spritesets,
     write_sprite_settings,
     write_sprite_subclasses,
 )
@@ -74,7 +74,7 @@ def patch(
     write_sprite_subclasses(rom, context.sprite_subclasses)
     write_damage_table(rom, context.damage_table)
     write_sprite_settings(rom, context.sprites)
-    write_sprite_blocksets(rom, context.spritesets)
+    write_spritesets(rom, context.spritesets)
     write_overworld_areas(rom, context.overworld_areas)
     write_dungeon_rooms(rom, context.dungeon_rooms)
     # Write CRC to the ROM.

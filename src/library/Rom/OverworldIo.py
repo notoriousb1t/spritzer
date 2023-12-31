@@ -1,12 +1,10 @@
 from typing import Dict
 
 from ..Model.SpritesetId import SpritesetId
-
 from ..Model.OverworldSprite import OverworldSprite
-
 from ..Model.OverworldAreaId import OverworldAreaId
 
-from .LocalRom import LocalRom, compute_snes_address
+from .LocalRom import LocalRom, compute_snes_address, pc_address_to_snes_address
 
 from ..Model import (
     OverworldArea,
