@@ -1,8 +1,11 @@
-from typing import Dict
+from typing import Dict, List
 
-from ..Model.SpritesetId import SpritesetId
-from ..Model.OverworldSprite import OverworldSprite
-from ..Model.OverworldAreaId import OverworldAreaId
+from ..Model import (
+    SpritesetId,
+    OverworldSprite,
+    OverworldAreaId,
+    OverworldConfiguration,
+)
 
 from .LocalRom import LocalRom, compute_snes_address, pc_address_to_snes_address
 
@@ -12,44 +15,36 @@ from ..Model import (
 )
 
 _stop_marker = 0xFF
+_light_world_v1_index = 1
+_light_world_v2_index = 2
+_darkworld_index = 3
+
+#
+# if (
+#     id == OverworldAreaId.x80_MASTER_SWORD_GLADE_UNDER_BRIDGE
+#     or id == OverworldAreaId.x81_ZORAS_DOMAIN
+# ):
+#     return 0x016576 + id - 0x80
+# if (
+#     id == OverworldAreaId.x100_MISERY_MIRE_DW_POST_AGA
+#     or id == OverworldAreaId.x111_ZORAS_DOMAIN_POST_AGA
+# ):
 
 
-def _resolve_gfx_address(id: OverworldAreaId) -> int:
-    """Finds the address that holds the graphics block id."""
-
-    if (
-        id == OverworldAreaId.x80_MASTER_SWORD_GLADE_UNDER_BRIDGE
-        or id == OverworldAreaId.x81_ZORAS_DOMAIN
-    ):
-        return 0x016576 + id - 0x80
-    if (
-        id == OverworldAreaId.x100_MISERY_MIRE_DW_POST_AGA
-        or id == OverworldAreaId.x111_ZORAS_DOMAIN_POST_AGA
-    ):
-        return 0x016576 + id - 0x110
-    if id >= 0x40 and id < 0x80:
-        return 0x007A81 + id + 0x40
-    if id >= 0x90 and id < 0x110:
-        return 0x007A81 + id - 0x50
-    return 0x007A81 + id
-
-
-def _load_area(rom: LocalRom, id: OverworldAreaId) -> OverworldArea:
-    """Reads an Area from the ROM and returns it as a data class."""
-    # Resolve the address of this Dungeon RoomArea and read the graphics block into memory.
-    gfx = SpritesetId(rom.read_address(_resolve_gfx_address(id)))
-
+def _load_sprites(
+    rom: LocalRom, id: OverworldAreaId, sprite_address: int
+) -> List[OverworldSprite]:
     # Find the base address of Overworld Sprites in this Overworld Area.
     sprite_table_base_address = compute_snes_address(
         [
             rom.overworld_sprite_bank,
-            rom.read_snes_address(rom.area_sprite_pointers_snes + (id * 2) + 1),
-            rom.read_snes_address(rom.area_sprite_pointers_snes + (id * 2)),
+            rom.read_snes_address(sprite_address + 1),
+            rom.read_snes_address(sprite_address),
         ]
     )
 
     index = 0
-    overworld_sprites = []
+    sprites = []
     remaining_max_bytes = 10000
     while True:
         # Read the sprite table for this Overworld Area.
@@ -63,17 +58,88 @@ def _load_area(rom: LocalRom, id: OverworldAreaId) -> OverworldArea:
         if remaining_max_bytes == 0:
             raise "Maximum bytes exceeded. Aborting to prevent infinite loop"
 
-        overworld_sprites.append(
+        sprite_id = rom.read_snes_address(address + 2)
+        sprites.append(
             OverworldSprite(
                 address,
                 y=rom.read_snes_address(address),
                 x=rom.read_snes_address(address + 1),
-                id=SpriteId(rom.read_snes_address(address + 2)),
+                id=SpriteId(sprite_id),
             )
         )
         index += 3
         remaining_max_bytes -= 1
-    return OverworldArea(id, gfx, overworld_sprites)
+
+    return sprites
+
+
+def _load_configuration(
+    rom: LocalRom,
+    id: OverworldAreaId,
+    config_index: int,
+    sprite_address: int,
+) -> OverworldConfiguration:
+    """Reads an Area from the ROM and returns it as a data class."""
+    # Resolve the sprite graphics and sprite palette id.
+    spriteset_id = SpritesetId(
+        rom.read_snes_address(rom.area_graphics_snes + id + (config_index * 0x40))
+    )
+    sprite_palette_id = rom.read_snes_address(
+        rom.area_graphics_snes + id + ((config_index + 4) * 0x40)
+    )
+    sprites = _load_sprites(
+        rom,
+        id=id,
+        sprite_address=sprite_address + (id * 2) + (0x40 if id >= 0x40 else 0),
+    )
+
+    return OverworldConfiguration(
+        spriteset_id=spriteset_id,
+        sprite_palette_id=sprite_palette_id,
+        sprites=sprites,
+    )
+
+
+def _load_area(rom: LocalRom, id: OverworldAreaId) -> OverworldArea:
+    if id >= 0x40:
+        # Load Zoras domain, master sword grove, and under bridge
+        # from post aga pointer. These are after the normal rooms which have
+        # light and dark world equivalents.
+        return OverworldArea(
+            id=id,
+            light_world_v2=_load_configuration(
+                rom,
+                id=id,
+                config_index=_light_world_v2_index,
+                sprite_address=rom.area_sprite_pointers_lightworld_v2_snes,
+            ),
+        )
+
+    light_world_v1 = _load_configuration(
+        rom,
+        id=id,
+        config_index=_light_world_v1_index,
+        sprite_address=rom.area_sprite_pointers_lightworld_v1_snes,
+    )
+    light_world_v2 = _load_configuration(
+        rom,
+        id=id,
+        config_index=_light_world_v2_index,
+        sprite_address=rom.area_sprite_pointers_lightworld_v2_snes,
+    )
+    dark_world = _load_configuration(
+        rom,
+        id=id,
+        config_index=_darkworld_index,
+        sprite_address=rom.area_sprite_pointers_darkworld_v2_snes,
+    )
+
+    return OverworldArea(
+        id,
+        light_world_v1=light_world_v1,
+        light_world_v2=light_world_v2,
+        dark_world=dark_world,
+    )
 
 
 def read_overworld_areas(rom: LocalRom) -> Dict[OverworldAreaId, OverworldArea]:
@@ -83,16 +149,24 @@ def read_overworld_areas(rom: LocalRom) -> Dict[OverworldAreaId, OverworldArea]:
 
 def write_overworld_areas(
     rom: LocalRom,
-    overworld_area_dict: Dict[OverworldAreaId, OverworldArea],
+    overworld_areas: Dict[OverworldAreaId, OverworldArea],
 ) -> None:
     """Writes AreaBlocks back to the ROM data."""
 
-    for id, overworld_area in overworld_area_dict.items():
-        # Write the new graphics block back to the Overworld Area address.
-        rom.write_address(_resolve_gfx_address(id), overworld_area.spriteset_id)
+    for area_id, overworld_area in overworld_areas.items():
+        for config_id, configuration in enumerate(overworld_area.configurations):
+            # Write the new graphics block back to the Overworld Area address.
+            rom.write_address(
+                rom.area_graphics_snes + area_id + (config_id * 0x40),
+                configuration.spriteset_id,
+            )
+            rom.write_address(
+                rom.area_graphics_snes + area_id + ((config_id + 4) * 0x40),
+                configuration.sprite_palette_id,
+            )
 
-        # Rewrite Overworld Sprites back into the same spots.
-        for overworld_sprite in overworld_area.overworld_sprites:
-            rom.write_snes_address(overworld_sprite._address, overworld_sprite.y)
-            rom.write_snes_address(overworld_sprite._address + 1, overworld_sprite.x)
-            rom.write_snes_address(overworld_sprite._address + 2, overworld_sprite.id)
+            # Rewrite Overworld Sprites back into the same spots.
+            for sprite in configuration.sprites:
+                rom.write_snes_address(sprite._address, sprite.y)
+                rom.write_snes_address(sprite._address + 1, sprite.x)
+                rom.write_snes_address(sprite._address + 2, sprite.id)

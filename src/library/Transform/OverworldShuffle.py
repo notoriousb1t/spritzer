@@ -1,12 +1,13 @@
 from random import Random
 from typing import List, Dict, Set
 
-from ..Model.SpritesetId import SpritesetId
-
-from ..Model.OverworldSprite import OverworldSprite
-
 from . import Context, Placement, is_compatible
-from ..Model import OverworldArea, SpriteId
+from ..Model import (
+    SpriteId,
+    OverworldSprite,
+    SpritesetId,
+    OverworldConfiguration,
+)
 
 
 def _reroll_overworld_sprites(
@@ -43,11 +44,12 @@ def reroll_overworld(context: Context) -> None:
     overworld_area_dict = context.overworld_areas
 
     # Group Overworld Areas by graphics block.
-    gfx_groups: Dict[SpritesetId, List[OverworldArea]] = {
+    gfx_groups: Dict[SpritesetId, List[OverworldConfiguration]] = {
         it: list() for it in list(SpritesetId)
     }
     for overworld_area in overworld_area_dict.values():
-        gfx_groups[overworld_area.spriteset_id].append(overworld_area)
+        for configuration in overworld_area.configurations:
+            gfx_groups[configuration.spriteset_id].append(configuration)
 
     # Create a dictionary of Entities which occur in that graphics blocks in these Overworld Areas.
     gfx_choices: Dict[SpritesetId, List[SpriteId]] = {
@@ -56,15 +58,15 @@ def reroll_overworld(context: Context) -> None:
     for gfx, overworld_areas in gfx_groups.items():
         # Capture possible Overworld Sprites in this graphics block.
         choice_set: Set[SpriteId] = set()
-        for overworld_area in overworld_areas:
-            for overworld_sprite in overworld_area.overworld_sprites:
+        for configuration in overworld_areas:
+            for overworld_sprite in configuration.sprites:
                 choice_set.add(overworld_sprite.id)
         gfx_choices[gfx] = choice_set
 
     # Randomize using Entities that occur anywhere in that Overworld Area.
     for overworld_area_dict in gfx_groups.values():
         # Reroll all Overworld Areas using the choices collected from related Overworld Areas.
-        for overworld_area in overworld_area_dict:
+        for configuration in overworld_area_dict:
             # Get the possibly Overworld Sprites from the current graphics block
-            choices = gfx_choices[overworld_area.spriteset_id]
-            _reroll_overworld_sprites(random, overworld_area.overworld_sprites, choices)
+            choices = gfx_choices[configuration.spriteset_id]
+            _reroll_overworld_sprites(random, configuration.sprites, choices)

@@ -66,12 +66,13 @@ class RomMode(IntEnum):
 
 class LocalRom:
     """Manages reading and writing to the Rom data.
-    
-          NOTE: The following conventions are used for pointers/byte address:
-                suffix of snes (preferred) indicates an SNES address
-                suffix of pc indicates a PC address
-                suffix of bank indicates an SNES bank
+
+    NOTE: The following conventions are used for pointers/byte address:
+          suffix of snes (preferred) indicates an SNES address
+          suffix of pc indicates a PC address
+          suffix of bank indicates an SNES bank
     """
+
     _original_buffer: bytearray
     _current_buffer: bytearray
     _mode = RomMode.READ
@@ -82,11 +83,18 @@ class LocalRom:
 
     sprite_blockset_snes = 0x00DB97
     room_header_pointers_snes = 0x4F1E2
-    area_sprite_pointers_snes = 0x9C901
+
+    area_sprite_pointers_lightworld_v1_snes = 0x9C901
+    area_sprite_pointers_lightworld_v2_snes = 0x9CA21
+    area_sprite_pointers_darkworld_v2_snes = 0x9CAA1
+    area_sprite_pointers_specialworld_v2_snes = 0x9CB21
+    area_sprite_empty = 0x9CB41
+
     room_sprite_pointers_snes = 0x9D62E
     damage_table_snes = 0x06F42D
+    area_graphics_snes = 0xFA41
     weapon_damage_snes = 0xDB8F1
-    
+
     @property
     def sprite_settings0_snes(self) -> int:
         return 0xDB080
@@ -145,7 +153,9 @@ class LocalRom:
     def write_crc(self):
         if self._mode != RomMode.CRC:
             raise "Wrong phase, cannot add CRC"
-        crc = (sum(self._current_buffer[:0x7FDC] + self._current_buffer[0x7FE0:]) + 0x01FE) & 0xFFFF
+        crc = (
+            sum(self._current_buffer[:0x7FDC] + self._current_buffer[0x7FE0:]) + 0x01FE
+        ) & 0xFFFF
 
         inv = crc ^ 0xFFFF
         crc_bytes = [inv & 0xFF, (inv >> 8) & 0xFF, crc & 0xFF, (crc >> 8) & 0xFF]
