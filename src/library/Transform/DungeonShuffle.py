@@ -2,26 +2,20 @@ from math import floor
 from random import Random
 from typing import List, Dict, Set, Tuple
 
-from ..Model.SpriteType import SpriteType
-
-from ..Model.SpritesetId import SpritesetId
-
-from ..Model.DungeonSprite import DungeonSprite
-
-from ..Model.DungeonRoomId import DungeonRoomId
-
-from ..Model.PaletteId import PaletteId
-
-from .Context import Context
-from .Placement import Placement, is_compatible
 from ..Model import (
     DungeonRoom,
     SpriteId,
+    SpriteType,
+    DungeonSprite,
+    DungeonRoomId,
 )
 
-_block_list = [
-    DungeonRoomId.x24_TURTLE_ROCK_DOUBLE_HOKKU_BOKKU_BIG_CHEST_ROOM
-]
+from .Context import Context
+from .SpriteChoices import compute_sprite_choices
+from .Placement import Placement, is_compatible
+
+_block_list = [DungeonRoomId.x24_TURTLE_ROCK_DOUBLE_HOKKU_BOKKU_BIG_CHEST_ROOM]
+
 
 def _find_distance(start: Tuple[int, int], end: Tuple[int, int]) -> int:
     return ((start[0] - end[0]) ** 2 + (start[1] - start[1]) ** 2) ** 0.5
@@ -81,7 +75,7 @@ def _sort_by_distance(dungeon_sprites: List[DungeonSprite]) -> List[DungeonSprit
 def _generate_sprite_selections(
     random: Random,
     dungeon_room_sprites: List[DungeonSprite],
-    choices: List[SpriteId],
+    choices: Set[SpriteId],
     placement: Placement,
 ) -> Dict[int, SpriteId]:
     # Presort Dungeon Room Sprites by distance from the center.
@@ -102,7 +96,7 @@ def _generate_sprite_selections(
             # Find all normal replacements. Make sure to include the sprite already present.
             possible_matches = [
                 it
-                for it in choices
+                for it in list(choices)
                 if is_compatible(
                     dungeon_sprite.sprite_id, it, placement, dungeon_sprite.has_key()
                 )
@@ -117,39 +111,8 @@ def _generate_sprite_selections(
     return distance_map
 
 
-def _compute_choices(dungeon_dict: Dict[DungeonRoomId, DungeonRoom]) -> List[SpriteId]:
-    # Group Dungeon Rooms by graphics blockset.
-    gfx_groups: Dict[SpritesetId, List[DungeonRoom]] = {
-        it: list() for it in list(SpritesetId)
-    }
-    for dungeon_room in dungeon_dict.values():
-        gfx_groups[dungeon_room.spriteset_id].append(dungeon_room)
-
-    # Create a dictionary of Entities which occur in that graphics blocks in these Dungeon Rooms.
-    gfx_choices: Dict[SpritesetId, List[SpriteId]] = {
-        it: list() for it in list(SpritesetId)
-    }
-    for id, dungeon_rooms in gfx_groups.items():
-        # Capture possible sprites in this graphics block.
-        choice_set: Set[SpriteId] = set()
-        for dungeon_room in dungeon_rooms:
-            for dungeon_sprite in dungeon_room.dungeon_sprites:
-                choice_set.add(dungeon_sprite.sprite_id)
-
-        choice_list = list()
-        for choice in choice_set:
-            choice_list.append(choice)
-            if not choice.requires_weapon:
-                # Weight non-special sprites higher than special ones. This reduces the chance
-                # of a Dungeon Room full of Eyegores, etc.
-                choice_list.append(choice)
-
-        gfx_choices[id] = choice_list
-    return gfx_choices
-
-
 def reroll_dungeon_sprites(context: Context) -> None:
-    gfx_choices = _compute_choices(context.dungeon_rooms)
+    choice_dict = compute_sprite_choices(context)
 
     for dungeon_room in context.dungeon_rooms.values():
         if dungeon_room.id in _block_list:
@@ -158,14 +121,12 @@ def reroll_dungeon_sprites(context: Context) -> None:
 
         # Randomize using Entities that occur anywhere in that Dungeon Room.
         if any(
-            it
-            for it in dungeon_room.dungeon_sprites
-            if it.sprite_id.role == SpriteType.BOSS
+            it for it in dungeon_room.sprites if it.sprite_id.role == SpriteType.BOSS
         ):
             # Skip all boss rooms, we shouldn't try to reroll those through this option.
             continue
 
-        choices = gfx_choices[dungeon_room.spriteset_id]
+        choices = choice_dict[dungeon_room.spriteset_id]
         if len(choices) < 1:
             # Skip if there is nothing to switch.
             continue
@@ -178,7 +139,7 @@ def reroll_dungeon_sprites(context: Context) -> None:
         dungeon_sprites_by_role: Dict[SpriteType, List[DungeonSprite]] = {
             it: list() for it in list(SpriteType)
         }
-        for dungeon_sprite in dungeon_room.dungeon_sprites:
+        for dungeon_sprite in dungeon_room.sprites:
             if dungeon_sprite.sprite_id.meta().can_shuffle_in_room:
                 dungeon_sprites_by_role[dungeon_sprite.sprite_id.role].append(
                     dungeon_sprite
@@ -190,9 +151,7 @@ def reroll_dungeon_sprites(context: Context) -> None:
             )
 
             for dungeon_sprite in dungeon_sprites:
-                next_sprite_id = distance_map[
-                    dungeon_sprite.distance_from_midpoint
-                ]
+                next_sprite_id = distance_map[dungeon_sprite.distance_from_midpoint]
                 if next_sprite_id != dungeon_sprite.sprite_id:
                     # Clear aux data because it may be unpredictable.
                     dungeon_sprite.aux0 = 0

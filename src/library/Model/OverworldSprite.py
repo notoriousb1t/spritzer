@@ -7,7 +7,7 @@ from .SpriteId import SpriteId
 class OverworldSprite:
     _address: int
     """The ROM address of the Sprite in an Overworld Area. DO NOT MODIFY."""
-    id: SpriteId
+    sprite_id: SpriteId
     """The Sprite placed in the Overworld Area."""
     x: int
     """The x coordinate of the Sprite in the Overworld Area."""

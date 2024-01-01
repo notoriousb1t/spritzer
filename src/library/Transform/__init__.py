@@ -8,4 +8,5 @@ from .MushroomShuffle import *
 from .OverworldShuffle import *
 from .Placement import *
 from .ShadowBees import *
+from .SpriteChoices import *
 from .VanillaFixes import *

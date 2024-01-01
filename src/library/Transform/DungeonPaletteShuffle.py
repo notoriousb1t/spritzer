@@ -47,7 +47,7 @@ def reroll_dungeon_palette(context: Context) -> None:
         for room in room_list:
             if any(
                 it
-                for it in room.dungeon_sprites
+                for it in room.sprites
                 if it.sprite_id.meta().role in [SpriteType.BOSS, SpriteType.NPC]
             ):
                 # Boss randomizer should handle palette swapping for boss rooms.

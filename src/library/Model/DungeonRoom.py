@@ -46,5 +46,5 @@ class DungeonRoom:
     """The destination for stairs 3"""
     sprite_ptr: (int, int)
     """Used for dungeon room swaps. DO NOT MODIFY"""
-    dungeon_sprites: List[DungeonSprite]
+    sprites: List[DungeonSprite]
     """List of sprites in this Dungeon Room."""

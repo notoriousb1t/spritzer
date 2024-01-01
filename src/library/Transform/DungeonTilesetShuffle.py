@@ -21,7 +21,7 @@ def reroll_dungeon_blocksets(context: Context) -> None:
             if (
                 any(
                     it
-                    for it in room.dungeon_sprites
+                    for it in room.sprites
                     if it.sprite_id.meta().role in [SpriteType.BOSS, SpriteType.NPC]
                 )
                 or room_id in dungeon_group.exclude_from_tile_shuffle

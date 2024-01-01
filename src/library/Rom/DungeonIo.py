@@ -135,7 +135,7 @@ def _read_room(rom: LocalRom, id: DungeonRoomId) -> DungeonRoom:
         stairs2=stairs2,
         stairs3=stairs3,
         sprite_ptr=sprite_ptr,
-        dungeon_sprites=dungeon_sprites,
+        sprites=dungeon_sprites,
     )
 
 
@@ -145,7 +145,7 @@ def read_dungeon_rooms(rom: LocalRom) -> Dict[DungeonRoomId, DungeonRoom]:
 
 def _write_dungeon_sprites(rom: LocalRom, room: DungeonRoom) -> None:
     # Rewrite new Dungeon Sprites.
-    for dungeon_sprite in room.dungeon_sprites:
+    for dungeon_sprite in room.sprites:
         rom.write_address(
             dungeon_sprite._address,
             (0b1000_0000 if dungeon_sprite.lower_layer else 0)

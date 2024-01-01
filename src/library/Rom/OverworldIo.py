@@ -89,7 +89,7 @@ def _load_sprites(rom: LocalRom, sprite_address: int) -> List[OverworldSprite]:
         x = rom.read_snes_address(address + 1)
         sprite_id = rom.read_snes_address(address + 2)
 
-        sprites.append(OverworldSprite(address, y=y, x=x, id=SpriteId(sprite_id)))
+        sprites.append(OverworldSprite(address, y=y, x=x, sprite_id=SpriteId(sprite_id)))
         index += 3
         remaining_max_bytes -= 1
 
@@ -206,4 +206,4 @@ def write_overworld_areas(
             for sprite in version.sprites:
                 rom.write_snes_address(sprite._address, sprite.y)
                 rom.write_snes_address(sprite._address + 1, sprite.x)
-                rom.write_snes_address(sprite._address + 2, sprite.id)
+                rom.write_snes_address(sprite._address + 2, sprite.sprite_id)
