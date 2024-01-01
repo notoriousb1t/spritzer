@@ -1,12 +1,15 @@
 from attr import dataclass
 from typing import List
 
+from .OverworldId import OverworldId
 from .OverworldAreaId import OverworldAreaId
 from .OverworldSprite import OverworldSprite
 from .SpritesetId import SpritesetId
 
 @dataclass
-class OverworldConfiguration:
+class OverworldAreaRoom:
+    overworld_id: OverworldId
+    """The overworld state this room is for."""
     spriteset_id: SpritesetId
     """The graphics block associated. This constrains which Entities can appear in this Area."""
     sprite_palette_id: int
@@ -19,16 +22,16 @@ class OverworldConfiguration:
 class OverworldArea:
     id: OverworldAreaId
     """The Area this block describes. DO NOT MODIFY."""
-    light_world_v1: OverworldConfiguration = None
+    light_world_v1: OverworldAreaRoom = None
     """This is used after rescuing Zelda."""
-    light_world_v2: OverworldConfiguration = None
+    light_world_v2: OverworldAreaRoom = None
     """This is used after defeating Agahnim."""
-    dark_world: OverworldConfiguration = None
+    dark_world: OverworldAreaRoom = None
     """This is used in the dark world."""
 
     @property
-    def configurations(self) -> List[OverworldConfiguration]:
-        configs: List[OverworldConfiguration] = list()
+    def versions(self) -> List[OverworldAreaRoom]:
+        configs: List[OverworldAreaRoom] = list()
         if self.light_world_v1:
             configs.append(self.light_world_v1)
         if self.light_world_v2:

@@ -84,6 +84,8 @@ class LocalRom:
     sprite_blockset_snes = 0x00DB97
     room_header_pointers_snes = 0x4F1E2
 
+    area_special_graphics_snes = 0x2E576
+    area_special_palette_snes = 0x2E596
     area_sprite_pointers_lightworld_v1_snes = 0x9C901
     area_sprite_pointers_lightworld_v2_snes = 0x9CA21
     area_sprite_pointers_darkworld_v2_snes = 0x9CAA1

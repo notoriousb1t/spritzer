@@ -7,6 +7,7 @@ from .DungeonRoomId import *
 from .DungeonSprite import *
 from .DungeonTag import *
 from .DungeonTag import *
+from .OverworldId import *
 from .OverworldArea import *
 from .OverworldAreaId import *
 from .OverworldSprite import *

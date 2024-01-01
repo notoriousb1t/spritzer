@@ -6,7 +6,7 @@ from ..Model import (
     SpriteId,
     OverworldSprite,
     SpritesetId,
-    OverworldConfiguration,
+    OverworldAreaRoom,
 )
 
 
@@ -44,11 +44,11 @@ def reroll_overworld(context: Context) -> None:
     overworld_area_dict = context.overworld_areas
 
     # Group Overworld Areas by graphics block.
-    gfx_groups: Dict[SpritesetId, List[OverworldConfiguration]] = {
+    gfx_groups: Dict[SpritesetId, List[OverworldAreaRoom]] = {
         it: list() for it in list(SpritesetId)
     }
     for overworld_area in overworld_area_dict.values():
-        for configuration in overworld_area.configurations:
+        for configuration in overworld_area.versions:
             gfx_groups[configuration.spriteset_id].append(configuration)
 
     # Create a dictionary of Entities which occur in that graphics blocks in these Overworld Areas.

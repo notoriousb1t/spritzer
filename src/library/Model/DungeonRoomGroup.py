@@ -42,6 +42,7 @@ class DungeonRoomGroup:
     rooms: List[DungeonRoomId] = []
     blocksets: List[BlocksetId] = []
     palettes: List[PaletteId] = []
+    exclude_from_tile_shuffle: List[DungeonRoomId] = []
 
 
 def get_dungeon_room_groups() -> Dict[DungeonRoomGroupId, DungeonRoomGroup]:
@@ -192,6 +193,10 @@ def get_dungeon_room_groups() -> Dict[DungeonRoomGroupId, DungeonRoomGroup]:
                 DungeonRoomId.xD8_EASTERN_PALACE_ZELDAGAMER_ROOM_PRE_ARMOS_KNIGHTS_ROOM,
                 DungeonRoomId.xD9_EASTERN_PALACE_CANONBALL_ROOM,
                 DungeonRoomId.xDA_EASTERN_PALACE_2_BUBBLE_WITH_SWITCH_UNDER_POT,
+            ],
+            exclude_from_tile_shuffle=[
+                DungeonRoomId.xA9_EASTERN_PALACE_BIG_CHEST_ROOM,
+                DungeonRoomId.xD9_EASTERN_PALACE_CANONBALL_ROOM,
             ],
             blocksets=[
                 BlocksetId.x0_CASTLE,
@@ -369,6 +374,10 @@ def get_dungeon_room_groups() -> Dict[DungeonRoomGroupId, DungeonRoomGroup]:
                 DungeonRoomId.xC3_MISERY_MIRE_BIG_CHEST_ROOM,
                 DungeonRoomId.xD1_MISERY_MIRE_CONVEYOR_SLUG_BIG_KEY_ROOM,
                 DungeonRoomId.xD2_MISERY_MIRE_MIRE02_WIZZROBES_ROOM,
+            ],
+            exclude_from_tile_shuffle=[
+                DungeonRoomId.x90_MISERY_MIRE_VITREOUS_BOSS,
+                DungeonRoomId.xA0_MISERY_MIRE_PRE_VITREOUS_ROOM,
             ],
             blocksets=[
                 BlocksetId.x5_EASTERN_PALACE,

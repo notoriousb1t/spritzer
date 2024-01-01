@@ -1,3 +1,4 @@
+from string import ascii_uppercase, digits
 from math import floor
 from customtkinter import (
     CTk,
@@ -11,6 +12,7 @@ from customtkinter import (
     CTkScrollableFrame,
     CTkComboBox,
 )
+from random import Random
 from tkinter import filedialog, messagebox, BooleanVar, StringVar
 from library.Patch import patch_file, Options, SpriteShuffle
 
@@ -23,12 +25,15 @@ class Adjuster:
     def __init__(self) -> None:
         self.app = CTk()
 
-        self.seed = StringVar(self.app)
-        self.enable_boss_shuffle = BooleanVar(self.app, True)
+        # Generate a random string for the seed.
+        random_seed = ''.join(Random().choices(ascii_uppercase + digits, k=16))
+
+        self.seed = StringVar(self.app, value=random_seed)
+        self.enable_boss_shuffle = BooleanVar(self.app, False)
         self.enable_dungeon_palette_shuffle = BooleanVar(self.app, True)
         self.sprite_shuffle = StringVar(self.app, SpriteShuffle.SIMPLE)
-        self.enable_dungeon_tileset_shuffle = BooleanVar(self.app, True)
-        self.enable_killable_thieves = BooleanVar(self.app, True)
+        self.enable_dungeon_tileset_shuffle = BooleanVar(self.app, False)
+        self.enable_killable_thieves = BooleanVar(self.app, False)
         self.enable_shadow_bees = BooleanVar(self.app, True)
         self.enable_mushroom_shuffle = BooleanVar(self.app, True)
 
