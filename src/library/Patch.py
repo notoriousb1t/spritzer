@@ -3,7 +3,7 @@ from typing import Callable, List
 
 from .Options import Options, OverworldEnemyShuffle, DungeonEnemyShuffle
 
-from .Model import create_spriteset_dict, create_free_spritesheet_list
+from .Model import create_spriteset_dict, create_free_spriteset_list
 from library.Rom import (
     get_local_rom,
     read_damage_table,
@@ -55,7 +55,7 @@ def patch(
 
     # Perform preprocessing
     context.spritesheet_sprites = create_spriteset_dict()
-    context.free_spritesheets = create_free_spritesheet_list()
+    context.free_spritesheets = create_free_spriteset_list()
     if preprocess_list:
         for preprocessor in preprocess_list:
             preprocessor(context)

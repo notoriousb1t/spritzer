@@ -38,6 +38,7 @@ def _reroll_overworld_sprites(
                 random.choice(possible_matches) if len(possible_matches) > 0 else None
             )
             if sprite_id == None:
+                sprite_id = SpriteId.xE3_FAIRY
                 break
             if sprite_id != overworld_sprite.sprite_id:
                 overworld_sprite.sprite_id = sprite_id

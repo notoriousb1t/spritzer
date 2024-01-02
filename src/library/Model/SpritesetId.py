@@ -1,4 +1,5 @@
 from enum import IntEnum
+from typing import List
 
 _room_gfx_offset = 64
 
@@ -44,6 +45,26 @@ class SpritesetId(IntEnum):
     x24_UNUSED = 36
     x25_UNUSED = 37
     x26_PYRAMID = 38
+
+    x2F_FREESPACE = 47
+    x30_FREESPACE = 48
+    x31_FREESPACE = 49
+    x32_FREESPACE = 50
+    x33_FREESPACE = 51
+    x34_FREESPACE = 52
+    x35_FREESPACE = 53
+    x36_FREESPACE = 54
+    x37_FREESPACE = 55
+    x38_FREESPACE = 56
+    x39_FREESPACE = 57
+    x3A_FREESPACE = 58
+    x3B_FREESPACE = 59
+    x3C_FREESPACE = 60
+    x3D_FREESPACE = 61
+    x3E_FREESPACE = 62
+    x3F_FREESPACE = 63
+    x40_FREESPACE = 64
+
     # Dungeon Room Graphics Range 65-?
     x01_SEWER_AND_CAVES = 1 + _room_gfx_offset
     x02_FIRST_DARK_ROOM = 2 + _room_gfx_offset
@@ -98,3 +119,27 @@ class SpritesetId(IntEnum):
     @staticmethod
     def from_room_value(value: int):
         return SpritesetId(value + _room_gfx_offset)
+
+
+def create_free_spriteset_list() -> List[SpritesetId]:
+    """Returns a list of spritesheets that are considered empty and can be used for swapping."""
+    return [
+        SpritesetId.x2F_FREESPACE,
+        SpritesetId.x30_FREESPACE,
+        SpritesetId.x31_FREESPACE,
+        SpritesetId.x32_FREESPACE,
+        SpritesetId.x33_FREESPACE,
+        SpritesetId.x34_FREESPACE,
+        SpritesetId.x35_FREESPACE,
+        SpritesetId.x36_FREESPACE,
+        SpritesetId.x37_FREESPACE,
+        SpritesetId.x38_FREESPACE,
+        SpritesetId.x39_FREESPACE,
+        SpritesetId.x3A_FREESPACE,
+        SpritesetId.x3B_FREESPACE,
+        SpritesetId.x3C_FREESPACE,
+        SpritesetId.x3D_FREESPACE,
+        SpritesetId.x3E_FREESPACE,
+        SpritesetId.x3F_FREESPACE,
+        SpritesetId.x40_FREESPACE,
+    ]
