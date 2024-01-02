@@ -111,8 +111,7 @@ def _generate_sprite_selections(
     return distance_map
 
 
-def reroll_dungeon_sprites(context: Context) -> None:
-    choice_dict = compute_sprite_choices(context)
+def reroll_dungeon_enemies(context: Context) -> None:
 
     for dungeon_room in context.dungeon_rooms.values():
         if dungeon_room.id in _block_list:
@@ -126,7 +125,7 @@ def reroll_dungeon_sprites(context: Context) -> None:
             # Skip all boss rooms, we shouldn't try to reroll those through this option.
             continue
 
-        choices = choice_dict[dungeon_room.spriteset_id]
+        choices = context.choices[dungeon_room.spriteset_id]
         if len(choices) < 1:
             # Skip if there is nothing to switch.
             continue

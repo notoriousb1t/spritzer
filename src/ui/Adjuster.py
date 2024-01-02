@@ -14,7 +14,8 @@ from customtkinter import (
 )
 from random import Random
 from tkinter import filedialog, messagebox, BooleanVar, StringVar
-from library.Patch import patch_file, Options, SpriteShuffle
+from library.Options import Options, DungeonEnemyShuffle, OverworldEnemyShuffle
+from library.Patch import patch_file
 
 _PADX = 12
 _PADY = 8
@@ -31,7 +32,8 @@ class Adjuster:
         self.seed = StringVar(self.app, value=random_seed)
         self.enable_boss_shuffle = BooleanVar(self.app, False)
         self.enable_dungeon_palette_shuffle = BooleanVar(self.app, True)
-        self.sprite_shuffle = StringVar(self.app, SpriteShuffle.SIMPLE)
+        self.dungeon_enemy_shuffle = StringVar(self.app, DungeonEnemyShuffle.SIMPLE)
+        self.overworld_enemy_shuffle = StringVar(self.app, OverworldEnemyShuffle.INVERTED)
         self.enable_dungeon_tileset_shuffle = BooleanVar(self.app, False)
         self.enable_killable_thieves = BooleanVar(self.app, False)
         self.enable_shadow_bees = BooleanVar(self.app, True)
@@ -56,14 +58,23 @@ class Adjuster:
         self.option_frame = CTkScrollableFrame(
             master=self.app,
         )
-        self.sprite_shuffle_label = CTkLabel(
+        self.dungeon_enemy_shuffle_label = CTkLabel(
             self.option_frame,
-            text="Entity Shuffle"
+            text="Dungeon Entity Shuffle"
         )
-        self.sprite_shuffle_combobox = CTkComboBox(
+        self.dungeon_enemy_shuffle_combobox = CTkComboBox(
             self.option_frame,
-            values=list(SpriteShuffle),
-            variable=self.sprite_shuffle,
+            values=list(DungeonEnemyShuffle),
+            variable=self.dungeon_enemy_shuffle,
+        )
+        self.overworld_enemy_shuffle_label = CTkLabel(
+            self.option_frame,
+            text="Overworld Entity Shuffle"
+        )
+        self.overworld_enemy_shuffle_combobox = CTkComboBox(
+            self.option_frame,
+            values=list(OverworldEnemyShuffle),
+            variable=self.overworld_enemy_shuffle,
         )
         self.enable_boss_shuffle_checkbox = CTkCheckBox(
             self.option_frame,
@@ -131,19 +142,34 @@ class Adjuster:
             pady=_PADY,
         )
 
-        self.sprite_shuffle_label.grid(
+        self.overworld_enemy_shuffle_label.grid(
             row=0,
             column=0,
             sticky="W",
-            pady=_PADY * 2,
-            padx=_PADX / 2,
+            pady=_PADY,
+            padx=_PADX,
         )
-        self.sprite_shuffle_combobox.grid(
+        self.overworld_enemy_shuffle_combobox.grid(
             row=0,
             column=1,
             sticky="W",
-            pady=_PADY * 2,
-            padx=_PADX / 2,
+            pady=_PADY,
+            padx=_PADX,
+        )
+
+        self.dungeon_enemy_shuffle_label.grid(
+            row=1,
+            column=0,
+            sticky="W",
+            pady=_PADY,
+            padx=_PADX,
+        )
+        self.dungeon_enemy_shuffle_combobox.grid(
+            row=1,
+            column=1,
+            sticky="W",
+            pady=_PADY,
+            padx=_PADX,
         )
 
         boolean_options = [
@@ -157,7 +183,7 @@ class Adjuster:
 
         # Overcomplicated code that lays checkboxes into columns.
         column_count = 1
-        row_offset = 1
+        row_offset = 2
         for index, checkbox in enumerate(boolean_options):
             cell_count = floor(len(boolean_options) / column_count)
             row = row_offset + (index % cell_count)
@@ -208,7 +234,8 @@ class Adjuster:
         options.killable_thieves = self.enable_killable_thieves.get()
         options.mushroom_shuffle = self.enable_mushroom_shuffle.get()
         options.shadow_bees = self.enable_shadow_bees.get()
-        options.sprite_shuffle = self.sprite_shuffle.get()
+        options.dungeon_enemy_shuffle = self.dungeon_enemy_shuffle.get()
+        options.overworld_enemy_shuffle = self.overworld_enemy_shuffle.get()
 
         input_path = filedialog.askopenfilename(filetypes=[("Zelda3 JPN", "*.sfc")])
         if not input_path:

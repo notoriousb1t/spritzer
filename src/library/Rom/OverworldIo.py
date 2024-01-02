@@ -6,7 +6,7 @@ from ..Model import (
     OverworldId,
     OverworldSprite,
     OverworldAreaId,
-    OverworldAreaRoom,
+    OverworldAreaVersion,
 )
 
 from .LocalRom import LocalRom, compute_snes_address, pc_address_to_snes_address
@@ -100,7 +100,7 @@ def _load_room_for_area(
     rom: LocalRom,
     id: OverworldAreaId,
     overworld_id: OverworldId,
-) -> OverworldAreaRoom:
+) -> OverworldAreaVersion:
     """Reads an Area from the ROM and returns it as a data class."""
     # Resolve the sprite graphics and sprite palette id.
     spriteset_id = SpritesetId(
@@ -128,7 +128,7 @@ def _load_room_for_area(
         ),
     )
 
-    return OverworldAreaRoom(
+    return OverworldAreaVersion(
         overworld_id=overworld_id,
         spriteset_id=spriteset_id,
         sprite_palette_id=sprite_palette_id,

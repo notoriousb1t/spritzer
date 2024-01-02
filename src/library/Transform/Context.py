@@ -1,6 +1,6 @@
 from attr import dataclass
 from random import Random
-from typing import Dict
+from typing import Dict, List
 
 
 from ..Model import (
@@ -15,6 +15,7 @@ from ..Model import (
     Sprite,
     SpriteSubclass,
     SpriteSubclassId,
+    SpriteSheetId,
 )
 
 
@@ -25,6 +26,9 @@ class Context:
     damage_table: DamageTable = None
     dungeon_rooms: Dict[DungeonRoomId, DungeonRoom] = {}
     overworld_areas: Dict[OverworldAreaId, OverworldArea] = {}
+    choices: Dict[SpritesetId, SpriteId] = {}
     spritesets: Dict[SpritesetId, Spriteset] = {}
     sprites: Dict[SpriteId, Sprite] = {}
     sprite_subclasses: Dict[SpriteSubclassId, SpriteSubclass] = {}
+    spritesheet_sprites: Dict[SpriteSheetId, List[SpriteId]] = {}
+    free_spritesheets: List[SpriteSheetId] = []

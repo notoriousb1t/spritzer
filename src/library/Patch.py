@@ -1,8 +1,9 @@
-from attr import dataclass
-from enum import StrEnum
 from random import Random
 from typing import Callable, List
 
+from .Options import Options, OverworldEnemyShuffle, DungeonEnemyShuffle
+
+from .Model import create_spriteset_dict, create_free_spritesheet_list
 from library.Rom import (
     get_local_rom,
     read_damage_table,
@@ -21,39 +22,25 @@ from library.Rom import (
 )
 from library.Transform import (
     Context,
+    compute_sprite_choices,
+    expand_overworld_sprite_pool,
     patch_shadow_bees,
     patch_thief_killable,
+    invert_world,
     reroll_dungeon_bosses,
     reroll_dungeon_palette,
-    reroll_dungeon_sprites,
+    reroll_dungeon_enemies,
     reroll_dungeon_blocksets,
     reroll_lost_woods_mushroom,
-    reroll_overworld,
+    reroll_overworld_enemies,
     patch_invulnerable_sprites,
 )
-
-
-class SpriteShuffle(StrEnum):
-    VANILLA = "vanilla"
-    SIMPLE = "simple"
-    DUNGEONSSIMPLE = "dungeonssimple"
-
-
-@dataclass
-class Options:
-    seed: str = None
-    boss_shuffle = False
-    dungeon_palette_shuffle = False
-    dungeon_tileset_shuffle = False
-    killable_thieves = False
-    mushroom_shuffle = False
-    shadow_bees = False
-    sprite_shuffle: SpriteShuffle = SpriteShuffle.VANILLA
 
 
 def patch(
     buffer: bytearray,
     random: Random,
+    preprocess_list: List[Callable[[Context], None]],
     transform_list: List[Callable[[Context], None]],
 ) -> None:
     rom = get_local_rom(buffer)
@@ -65,6 +52,14 @@ def patch(
     context.sprites = read_sprites(rom)
     context.overworld_areas = read_overworld_areas(rom)
     context.dungeon_rooms = read_dungeon_rooms(rom)
+
+    # Perform preprocessing
+    context.spritesheet_sprites = create_spriteset_dict()
+    context.free_spritesheets = create_free_spritesheet_list()
+    if preprocess_list:
+        for preprocessor in preprocess_list:
+            preprocessor(context)
+    context.choices = compute_sprite_choices(context)
     # Remove reading to enforce this is transactional.
     rom.set_mode(RomMode.LOCKED)
     for transform in transform_list:
@@ -93,7 +88,8 @@ def patch_buffer(
     """Patch a buffer containing Zelda3. It must have the smc header removed."""
     # Setup all transforms. The order is signficant.
     transform_list: List[Callable[[Context], None]] = list()
-    transform_list.append(patch_invulnerable_sprites)
+    preprocess_list: List[Callable[[Context], None]] = list()
+
     if options.killable_thieves:
         transform_list.append(patch_thief_killable)
     if options.shadow_bees:
@@ -106,16 +102,21 @@ def patch_buffer(
         transform_list.append(reroll_dungeon_palette)
     if options.boss_shuffle:
         transform_list.append(reroll_dungeon_bosses)
-    if options.sprite_shuffle != None:
-        if options.sprite_shuffle == SpriteShuffle.SIMPLE:
-            transform_list.append(reroll_dungeon_sprites)
-            transform_list.append(reroll_overworld)
-        elif options.sprite_shuffle == SpriteShuffle.DUNGEONSSIMPLE:
-            transform_list.append(reroll_dungeon_sprites)
+
+    if options.dungeon_enemy_shuffle != DungeonEnemyShuffle.VANILLA:
+        transform_list.append(patch_invulnerable_sprites)
+        transform_list.append(reroll_dungeon_enemies)
+
+    if options.overworld_enemy_shuffle != DungeonEnemyShuffle.VANILLA:
+        preprocess_list.append(expand_overworld_sprite_pool)
+        if options.overworld_enemy_shuffle == OverworldEnemyShuffle.INVERTED:
+            transform_list.append(invert_world)
+        transform_list.append(reroll_overworld_enemies)
 
     patch(
         buffer=buffer,
         random=random,
+        preprocess_list=preprocess_list,
         transform_list=transform_list,
     )
 

@@ -7,7 +7,7 @@ from .OverworldSprite import OverworldSprite
 from .SpritesetId import SpritesetId
 
 @dataclass
-class OverworldAreaRoom:
+class OverworldAreaVersion:
     overworld_id: OverworldId
     """The overworld state this room is for."""
     spriteset_id: SpritesetId
@@ -22,16 +22,16 @@ class OverworldAreaRoom:
 class OverworldArea:
     id: OverworldAreaId
     """The Area this block describes. DO NOT MODIFY."""
-    light_world_v1: OverworldAreaRoom = None
+    light_world_v1: OverworldAreaVersion = None
     """This is used after rescuing Zelda."""
-    light_world_v2: OverworldAreaRoom = None
+    light_world_v2: OverworldAreaVersion = None
     """This is used after defeating Agahnim."""
-    dark_world: OverworldAreaRoom = None
+    dark_world: OverworldAreaVersion = None
     """This is used in the dark world."""
 
     @property
-    def versions(self) -> List[OverworldAreaRoom]:
-        configs: List[OverworldAreaRoom] = list()
+    def versions(self) -> List[OverworldAreaVersion]:
+        configs: List[OverworldAreaVersion] = list()
         if self.light_world_v1:
             configs.append(self.light_world_v1)
         if self.light_world_v2:
@@ -39,3 +39,7 @@ class OverworldArea:
         if self.dark_world:
             configs.append(self.dark_world)
         return configs
+    
+    @property
+    def all_sprites(self) -> List[OverworldSprite]:
+        return [sprite for versions in self.versions for sprite in versions.sprites]

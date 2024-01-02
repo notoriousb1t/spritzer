@@ -1,5 +1,5 @@
 from enum import IntEnum
-from typing import Dict
+from typing import Dict, List
 
 from .SpriteId import SpriteId
 
@@ -82,12 +82,52 @@ class SpriteSheetId(IntEnum):
     x5A_UNKNOWN = 90  # 69=0x45
     x5C_UNKNOWN = 92  # 27=0x1b
     x5D_MANTLE_CREDITS = 93  # 14=0xe  67=0x43
+    x6C_FREESPACE = 108
+    x6D_FREESPACE = 109
+    x6E_FREESPACE = 110
+    x6F_FREESPACE = 111
+    x70_FREESPACE = 112
+    x71_FREESPACE = 113
+    x72_FREESPACE = 114
+    x73_FREESPACE = 115
+    x74_FREESPACE = 116
+    x75_FREESPACE = 117
+    x76_FREESPACE = 118
+    x77_FREESPACE = 119
+    x78_FREESPACE = 120
+    x79_FREESPACE = 121
+    x7A_FREESPACE = 122
+    x7B_FREESPACE = 123
+    x7C_FREESPACE = 124
 
     def __str__(self) -> str:
         return self.name
 
 
-def create_spriteset_dict() -> [Dict[SpriteSheetId, SpriteSheetId]]:
+def create_free_spritesheet_list() -> List[SpriteSheetId]:
+    """Returns a list of spritesheets that are considered empty and can be used for swapping."""
+    return [
+        SpriteSheetId.x6C_FREESPACE,
+        SpriteSheetId.x6D_FREESPACE,
+        SpriteSheetId.x6E_FREESPACE,
+        SpriteSheetId.x6F_FREESPACE,
+        SpriteSheetId.x70_FREESPACE,
+        SpriteSheetId.x71_FREESPACE,
+        SpriteSheetId.x72_FREESPACE,
+        SpriteSheetId.x73_FREESPACE,
+        SpriteSheetId.x74_FREESPACE,
+        SpriteSheetId.x75_FREESPACE,
+        SpriteSheetId.x76_FREESPACE,
+        SpriteSheetId.x77_FREESPACE,
+        SpriteSheetId.x78_FREESPACE,
+        SpriteSheetId.x79_FREESPACE,
+        SpriteSheetId.x7A_FREESPACE,
+        SpriteSheetId.x7B_FREESPACE,
+        SpriteSheetId.x7C_FREESPACE,
+    ]
+
+
+def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
     """Creates a new dictionary for existing spriteset -> sprite relationships. This should only contain information normally in vanilla"""
     return {
         SpriteSheetId.x0_FREESPACE: [],  # This should always be empty. This is effectively None.

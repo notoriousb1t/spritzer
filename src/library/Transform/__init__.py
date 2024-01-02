@@ -9,4 +9,5 @@ from .OverworldShuffle import *
 from .Placement import *
 from .ShadowBees import *
 from .SpriteChoices import *
+from .SpriteExpansion import *
 from .VanillaFixes import *
