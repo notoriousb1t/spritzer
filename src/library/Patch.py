@@ -1,6 +1,8 @@
 from random import Random
 from typing import Callable, List
 
+from library.Transform.OverworldInversion import invert_world
+
 from .Options import Options, OverworldEnemyShuffle, DungeonEnemyShuffle
 
 from .Model import create_spriteset_dict, create_free_spriteset_list
@@ -26,7 +28,6 @@ from library.Transform import (
     expand_overworld_sprite_pool,
     patch_shadow_bees,
     patch_thief_killable,
-    invert_world,
     reroll_dungeon_bosses,
     reroll_dungeon_palette,
     reroll_dungeon_enemies,
