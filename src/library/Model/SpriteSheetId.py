@@ -429,7 +429,6 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
         ],
         SpriteSheetId.x59_FOLLOWERS: [
             SpriteId.xB6_KIKI,
-            SpriteId.x39_AVERAGE_MIDDLE_AGED_MAN,
         ],
         SpriteSheetId.x5A_UNKNOWN: [],  # 69=0x45
         SpriteSheetId.x5C_UNKNOWN: [],  # 27=0x1b

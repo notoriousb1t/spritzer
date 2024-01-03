@@ -30,14 +30,16 @@ def _apply_area_specific_tweaks(context: Context, area: OverworldArea) -> None:
         death_mountain1.sheet3 = SpriteSheetId.x10_MISC_ROCKS
         death_mountain2.sheet2 = SpriteSheetId.x12_DESERT_1
         death_mountain2.sheet3 = SpriteSheetId.x10_MISC_ROCKS
+        death_mountain_dw = context.spritesets[area.dark_world.spriteset_id]
+        death_mountain_dw.sheet3 = SpriteSheetId.x14_FRIENDLY_LYNEL
     elif area.id == OverworldAreaId.x1E_EASTERN_PALACE:
         palace_of_darkness = context.spritesets[area.dark_world.spriteset_id]
         palace_of_darkness.sheet3 = SpriteSheetId.x59_FOLLOWERS
     elif area.id == OverworldAreaId.x3A_PATH_BETWEEN_DESERT_OF_MYSTERY_AND_GREAT_SWAMP:
         path1 = context.spritesets[area.light_world_v1.spriteset_id]
         path2 = context.spritesets[area.light_world_v2.spriteset_id]
-        path1.sheet3 = SpriteSheetId.x59_FOLLOWERS
-        path2.sheet3 = SpriteSheetId.x59_FOLLOWERS
+        path1.sheet3 = SpriteSheetId.x11_MISC_FAKE_SWORD
+        path2.sheet3 = SpriteSheetId.x11_MISC_FAKE_SWORD
     elif area.id == OverworldAreaId.x16_WITCHS_HUT:
         hut1 = context.spritesets[area.light_world_v1.spriteset_id]
         hut2 = context.spritesets[area.light_world_v2.spriteset_id]
