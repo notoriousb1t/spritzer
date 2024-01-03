@@ -3,7 +3,7 @@ from typing import Callable, List
 
 from .Options import Options, OverworldEnemyShuffle, DungeonEnemyShuffle
 
-from .Model import create_spriteset_dict, create_free_spriteset_list
+from .Model import create_spriteset_dict
 from library.Rom import (
     get_local_rom,
     read_damage_table,
@@ -22,7 +22,10 @@ from library.Rom import (
 )
 from library.Transform import (
     Context,
-    compute_sprite_choices,
+    preprocess_simple_overworld_choices,
+    preprocess_simple_dungeon_choices,
+    preprocess_full_overworld_choices,
+    preprocess_full_dungeon_choices,
     expand_overworld_sprite_pool,
     invert_world,
     patch_shadow_bees,
@@ -55,15 +58,15 @@ def patch(
 
     # Perform preprocessing
     context.spritesheet_sprites = create_spriteset_dict()
-    context.free_spritesheets = create_free_spriteset_list()
     if preprocess_list:
         for preprocessor in preprocess_list:
             preprocessor(context)
-    context.choices = compute_sprite_choices(context)
+
     # Remove reading to enforce this is transactional.
     rom.set_mode(RomMode.LOCKED)
     for transform in transform_list:
         transform(context)
+
     # Write the data back to the ROM.
     rom.set_mode(RomMode.WRITE)
     write_sprite_subclasses(rom, context.sprite_subclasses)
@@ -92,24 +95,57 @@ def patch_buffer(
 
     if options.killable_thieves:
         transform_list.append(patch_thief_killable)
+
     if options.shadow_bees:
         transform_list.append(patch_shadow_bees)
+
     if options.mushroom_shuffle:
         transform_list.append(reroll_lost_woods_mushroom)
+
     if options.dungeon_tileset_shuffle:
         transform_list.append(reroll_dungeon_blocksets)
+
     if options.dungeon_palette_shuffle:
         transform_list.append(reroll_dungeon_palette)
+
     if options.boss_shuffle:
         transform_list.append(reroll_dungeon_bosses)
 
-    if options.dungeon_enemy_shuffle != DungeonEnemyShuffle.VANILLA:
-        transform_list.append(patch_invulnerable_sprites)
+    if options.dungeon_enemy_shuffle == DungeonEnemyShuffle.SIMPLE:
+        preprocess_list.append(preprocess_simple_dungeon_choices)
+        preprocess_list.append(patch_invulnerable_sprites)
+        transform_list.append(reroll_dungeon_enemies)
+    elif options.dungeon_enemy_shuffle == DungeonEnemyShuffle.FULL:
+        preprocess_list.append(preprocess_full_dungeon_choices)
+        preprocess_list.append(patch_invulnerable_sprites)
+        transform_list.append(reroll_dungeon_enemies)
+    elif options.dungeon_enemy_shuffle == DungeonEnemyShuffle.CHAOS:
+        preprocess_list.append(preprocess_full_dungeon_choices)
+        preprocess_list.append(patch_invulnerable_sprites)
+        transform_list.append(reroll_dungeon_enemies)
+    elif options.dungeon_enemy_shuffle == DungeonEnemyShuffle.INSANITY:
+        preprocess_list.append(preprocess_full_dungeon_choices)
+        preprocess_list.append(patch_invulnerable_sprites)
         transform_list.append(reroll_dungeon_enemies)
 
-    if options.overworld_enemy_shuffle != DungeonEnemyShuffle.VANILLA:
-        if options.overworld_enemy_shuffle == OverworldEnemyShuffle.INVERTED:
-            preprocess_list.append(invert_world)
+    if options.overworld_enemy_shuffle == OverworldEnemyShuffle.SIMPLE:
+        preprocess_list.append(preprocess_simple_overworld_choices)
+        transform_list.append(reroll_overworld_enemies)
+    elif options.overworld_enemy_shuffle == OverworldEnemyShuffle.INVERTED:
+        preprocess_list.append(invert_world)
+        preprocess_list.append(preprocess_full_overworld_choices)
+        preprocess_list.append(expand_overworld_sprite_pool)
+        transform_list.append(reroll_overworld_enemies)
+    elif options.overworld_enemy_shuffle == OverworldEnemyShuffle.FULL:
+        preprocess_list.append(preprocess_full_overworld_choices)
+        preprocess_list.append(expand_overworld_sprite_pool)
+        transform_list.append(reroll_overworld_enemies)
+    elif options.overworld_enemy_shuffle == OverworldEnemyShuffle.CHAOS:
+        preprocess_list.append(preprocess_full_overworld_choices)
+        preprocess_list.append(expand_overworld_sprite_pool)
+        transform_list.append(reroll_overworld_enemies)
+    elif options.overworld_enemy_shuffle == OverworldEnemyShuffle.INSANITY:
+        preprocess_list.append(preprocess_full_overworld_choices)
         preprocess_list.append(expand_overworld_sprite_pool)
         transform_list.append(reroll_overworld_enemies)
 

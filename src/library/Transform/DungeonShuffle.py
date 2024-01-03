@@ -11,7 +11,6 @@ from ..Model import (
 )
 
 from .Context import Context
-from .SpriteChoices import compute_sprite_choices
 from .Placement import Placement, is_compatible
 
 _block_list = [DungeonRoomId.x24_TURTLE_ROCK_DOUBLE_HOKKU_BOKKU_BIG_CHEST_ROOM]
@@ -125,7 +124,7 @@ def reroll_dungeon_enemies(context: Context) -> None:
             # Skip all boss rooms, we shouldn't try to reroll those through this option.
             continue
 
-        choices = context.choices[dungeon_room.spriteset_id]
+        choices = context.dungeon_choices[dungeon_room.spriteset_id]
         if len(choices) < 1:
             # Skip if there is nothing to switch.
             continue

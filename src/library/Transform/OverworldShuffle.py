@@ -49,5 +49,5 @@ def reroll_overworld_enemies(context: Context) -> None:
         # Reroll all Overworld Areas using the choices collected from related Overworld Areas.
         for version in overworld_area.versions:
             # Get the possibly Overworld Sprites from the current graphics block
-            choices = context.choices[version.spriteset_id]
+            choices = context.overworld_choices[version.spriteset_id]
             _reroll_overworld_sprites(random, version.sprites, choices)

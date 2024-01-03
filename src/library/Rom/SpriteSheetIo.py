@@ -1,9 +1,7 @@
 from typing import List, Dict
 
-from ..Model.SpritesetId import SpritesetId
-
+from ..Model import SpritesetId, Spriteset, SpriteSheetId
 from .LocalRom import LocalRom
-from ..Model import Spriteset
 
 
 def _read_spriteset(rom: LocalRom, id: SpritesetId) -> List[Spriteset]:
@@ -13,10 +11,10 @@ def _read_spriteset(rom: LocalRom, id: SpritesetId) -> List[Spriteset]:
     set3 = rom.read_snes_address(rom.sprite_blockset_snes + (id * 4) + 3)
     return Spriteset(
         id=id,
-        sheet0=set0,
-        sheet1=set1,
-        sheet2=set2,
-        sheet3=set3,
+        sheet0=SpriteSheetId(set0),
+        sheet1=SpriteSheetId(set1),
+        sheet2=SpriteSheetId(set2),
+        sheet3=SpriteSheetId(set3),
     )
 
 

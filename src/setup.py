@@ -14,8 +14,8 @@ build_options = {
 executables = [Executable("main.py", base=base, target_name="spritzer-ui")]
 
 setup(
-    name="Spritzer",
-    version="0.1.15",
+    name="spritzer",
+    version="0.1.23",
     description="Zelda3 Randomizer",
     options={"build_exe": build_options},
     executables=executables,

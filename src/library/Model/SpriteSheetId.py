@@ -43,6 +43,7 @@ class SpriteSheetId(IntEnum):
     x2A_HAZARDS = 42  # 27=0x1b  89=0x59  107=0x6b
     x2B_UNUSED = 43  # 80=0x50
     x2C_BEAM_ME_UP_MR_POPO = 44
+    x2D_UNKNOWN = 45
     x2E_EYEGORE = 46  # 72=0x48  73=0x49  74=0x4a  75=0x4b
     x2F_CANON_SANDCRAB = 47  # 74=0x4a  75=0x4b
     x30_MOLDORM_BOSS = 48  # 76=0x4c
@@ -64,7 +65,7 @@ class SpriteSheetId(IntEnum):
     x43_AGAHNIM = 67  # 82=0x52  88=0x58
     x44_ZORAS_DOMAIN = 68  # 14=0xe
     x45_BIG_BAD_GUY = 69  # 98=0x62
-    x46_SOLDIERS_1 = 70
+    x46_SOLDIERS = 70
     x47_PRIEST = 71
     x48_SOLDIER = 72  # 2=0x2  4=0x4  5=0x5  11=0xb  13=0xd  103=0x67
     x49_SOLDIERS = 73  # 0=0x0  1=0x1  2=0x2  3=0x3  4=0x4  5=0x5  6=0x6  7=0x7  8=0x8  9=0x9  10=0xa  11=0xb  13=0xd  26=0x1a  28=0x1c  31=0x1f  32=0x20  35=0x23  65=0x41  66=0x42  67=0x43  68=0x44  70=0x46  77=0x4d  78=0x4e  80=0x50  97=0x61  103=0x67
@@ -88,9 +89,61 @@ class SpriteSheetId(IntEnum):
         return self.name
 
 
+def get_common_sprites() -> List[SpriteId]:
+    """Sprites that are available for any spritesheet"""
+    return [
+        SpriteId.xD3_STAL,
+        SpriteId.x33_PULL_FOR_RUPEES,
+        SpriteId.x9F_FLUTE,
+        SpriteId.xAC_APPLE,
+        SpriteId.xBA_WHIRLPOOL,
+        SpriteId.xD8_GREEN_BOMB,
+        SpriteId.xD9_GREEN_RUPEE,
+        SpriteId.xDA_BLUE_RUPEE,
+        SpriteId.xDB_RED_RUPEE,
+        SpriteId.x79_BEE,
+        SpriteId.xB2_GOOD_BEE_AGAIN,
+        SpriteId.xDC_BOMB_REFILL_1,
+        SpriteId.xDD_BOMB_REFILL_4,
+        SpriteId.xDE_BOMB_REFILL_8,
+        SpriteId.xDF_SMALL_MAGIC_REFILL,
+        SpriteId.xE0_FULL_MAGIC_REFILL,
+        SpriteId.xE1_ARROW_REFILL_5,
+        SpriteId.xE2_ARROW_REFILL_10,
+        SpriteId.xE3_FAIRY,
+        SpriteId.xE7_MUSHROOM,
+        SpriteId.xEA_HEART_CONTAINER,
+        SpriteId.xEB_HEART_PIECE,
+        SpriteId.xF3_PERSONS_DOOR_OW_OVERLORD,
+        SpriteId.x37_WATERFALL,  # TODO: needs verification
+        SpriteId.x3B_DASH_ITEM,  # TODO: needs verification
+        SpriteId.xD1_BUNNY_BEAM,  # TODO: Needs verification
+        SpriteId.x76_PRINCESS_ZELDA,
+    ]
+
+
+def common_dungeon_sprites() -> List[SpriteId]:
+    """Sprites that can be used regardless of the spritesheet"""
+    return [
+        SpriteId.xC5_MEDUSA,
+        SpriteId.xC6_YOMO_MEDUSA,
+        SpriteId.xE4_KEY,
+        SpriteId.xE5_BIG_KEY,
+        SpriteId.x106_BOMB_DROP1_TRAP,
+        SpriteId.x107_MOVING_FLOOR,
+        SpriteId.x108_TRANSFORMER_BUNNY_BEAM,
+        SpriteId.x116_ZORO_SPAWNER,
+        SpriteId.x109_WALLMASTER_OVERLORD,
+        SpriteId.x114_FLYING_FLOOR_TILE_TRAP,
+        SpriteId.x10B_FLOOR_DROP_NORTH,
+        SpriteId.x10A_FLOOR_DROP_SQUARE,
+        SpriteId.x117_FOUR_SKULL_TRAP_IN_POD_UNDER_POT,
+    ]
+
+
 def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
     """Creates a new dictionary for existing spriteset -> sprite relationships. This should only contain information normally in vanilla"""
-    return {
+    spriteset_dict: Dict[SpriteSheetId, List[SpriteId]] = {
         SpriteSheetId.x0_FREESPACE: [],  # This should always be empty. This is effectively None.
         SpriteSheetId.xC_OCTOROK_ZORA: [
             SpriteId.x58_CRAB,
@@ -98,15 +151,17 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
             SpriteId.x8_OCTOROK_ONE_WAY,
             SpriteId.xA_OCTOROK_FOUR_WAY,
             SpriteId.xF_OCTOBALLOON,
+            SpriteId.xD2_FLOPPING_FISH,
         ],
         SpriteSheetId.xD_SOLDIERS_DW: [
             SpriteId.x41_BLUE_SWORD_SOLDIER,
             SpriteId.x42_GREEN_SWORD_SOLDIER,
+            SpriteId.x43_RED_SPEAR_SOLDIER,
             SpriteId.x45_GREEN_SPEAR_SOLDIER,
         ],
         SpriteSheetId.xE_POE_THIEF: [
             SpriteId.x19_POE,
-            SpriteId.xC4_THIEF,
+            # SpriteId.xC4_THIEF,
         ],
         SpriteSheetId.xF_DASH_HOARDER: [
             SpriteId.x17_BUSH_HOARDER,
@@ -120,6 +175,7 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
             SpriteId.x51_ARMOS,
             SpriteId.xC2_BOULDERS,
             SpriteId.xC9_TEKTITE,
+            SpriteId.xF4_FALLING_ROCKS_OW_OVERLORD,
         ],
         SpriteSheetId.x11_MISC_FAKE_SWORD: [
             SpriteId.x0_CROW,
@@ -127,7 +183,7 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
             SpriteId.x39_AVERAGE_MIDDLE_AGED_MAN,
             SpriteId.x3E_ROCK_HOARDER,
             SpriteId.x4D_TOPPO,
-            # SpriteId.xD_BUZZBLOB,
+            SpriteId.xD_BUZZBLOB,
             SpriteId.xE8_FAKE_MASTER_SWORD,
         ],
         SpriteSheetId.x12_DESERT_1: [
@@ -135,6 +191,9 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
             SpriteId.x4C_GELDMAN,
             SpriteId.x57_DESERT_PALACE_BARRIERS,
             SpriteId.xF2_MEDALLION_TABLET,
+            SpriteId.xB3_HYLIAN_INSCRIPTION,
+            SpriteId.x0_CROW,
+            SpriteId.x39_AVERAGE_MIDDLE_AGED_MAN,
         ],
         SpriteSheetId.x13_SOLDIER_RECRUITS: [
             SpriteId.x4B_GREEN_SOLDIER_RECRUITS,
@@ -144,11 +203,18 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
             SpriteId.xD0_LYNEL,
         ],
         SpriteSheetId.x15_THIEF_DW: [
+            SpriteId.xC4_THIEF,
+            SpriteId.x25_TALKING_TREE,
             SpriteId.xB4_THIEFS_CHEST_ITEM_TRIGGER,
+            SpriteId.xBB_SALESMAN,
+            SpriteId.xB_CUCCO,
+            SpriteId.x14_GARGOYLES_DOMAIN_GATE,
+            SpriteId.x19_POE,
         ],
         SpriteSheetId.x16_HINOX_SNAPDRAGON: [
-            SpriteId.x11_HINOX,
             SpriteId.xE_SNAPDRAGON,
+            SpriteId.x11_HINOX,
+            SpriteId.x22_ROPA,
         ],
         SpriteSheetId.x17_MOBLIN: [
             SpriteId.x12_MOBLIN,
@@ -161,6 +227,9 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
         ],
         SpriteSheetId.x19_SWAMOLA_CROW: [
             SpriteId.x0_CROW,
+            SpriteId.xE_SNAPDRAGON,
+            SpriteId.x25_TALKING_TREE,
+            SpriteId.xB6_KIKI,
             SpriteId.xCF_SWAMOLA,
         ],
         SpriteSheetId.x1A_AGAHNIM: [
@@ -175,31 +244,40 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
             SpriteId.xA8_ZIRRO_1,
             SpriteId.xA9_ZIRRO_2,
             SpriteId.xAA_PIKIT,
+            SpriteId.xE_SNAPDRAGON,
         ],
         SpriteSheetId.x1C_PESTS: [
             SpriteId.x6D_RAT,
             SpriteId.x6E_ROPE,
             SpriteId.x6F_KEESE,
+            SpriteId.x40_LIGHTNING_LOCK,
         ],  # 65=0x41  66=0x42  70=0x46
         SpriteSheetId.x1D_ARMOS_BOSS_LOCK_BAT: [
             SpriteId.x119_ARMOS_KNIGHTS_TRIGGER,
             SpriteId.x3A_HALF_MAGIC_BAT,
             SpriteId.x40_LIGHTNING_LOCK,
             SpriteId.x53_ARMOS_KNIGHTS_BOSS,
+            SpriteId.x30_PERSON,
         ],
         SpriteSheetId.x1E_MINI_MONSTERS: [
             SpriteId.x13_MINI_HELMASAUR,
             SpriteId.x18_MINI_MOLDORM,
             SpriteId.x26_HARDHAT_BEETLE,
-        ],  # 76=0x4c  83=0x53  84=0x54  85=0x55  86=0x56  87=0x57  89=0x59  90=0x5a  101=0x65  104=0x68
+        ],
         SpriteSheetId.x1F_STALFOS_BARI: [
             SpriteId.x24_BLUE_BARI,
             SpriteId.x23_RED_BARI,
             SpriteId.xA7_STALFOS,
+            SpriteId.x7C_FLOATING_STALFOS_HEAD,
         ],
         SpriteSheetId.x20_STALFOS_KNIGHT_VERMIN: [
+            SpriteId.x110_PIROGUSU_SPAWNER_RIGHT,
+            SpriteId.x111_PIROGUSU_SPAWNER_LEFT,
+            SpriteId.x112_PIROGUSU_SPAWNER_DOWN,
+            SpriteId.x113_PIROGUSU_SPAWNER_UP,
             SpriteId.x8F_SLIME,
             SpriteId.x91_STALFOS_KNIGHT,
+            SpriteId.x9C_VERMIN_HORIZONTAL_PIROGUSU,
             SpriteId.x9D_VERMIN_VERTICAL_PIROGUSU,
         ],
         SpriteSheetId.x21_BIG_BAD_GUY: [
@@ -254,12 +332,14 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
             SpriteId.x87_FLAMES,
             SpriteId.x8E_TERRORPIN,
             SpriteId.xD5_DIGGING_GAME_PROPRIETOR,
+            SpriteId.x86_KODONGOS,
         ],  # 27=0x1b  89=0x59  107=0x6b
         SpriteSheetId.x2B_UNUSED: [],  # 80=0x50
         SpriteSheetId.x2C_BEAM_ME_UP_MR_POPO: [
             SpriteId.x4E_POPO_1,
             SpriteId.x4F_POPO_2,
             SpriteId.x61_BEAMOS,
+            SpriteId.x5C_SPARK_RIGHT_TO_LEFT,
             SpriteId.x83_GREEN_EYEGORE_MIMIC,
             SpriteId.x84_RED_EYEGORE_MIMIC,
         ],
@@ -313,6 +393,7 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
         SpriteSheetId.x3C_KHOLDSTARE_BOSS: [
             SpriteId.xA2_KHOLDSTARE_BOSS,
             SpriteId.xA3_KHOLDSTARES_SHELL,
+            SpriteId.xA4_FALLING_ICE,
         ],
         SpriteSheetId.x3D_VITREOUS_BOSS: [
             SpriteId.xBF_VITREOUS_LIGHTNING,
@@ -359,32 +440,47 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
             SpriteId.xD6_GANON,
             SpriteId.xD7_GANON_INVINCIBLE,
         ],  # 98=0x62
-        SpriteSheetId.x46_SOLDIERS_1: [
+        SpriteSheetId.x46_SOLDIERS: [
             SpriteId.x6B_CANNON_SOLDIER,
             SpriteId.x47_GREEN_ARCHER,
             SpriteId.x6A_BALL_N_CHAIN_TROOPER,
+            SpriteId.x48_RED_JAVELIN_SOLDIER,
+            SpriteId.x44_ASSAULT_SWORD_SOLDIER,
+            SpriteId.x4_PULL_SWITCH_GOOD,
+            SpriteId.x6_PULL_SWITCH_TRAP,
         ],
         SpriteSheetId.x47_PRIEST: [
             SpriteId.x73_UNCLE_PRIEST,
         ],  # 70=0x46
         SpriteSheetId.x48_SOLDIER: [
             SpriteId.x46_BLUE_ARCHER,
+            SpriteId.x47_GREEN_ARCHER,
             SpriteId.x3F_TUTORIAL_SOLDIER,
+            SpriteId.x49_RED_JAVELIN_SOLDIER_2,
         ],
         SpriteSheetId.x49_SOLDIERS: [
             SpriteId.x41_BLUE_SWORD_SOLDIER,
             SpriteId.x42_GREEN_SWORD_SOLDIER,
             SpriteId.x43_RED_SPEAR_SOLDIER,
+            SpriteId.x45_GREEN_SPEAR_SOLDIER,
+            SpriteId.x43_RED_SPEAR_SOLDIER,
             SpriteId.xB9_FEUDING_FRIENDS_ON_DEATH_MOUNTAIN,
+            SpriteId.xD4_LANDMINE,
         ],
         SpriteSheetId.x4A_KAKARIKO: [
             SpriteId.x75_BOTTLE_SALESMAN,
             SpriteId.x3C_VILLAGE_KID,
             SpriteId.x2C_LUMBERJACKS,
             SpriteId.x2A_SWEEPING_LADY,
+            SpriteId.x78_VILLAGE_ELDER,
+            SpriteId.x1A_DWARVES,
+            SpriteId.xBB_SALESMAN,
         ],
         SpriteSheetId.x4B_ARCHERY: [
             SpriteId.x65_ARCHERY_GUY,
+            SpriteId.x31_FORTUNE_TELLER,
+            SpriteId.x28_STORYTELLERS,
+            SpriteId.xE9_MAGIC_MERCHANT,
         ],
         SpriteSheetId.x4C_SAHASRAHLA_WITCH: [
             SpriteId.x16_SAHASRAHLA,
@@ -395,8 +491,15 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
             SpriteId.xAB_MAIDEN,
             SpriteId.xAD_LOST_OLD_MAN,
             SpriteId.xB7_MAIDEN_IN_BLIND_DUNGEON,
+            SpriteId.xB5_BOMB_SALESMAN,
         ],
-        SpriteSheetId.x4E_UNCLE_PRIEST: [SpriteId.x73_UNCLE_PRIEST],  # 15=0xf
+        SpriteSheetId.x4E_UNCLE_PRIEST: [
+            SpriteId.x73_UNCLE_PRIEST,
+            SpriteId.xA0_BIRDS_HAUNTED_GROVE,
+            SpriteId.x2E_FLUTE_BOYS_NOTES,
+            SpriteId.x1D_WEATHERVANE,
+            SpriteId.x9E_OSTRICH_HAUNTED_GROVE,
+        ],
         SpriteSheetId.x4F_OLD_MAN_RUNNER: [
             SpriteId.x32_ANGRY_BROTHERS,
             SpriteId.x74_RUNNING_MAN,
@@ -405,6 +508,7 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
         SpriteSheetId.x50_CUCCO_FOR_NPCS: [
             SpriteId.xB_CUCCO,
             SpriteId.x2F_RACE_HP_NPCS,
+            SpriteId.x30_PERSON,
             SpriteId.x34_SCARED_GIRL,
             SpriteId.x3D_SCARED_LADIES_OUTSIDE_HOUSES,
         ],
@@ -418,14 +522,46 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
             SpriteId.x7D_BIG_SPIKE_TRAP,
             SpriteId.x82_ANTIFAIRY_CIRCLE,
             SpriteId.x8A_SPIKE_TRAP,
+            SpriteId.x93_BUMPER,
+            SpriteId.x95_EYE_LASER_RIGHT,
+            SpriteId.x96_EYE_LASER_LEFT,
+            SpriteId.x97_EYE_LASER_DOWN,
+            SpriteId.x97_EYE_LASER_DOWN,
+            SpriteId.x1E_CRYSTAL_SWITCH,
+            SpriteId.x7E_GURUGURU_BAR_CLOCKWISE,
+            SpriteId.x7F_GURUGURU_BAR_COUNTER_CLOCKWISE,
+            SpriteId.x80_WINDER,
+            SpriteId.x5B_SPARK_LEFT_TO_RIGHT,
+            SpriteId.x5C_SPARK_RIGHT_TO_LEFT,
+            SpriteId.x1C_STATUE,
+            SpriteId.x4_PULL_SWITCH_GOOD,
+            SpriteId.x6_PULL_SWITCH_TRAP,
         ],  # 65=0x41  66=0x42  67=0x43  68=0x44  70=0x46  72=0x48  74=0x4a  76=0x4c  83=0x53  89=0x59  90=0x5a  91=0x5b  92=0x5c  93=0x5d  94=0x5e  96=0x60  97=0x61  100=0x64  101=0x65  103=0x67  107=0x6b
-        SpriteSheetId.x53_UNKNOWN: [],  # 81=0x51  102=0x66  105=0x69
+        SpriteSheetId.x53_UNKNOWN: [
+            SpriteId.x1E_CRYSTAL_SWITCH,
+            SpriteId.x1C_STATUE,
+            SpriteId.x4_PULL_SWITCH_GOOD,
+            SpriteId.x6_PULL_SWITCH_TRAP,
+            SpriteId.x80_WINDER,
+            SpriteId.x8A_SPIKE_TRAP,
+            SpriteId.x21_PUSH_SWITCH,
+            SpriteId.x5B_SPARK_LEFT_TO_RIGHT,
+            SpriteId.x5C_SPARK_RIGHT_TO_LEFT,
+            SpriteId.x7E_GURUGURU_BAR_CLOCKWISE,
+            SpriteId.x7F_GURUGURU_BAR_COUNTER_CLOCKWISE,
+            SpriteId.x96_EYE_LASER_LEFT,
+            SpriteId.x97_EYE_LASER_DOWN,
+            SpriteId.x15_ANTIFAIRY,
+            SpriteId.x77_ANTIFAIRY_ALTERNATE,
+        ],  # 81=0x51  102=0x66  105=0x69
         SpriteSheetId.x55_AGAHNIM: [
             SpriteId.x7A_AGAHNIM,
             SpriteId.xC1_AGAHNIM_TELEPORTING,
             SpriteId.x7B_AGAHNIM_ENERGY_BALL,
             SpriteId.xAB_MAIDEN,
             SpriteId.x76_PRINCESS_ZELDA,
+            SpriteId.x4_PULL_SWITCH_GOOD,
+            SpriteId.x6_PULL_SWITCH_TRAP,
         ],
         SpriteSheetId.x59_FOLLOWERS: [
             SpriteId.xB6_KIKI,
@@ -436,3 +572,8 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
             SpriteId.xEE_MANTLE
         ],  # Contains intro/outro sprites as well, but they are not listed.
     }
+
+    for id in spriteset_dict.keys():
+        spriteset_dict[id] += get_common_sprites() + common_dungeon_sprites()
+
+    return spriteset_dict
