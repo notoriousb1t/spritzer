@@ -10,8 +10,8 @@ class SpriteSheetId(IntEnum):
     xD_SOLDIERS_DW = 13  # 18=0x12  19=0x13  20=0x14  21=0x15  22=0x16  23=0x17  24=0x18  25=0x19  30=0x1e  34=0x22  36=0x24  37=0x25  100=0x64
     xE_POE_THIEF = 14  # 3=0x3  7=0x7  37=0x25  104=0x68
     xF_DASH_HOARDER = 15  # 16=0x10  26=0x1a
-    x10_MISCELLANEOUS_1 = 16  # 5=0x5  16=0x10  30=0x1e  33=0x21
-    x11_MISCELLANEOUS_2 = (
+    x10_MISC_ROCKS = 16  # 5=0x5  16=0x10  30=0x1e  33=0x21
+    x11_MISC_FAKE_SWORD = (
         17  # 4=0x4  7=0x7  10=0xa  13=0xd  26=0x1a  32=0x20  34=0x22  36=0x24  37=0x25
     )
     x12_DESERT_1 = 18  # 8=0x8  16=0x10  31=0x1f  33=0x21
@@ -44,7 +44,7 @@ class SpriteSheetId(IntEnum):
     x2B_UNUSED = 43  # 80=0x50
     x2C_BEAM_ME_UP_MR_POPO = 44
     x2E_EYEGORE = 46  # 72=0x48  73=0x49  74=0x4a  75=0x4b
-    x2F_CANON_CRAB = 47  # 74=0x4a  75=0x4b
+    x2F_CANON_SANDCRAB = 47  # 74=0x4a  75=0x4b
     x30_MOLDORM_BOSS = 48  # 76=0x4c
     x31_LANMOLAS_BOSS = 49  # 75=0x4b  99=0x63
     x33_BIG_BAD_GUY = 51  # 98=0x62
@@ -79,6 +79,7 @@ class SpriteSheetId(IntEnum):
     x52_ANTIFAIRY_SPIKES = 82  # 65=0x41  66=0x42  67=0x43  68=0x44  70=0x46  72=0x48  74=0x4a  76=0x4c  83=0x53  89=0x59  90=0x5a  91=0x5b  92=0x5c  93=0x5d  94=0x5e  96=0x60  97=0x61  100=0x64  101=0x65  103=0x67  107=0x6b
     x53_UNKNOWN = 83  # 81=0x51  102=0x66  105=0x69
     x55_AGAHNIM = 85  # 82=0x52  88=0x58
+    x59_FOLLOWERS = 89
     x5A_UNKNOWN = 90  # 69=0x45
     x5C_UNKNOWN = 92  # 27=0x1b
     x5D_MANTLE_CREDITS = 93  # 14=0xe  67=0x43
@@ -92,6 +93,7 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
     return {
         SpriteSheetId.x0_FREESPACE: [],  # This should always be empty. This is effectively None.
         SpriteSheetId.xC_OCTOROK_ZORA: [
+            SpriteId.x58_CRAB,
             SpriteId.x55_FIREBALL_ZORA,
             SpriteId.x8_OCTOROK_ONE_WAY,
             SpriteId.xA_OCTOROK_FOUR_WAY,
@@ -111,7 +113,7 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
             SpriteId.x3B_DASH_ITEM,
             SpriteId.x3E_ROCK_HOARDER,
         ],
-        SpriteSheetId.x10_MISCELLANEOUS_1: [
+        SpriteSheetId.x10_MISC_ROCKS: [
             SpriteId.x17_BUSH_HOARDER,
             SpriteId.x27_DEADROCK,
             SpriteId.x3E_ROCK_HOARDER,
@@ -119,13 +121,13 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
             SpriteId.xC2_BOULDERS,
             SpriteId.xC9_TEKTITE,
         ],
-        SpriteSheetId.x11_MISCELLANEOUS_2: [
+        SpriteSheetId.x11_MISC_FAKE_SWORD: [
             SpriteId.x0_CROW,
             SpriteId.x17_BUSH_HOARDER,
             SpriteId.x39_AVERAGE_MIDDLE_AGED_MAN,
             SpriteId.x3E_ROCK_HOARDER,
             SpriteId.x4D_TOPPO,
-            SpriteId.xD_BUZZBLOB,
+            # SpriteId.xD_BUZZBLOB,
             SpriteId.xE8_FAKE_MASTER_SWORD,
         ],
         SpriteSheetId.x12_DESERT_1: [
@@ -265,8 +267,9 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
             SpriteId.x83_GREEN_EYEGORE_MIMIC,
             SpriteId.x84_RED_EYEGORE_MIMIC,
         ],  # 72=0x48  73=0x49  74=0x4a  75=0x4b
-        SpriteSheetId.x2F_CANON_CRAB: [
-            SpriteId.x58_CRAB,
+        SpriteSheetId.x2F_CANON_SANDCRAB: [
+            SpriteId.x63_DEVALANT_NON_SHOOTER,
+            SpriteId.x64_DEVALANT_SHOOTER,
             SpriteId.x66_MOVING_CANNON_BALL_SHOOTERS_RIGHT,
             SpriteId.x67_MOVING_CANNON_BALL_SHOOTERS_LEFT,
             SpriteId.x68_MOVING_CANNON_BALL_SHOOTERS_DOWN,
@@ -423,6 +426,10 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
             SpriteId.x7B_AGAHNIM_ENERGY_BALL,
             SpriteId.xAB_MAIDEN,
             SpriteId.x76_PRINCESS_ZELDA,
+        ],
+        SpriteSheetId.x59_FOLLOWERS: [
+            SpriteId.xB6_KIKI,
+            SpriteId.x39_AVERAGE_MIDDLE_AGED_MAN,
         ],
         SpriteSheetId.x5A_UNKNOWN: [],  # 69=0x45
         SpriteSheetId.x5C_UNKNOWN: [],  # 27=0x1b

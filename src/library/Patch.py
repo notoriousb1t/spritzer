@@ -1,8 +1,6 @@
 from random import Random
 from typing import Callable, List
 
-from library.Transform.OverworldInversion import invert_world
-
 from .Options import Options, OverworldEnemyShuffle, DungeonEnemyShuffle
 
 from .Model import create_spriteset_dict, create_free_spriteset_list
@@ -26,6 +24,7 @@ from library.Transform import (
     Context,
     compute_sprite_choices,
     expand_overworld_sprite_pool,
+    invert_world,
     patch_shadow_bees,
     patch_thief_killable,
     reroll_dungeon_bosses,
@@ -109,9 +108,9 @@ def patch_buffer(
         transform_list.append(reroll_dungeon_enemies)
 
     if options.overworld_enemy_shuffle != DungeonEnemyShuffle.VANILLA:
-        preprocess_list.append(expand_overworld_sprite_pool)
         if options.overworld_enemy_shuffle == OverworldEnemyShuffle.INVERTED:
-            transform_list.append(invert_world)
+            preprocess_list.append(invert_world)
+        preprocess_list.append(expand_overworld_sprite_pool)
         transform_list.append(reroll_overworld_enemies)
 
     patch(

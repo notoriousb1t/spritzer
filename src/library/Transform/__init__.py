@@ -6,6 +6,7 @@ from .DungeonTilesetShuffle import *
 from .KillableSprite import *
 from .MushroomShuffle import *
 from .OverworldShuffle import *
+from .OverworldInversion import *
 from .Placement import *
 from .ShadowBees import *
 from .SpriteChoices import *
