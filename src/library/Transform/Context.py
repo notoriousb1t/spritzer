@@ -32,3 +32,4 @@ class Context:
     sprites: Dict[SpriteId, Sprite] = {}
     sprite_subclasses: Dict[SpriteSubclassId, SpriteSubclass] = {}
     spritesheet_sprites: Dict[SpriteSheetId, List[SpriteId]] = {}
+    unused_spritesets: List[SpritesetId] = []

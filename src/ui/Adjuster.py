@@ -31,13 +31,13 @@ class Adjuster:
 
         self.seed = StringVar(self.app, value=random_seed)
         self.enable_boss_shuffle = BooleanVar(self.app, False)
-        self.enable_dungeon_palette_shuffle = BooleanVar(self.app, True)
-        self.dungeon_enemy_shuffle = StringVar(self.app, DungeonEnemyShuffle.SIMPLE)
+        self.enable_dungeon_palette_shuffle = BooleanVar(self.app, False)
+        self.dungeon_enemy_shuffle = StringVar(self.app, DungeonEnemyShuffle.VANILLA)
         self.overworld_enemy_shuffle = StringVar(self.app, OverworldEnemyShuffle.INVERTED)
         self.enable_dungeon_tileset_shuffle = BooleanVar(self.app, False)
         self.enable_killable_thieves = BooleanVar(self.app, False)
-        self.enable_shadow_bees = BooleanVar(self.app, True)
-        self.enable_mushroom_shuffle = BooleanVar(self.app, True)
+        self.enable_shadow_bees = BooleanVar(self.app, False)
+        self.enable_mushroom_shuffle = BooleanVar(self.app, False)
 
         self.create_window()
         self.create_widgets()

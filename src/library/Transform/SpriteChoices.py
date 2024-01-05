@@ -45,10 +45,14 @@ def _compute_full_sprite_choices(context: Context) -> Dict[SpritesetId, Set[Spri
                 else []
             )
         ]
+        # This is an indirect way to validate that multiple spritesheets are loaded
+        # required for these enemies.
         if SpriteId.xE_SNAPDRAGON in all_sprites:
-            # Remove a snapdragon. If there is one left, then it is actually
-            # a choice. Snapdragon has two required spritesheets.
             all_sprites.remove(SpriteId.xE_SNAPDRAGON)
+        if SpriteId.x84_RED_EYEGORE_MIMIC in all_sprites:
+            all_sprites.remove(SpriteId.x84_RED_EYEGORE_MIMIC)
+        if SpriteId.x83_GREEN_EYEGORE_MIMIC in all_sprites:
+            all_sprites.remove(SpriteId.x83_GREEN_EYEGORE_MIMIC)
 
         for sprite_id in all_sprites:
             choices[spriteset_id].add(sprite_id)

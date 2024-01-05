@@ -22,22 +22,22 @@ class OverworldAreaVersion:
 class OverworldArea:
     id: OverworldAreaId
     """The Area this block describes. DO NOT MODIFY."""
-    light_world_v1: OverworldAreaVersion = None
+    lw_v1: OverworldAreaVersion = None
     """This is used after rescuing Zelda."""
-    light_world_v2: OverworldAreaVersion = None
+    lw_v2: OverworldAreaVersion = None
     """This is used after defeating Agahnim."""
-    dark_world: OverworldAreaVersion = None
+    dw: OverworldAreaVersion = None
     """This is used in the dark world."""
 
     @property
     def versions(self) -> List[OverworldAreaVersion]:
         configs: List[OverworldAreaVersion] = list()
-        if self.light_world_v1:
-            configs.append(self.light_world_v1)
-        if self.light_world_v2:
-            configs.append(self.light_world_v2)
-        if self.dark_world:
-            configs.append(self.dark_world)
+        if self.lw_v1:
+            configs.append(self.lw_v1)
+        if self.lw_v2:
+            configs.append(self.lw_v2)
+        if self.dw:
+            configs.append(self.dw)
         return configs
     
     @property

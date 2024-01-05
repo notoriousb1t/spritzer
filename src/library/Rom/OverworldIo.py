@@ -145,7 +145,7 @@ def _load_area(rom: LocalRom, id: OverworldAreaId) -> OverworldArea:
             rom=rom, id=id, overworld_id=OverworldId.LIGHT_WORLD_V2
         )
 
-        return OverworldArea(id=id, light_world_v2=light_world_v2)
+        return OverworldArea(id=id, lw_v2=light_world_v2)
 
     light_world_v1 = _load_room_for_area(
         rom=rom,
@@ -165,9 +165,9 @@ def _load_area(rom: LocalRom, id: OverworldAreaId) -> OverworldArea:
 
     return OverworldArea(
         id=id,
-        light_world_v1=light_world_v1,
-        light_world_v2=light_world_v2,
-        dark_world=dark_world,
+        lw_v1=light_world_v1,
+        lw_v2=light_world_v2,
+        dw=dark_world,
     )
 
 

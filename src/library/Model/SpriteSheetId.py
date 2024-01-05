@@ -6,84 +6,80 @@ from .SpriteId import SpriteId
 
 class SpriteSheetId(IntEnum):
     x0_FREESPACE = 0
-    xC_OCTOROK_ZORA = 12  # 1=0x1  4=0x4  5=0x5  11=0xb  14=0xe  32=0x20  35=0x23
-    xD_SOLDIERS_DW = 13  # 18=0x12  19=0x13  20=0x14  21=0x15  22=0x16  23=0x17  24=0x18  25=0x19  30=0x1e  34=0x22  36=0x24  37=0x25  100=0x64
-    xE_POE_THIEF = 14  # 3=0x3  7=0x7  37=0x25  104=0x68
-    xF_DASH_HOARDER = 15  # 16=0x10  26=0x1a
-    x10_MISC_ROCKS = 16  # 5=0x5  16=0x10  30=0x1e  33=0x21
-    x11_MISC_FAKE_SWORD = (
-        17  # 4=0x4  7=0x7  10=0xa  13=0xd  26=0x1a  32=0x20  34=0x22  36=0x24  37=0x25
-    )
-    x12_DESERT_1 = 18  # 8=0x8  16=0x10  31=0x1f  33=0x21
-    x13_SOLDIER_RECRUITS = 19  # 2=0x2  3=0x3  68=0x44  77=0x4d  78=0x4e  103=0x67
-    x14_FRIENDLY_LYNEL = 20  # 20=0x14
-    x15_THIEF_DW = 21  # 21=0x15  27=0x1b  29=0x1d  106=0x6a
-    x16_HINOX_SNAPDRAGON = 22  # 19=0x13  20=0x14  22=0x16  23=0x17  24=0x18  25=0x19  28=0x1c  30=0x1e  31=0x1f  32=0x20  34=0x22  35=0x23  36=0x24  38=0x26
-    x17_MOBLIN = (
-        23  # 18=0x12  19=0x13  20=0x14  21=0x15  23=0x17  28=0x1c  30=0x1e  38=0x26
-    )
-    x18_OCTOROCKS = 24  # 22=0x16  25=0x19
-    x19_SWAMOLA_CROW = 25  # 22=0x16  23=0x17
-    x1A_AGAHNIM = 26  # 38=0x26  88=0x58
-    x1B_MISCELLANEOUS_DW_1 = 27  # 19=0x13  25=0x19  38=0x26
-    x1C_PESTS = 28  # 65=0x41  66=0x42  70=0x46
-    x1D_ARMOS_BOSS_LOCK_BAT = 29  # 2=0x2  73=0x49
-    x1E_MINI_MONSTERS = 30  # 76=0x4c  83=0x53  84=0x54  85=0x55  86=0x56  87=0x57  89=0x59  90=0x5a  101=0x65  104=0x68
+    xC_OCTOROK_ZORA = 12
+    xD_SOLDIERS_DW = 13
+    xE_POE_THIEF = 14
+    xF_DASH_HOARDER = 15
+    x10_MISC_ROCKS = 16
+    x11_MISC_FAKE_SWORD = 17
+    x12_DESERT_1 = 18
+    x13_SOLDIER_RECRUITS = 19
+    x14_FRIENDLY_LYNEL = 20
+    x15_THIEF_DW = 21
+    x16_HINOX_SNAPDRAGON = 22
+    x17_MOBLIN = 23
+    x18_OCTOROCKS = 24
+    x19_SWAMOLA_CROW = 25
+    x1A_AGAHNIM = 26
+    x1B_MISCELLANEOUS_DW_1 = 27
+    x1C_PESTS = 28
+    x1D_ARMOS_BOSS_LOCK_BAT = 29
+    x1E_MINI_MONSTERS = 30
     x1F_STALFOS_BARI = 31
     x20_STALFOS_KNIGHT_VERMIN = 32
-    x21_BIG_BAD_GUY = 33  # 98=0x62
-    x22_WATER_TEKTITES = 34  # 81=0x51
-    x23_WALLMASTER_GIBDO = 35  # 83=0x53
-    x24_PESTS_DW = 36  # 97=0x61
-    x25_WIZZROBE = 37  # 93=0x5d
-    x26_FROSTY_FRIENDS = 38  # 92=0x5c  105=0x69
-    x27_TURTLE_ROCK = 39  # 87=0x57  94=0x5e  101=0x65  102=0x66
-    x28_ZAZAK = 40  # 91=0x5b  99=0x63
-    x29_WIZZROBE = 41  # 100=0x64
-    x2A_HAZARDS = 42  # 27=0x1b  89=0x59  107=0x6b
-    x2B_UNUSED = 43  # 80=0x50
+    x21_BIG_BAD_GUY = 33
+    x22_WATER_TEKTITES = 34
+    x23_WALLMASTER_GIBDO = 35
+    x24_PESTS_DW = 36
+    x25_WIZZROBE = 37
+    x26_FROSTY_FRIENDS = 38
+    x27_TURTLE_ROCK = 39
+    x28_ZAZAK = 40
+    x29_WIZZROBE = 41
+    x2A_HAZARDS = 42
+    x2B_UNUSED = 43
     x2C_BEAM_ME_UP_MR_POPO = 44
     x2D_UNKNOWN = 45
-    x2E_EYEGORE = 46  # 72=0x48  73=0x49  74=0x4a  75=0x4b
-    x2F_CANON_SANDCRAB = 47  # 74=0x4a  75=0x4b
-    x30_MOLDORM_BOSS = 48  # 76=0x4c
-    x31_LANMOLAS_BOSS = 49  # 75=0x4b  99=0x63
-    x33_BIG_BAD_GUY = 51  # 98=0x62
-    x36_MASTER_SWORD = 54  # 12=0xc  71=0x47
-    x37_MASTER_SWORD = 55  # 12=0xc
-    x38_MOTHULA_BOSS = 56  # 90=0x5a
-    x39_ARRGHUS_BOSS = 57  # 71=0x47  84=0x54
-    x3A_HELMASAUR_KING_BOSS = 58  # 84=0x54  85=0x55
-    x3B_BLIND_BOSS = 59  # 96=0x60
-    x3C_KHOLDSTARE_BOSS = 60  # 86=0x56
-    x3D_VITREOUS_BOSS = 61  # 82=0x52  86=0x56
-    x3E_HELMASAUR_KING_BOSS = 62  # 85=0x55
-    x3F_TRINEXX_BOSS = 63  # 1=0x1  28=0x1c  87=0x57
-    x40_TRINEXX_BOSS = 64  # 87=0x57
-    x41_BIG_BAD_GUY = 65  # 98=0x62
-    x42_AGAHNIM = 66  # 82=0x52  88=0x58
-    x43_AGAHNIM = 67  # 82=0x52  88=0x58
-    x44_ZORAS_DOMAIN = 68  # 14=0xe
-    x45_BIG_BAD_GUY = 69  # 98=0x62
+    x2E_EYEGORE = 46
+    x2F_CANON_SANDCRAB = 47
+    x30_MOLDORM_BOSS = 48
+    x31_LANMOLAS_BOSS = 49
+    x33_BIG_BAD_GUY = 51
+    x36_MASTER_SWORD = 54
+    x37_MASTER_SWORD = 55
+    x38_MOTHULA_BOSS = 56
+    x39_ARRGHUS_BOSS = 57
+    x3A_HELMASAUR_KING_BOSS = 58
+    x3B_BLIND_BOSS = 59
+    x3C_KHOLDSTARE_BOSS = 60
+    x3D_VITREOUS_BOSS = 61
+    x3E_HELMASAUR_KING_BOSS = 62
+    x3F_TRINEXX_BOSS = 63
+    x40_TRINEXX_BOSS = 64
+    x41_BIG_BAD_GUY = 65
+    x42_AGAHNIM = 66
+    x43_AGAHNIM = 67
+    x44_ZORAS_DOMAIN = 68
+    x45_BIG_BAD_GUY = 69
     x46_SOLDIERS = 70
     x47_PRIEST = 71
-    x48_SOLDIER = 72  # 2=0x2  4=0x4  5=0x5  11=0xb  13=0xd  103=0x67
-    x49_SOLDIERS = 73  # 0=0x0  1=0x1  2=0x2  3=0x3  4=0x4  5=0x5  6=0x6  7=0x7  8=0x8  9=0x9  10=0xa  11=0xb  13=0xd  26=0x1a  28=0x1c  31=0x1f  32=0x20  35=0x23  65=0x41  66=0x42  67=0x43  68=0x44  70=0x46  77=0x4d  78=0x4e  80=0x50  97=0x61  103=0x67
-    x4A_KAKARIKO = 74  # 6=0x6  7=0x7  26=0x1a  37=0x25  69=0x45  79=0x4f  104=0x68
-    x4B_ARCHERY = 75  # 27=0x1b  69=0x45  71=0x47  80=0x50
-    x4C_SAHASRAHLA_WITCH = 76  # 13=0xd  17=0x11  36=0x24  80=0x50
-    x4D_OLD_MAN_MAIDEN = 77  # 69=0x45  71=0x47  79=0x4f
-    x4E_UNCLE_PRIEST = 78  # 15=0xf
-    x4F_OLD_MAN_RUNNER = 79  # 6=0x6  78=0x4e  79=0x4f
-    x50_CUCCO_FOR_NPCS = 80  # 6=0x6  9=0x9  78=0x4e  79=0x4f  104=0x68
-    x51_UNCLE_PRIEST_SICK_BOY = 81  # 77=0x4d
-    x52_ANTIFAIRY_SPIKES = 82  # 65=0x41  66=0x42  67=0x43  68=0x44  70=0x46  72=0x48  74=0x4a  76=0x4c  83=0x53  89=0x59  90=0x5a  91=0x5b  92=0x5c  93=0x5d  94=0x5e  96=0x60  97=0x61  100=0x64  101=0x65  103=0x67  107=0x6b
-    x53_UNKNOWN = 83  # 81=0x51  102=0x66  105=0x69
-    x55_AGAHNIM = 85  # 82=0x52  88=0x58
+    x48_SOLDIER = 72
+    x49_SOLDIERS = 73
+    x4A_KAKARIKO = 74
+    x4B_ARCHERY = 75
+    x4C_SAHASRAHLA_WITCH = 76
+    x4D_OLD_MAN_MAIDEN = 77
+    x4E_UNCLE_PRIEST = 78
+    x4F_OLD_MAN_RUNNER = 79
+    x50_CUCCO_FOR_NPCS = 80
+    x51_UNCLE_PRIEST_SICK_BOY = 81
+    x52_ANTIFAIRY_SPIKES = 82
+    x53_UNKNOWN = 83
+    x55_AGAHNIM = 85
     x59_FOLLOWERS = 89
-    x5A_UNKNOWN = 90  # 69=0x45
-    x5C_UNKNOWN = 92  # 27=0x1b
-    x5D_MANTLE_CREDITS = 93  # 14=0xe  67=0x43
+    x5A_UNKNOWN = 90
+    x5C_UNKNOWN = 92
+    x5D_MANTLE_CREDITS = 93
 
     def __str__(self) -> str:
         return self.name
@@ -161,7 +157,7 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
         ],
         SpriteSheetId.xE_POE_THIEF: [
             SpriteId.x19_POE,
-            # SpriteId.xC4_THIEF,
+            SpriteId.xC4_THIEF,
         ],
         SpriteSheetId.xF_DASH_HOARDER: [
             SpriteId.x17_BUSH_HOARDER,
@@ -203,8 +199,6 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
             SpriteId.xD0_LYNEL,
         ],
         SpriteSheetId.x15_THIEF_DW: [
-            SpriteId.xC4_THIEF,
-            SpriteId.x25_TALKING_TREE,
             SpriteId.xB4_THIEFS_CHEST_ITEM_TRIGGER,
             SpriteId.xBB_SALESMAN,
             SpriteId.xB_CUCCO,
@@ -238,20 +232,19 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
             SpriteId.x7B_AGAHNIM_ENERGY_BALL,
             SpriteId.xAB_MAIDEN,
             SpriteId.x76_PRINCESS_ZELDA,
-        ],  # 38=0x26  88=0x58
+        ],
         SpriteSheetId.x1B_MISCELLANEOUS_DW_1: [
             SpriteId.x25_TALKING_TREE,
             SpriteId.xA8_ZIRRO_1,
             SpriteId.xA9_ZIRRO_2,
             SpriteId.xAA_PIKIT,
-            SpriteId.xE_SNAPDRAGON,
         ],
         SpriteSheetId.x1C_PESTS: [
             SpriteId.x6D_RAT,
             SpriteId.x6E_ROPE,
             SpriteId.x6F_KEESE,
             SpriteId.x40_LIGHTNING_LOCK,
-        ],  # 65=0x41  66=0x42  70=0x46
+        ],
         SpriteSheetId.x1D_ARMOS_BOSS_LOCK_BAT: [
             SpriteId.x119_ARMOS_KNIGHTS_TRIGGER,
             SpriteId.x3A_HALF_MAGIC_BAT,
@@ -283,7 +276,7 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
         SpriteSheetId.x21_BIG_BAD_GUY: [
             SpriteId.xD6_GANON,
             SpriteId.xD7_GANON_INVINCIBLE,
-        ],  # 98=0x62
+        ],
         SpriteSheetId.x22_WATER_TEKTITES: [
             SpriteId.x9A_KYAMERON_WATER_SPLASH,
             SpriteId.x81_WATER_TEKTITE,
@@ -301,11 +294,11 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
             SpriteId.x115_WIZZROBE_SPAWNER,
             SpriteId.x20_SLUGGULA,
             SpriteId.x9B_WIZZROBE,
-        ],  # 93=0x5d
+        ],
         SpriteSheetId.x26_FROSTY_FRIENDS: [
             SpriteId.x99_PENGATOR,
             SpriteId.xA1_FREEZOR,
-        ],  # 92=0x5c  105=0x69
+        ],
         SpriteSheetId.x27_TURTLE_ROCK: [
             SpriteId.x1E_CRYSTAL_SWITCH,
             SpriteId.x5D_ROLLER_VERTICAL_MOVING_1,
@@ -320,11 +313,11 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
             SpriteId.xA5_BLUE_ZAZAK,
             SpriteId.xA6_RED_ZAZAK,
             SpriteId.xC3_GIBO,
-        ],  # 91=0x5b  99=0x63
+        ],
         SpriteSheetId.x29_WIZZROBE: [
             SpriteId.x115_WIZZROBE_SPAWNER,
             SpriteId.x9B_WIZZROBE,
-        ],  # 100=0x64
+        ],
         SpriteSheetId.x2A_HAZARDS: [
             SpriteId.x7E_GURUGURU_BAR_CLOCKWISE,
             SpriteId.x7F_GURUGURU_BAR_COUNTER_CLOCKWISE,
@@ -333,7 +326,7 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
             SpriteId.x8E_TERRORPIN,
             SpriteId.xD5_DIGGING_GAME_PROPRIETOR,
             SpriteId.x86_KODONGOS,
-        ],  # 27=0x1b  89=0x59  107=0x6b
+        ],
         SpriteSheetId.x2B_UNUSED: [],  # 80=0x50
         SpriteSheetId.x2C_BEAM_ME_UP_MR_POPO: [
             SpriteId.x4E_POPO_1,
@@ -346,7 +339,7 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
         SpriteSheetId.x2E_EYEGORE: [
             SpriteId.x83_GREEN_EYEGORE_MIMIC,
             SpriteId.x84_RED_EYEGORE_MIMIC,
-        ],  # 72=0x48  73=0x49  74=0x4a  75=0x4b
+        ],
         SpriteSheetId.x2F_CANON_SANDCRAB: [
             SpriteId.x63_DEVALANT_NON_SHOOTER,
             SpriteId.x64_DEVALANT_SHOOTER,
@@ -355,17 +348,17 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
             SpriteId.x68_MOVING_CANNON_BALL_SHOOTERS_DOWN,
             SpriteId.x69_MOVING_CANNON_BALL_SHOOTERS_UP,
             SpriteId.x71_LEEVER,
-        ],  # 74=0x4a  75=0x4b
+        ],
         SpriteSheetId.x30_MOLDORM_BOSS: [
             SpriteId.x9_MOLDORM_BOSS,
-        ],  # 76=0x4c
+        ],
         SpriteSheetId.x31_LANMOLAS_BOSS: [
             SpriteId.x54_LANMOLAS_BOSS,
-        ],  # 75=0x4b  99=0x63
+        ],
         SpriteSheetId.x33_BIG_BAD_GUY: [
             SpriteId.xD6_GANON,
             SpriteId.xD7_GANON_INVINCIBLE,
-        ],  # 98=0x62
+        ],
         SpriteSheetId.x36_MASTER_SWORD: [
             SpriteId.x59_BIRD,
             SpriteId.x5A_SQUIRREL,
@@ -379,7 +372,7 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
         SpriteSheetId.x38_MOTHULA_BOSS: [
             SpriteId.x88_MOTHULA_BOSS,
             SpriteId.x89_MOTHULAS_BEAM,
-        ],  # 90=0x5a
+        ],
         SpriteSheetId.x39_ARRGHUS_BOSS: [
             SpriteId.x8C_ARRGHUS_BOSS,
             SpriteId.x8D_ARRGHUS_SPAWN,
@@ -465,7 +458,6 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
             SpriteId.x45_GREEN_SPEAR_SOLDIER,
             SpriteId.x43_RED_SPEAR_SOLDIER,
             SpriteId.xB9_FEUDING_FRIENDS_ON_DEATH_MOUNTAIN,
-            SpriteId.xD4_LANDMINE,
         ],
         SpriteSheetId.x4A_KAKARIKO: [
             SpriteId.x75_BOTTLE_SALESMAN,
@@ -528,15 +520,10 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
             SpriteId.x97_EYE_LASER_DOWN,
             SpriteId.x97_EYE_LASER_DOWN,
             SpriteId.x1E_CRYSTAL_SWITCH,
-            SpriteId.x7E_GURUGURU_BAR_CLOCKWISE,
-            SpriteId.x7F_GURUGURU_BAR_COUNTER_CLOCKWISE,
-            SpriteId.x80_WINDER,
-            SpriteId.x5B_SPARK_LEFT_TO_RIGHT,
-            SpriteId.x5C_SPARK_RIGHT_TO_LEFT,
             SpriteId.x1C_STATUE,
             SpriteId.x4_PULL_SWITCH_GOOD,
             SpriteId.x6_PULL_SWITCH_TRAP,
-        ],  # 65=0x41  66=0x42  67=0x43  68=0x44  70=0x46  72=0x48  74=0x4a  76=0x4c  83=0x53  89=0x59  90=0x5a  91=0x5b  92=0x5c  93=0x5d  94=0x5e  96=0x60  97=0x61  100=0x64  101=0x65  103=0x67  107=0x6b
+        ],
         SpriteSheetId.x53_UNKNOWN: [
             SpriteId.x1E_CRYSTAL_SWITCH,
             SpriteId.x1C_STATUE,
@@ -553,7 +540,7 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
             SpriteId.x97_EYE_LASER_DOWN,
             SpriteId.x15_ANTIFAIRY,
             SpriteId.x77_ANTIFAIRY_ALTERNATE,
-        ],  # 81=0x51  102=0x66  105=0x69
+        ],
         SpriteSheetId.x55_AGAHNIM: [
             SpriteId.x7A_AGAHNIM,
             SpriteId.xC1_AGAHNIM_TELEPORTING,
@@ -566,8 +553,8 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
         SpriteSheetId.x59_FOLLOWERS: [
             SpriteId.xB6_KIKI,
         ],
-        SpriteSheetId.x5A_UNKNOWN: [],  # 69=0x45
-        SpriteSheetId.x5C_UNKNOWN: [],  # 27=0x1b
+        SpriteSheetId.x5A_UNKNOWN: [],
+        SpriteSheetId.x5C_UNKNOWN: [],
         SpriteSheetId.x5D_MANTLE_CREDITS: [
             SpriteId.xEE_MANTLE
         ],  # Contains intro/outro sprites as well, but they are not listed.

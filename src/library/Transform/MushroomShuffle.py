@@ -10,12 +10,12 @@ def reroll_lost_woods_mushroom(context: Context) -> None:
     lost_woods_lw = context.overworld_areas[OverworldAreaId.x0_LOST_WOODS]
 
     original_mushroom = next(
-        it for it in lost_woods_lw.light_world_v2.sprites if it.sprite_id == SpriteId.xE7_MUSHROOM
+        it for it in lost_woods_lw.lw_v2.sprites if it.sprite_id == SpriteId.xE7_MUSHROOM
     )
     # Reassign the mushroom to a fake master sword
     original_mushroom.sprite_id = SpriteId.xE8_FAKE_MASTER_SWORD
     next_mushroom = context.random.choice(
-        [it for it in lost_woods_lw.light_world_v2.sprites if it.sprite_id == SpriteId.xE8_FAKE_MASTER_SWORD]
+        [it for it in lost_woods_lw.lw_v2.sprites if it.sprite_id == SpriteId.xE8_FAKE_MASTER_SWORD]
     )
     # Randomly assign fake master sword as mushroom.
     next_mushroom.sprite_id = SpriteId.xE7_MUSHROOM

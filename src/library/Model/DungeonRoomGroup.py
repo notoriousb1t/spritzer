@@ -197,6 +197,7 @@ def get_dungeon_room_groups() -> Dict[DungeonRoomGroupId, DungeonRoomGroup]:
             exclude_from_tile_shuffle=[
                 DungeonRoomId.xA9_EASTERN_PALACE_BIG_CHEST_ROOM,
                 DungeonRoomId.xD9_EASTERN_PALACE_CANONBALL_ROOM,
+                DungeonRoomId.xB9_EASTERN_PALACE_LOBBY_CANNONBALLS_ROOM,
             ],
             blocksets=[
                 BlocksetId.x0_CASTLE,
