@@ -88,7 +88,6 @@ class SpriteSheetId(IntEnum):
 def get_common_sprites() -> List[SpriteId]:
     """Sprites that are available for any spritesheet"""
     return [
-        SpriteId.xD3_STAL,
         SpriteId.x33_PULL_FOR_RUPEES,
         SpriteId.x9F_FLUTE,
         SpriteId.xAC_APPLE,
@@ -115,12 +114,14 @@ def get_common_sprites() -> List[SpriteId]:
         SpriteId.x3B_DASH_ITEM,  # TODO: needs verification
         SpriteId.xD1_BUNNY_BEAM,  # TODO: Needs verification
         SpriteId.x76_PRINCESS_ZELDA,
+        SpriteId.xBA_WHIRLPOOL,
     ]
 
 
 def common_dungeon_sprites() -> List[SpriteId]:
     """Sprites that can be used regardless of the spritesheet"""
     return [
+        SpriteId.xD3_STAL,
         SpriteId.xC5_MEDUSA,
         SpriteId.xC6_YOMO_MEDUSA,
         SpriteId.xE4_KEY,
@@ -154,11 +155,9 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
             SpriteId.x42_GREEN_SWORD_SOLDIER,
             SpriteId.x43_RED_SPEAR_SOLDIER,
             SpriteId.x45_GREEN_SPEAR_SOLDIER,
-        ],
-        SpriteSheetId.xE_POE_THIEF: [
             SpriteId.x19_POE,
-            SpriteId.xC4_THIEF,
         ],
+        SpriteSheetId.xE_POE_THIEF: [],
         SpriteSheetId.xF_DASH_HOARDER: [
             SpriteId.x17_BUSH_HOARDER,
             SpriteId.x3B_DASH_ITEM,
@@ -172,6 +171,9 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
             SpriteId.xC2_BOULDERS,
             SpriteId.xC9_TEKTITE,
             SpriteId.xF4_FALLING_ROCKS_OW_OVERLORD,
+             # This is incorrect, but looks almost intentional and increases the
+             # the number of flying creatures available. "Flying Hoarder"
+            SpriteId.x19_POE,
         ],
         SpriteSheetId.x11_MISC_FAKE_SWORD: [
             SpriteId.x0_CROW,
@@ -181,6 +183,9 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
             SpriteId.x4D_TOPPO,
             SpriteId.xD_BUZZBLOB,
             SpriteId.xE8_FAKE_MASTER_SWORD,
+             # This is incorrect, but looks almost intentional and increases the
+             # the number of flying creatures available. "Flying Hoarder"
+            SpriteId.x19_POE,
         ],
         SpriteSheetId.x12_DESERT_1: [
             SpriteId.x1_VULTURE,
@@ -203,7 +208,6 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
             SpriteId.xBB_SALESMAN,
             SpriteId.xB_CUCCO,
             SpriteId.x14_GARGOYLES_DOMAIN_GATE,
-            SpriteId.x19_POE,
         ],
         SpriteSheetId.x16_HINOX_SNAPDRAGON: [
             SpriteId.xE_SNAPDRAGON,
@@ -212,6 +216,7 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
         ],
         SpriteSheetId.x17_MOBLIN: [
             SpriteId.x12_MOBLIN,
+            SpriteId.xE_SNAPDRAGON,
         ],
         SpriteSheetId.x18_OCTOROCKS: [
             SpriteId.x55_FIREBALL_ZORA,
@@ -221,7 +226,6 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
         ],
         SpriteSheetId.x19_SWAMOLA_CROW: [
             SpriteId.x0_CROW,
-            SpriteId.xE_SNAPDRAGON,
             SpriteId.x25_TALKING_TREE,
             SpriteId.xB6_KIKI,
             SpriteId.xCF_SWAMOLA,
@@ -238,6 +242,7 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
             SpriteId.xA8_ZIRRO_1,
             SpriteId.xA9_ZIRRO_2,
             SpriteId.xAA_PIKIT,
+            SpriteId.x19_POE,
         ],
         SpriteSheetId.x1C_PESTS: [
             SpriteId.x6D_RAT,
@@ -559,8 +564,5 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
             SpriteId.xEE_MANTLE
         ],  # Contains intro/outro sprites as well, but they are not listed.
     }
-
-    for id in spriteset_dict.keys():
-        spriteset_dict[id] += get_common_sprites() + common_dungeon_sprites()
 
     return spriteset_dict

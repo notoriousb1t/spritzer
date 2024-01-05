@@ -59,7 +59,6 @@ def patch(
 
     # Perform preprocessing
     context.unused_spritesets = create_free_spriteset_list(context)
-    print(f"found {len(context.unused_spritesets)} {context.unused_spritesets}")
     context.spritesheet_sprites = create_spriteset_dict()
     if preprocess_list:
         for preprocessor in preprocess_list:
@@ -69,6 +68,7 @@ def patch(
     rom.set_mode(RomMode.LOCKED)
     for transform in transform_list:
         transform(context)
+
 
     # Write the data back to the ROM.
     rom.set_mode(RomMode.WRITE)

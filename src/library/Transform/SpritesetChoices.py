@@ -1,5 +1,5 @@
 from typing import List
-from ..Model.SpritesetId import SpritesetId
+from ..Model import SpritesetId
 from .Context import Context
 
 

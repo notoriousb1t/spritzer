@@ -11,7 +11,7 @@ class SpriteType(IntEnum):
     NPC = 5  # Invincible characters such as townfolk.
     OBJECT = 6  # Basic category for interactive objects such as projectiles.
     OVERLORD = 7  # Screen events like Bee traps.
-    CONSUMABLE = 8  # Consumed by Link, such as rupees.
+    CONSUMABLE = 8  # Consumed by Link or temporary, such as rupees.
     HAZARD = 9  # Fire bars, spikes, etc.
 
     def __str__(self) -> str:
