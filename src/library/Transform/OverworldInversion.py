@@ -7,13 +7,22 @@ from . import Context
 # If all indexes are preserved, the sprite sheet is left fully intact.
 # If a non-zero number of indexes less than max are provided, it creates a new spritesheet to capture changes.
 _SPECIAL_AREAS: Dict[OverworldAreaId, Tuple[List[int], List[int], List[int]]] = {
-    OverworldAreaId.x16_WITCHS_HUT: ([2], []),
+    # Preserve Witch and zoras
+    OverworldAreaId.x16_WITCHS_HUT: ([2], [2]),
+    # This is only NPCs, so just skip inversion.
     OverworldAreaId.x28_KAKARIKO_VILLAGE_MAZE_RACE: (range(4), range(4)),
+    # Preserve frog black smith
+    OverworldAreaId.x29_KAKARIKO_VILLAGE_LIBRARY: ([], range(4)),
+    # Preserve all existing NPCs
     OverworldAreaId.x18_KAKARIKO_VILLAGE: (range(4), []),
+    # Only NPCs and creatures.
     OverworldAreaId.x2A_HAUNTED_GROVE: (range(4), range(4)),
+    # Don't bother inverting master sword area or man camping under bridge.
     OverworldAreaId.x40_MASTER_SWORD_UNDER_BRIDGE: (range(4), range(4)),
+    # Lumberjack in lw_v1 and dash item in lw_v2
     OverworldAreaId.x2_LUMBER_JACK_HOUSE: (range(4), []),
-    OverworldAreaId.xF_ENTRANCE_TO_ZORAS_DOMAIN: ([], range(4)),
+    # Preserve catfish.
+    OverworldAreaId.xF_ENTRANCE_TO_ZORAS_DOMAIN: ([], [2, 3]),
     # Hylia Obstacle and Tablet. Also preserve Fireball Zoras.
     OverworldAreaId.x30_DESERT_OF_MYSTERY: ([2], [2]),
     # Fake Sword

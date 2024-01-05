@@ -3,7 +3,7 @@ from typing import Callable, List
 
 from .Options import Options, OverworldEnemyShuffle, DungeonEnemyShuffle
 
-from .Model import create_spriteset_dict, create_free_spriteset_list
+from .Model import create_spriteset_dict
 from library.Rom import (
     get_local_rom,
     read_damage_table,
@@ -22,6 +22,7 @@ from library.Rom import (
 )
 from library.Transform import (
     Context,
+    create_free_spriteset_list,
     preprocess_simple_overworld_choices,
     preprocess_simple_dungeon_choices,
     preprocess_full_overworld_choices,
@@ -55,9 +56,10 @@ def patch(
     context.sprites = read_sprites(rom)
     context.overworld_areas = read_overworld_areas(rom)
     context.dungeon_rooms = read_dungeon_rooms(rom)
-    context.unused_spritesets = create_free_spriteset_list()
 
     # Perform preprocessing
+    context.unused_spritesets = create_free_spriteset_list(context)
+    print(f"found {len(context.unused_spritesets)} {context.unused_spritesets}")
     context.spritesheet_sprites = create_spriteset_dict()
     if preprocess_list:
         for preprocessor in preprocess_list:

@@ -11,4 +11,5 @@ from .Placement import *
 from .ShadowBees import *
 from .SpriteChoices import *
 from .SpriteExpansion import *
+from .SpritesetChoices import *
 from .VanillaFixes import *
