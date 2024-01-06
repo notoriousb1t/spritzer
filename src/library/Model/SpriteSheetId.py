@@ -157,11 +157,15 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
             SpriteId.x45_GREEN_SPEAR_SOLDIER,
             SpriteId.x19_POE,
         ],
-        SpriteSheetId.xE_POE_THIEF: [],
+        SpriteSheetId.xE_POE_THIEF: [
+            SpriteId.x19_POE,
+        ],
         SpriteSheetId.xF_DASH_HOARDER: [
             SpriteId.x17_BUSH_HOARDER,
             SpriteId.x3B_DASH_ITEM,
             SpriteId.x3E_ROCK_HOARDER,
+            # Creates a "Flying Hoarder"
+            SpriteId.x19_POE,
         ],
         SpriteSheetId.x10_MISC_ROCKS: [
             SpriteId.x17_BUSH_HOARDER,
@@ -171,8 +175,7 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
             SpriteId.xC2_BOULDERS,
             SpriteId.xC9_TEKTITE,
             SpriteId.xF4_FALLING_ROCKS_OW_OVERLORD,
-             # This is incorrect, but looks almost intentional and increases the
-             # the number of flying creatures available. "Flying Hoarder"
+            # Creates a "Flying Hoarder"
             SpriteId.x19_POE,
         ],
         SpriteSheetId.x11_MISC_FAKE_SWORD: [
@@ -183,9 +186,9 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
             SpriteId.x4D_TOPPO,
             SpriteId.xD_BUZZBLOB,
             SpriteId.xE8_FAKE_MASTER_SWORD,
-             # This is incorrect, but looks almost intentional and increases the
-             # the number of flying creatures available. "Flying Hoarder"
+            # Creates a "Flying Hoarder"
             SpriteId.x19_POE,
+            SpriteId.xC4_THIEF,
         ],
         SpriteSheetId.x12_DESERT_1: [
             SpriteId.x1_VULTURE,
@@ -208,6 +211,8 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
             SpriteId.xBB_SALESMAN,
             SpriteId.xB_CUCCO,
             SpriteId.x14_GARGOYLES_DOMAIN_GATE,
+            SpriteId.x19_POE,
+            SpriteId.xC4_THIEF,
         ],
         SpriteSheetId.x16_HINOX_SNAPDRAGON: [
             SpriteId.xE_SNAPDRAGON,

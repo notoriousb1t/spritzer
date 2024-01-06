@@ -16,7 +16,7 @@ _SPECIAL_AREAS: Dict[OverworldAreaId, Tuple[List[int], List[int], List[int]]] = 
     # Preserve all existing NPCs
     OverworldAreaId.x18_KAKARIKO_VILLAGE: (range(4), []),
     # Purple chest.
-    OverworldAreaId.x22_SMITHY: ([], range(4)),
+    OverworldAreaId.x22_SMITHY: ([], [0, 3]),
     # Only NPCs and creatures.
     OverworldAreaId.x2A_HAUNTED_GROVE: (range(4), range(4)),
     # Don't bother inverting master sword area or man camping under bridge.
@@ -115,21 +115,6 @@ def _invert_normal_overworld_versions(area: OverworldArea) -> None:
 
 
 def invert_world(context: Context) -> None:
-    for area in context.overworld_areas.values():
-        target = SpriteId.x19_POE
-        if area.lw_v1 and target in [sprite.sprite_id for sprite in area.lw_v1.sprites]:
-            print(f"{area.id}")
-            print(f" - Set {area.lw_v1.spriteset_id}")
-            print(f" - Sheet {context.spritesets[area.lw_v1.spriteset_id].sheet3}")
-        if area.lw_v2 and target in [sprite.sprite_id for sprite in area.lw_v2.sprites]:
-            print(f"{area.id}")
-            print(f" - Set {area.lw_v2.spriteset_id}")
-            print(f" - Sheet {context.spritesets[area.lw_v2.spriteset_id].sheet3}")
-        if area.dw and target in [sprite.sprite_id for sprite in area.dw.sprites]:
-            print(f"{area.id}")
-            print(f" - Set {area.dw.spriteset_id}")
-            print(f" - Sheet {context.spritesets[area.dw.spriteset_id].sheet3}")
-
     # Replace talking trees with fairies. This serves 2 purposes:
     # - introduces more consumables to dark world
     # - generalizes areas because Talking Trees are considered NPCs.
@@ -142,9 +127,6 @@ def invert_world(context: Context) -> None:
             if sprite.sprite_id == SpriteId.x4D_TOPPO:
                 # This generally works everywhere.
                 sprite.sprite_id = SpriteId.xD3_STAL
-            if sprite.sprite_id == SpriteId.xD2_FLOPPING_FISH:
-                # This generally works everywhere.
-                sprite.sprite_id = SpriteId.xD3_STAL
 
     for area in context.overworld_areas.values():
         if area.id in _SPECIAL_AREAS:
@@ -154,7 +136,16 @@ def invert_world(context: Context) -> None:
             _invert_normal_overworld_versions(area)
 
     # Some manual tweaks.
-    
+    # This swap doesn't work as well because kakariko has no flying creatures.
+    kakariko_vilage = context.overworld_areas[OverworldAreaId.x18_KAKARIKO_VILLAGE]
+    kakariko_path = context.overworld_areas[
+        OverworldAreaId.x10_PATH_BETWEEN_KAKARIKO_VILLAGE_AND_LOST_WOODS
+    ]
+    for sprites in [kakariko_path.dw.sprites, kakariko_vilage.dw.sprites]:
+        for sprite in sprites:
+            if sprite.sprite_id == SpriteId.x19_POE:
+                sprite.sprite_id = SpriteId.xB_CUCCO
+
     # Restores Poes in Dark Kakariko.
     thieves_village_spriteset = context.spritesets[SpritesetId.x15_THIEVES_VILLAGE]
     thieves_village_spriteset.sheet3 = SpriteSheetId.x15_THIEF_DW
