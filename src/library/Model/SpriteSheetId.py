@@ -155,7 +155,6 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
             SpriteId.x42_GREEN_SWORD_SOLDIER,
             SpriteId.x43_RED_SPEAR_SOLDIER,
             SpriteId.x45_GREEN_SPEAR_SOLDIER,
-            SpriteId.x19_POE,
         ],
         SpriteSheetId.xE_POE_THIEF: [
             SpriteId.x19_POE,
@@ -188,7 +187,6 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
             SpriteId.xE8_FAKE_MASTER_SWORD,
             # Creates a "Flying Hoarder"
             SpriteId.x19_POE,
-            SpriteId.xC4_THIEF,
         ],
         SpriteSheetId.x12_DESERT_1: [
             SpriteId.x1_VULTURE,
@@ -212,7 +210,6 @@ def create_spriteset_dict() -> Dict[SpriteSheetId, List[SpriteId]]:
             SpriteId.xB_CUCCO,
             SpriteId.x14_GARGOYLES_DOMAIN_GATE,
             SpriteId.x19_POE,
-            SpriteId.xC4_THIEF,
         ],
         SpriteSheetId.x16_HINOX_SNAPDRAGON: [
             SpriteId.xE_SNAPDRAGON,

@@ -53,13 +53,17 @@ def _invert_special_overworld_versions(context: Context, area: OverworldArea) ->
     """Specific patches to preserve NPCs and objects, but non-restrictive overall."""
     (preserved_lw_sheets, preserved_dw_sheets) = _SPECIAL_AREAS[area.id]
     spriteset_lw_id = area.lw_v1.spriteset_id if area.lw_v1 else area.lw_v2.spriteset_id
+    spriteset_lw_palette = area.lw_v2.sprite_palette_id
     spriteset_lw = context.spritesets[spriteset_lw_id]
     spriteset_dw_id = area.dw.spriteset_id
+    spriteset_dw_palette = area.dw.sprite_palette_id
     spriteset_dw = context.spritesets[spriteset_dw_id]
 
     if len(preserved_lw_sheets) == 0:
         area.lw_v1.spriteset_id = spriteset_dw_id
+        area.lw_v1.sprite_palette_id = spriteset_dw_palette
         area.lw_v2.spriteset_id = spriteset_dw_id
+        area.lw_v2.sprite_palette_id = spriteset_dw_palette
     elif len(preserved_lw_sheets) == 4:
         # If we are preserving all 4 spots, do nothing.
         pass
@@ -68,7 +72,9 @@ def _invert_special_overworld_versions(context: Context, area: OverworldArea) ->
         spriteset = context.spritesets[spriteset_id]
 
         area.lw_v1.spriteset_id = spriteset_id
+        area.lw_v1.sprite_palette_id = spriteset_dw_palette
         area.lw_v2.spriteset_id = spriteset_id
+        area.lw_v2.sprite_palette_id = spriteset_dw_palette
 
         for index in range(4):
             if index in preserved_lw_sheets:
@@ -78,6 +84,7 @@ def _invert_special_overworld_versions(context: Context, area: OverworldArea) ->
 
     if len(preserved_dw_sheets) == 0:
         area.dw.spriteset_id = spriteset_lw_id
+        area.dw.sprite_palette_id = spriteset_lw_palette
     elif len(preserved_dw_sheets) == 4:
         # If we are preserving all 4 spots, do nothing.
         pass
@@ -86,6 +93,7 @@ def _invert_special_overworld_versions(context: Context, area: OverworldArea) ->
         spriteset_id = context.unused_spritesets.pop()
         spriteset = context.spritesets[spriteset_id]
         area.dw.spriteset_id = spriteset_id
+        area.dw.sprite_palette_id = spriteset_lw_palette
 
         for index in range(4):
             if index in preserved_dw_sheets:
