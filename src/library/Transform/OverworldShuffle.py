@@ -24,9 +24,9 @@ def _balanced_weights(context: Context, sprite_ids: List[SpriteId]) -> List[int]
         * max(context.sprites[x].hp, 4),
         reverse=True,
     )
-    # create weight which is 1 + its fractional value in the list. This means enemies with
-    # high hit points relative to the group will be placed less often.
-    # Add 0.25 so the weight is never 0. This also serves to balance the weightings somewhat.
+    # create weight which is its fractional place in the list. This means enemies with
+    # high difficulty relative to the group will be placed slightly less often.
+    # Add 0.25 so the weight is never 0 (not placed). This also serves to balance the weightings somewhat.
     return [0.25 + (index / len(sprite_ids)) for index, _ in enumerate(sprite_ids)]
 
 
