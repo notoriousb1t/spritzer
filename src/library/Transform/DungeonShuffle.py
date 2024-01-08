@@ -111,7 +111,7 @@ def _generate_sprite_selections(
             weights = context.get_dungeon_enemy_weights(context, possible_matches)
             distance_map[dungeon_sprite.distance_from_midpoint] = random.choices(
                 possible_matches,
-                cum_weights=weights,
+                weights=weights,
             )[0]
     return distance_map
 

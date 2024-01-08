@@ -4,7 +4,10 @@ from ..Model import SpriteId
 
 
 def _compute_difficulty(context: Context, sprite_id) -> int:
-    return 0
+    sprite = context.sprites[sprite_id]
+    subclass = sprite.subclass if sprite.subclass != None else 1
+    hp = sprite.hp if sprite.hp != None and sprite.hp != 0xFF else 0xF
+    return (hp / 4) * subclass
 
 
 def get_weights_random(_: Context, sprite_ids: List[SpriteId]) -> List[int]:
@@ -34,45 +37,36 @@ def get_weights_balanced(context: Context, sprite_ids: List[SpriteId]) -> List[i
 
 
 def get_weights_casual(context: Context, sprite_ids: List[SpriteId]) -> List[int]:
-    # Find difficulty by multiplying the green mail damage by the creature's HP.
-    # This seems to more or less line up with difficulty of killing the creature
-    # Min HP for this purpose is 4. Damage has a +1 modifier to prevent 0.
-    sprite_ids.sort(
-        key=lambda x: (
-            context.damage_table.link_damage_rows[
-                context.sprites[x].subclass
-            ].green_mail
-            + 1
-        )
-        * max(context.sprites[x].hp, 4),
-        reverse=False,
-    )
-    # Zero out the top 70% of enemies.
+    sprite_ids.sort(key=lambda x: _compute_difficulty(context, x))
+    # Zero out the top 50% of enemies. Also removed any enemy with red in its name (soldiers)
     count = len(sprite_ids)
     return [
-        max(0.00001, (5 if (index + 1 / count) > .666 else 0))
-        for index, _ in enumerate(sprite_ids)
+        max(
+            0.00001,
+            (
+                0
+                if (index / count) > 0.5
+                else (1 if not ("RED" in id.name and "SOLDIER" in id.name) else 0.00001)
+            ),
+        )
+        for index, id in enumerate(sprite_ids)
     ]
 
 
-
 def get_weights_hero(context: Context, sprite_ids: List[SpriteId]) -> List[int]:
-    # Find difficulty by multiplying the green mail damage by the creature's HP.
-    # This seems to more or less line up with difficulty of killing the creature
-    # Min HP for this purpose is 4. Damage has a +1 modifier to prevent 0.
-    sprite_ids.sort(
-        key=lambda x: (
-            context.damage_table.link_damage_rows[
-                context.sprites[x].subclass
-            ].green_mail
-            + 1
-        )
-        * max(context.sprites[x].hp, 4),
-        reverse=True,
-    )
-    # Zero out the top 70% of enemies.
+    sprite_ids.sort(key=lambda x: _compute_difficulty(context, x))
+    # Zero out the bottom 50% of enemies. Also removed any enemy with green in its name (soldiers)
     count = len(sprite_ids)
     return [
-        max(0.00001, (5 if (index + 1 / count) > .666 else 0))
-        for index, _ in enumerate(sprite_ids)
+        max(
+            0.00001,
+            (
+                0
+                if (index / count) <= 0.75
+                else (
+                    1 if not ("GREEN" in id.name and "SOLDIER" in id.name) else 0.00001
+                )
+            ),
+        )
+        for index, id in enumerate(sprite_ids)
     ]

@@ -37,7 +37,7 @@ def _reroll_overworld_sprites(
 
             # Try to find a suitable match, if not just leave the Sprite as is.
             weights = context.get_overworld_enemy_weights(context, possible_matches)
-            sprite_id = random.choices(possible_matches, cum_weights=weights)[0]
+            sprite_id = random.choices(possible_matches, weights=weights)[0]
             if sprite_id != overworld_sprite.sprite_id:
                 overworld_sprite.sprite_id = sprite_id
 
