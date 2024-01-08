@@ -1,9 +1,15 @@
 from random import Random
 from typing import Callable, List
 
-from .Options import Options, OverworldEnemyShuffle, DungeonEnemyShuffle
+from .Options import (
+    Options,
+    OverworldEnemyShuffle,
+    DungeonEnemyShuffle,
+    OverworldEnemyBalancing,
+    DungeonEnemyBalancing,
+)
 
-from .Model import create_spriteset_dict
+from .Model import create_spriteset_dict, SpriteId
 from library.Rom import (
     get_local_rom,
     read_damage_table,
@@ -38,6 +44,10 @@ from library.Transform import (
     reroll_lost_woods_mushroom,
     reroll_overworld_enemies,
     patch_invulnerable_sprites,
+    get_weights_balanced,
+    get_weights_random,
+    get_weights_casual,
+    get_weights_hero,
 )
 
 
@@ -46,9 +56,15 @@ def patch(
     random: Random,
     preprocess_list: List[Callable[[Context], None]],
     transform_list: List[Callable[[Context], None]],
+    dungeon_enemy_balancing: Callable[[Context, List[SpriteId]], List[int]] = None,
+    overworld_enemy_balancing: Callable[[Context, List[SpriteId]], List[int]] = None,
 ) -> None:
     rom = get_local_rom(buffer)
     context = Context(random=random)
+    if dungeon_enemy_balancing:
+        context.get_dungeon_enemy_weights = dungeon_enemy_balancing
+    if overworld_enemy_balancing:
+        context.get_overworld_enemy_weights = overworld_enemy_balancing
     # Read the rom and load all models.
     context.damage_table = read_damage_table(rom)
     context.sprite_subclasses = read_sprite_subclasses(rom)
@@ -68,7 +84,6 @@ def patch(
     rom.set_mode(RomMode.LOCKED)
     for transform in transform_list:
         transform(context)
-
 
     # Write the data back to the ROM.
     rom.set_mode(RomMode.WRITE)
@@ -152,11 +167,31 @@ def patch_buffer(
         preprocess_list.append(expand_overworld_sprite_pool)
         transform_list.append(reroll_overworld_enemies)
 
+    if options.overworld_enemy_balancing == OverworldEnemyBalancing.BALANCED:
+        overworld_enemy_balancing = get_weights_balanced
+    elif options.overworld_enemy_balancing == OverworldEnemyBalancing.CASUAL:
+        overworld_enemy_balancing = get_weights_casual
+    elif options.overworld_enemy_balancing == OverworldEnemyBalancing.HERO:
+        overworld_enemy_balancing = get_weights_hero
+    else:
+        overworld_enemy_balancing = get_weights_random
+
+    if options.dungeon_enemy_balancing == DungeonEnemyBalancing.BALANCED:
+        dungeon_enemy_balancing = get_weights_balanced
+    elif options.dungeon_enemy_balancing == DungeonEnemyBalancing.CASUAL:
+        dungeon_enemy_balancing = get_weights_casual
+    elif options.dungeon_enemy_balancing == DungeonEnemyBalancing.HERO:
+        dungeon_enemy_balancing = get_weights_hero
+    else:
+        dungeon_enemy_balancing = get_weights_random
+
     patch(
         buffer=buffer,
         random=random,
         preprocess_list=preprocess_list,
         transform_list=transform_list,
+        dungeon_enemy_balancing=dungeon_enemy_balancing,
+        overworld_enemy_balancing=overworld_enemy_balancing,
     )
 
 

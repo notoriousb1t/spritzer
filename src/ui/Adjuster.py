@@ -14,7 +14,13 @@ from customtkinter import (
 )
 from random import Random
 from tkinter import filedialog, messagebox, BooleanVar, StringVar
-from library.Options import Options, DungeonEnemyShuffle, OverworldEnemyShuffle
+from library.Options import (
+    Options,
+    DungeonEnemyShuffle,
+    OverworldEnemyShuffle,
+    OverworldEnemyBalancing,
+    DungeonEnemyBalancing,
+)
 from library.Patch import patch_file
 
 _PADX = 12
@@ -27,13 +33,21 @@ class Adjuster:
         self.app = CTk()
 
         # Generate a random string for the seed.
-        random_seed = ''.join(Random().choices(ascii_uppercase + digits, k=16))
+        random_seed = "".join(Random().choices(ascii_uppercase + digits, k=16))
 
         self.seed = StringVar(self.app, value=random_seed)
         self.enable_boss_shuffle = BooleanVar(self.app, False)
         self.enable_dungeon_palette_shuffle = BooleanVar(self.app, False)
-        self.dungeon_enemy_shuffle = StringVar(self.app, DungeonEnemyShuffle.VANILLA)
-        self.overworld_enemy_shuffle = StringVar(self.app, OverworldEnemyShuffle.INVERTED)
+        self.dungeon_enemy_balancing = StringVar(
+            self.app, DungeonEnemyBalancing.RANDOM
+        )
+        self.dungeon_enemy_shuffle = StringVar(self.app, DungeonEnemyShuffle.SIMPLE)
+        self.overworld_enemy_balancing = StringVar(
+            self.app, OverworldEnemyBalancing.RANDOM
+        )
+        self.overworld_enemy_shuffle = StringVar(
+            self.app, OverworldEnemyShuffle.SIMPLE
+        )
         self.enable_dungeon_tileset_shuffle = BooleanVar(self.app, False)
         self.enable_killable_thieves = BooleanVar(self.app, False)
         self.enable_shadow_bees = BooleanVar(self.app, False)
@@ -50,7 +64,7 @@ class Adjuster:
     def create_window(self) -> None:
         # create root window
         self.app.title("Spritzer ROM Adjuster")
-        self.app.eval('tk::PlaceWindow . center')
+        self.app.eval("tk::PlaceWindow . center")
         self.app.minsize(_WINDOW[0], _WINDOW[1])
         self.app.maxsize(_WINDOW[0], _WINDOW[1])
 
@@ -58,18 +72,32 @@ class Adjuster:
         self.option_frame = CTkScrollableFrame(
             master=self.app,
         )
-        self.dungeon_enemy_shuffle_label = CTkLabel(
+        self.dungeon_enemy_balancing_label = CTkLabel(
+            self.option_frame, text="Dungeon Enemy Balancing"
+        )
+        self.dungeon_enemy_balancing_combobox = CTkComboBox(
             self.option_frame,
-            text="Dungeon Entity Shuffle"
+            values=list(DungeonEnemyBalancing),
+            variable=self.dungeon_enemy_balancing,
+        )
+        self.dungeon_enemy_shuffle_label = CTkLabel(
+            self.option_frame, text="Dungeon Enemy Shuffle"
         )
         self.dungeon_enemy_shuffle_combobox = CTkComboBox(
             self.option_frame,
             values=list(DungeonEnemyShuffle),
             variable=self.dungeon_enemy_shuffle,
         )
-        self.overworld_enemy_shuffle_label = CTkLabel(
+        self.overworld_enemy_balancing_label = CTkLabel(
+            self.option_frame, text="Overworld Enemy Balancing"
+        )
+        self.overworld_enemy_balancing_combobox = CTkComboBox(
             self.option_frame,
-            text="Overworld Entity Shuffle"
+            values=list(OverworldEnemyBalancing),
+            variable=self.overworld_enemy_balancing,
+        )
+        self.overworld_enemy_shuffle_label = CTkLabel(
+            self.option_frame, text="Overworld Enemy Shuffle"
         )
         self.overworld_enemy_shuffle_combobox = CTkComboBox(
             self.option_frame,
@@ -156,16 +184,43 @@ class Adjuster:
             pady=_PADY,
             padx=_PADX,
         )
-
-        self.dungeon_enemy_shuffle_label.grid(
+        self.overworld_enemy_balancing_label.grid(
             row=1,
             column=0,
             sticky="W",
             pady=_PADY,
             padx=_PADX,
         )
-        self.dungeon_enemy_shuffle_combobox.grid(
+        self.overworld_enemy_balancing_combobox.grid(
             row=1,
+            column=1,
+            sticky="W",
+            pady=_PADY,
+            padx=_PADX,
+        )
+        self.dungeon_enemy_shuffle_label.grid(
+            row=2,
+            column=0,
+            sticky="W",
+            pady=_PADY,
+            padx=_PADX,
+        )
+        self.dungeon_enemy_shuffle_combobox.grid(
+            row=2,
+            column=1,
+            sticky="W",
+            pady=_PADY,
+            padx=_PADX,
+        )
+        self.dungeon_enemy_balancing_label.grid(
+            row=3,
+            column=0,
+            sticky="W",
+            pady=_PADY,
+            padx=_PADX,
+        )
+        self.dungeon_enemy_balancing_combobox.grid(
+            row=3,
             column=1,
             sticky="W",
             pady=_PADY,
@@ -183,7 +238,7 @@ class Adjuster:
 
         # Overcomplicated code that lays checkboxes into columns.
         column_count = 1
-        row_offset = 2
+        row_offset = 4
         for index, checkbox in enumerate(boolean_options):
             cell_count = floor(len(boolean_options) / column_count)
             row = row_offset + (index % cell_count)
@@ -234,8 +289,10 @@ class Adjuster:
         options.killable_thieves = self.enable_killable_thieves.get()
         options.mushroom_shuffle = self.enable_mushroom_shuffle.get()
         options.shadow_bees = self.enable_shadow_bees.get()
+        options.dungeon_enemy_balancing = self.dungeon_enemy_balancing.get()
         options.dungeon_enemy_shuffle = self.dungeon_enemy_shuffle.get()
         options.overworld_enemy_shuffle = self.overworld_enemy_shuffle.get()
+        options.overworld_enemy_balancing = self.overworld_enemy_balancing.get()
 
         input_path = filedialog.askopenfilename(filetypes=[("Zelda3 JPN", "*.sfc")])
         if not input_path:

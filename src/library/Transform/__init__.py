@@ -13,3 +13,4 @@ from .SpriteChoices import *
 from .SpriteExpansion import *
 from .SpritesetChoices import *
 from .VanillaFixes import *
+from .SpriteBalancing import *

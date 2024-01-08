@@ -72,6 +72,7 @@ def _sort_by_distance(dungeon_sprites: List[DungeonSprite]) -> List[DungeonSprit
 
 
 def _generate_sprite_selections(
+    context: Context,
     random: Random,
     dungeon_room_sprites: List[DungeonSprite],
     choices: Set[SpriteId],
@@ -101,17 +102,21 @@ def _generate_sprite_selections(
                 )
             ]
 
-            sprite_id = (
-                random.choice(possible_matches)
-                if len(possible_matches) > 0
-                else dungeon_sprite.sprite_id
-            )
-            distance_map[dungeon_sprite.distance_from_midpoint] = sprite_id
+            if len(possible_matches) == 0:
+                distance_map[
+                    dungeon_sprite.distance_from_midpoint
+                ] = dungeon_sprite.sprite_id
+                continue
+
+            weights = context.get_dungeon_enemy_weights(context, possible_matches)
+            distance_map[dungeon_sprite.distance_from_midpoint] = random.choices(
+                possible_matches,
+                cum_weights=weights,
+            )[0]
     return distance_map
 
 
 def reroll_dungeon_enemies(context: Context) -> None:
-
     for dungeon_room in context.dungeon_rooms.values():
         if dungeon_room.id in _block_list:
             # Ignore rooms that are problematic (for example, kill room logic isn't working)
@@ -145,7 +150,11 @@ def reroll_dungeon_enemies(context: Context) -> None:
 
         for dungeon_sprites in dungeon_sprites_by_role.values():
             distance_map = _generate_sprite_selections(
-                context.random, dungeon_sprites, choices, placement
+                context,
+                context.random,
+                dungeon_sprites,
+                choices,
+                placement,
             )
 
             for dungeon_sprite in dungeon_sprites:

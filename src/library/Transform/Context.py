@@ -1,6 +1,6 @@
 from attr import dataclass
 from random import Random
-from typing import Dict, List, Set
+from typing import Callable, Dict, List, Set, Self
 
 
 from ..Model import (
@@ -33,3 +33,6 @@ class Context:
     sprite_subclasses: Dict[SpriteSubclassId, SpriteSubclass] = {}
     spritesheet_sprites: Dict[SpriteSheetId, List[SpriteId]] = {}
     unused_spritesets: List[SpritesetId] = []
+
+    get_dungeon_enemy_weights: Callable[[Self, List[SpriteId]], List[int]] = None
+    get_overworld_enemy_weights: Callable[[Self, List[SpriteId]], List[int]] = None
