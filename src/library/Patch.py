@@ -1,7 +1,7 @@
 from random import Random
 from typing import Callable, List
 
-from .Options import Options, OverworldEnemyShuffle, UnderworldEnemyShuffle
+from .Options import Options, OverworldEnemyShuffle, UnderworldEnemyShuffle, Balancing
 
 from .Model import create_spriteset_dict
 from library.Rom import (
@@ -46,6 +46,8 @@ def patch(
     random: Random,
     preprocess_list: List[Callable[[Context], None]],
     transform_list: List[Callable[[Context], None]],
+    overworld_balancing: Balancing,
+    underworld_balancing: Balancing,
 ) -> None:
     rom = get_local_rom(buffer)
     context = Context(random=random)
@@ -57,6 +59,8 @@ def patch(
     context.sprites = read_sprites(rom)
     context.overworld_areas = read_overworld_areas(rom)
     context.underworld_rooms = read_underworld_rooms(rom)
+    context.overworld_balancing = overworld_balancing
+    context.underworld_balancing = underworld_balancing
 
     # Perform preprocessing
     context.unused_spritesets = create_free_overworld_spriteset_list(context)
@@ -157,6 +161,8 @@ def patch_buffer(
         random=random,
         preprocess_list=preprocess_list,
         transform_list=transform_list,
+        overworld_balancing=options.overworld_balancing,
+        underworld_balancing=options.underworld_balancing,
     )
 
 
