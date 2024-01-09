@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import List
 
-from ..Model import SpriteSettings, SpriteId
+from ..Model import SpriteSettings, SpriteId, SpriteVulnerability
 
 
 class Placement(Enum):
@@ -43,18 +43,16 @@ def is_compatible(
     if not (source_meta.can_shuffle_in_room and target_meta.can_shuffle_in_room):
         return False
 
-    if has_key and source_meta.can_hold_key and not target_meta.can_hold_key:
-        return False
+    if has_key and source_meta.can_hold_key:
+        return (
+            target_meta.can_hold_key
+            and source_meta.vulnerability == target_meta.vulnerability
+        )
 
     if (
-        has_key
-        and source_meta.can_hold_key
-        and source_meta.vulnerability != target_meta.vulnerability
+        placement == Placement.KILL_ROOM
+        or source_meta.vulnerability == SpriteVulnerability.INVULNERABLE
     ):
-        return False
+        return source_meta.vulnerability == target_meta.vulnerability
 
-    if placement != Placement.KILL_ROOM:
-        # No need to evaluate kill conditions if the Underworld Room isn't a kill room.
-        return True
-
-    return source_meta.vulnerability == target_meta.vulnerability
+    return target_meta.vulnerability != SpriteVulnerability.INVULNERABLE

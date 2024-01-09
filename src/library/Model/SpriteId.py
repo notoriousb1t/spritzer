@@ -333,7 +333,8 @@ _sprite_settings: Dict[SpriteId, SpriteSettings] = {
     SpriteId.x13_MINI_HELMASAUR: SpriteSettings(role=SpriteType.ENEMY),
     SpriteId.x14_GARGOYLES_DOMAIN_GATE: SpriteSettings(role=SpriteType.OBJECT),
     SpriteId.x15_ANTIFAIRY: SpriteSettings(
-        vulnerability=SpriteVulnerability.INVULNERABLE, role=SpriteType.ENEMY
+        vulnerability=SpriteVulnerability.INVULNERABLE,
+        role=SpriteType.ENEMY,
     ),
     SpriteId.x16_SAHASRAHLA: SpriteSettings(role=SpriteType.NPC),
     SpriteId.x17_BUSH_HOARDER: SpriteSettings(
@@ -710,5 +711,3 @@ _sprite_settings: Dict[SpriteId, SpriteSettings] = {
     SpriteId.x141_SOLDIER_ALERTER_BLUE: SpriteSettings(role=SpriteType.OVERLORD),
     SpriteId.x142_SOLDIER_ALERTER_GREEN: SpriteSettings(role=SpriteType.OVERLORD),
 }
-
-
