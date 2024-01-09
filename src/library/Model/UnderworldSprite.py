@@ -3,15 +3,15 @@ from .SpriteId import SpriteId
 
 
 @dataclass
-class DungeonSprite:
+class UnderworldSprite:
     _address: int
-    """The ROM address of the Sprite in an Dungeon Room. DO NOT MODIFY."""
+    """The ROM address of the Sprite in an Underworld Room. DO NOT MODIFY."""
     sprite_id: SpriteId
-    """The type of Sprite placed in the Dungeon Room.."""
+    """The type of Sprite placed in the Underworld Room.."""
     y: int
-    """The y coordinate of the Sprite in the Dungeon Room. and some settings."""
+    """The y coordinate of the Sprite in the Underworld Room. and some settings."""
     x: int
-    """The x coordinate of the Sprite in the Dungeon Room. and some settings."""
+    """The x coordinate of the Sprite in the Underworld Room. and some settings."""
     lower_layer: bool
     """True if this sprite is rendered on the bottom layer."""
     item: SpriteId

@@ -1,20 +1,7 @@
 from enum import StrEnum
 from attr import dataclass
 
-
-class DungeonEnemyShuffle(StrEnum):
-    VANILLA = "vanilla"
-    SIMPLE = "simple"
-    FULL = "full"
-    CHAOS = "chaos"
-    INSANITY = "insanity"
-
-
-class DungeonEnemyBalancing(StrEnum):
-    RANDOM = "random"
-    CASUAL = "casual"
-    BALANCED = "balanced"
-    HERO = "hero"
+from library.Transform.Context import Balancing
 
 
 class OverworldEnemyShuffle(StrEnum):
@@ -26,23 +13,24 @@ class OverworldEnemyShuffle(StrEnum):
     INSANITY = "insanity"
 
 
-class OverworldEnemyBalancing(StrEnum):
-    RANDOM = "random"
-    CASUAL = "casual"
-    BALANCED = "balanced"
-    HERO = "hero"
+class UnderworldEnemyShuffle(StrEnum):
+    VANILLA = "vanilla"
+    SIMPLE = "simple"
+    FULL = "full"
+    CHAOS = "chaos"
+    INSANITY = "insanity"
 
 
 @dataclass
 class Options:
+    seed: str = None
     boss_shuffle = False
-    dungeon_enemy_balancing = DungeonEnemyBalancing.BALANCED
-    dungeon_enemy_shuffle = DungeonEnemyShuffle.VANILLA
-    dungeon_palette_shuffle = False
-    dungeon_tileset_shuffle = False
+    overworld_balancing = Balancing.BALANCED
+    overworld_enemy_shuffle = OverworldEnemyShuffle.VANILLA
+    underworld_balancing = Balancing.BALANCED
+    underworld_enemy_shuffle = UnderworldEnemyShuffle.VANILLA
+    underworld_palette_shuffle = False
+    underworld_tileset_shuffle = False
     killable_thieves = False
     mushroom_shuffle = False
-    overworld_enemy_balancing = OverworldEnemyBalancing.BALANCED
-    overworld_enemy_shuffle = OverworldEnemyShuffle.VANILLA
-    seed: str = None
     shadow_bees = False

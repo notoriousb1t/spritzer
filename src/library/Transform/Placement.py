@@ -54,7 +54,7 @@ def is_compatible(
         return False
 
     if placement != Placement.KILL_ROOM:
-        # No need to evaluate kill conditions if the Dungeon Room isn't a kill room.
+        # No need to evaluate kill conditions if the Underworld Room isn't a kill room.
         return True
 
     return source_meta.vulnerability == target_meta.vulnerability

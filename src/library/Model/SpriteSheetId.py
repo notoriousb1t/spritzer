@@ -118,7 +118,7 @@ def get_common_sprites() -> List[SpriteId]:
     ]
 
 
-def common_dungeon_sprites() -> List[SpriteId]:
+def common_underworld_sprites() -> List[SpriteId]:
     """Sprites that can be used regardless of the spritesheet"""
     return [
         SpriteId.xD3_STAL,

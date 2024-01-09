@@ -65,7 +65,7 @@ class SpritesetId(IntEnum):
     x3F_FREESPACE = 63
     x40_FREESPACE = 64
 
-    # Dungeon Room Graphics Range 65-?
+    # Underworld Room Graphics Range 65-?
     x01_SEWER_AND_CAVES = 1 + _room_gfx_offset
     x02_FIRST_DARK_ROOM = 2 + _room_gfx_offset
     x03_THRONE_ROOM = 3 + _room_gfx_offset
@@ -110,24 +110,24 @@ class SpritesetId(IntEnum):
     x2A_HYPE_CAVE = 42 + _room_gfx_offset
     x2B_PALACE_OF_DARKNESS2 = 43 + _room_gfx_offset
 
-    x2C_DUNGEON_FREESPACE = 43 + _room_gfx_offset
-    x2D_DUNGEON_FREESPACE = 44 + _room_gfx_offset
-    x2E_DUNGEON_FREESPACE = 45 + _room_gfx_offset
-    x2F_DUNGEON_FREESPACE = 46 + _room_gfx_offset
-    x30_DUNGEON_FREESPACE = 47 + _room_gfx_offset
-    x31_DUNGEON_FREESPACE = 48 + _room_gfx_offset
-    x32_DUNGEON_FREESPACE = 49 + _room_gfx_offset
-    x33_DUNGEON_FREESPACE = 50 + _room_gfx_offset
-    x34_DUNGEON_FREESPACE = 51 + _room_gfx_offset
-    x35_DUNGEON_FREESPACE = 52 + _room_gfx_offset
-    x36_DUNGEON_FREESPACE = 53 + _room_gfx_offset
-    x37_DUNGEON_FREESPACE = 54 + _room_gfx_offset
-    x38_DUNGEON_FREESPACE = 55 + _room_gfx_offset
-    x39_DUNGEON_FREESPACE = 56 + _room_gfx_offset
-    x3A_DUNGEON_FREESPACE = 57 + _room_gfx_offset
-    x3B_DUNGEON_FREESPACE = 58 + _room_gfx_offset
-    x3C_DUNGEON_FREESPACE = 59 + _room_gfx_offset
-    x3D_DUNGEON_FREESPACE = 60 + _room_gfx_offset
+    x2C_UNDERWORLD_FREESPACE = 43 + _room_gfx_offset
+    x2D_UNDERWORLD_FREESPACE = 44 + _room_gfx_offset
+    x2E_UNDERWORLD_FREESPACE = 45 + _room_gfx_offset
+    x2F_UNDERWORLD_FREESPACE = 46 + _room_gfx_offset
+    x30_UNDERWORLD_FREESPACE = 47 + _room_gfx_offset
+    x31_UNDERWORLD_FREESPACE = 48 + _room_gfx_offset
+    x32_UNDERWORLD_FREESPACE = 49 + _room_gfx_offset
+    x33_UNDERWORLD_FREESPACE = 50 + _room_gfx_offset
+    x34_UNDERWORLD_FREESPACE = 51 + _room_gfx_offset
+    x35_UNDERWORLD_FREESPACE = 52 + _room_gfx_offset
+    x36_UNDERWORLD_FREESPACE = 53 + _room_gfx_offset
+    x37_UNDERWORLD_FREESPACE = 54 + _room_gfx_offset
+    x38_UNDERWORLD_FREESPACE = 55 + _room_gfx_offset
+    x39_UNDERWORLD_FREESPACE = 56 + _room_gfx_offset
+    x3A_UNDERWORLD_FREESPACE = 57 + _room_gfx_offset
+    x3B_UNDERWORLD_FREESPACE = 58 + _room_gfx_offset
+    x3C_UNDERWORLD_FREESPACE = 59 + _room_gfx_offset
+    x3D_UNDERWORLD_FREESPACE = 60 + _room_gfx_offset
 
     def __str__(self) -> str:
         return self.name

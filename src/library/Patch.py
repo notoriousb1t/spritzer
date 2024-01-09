@@ -1,26 +1,20 @@
 from random import Random
 from typing import Callable, List
 
-from .Options import (
-    Options,
-    OverworldEnemyShuffle,
-    DungeonEnemyShuffle,
-    OverworldEnemyBalancing,
-    DungeonEnemyBalancing,
-)
+from .Options import Options, OverworldEnemyShuffle, UnderworldEnemyShuffle
 
-from .Model import create_spriteset_dict, SpriteId
+from .Model import create_spriteset_dict
 from library.Rom import (
     get_local_rom,
     read_damage_table,
-    read_dungeon_rooms,
+    read_underworld_rooms,
     read_overworld_areas,
     read_sprites,
     read_spritesets,
     read_sprite_subclasses,
     RomMode,
     write_damage_table,
-    write_dungeon_rooms,
+    write_underworld_rooms,
     write_overworld_areas,
     write_spritesets,
     write_sprite_settings,
@@ -28,26 +22,22 @@ from library.Rom import (
 )
 from library.Transform import (
     Context,
-    create_free_spriteset_list,
+    create_free_overworld_spriteset_list,
     preprocess_simple_overworld_choices,
-    preprocess_simple_dungeon_choices,
+    preprocess_simple_underworld_choices,
     preprocess_full_overworld_choices,
-    preprocess_full_dungeon_choices,
+    preprocess_full_underworld_choices,
     expand_overworld_sprite_pool,
     invert_world,
     patch_shadow_bees,
     patch_thief_killable,
-    reroll_dungeon_bosses,
-    reroll_dungeon_palette,
-    reroll_dungeon_enemies,
-    reroll_dungeon_blocksets,
+    reroll_underworld_bosses,
+    reroll_underworld_palette,
+    reroll_underworld_enemies,
+    reroll_underworld_blocksets,
     reroll_lost_woods_mushroom,
     reroll_overworld_enemies,
     patch_invulnerable_sprites,
-    get_weights_balanced,
-    get_weights_random,
-    get_weights_casual,
-    get_weights_hero,
 )
 
 
@@ -56,25 +46,20 @@ def patch(
     random: Random,
     preprocess_list: List[Callable[[Context], None]],
     transform_list: List[Callable[[Context], None]],
-    dungeon_enemy_balancing: Callable[[Context, List[SpriteId]], List[int]] = None,
-    overworld_enemy_balancing: Callable[[Context, List[SpriteId]], List[int]] = None,
 ) -> None:
     rom = get_local_rom(buffer)
     context = Context(random=random)
-    if dungeon_enemy_balancing:
-        context.get_dungeon_enemy_weights = dungeon_enemy_balancing
-    if overworld_enemy_balancing:
-        context.get_overworld_enemy_weights = overworld_enemy_balancing
+
     # Read the rom and load all models.
     context.damage_table = read_damage_table(rom)
     context.sprite_subclasses = read_sprite_subclasses(rom)
     context.spritesets = read_spritesets(rom)
     context.sprites = read_sprites(rom)
     context.overworld_areas = read_overworld_areas(rom)
-    context.dungeon_rooms = read_dungeon_rooms(rom)
+    context.underworld_rooms = read_underworld_rooms(rom)
 
     # Perform preprocessing
-    context.unused_spritesets = create_free_spriteset_list(context)
+    context.unused_spritesets = create_free_overworld_spriteset_list(context)
     context.spritesheet_sprites = create_spriteset_dict()
     if preprocess_list:
         for preprocessor in preprocess_list:
@@ -92,7 +77,7 @@ def patch(
     write_sprite_settings(rom, context.sprites)
     write_spritesets(rom, context.spritesets)
     write_overworld_areas(rom, context.overworld_areas)
-    write_dungeon_rooms(rom, context.dungeon_rooms)
+    write_underworld_rooms(rom, context.underworld_rooms)
     # Write CRC to the ROM.
     rom.set_mode(RomMode.CRC)
     rom.write_crc()
@@ -120,31 +105,31 @@ def patch_buffer(
     if options.mushroom_shuffle:
         transform_list.append(reroll_lost_woods_mushroom)
 
-    if options.dungeon_tileset_shuffle:
-        transform_list.append(reroll_dungeon_blocksets)
+    if options.underworld_tileset_shuffle:
+        transform_list.append(reroll_underworld_blocksets)
 
-    if options.dungeon_palette_shuffle:
-        transform_list.append(reroll_dungeon_palette)
+    if options.underworld_palette_shuffle:
+        transform_list.append(reroll_underworld_palette)
 
     if options.boss_shuffle:
-        transform_list.append(reroll_dungeon_bosses)
+        transform_list.append(reroll_underworld_bosses)
 
-    if options.dungeon_enemy_shuffle == DungeonEnemyShuffle.SIMPLE:
-        preprocess_list.append(preprocess_simple_dungeon_choices)
+    if options.underworld_enemy_shuffle == UnderworldEnemyShuffle.SIMPLE:
+        preprocess_list.append(preprocess_simple_underworld_choices)
         preprocess_list.append(patch_invulnerable_sprites)
-        transform_list.append(reroll_dungeon_enemies)
-    elif options.dungeon_enemy_shuffle == DungeonEnemyShuffle.FULL:
-        preprocess_list.append(preprocess_full_dungeon_choices)
+        transform_list.append(reroll_underworld_enemies)
+    elif options.underworld_enemy_shuffle == UnderworldEnemyShuffle.FULL:
+        preprocess_list.append(preprocess_full_underworld_choices)
         preprocess_list.append(patch_invulnerable_sprites)
-        transform_list.append(reroll_dungeon_enemies)
-    elif options.dungeon_enemy_shuffle == DungeonEnemyShuffle.CHAOS:
-        preprocess_list.append(preprocess_full_dungeon_choices)
+        transform_list.append(reroll_underworld_enemies)
+    elif options.underworld_enemy_shuffle == UnderworldEnemyShuffle.CHAOS:
+        preprocess_list.append(preprocess_full_underworld_choices)
         preprocess_list.append(patch_invulnerable_sprites)
-        transform_list.append(reroll_dungeon_enemies)
-    elif options.dungeon_enemy_shuffle == DungeonEnemyShuffle.INSANITY:
-        preprocess_list.append(preprocess_full_dungeon_choices)
+        transform_list.append(reroll_underworld_enemies)
+    elif options.underworld_enemy_shuffle == UnderworldEnemyShuffle.INSANITY:
+        preprocess_list.append(preprocess_full_underworld_choices)
         preprocess_list.append(patch_invulnerable_sprites)
-        transform_list.append(reroll_dungeon_enemies)
+        transform_list.append(reroll_underworld_enemies)
 
     if options.overworld_enemy_shuffle == OverworldEnemyShuffle.SIMPLE:
         preprocess_list.append(preprocess_simple_overworld_choices)
@@ -167,31 +152,11 @@ def patch_buffer(
         preprocess_list.append(expand_overworld_sprite_pool)
         transform_list.append(reroll_overworld_enemies)
 
-    if options.overworld_enemy_balancing == OverworldEnemyBalancing.BALANCED:
-        overworld_enemy_balancing = get_weights_balanced
-    elif options.overworld_enemy_balancing == OverworldEnemyBalancing.CASUAL:
-        overworld_enemy_balancing = get_weights_casual
-    elif options.overworld_enemy_balancing == OverworldEnemyBalancing.HERO:
-        overworld_enemy_balancing = get_weights_hero
-    else:
-        overworld_enemy_balancing = get_weights_random
-
-    if options.dungeon_enemy_balancing == DungeonEnemyBalancing.BALANCED:
-        dungeon_enemy_balancing = get_weights_balanced
-    elif options.dungeon_enemy_balancing == DungeonEnemyBalancing.CASUAL:
-        dungeon_enemy_balancing = get_weights_casual
-    elif options.dungeon_enemy_balancing == DungeonEnemyBalancing.HERO:
-        dungeon_enemy_balancing = get_weights_hero
-    else:
-        dungeon_enemy_balancing = get_weights_random
-
     patch(
         buffer=buffer,
         random=random,
         preprocess_list=preprocess_list,
         transform_list=transform_list,
-        dungeon_enemy_balancing=dungeon_enemy_balancing,
-        overworld_enemy_balancing=overworld_enemy_balancing,
     )
 
 

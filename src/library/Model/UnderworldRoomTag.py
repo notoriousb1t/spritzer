@@ -1,8 +1,8 @@
 from enum import IntEnum
 
 
-class DungeonTag(IntEnum):
-    """Tags used to indicate conditions for a Dungeon Room such as key prize or shutter conditions."""
+class UnderworldRoomTag(IntEnum):
+    """Tags used to indicate conditions for an Underworld Room such as key prize or shutter conditions."""
 
     x0_NOTHING = 0
     x1_NW_KILL_ENEMY_TO_OPEN = 1
@@ -74,31 +74,31 @@ class DungeonTag(IntEnum):
 
     def is_kill_room(self) -> bool:
         return self in [
-            DungeonTag.x27_TRIGGER_ACTIVATED_CHEST,
-            DungeonTag.x1_NW_KILL_ENEMY_TO_OPEN,
-            DungeonTag.x2_NE_KILL_ENEMY_TO_OPEN,
-            DungeonTag.x3_SW_KILL_ENEMY_TO_OPEN,
-            DungeonTag.x4_SE_KILL_ENEMY_TO_OPEN,
-            DungeonTag.x5_W_KILL_ENEMY_TO_OPEN,
-            DungeonTag.x6_E_KILL_ENEMY_TO_OPEN,
-            DungeonTag.x7_N_KILL_ENEMY_TO_OPEN,
-            DungeonTag.x8_S_KILL_ENEMY_TO_OPEN,
-            DungeonTag.x9_CLEAR_QUADRANT_TO_OPEN,
-            DungeonTag.xA_CLEAR_ROOM_TO_OPEN,
-            DungeonTag.x15_CLEAR_LEVEL_TO_OPEN_DOOR,
-            DungeonTag.x25_KILL_ENEMY_TO_CLEAR_LEVEL,
-            DungeonTag.x26_SE_KILL_ENEMY_TO_MOVE_BLOCK,
-            DungeonTag.x29_NW_KILL_ENEMY_FOR_CHEST,
-            DungeonTag.x2A_NE_KILL_ENEMY_FOR_CHEST,
-            DungeonTag.x2B_SW_KILL_ENEMIES_FOR_CHEST,
-            DungeonTag.x2C_SE_KILL_ENEMY_FOR_CHEST,
-            DungeonTag.x2D_W_KILL_ENEMY_FOR_CHEST,
-            DungeonTag.x2E_E_KILL_ENEMY_FOR_CHEST,
-            DungeonTag.x2F_N_KILL_ENEMY_FOR_CHEST,
-            DungeonTag.x30_S_KILL_ENEMY_FOR_CHEST,
-            DungeonTag.x31_CLEAR_QUADRANT_FOR_CHEST,
-            DungeonTag.x32_CLEAR_ROOM_FOR_CHEST,
-            DungeonTag.x38_AGAHNIMS_ROOM,
-            DungeonTag.x3D_KILL_TO_OPEN_GANONS_DOOR,
-            DungeonTag.x3F_KILL_BOSS_AGAIN,
+            UnderworldRoomTag.x27_TRIGGER_ACTIVATED_CHEST,
+            UnderworldRoomTag.x1_NW_KILL_ENEMY_TO_OPEN,
+            UnderworldRoomTag.x2_NE_KILL_ENEMY_TO_OPEN,
+            UnderworldRoomTag.x3_SW_KILL_ENEMY_TO_OPEN,
+            UnderworldRoomTag.x4_SE_KILL_ENEMY_TO_OPEN,
+            UnderworldRoomTag.x5_W_KILL_ENEMY_TO_OPEN,
+            UnderworldRoomTag.x6_E_KILL_ENEMY_TO_OPEN,
+            UnderworldRoomTag.x7_N_KILL_ENEMY_TO_OPEN,
+            UnderworldRoomTag.x8_S_KILL_ENEMY_TO_OPEN,
+            UnderworldRoomTag.x9_CLEAR_QUADRANT_TO_OPEN,
+            UnderworldRoomTag.xA_CLEAR_ROOM_TO_OPEN,
+            UnderworldRoomTag.x15_CLEAR_LEVEL_TO_OPEN_DOOR,
+            UnderworldRoomTag.x25_KILL_ENEMY_TO_CLEAR_LEVEL,
+            UnderworldRoomTag.x26_SE_KILL_ENEMY_TO_MOVE_BLOCK,
+            UnderworldRoomTag.x29_NW_KILL_ENEMY_FOR_CHEST,
+            UnderworldRoomTag.x2A_NE_KILL_ENEMY_FOR_CHEST,
+            UnderworldRoomTag.x2B_SW_KILL_ENEMIES_FOR_CHEST,
+            UnderworldRoomTag.x2C_SE_KILL_ENEMY_FOR_CHEST,
+            UnderworldRoomTag.x2D_W_KILL_ENEMY_FOR_CHEST,
+            UnderworldRoomTag.x2E_E_KILL_ENEMY_FOR_CHEST,
+            UnderworldRoomTag.x2F_N_KILL_ENEMY_FOR_CHEST,
+            UnderworldRoomTag.x30_S_KILL_ENEMY_FOR_CHEST,
+            UnderworldRoomTag.x31_CLEAR_QUADRANT_FOR_CHEST,
+            UnderworldRoomTag.x32_CLEAR_ROOM_FOR_CHEST,
+            UnderworldRoomTag.x38_AGAHNIMS_ROOM,
+            UnderworldRoomTag.x3D_KILL_TO_OPEN_GANONS_DOOR,
+            UnderworldRoomTag.x3F_KILL_BOSS_AGAIN,
         ]

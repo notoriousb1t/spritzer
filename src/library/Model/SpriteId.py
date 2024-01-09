@@ -488,7 +488,7 @@ _sprite_settings: Dict[SpriteId, SpriteSettings] = {
     SpriteId.x80_WINDER: SpriteSettings(role=SpriteType.HAZARD),
     SpriteId.x81_WATER_TEKTITE: SpriteSettings(is_aquatic=True, role=SpriteType.ENEMY),
     SpriteId.x82_ANTIFAIRY_CIRCLE: SpriteSettings(
-        can_shuffle_in_room=False,  # This is tied to Dungeon Room mechanics (DungeonTags)
+        can_shuffle_in_room=False,  # This is tied to Underworld Room mechanics (UnderworldRoomTags)
         role=SpriteType.HAZARD,
     ),
     SpriteId.x83_GREEN_EYEGORE_MIMIC: SpriteSettings(

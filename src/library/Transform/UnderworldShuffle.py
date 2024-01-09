@@ -3,17 +3,18 @@ from random import Random
 from typing import List, Dict, Set, Tuple
 
 from ..Model import (
-    DungeonRoom,
+    UnderworldRoom,
     SpriteId,
     SpriteType,
-    DungeonSprite,
-    DungeonRoomId,
+    UnderworldSprite,
+    UnderworldRoomId,
 )
 
 from .Context import Context
+from .SpriteBalancing import get_weights
 from .Placement import Placement, is_compatible
 
-_block_list = [DungeonRoomId.x24_TURTLE_ROCK_DOUBLE_HOKKU_BOKKU_BIG_CHEST_ROOM]
+_block_list = [UnderworldRoomId.x24_TURTLE_ROCK_DOUBLE_HOKKU_BOKKU_BIG_CHEST_ROOM]
 
 
 def _find_distance(start: Tuple[int, int], end: Tuple[int, int]) -> int:
@@ -21,10 +22,10 @@ def _find_distance(start: Tuple[int, int], end: Tuple[int, int]) -> int:
 
 
 def _detect_room_configuration(
-    dungeon_sprites: List[DungeonSprite],
+    dungeon_sprites: List[UnderworldSprite],
 ) -> Tuple[int, int, bool]:
-    start: DungeonSprite = None
-    end: DungeonSprite = None
+    start: UnderworldSprite = None
+    end: UnderworldSprite = None
     max_distance = 0
     is_horizontal = True
     for i in range(len(dungeon_sprites)):
@@ -46,7 +47,9 @@ def _detect_room_configuration(
     )
 
 
-def _sort_by_distance(dungeon_sprites: List[DungeonSprite]) -> List[DungeonSprite]:
+def _sort_by_distance(
+    dungeon_sprites: List[UnderworldSprite],
+) -> List[UnderworldSprite]:
     if len(dungeon_sprites) < 2:
         return dungeon_sprites
 
@@ -74,7 +77,7 @@ def _sort_by_distance(dungeon_sprites: List[DungeonSprite]) -> List[DungeonSprit
 def _generate_sprite_selections(
     context: Context,
     random: Random,
-    dungeon_room_sprites: List[DungeonSprite],
+    dungeon_room_sprites: List[UnderworldSprite],
     choices: Set[SpriteId],
     placement: Placement,
 ) -> Dict[int, SpriteId]:
@@ -108,7 +111,11 @@ def _generate_sprite_selections(
                 ] = dungeon_sprite.sprite_id
                 continue
 
-            weights = context.get_dungeon_enemy_weights(context, possible_matches)
+            weights = get_weights(
+                context.underworld_balancing,
+                context,
+                possible_matches,
+            )
             distance_map[dungeon_sprite.distance_from_midpoint] = random.choices(
                 possible_matches,
                 weights=weights,
@@ -116,8 +123,8 @@ def _generate_sprite_selections(
     return distance_map
 
 
-def reroll_dungeon_enemies(context: Context) -> None:
-    for dungeon_room in context.dungeon_rooms.values():
+def reroll_underworld_enemies(context: Context) -> None:
+    for dungeon_room in context.underworld_rooms.values():
         if dungeon_room.id in _block_list:
             # Ignore rooms that are problematic (for example, kill room logic isn't working)
             continue
@@ -129,7 +136,7 @@ def reroll_dungeon_enemies(context: Context) -> None:
             # Skip all boss rooms, we shouldn't try to reroll those through this option.
             continue
 
-        choices = context.dungeon_choices[dungeon_room.spriteset_id]
+        choices = context.underworld_choices[dungeon_room.spriteset_id]
         if len(choices) < 1:
             # Skip if there is nothing to switch.
             continue
@@ -137,9 +144,9 @@ def reroll_dungeon_enemies(context: Context) -> None:
         placement = (
             Placement.KILL_ROOM
             if dungeon_room.tag1.is_kill_room() or dungeon_room.tag2.is_kill_room()
-            else DungeonRoom
+            else UnderworldRoom
         )
-        dungeon_sprites_by_role: Dict[SpriteType, List[DungeonSprite]] = {
+        dungeon_sprites_by_role: Dict[SpriteType, List[UnderworldSprite]] = {
             it: list() for it in list(SpriteType)
         }
         for dungeon_sprite in dungeon_room.sprites:

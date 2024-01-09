@@ -2,7 +2,7 @@ from enum import IntEnum
 
 
 class BlocksetId(IntEnum):
-    """The resource id of walls, floors, etc. of the Dungeon Room."""
+    """The resource id of walls, floors, etc. of the Underworld Room."""
 
     x0_CASTLE = 0
     x1_DUNGEON = 1

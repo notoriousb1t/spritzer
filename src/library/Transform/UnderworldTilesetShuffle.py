@@ -1,9 +1,9 @@
-from ..Model import get_dungeon_room_groups, SpriteType
+from ..Model import get_underworld_groups, SpriteType
 from .Context import Context
 
 
-def reroll_dungeon_blocksets(context: Context) -> None:
-    dungeon_room_groups = get_dungeon_room_groups()
+def reroll_underworld_blocksets(context: Context) -> None:
+    dungeon_room_groups = get_underworld_groups()
 
     for dungeon_group in dungeon_room_groups.values():
         if len(dungeon_group.rooms) < 1:
@@ -17,7 +17,7 @@ def reroll_dungeon_blocksets(context: Context) -> None:
 
         next_blockset_id = context.random.choice(matching_blocksets)
         for room_id in dungeon_group.rooms:
-            room = context.dungeon_rooms[room_id]
+            room = context.underworld_rooms[room_id]
             if (
                 any(
                     it

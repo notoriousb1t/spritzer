@@ -1,11 +1,10 @@
 from typing import Dict, List
 
 from ..Model.PaletteId import PaletteId
-
-from ..Model import DungeonRoom, SpriteType
+from ..Model import UnderworldRoom, SpriteType
 from .Context import Context
 
-_dungeon_palettes = [
+_underworld_palettes = [
     PaletteId.x00_HYRULE_CASTLE,
     PaletteId.x03_GREEN_DUNGEON,
     PaletteId.x04_ICE_DUNGEON,
@@ -32,18 +31,18 @@ _dungeon_palettes = [
     PaletteId.x28_GANONS_TOWER,
 ]
 
-def reroll_dungeon_palette(context: Context) -> None:
-    palette_dict: Dict[PaletteId, List[DungeonRoom]] = {
+def reroll_underworld_palette(context: Context) -> None:
+    palette_dict: Dict[PaletteId, List[UnderworldRoom]] = {
         it: list() for it in list(PaletteId)
     }
-    for room in context.dungeon_rooms.values():
+    for room in context.underworld_rooms.values():
         palette_dict[room.palette_id].append(room)
 
     for room_list in palette_dict.values():
         if len(room_list) == 0:
             continue
 
-        new_palette_id = context.random.choice(_dungeon_palettes)
+        new_palette_id = context.random.choice(_underworld_palettes)
         for room in room_list:
             if any(
                 it

@@ -4,11 +4,11 @@ from .LocalRom import LocalRom, resolve_address
 
 from ..Model import (
     BlocksetId,
-    DungeonRoom,
-    DungeonRoomFloorId,
-    DungeonRoomId,
-    DungeonSprite,
-    DungeonTag,
+    UnderworldRoom,
+    UnderworldRoomFloorId,
+    UnderworldRoomId,
+    UnderworldSprite,
+    UnderworldRoomTag,
     PaletteId,
     SpriteId,
     SpritesetId,
@@ -31,7 +31,7 @@ def _peek_item(rom: LocalRom, sprite_address: int) -> SpriteId:
     return None
 
 
-def _read_room_sprites(rom: LocalRom, base_address: int) -> List[DungeonSprite]:
+def _read_room_sprites(rom: LocalRom, base_address: int) -> List[UnderworldSprite]:
     index = 1  # byte 0 handles sprite ordering, there is no reason to modify this.
     dungeon_room_sprites = []
     remaining_max_bytes = 10000
@@ -61,7 +61,7 @@ def _read_room_sprites(rom: LocalRom, base_address: int) -> List[DungeonSprite]:
         item = _peek_item(rom, sprite_address)
 
         dungeon_room_sprites.append(
-            DungeonSprite(
+            UnderworldSprite(
                 sprite_address,
                 sprite_id=type,
                 y=y,
@@ -77,7 +77,7 @@ def _read_room_sprites(rom: LocalRom, base_address: int) -> List[DungeonSprite]:
     return dungeon_room_sprites
 
 
-def _read_room(rom: LocalRom, id: DungeonRoomId) -> DungeonRoom:
+def _read_room(rom: LocalRom, id: UnderworldRoomId) -> UnderworldRoom:
     # Find the address of the Dungeon Room and read in graphics block and tags.
     header_address = resolve_address(
         [
@@ -93,15 +93,15 @@ def _read_room(rom: LocalRom, id: DungeonRoomId) -> DungeonRoom:
     blockset_id = BlocksetId(rom.read_address(header_address + 2))
     spriteset_id = SpritesetId.from_room_value(rom.read_address(header_address + 3))
     bgmove = rom.read_address(header_address + 4)
-    tag1 = DungeonTag(rom.read_address(header_address + 5))
-    tag2 = DungeonTag(rom.read_address(header_address + 6))
-    floor_upper = DungeonRoomFloorId(rom.read_address(header_address + 7))
-    floor_lower = DungeonRoomFloorId(rom.read_address(header_address + 8))
-    warp = DungeonRoomId(rom.read_address(header_address + 9))
-    stairs0 = DungeonRoomId(rom.read_address(header_address + 10))
-    stairs1 = DungeonRoomId(rom.read_address(header_address + 11))
-    stairs2 = DungeonRoomId(rom.read_address(header_address + 12))
-    stairs3 = DungeonRoomId(rom.read_address(header_address + 13))
+    tag1 = UnderworldRoomTag(rom.read_address(header_address + 5))
+    tag2 = UnderworldRoomTag(rom.read_address(header_address + 6))
+    floor_upper = UnderworldRoomFloorId(rom.read_address(header_address + 7))
+    floor_lower = UnderworldRoomFloorId(rom.read_address(header_address + 8))
+    warp = UnderworldRoomId(rom.read_address(header_address + 9))
+    stairs0 = UnderworldRoomId(rom.read_address(header_address + 10))
+    stairs1 = UnderworldRoomId(rom.read_address(header_address + 11))
+    stairs2 = UnderworldRoomId(rom.read_address(header_address + 12))
+    stairs3 = UnderworldRoomId(rom.read_address(header_address + 13))
 
     sprite_ptr = (
         rom.read_snes_address(rom.room_sprite_pointers_snes + (id * 2)),
@@ -109,7 +109,7 @@ def _read_room(rom: LocalRom, id: DungeonRoomId) -> DungeonRoom:
     )
     sprite_table_base_snes_address = resolve_address(
         [
-            rom.dungeon_sprite_bank,
+            rom.underworld_sprite_bank,
             sprite_ptr[1],
             sprite_ptr[0],
         ]
@@ -117,7 +117,7 @@ def _read_room(rom: LocalRom, id: DungeonRoomId) -> DungeonRoom:
 
     dungeon_sprites = _read_room_sprites(rom, sprite_table_base_snes_address)
 
-    return DungeonRoom(
+    return UnderworldRoom(
         header_address=header_address,
         id=id,
         bg2_property=bg2_property,
@@ -139,11 +139,11 @@ def _read_room(rom: LocalRom, id: DungeonRoomId) -> DungeonRoom:
     )
 
 
-def read_dungeon_rooms(rom: LocalRom) -> Dict[DungeonRoomId, DungeonRoom]:
-    return {id: _read_room(rom, id) for id in list(DungeonRoomId)}
+def read_underworld_rooms(rom: LocalRom) -> Dict[UnderworldRoomId, UnderworldRoom]:
+    return {id: _read_room(rom, id) for id in list(UnderworldRoomId)}
 
 
-def _write_dungeon_sprites(rom: LocalRom, room: DungeonRoom) -> None:
+def _write_dungeon_sprites(rom: LocalRom, room: UnderworldRoom) -> None:
     # Rewrite new Dungeon Sprites.
     for dungeon_sprite in room.sprites:
         rom.write_address(
@@ -163,9 +163,9 @@ def _write_dungeon_sprites(rom: LocalRom, room: DungeonRoom) -> None:
         )
 
 
-def write_dungeon_rooms(
+def write_underworld_rooms(
     rom: LocalRom,
-    dungeon_room_dict: Dict[DungeonRoomId, DungeonRoom],
+    dungeon_room_dict: Dict[UnderworldRoomId, UnderworldRoom],
 ) -> None:
     for room in dungeon_room_dict.values():
         rom.write_address(room.header_address, room.bg2_property)

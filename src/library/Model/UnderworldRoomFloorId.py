@@ -1,8 +1,8 @@
 from enum import IntEnum
 
 
-class DungeonRoomFloorId(IntEnum):
-    """The floors of dungeons"""
+class UnderworldRoomFloorId(IntEnum):
+    """The floors of the underworld"""
 
     x00_GROUND_NEUTRAL = 0
     x01_GROUND_PRIMARY = 1

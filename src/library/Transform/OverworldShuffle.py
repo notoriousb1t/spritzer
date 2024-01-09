@@ -1,5 +1,6 @@
 from random import Random
 from typing import List, Set
+from .SpriteBalancing import get_weights
 
 
 from . import Context, Placement, is_compatible
@@ -36,7 +37,12 @@ def _reroll_overworld_sprites(
                 break
 
             # Try to find a suitable match, if not just leave the Sprite as is.
-            weights = context.get_overworld_enemy_weights(context, possible_matches)
+
+            weights = get_weights(
+                context.overworld_balancing,
+                context,
+                possible_matches,
+            )
             sprite_id = random.choices(possible_matches, weights=weights)[0]
             if sprite_id != overworld_sprite.sprite_id:
                 overworld_sprite.sprite_id = sprite_id

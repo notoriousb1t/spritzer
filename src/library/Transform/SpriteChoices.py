@@ -1,6 +1,6 @@
 from typing import Dict, Set
 from .Context import Context
-from ..Model import SpriteId, SpritesetId, get_common_sprites, common_dungeon_sprites
+from ..Model import SpriteId, SpritesetId, get_common_sprites, common_underworld_sprites
 
 
 def _compute_basic_sprite_choices(context: Context) -> Dict[SpriteId, Set[SpriteId]]:
@@ -14,7 +14,7 @@ def _compute_basic_sprite_choices(context: Context) -> Dict[SpriteId, Set[Sprite
             for sprite in version.sprites:
                 choices[version.spriteset_id].add(sprite.sprite_id)
 
-    for room in context.dungeon_rooms.values():
+    for room in context.underworld_rooms.values():
         if not room.spriteset_id in choices:
             choices[room.spriteset_id] = set()
         for sprite in room.sprites:
@@ -23,7 +23,7 @@ def _compute_basic_sprite_choices(context: Context) -> Dict[SpriteId, Set[Sprite
     return choices
 
 
-def _compute_full_sprite_choices(context: Context, is_dungeon: bool) -> Dict[SpritesetId, Set[SpriteId]]:
+def _compute_full_sprite_choices(context: Context, is_underworld: bool) -> Dict[SpritesetId, Set[SpriteId]]:
     """Compute sprite choices based on what is possible in a Spriteset."""
     # Create a dictionary of Entities which occur in that graphics blocks in these Overworld Areas.
     choices: Dict[SpritesetId, Set[SpriteId]] = {}
@@ -60,19 +60,19 @@ def _compute_full_sprite_choices(context: Context, is_dungeon: bool) -> Dict[Spr
         for sprite_id in get_common_sprites():
             choices[spriteset_id].add(sprite_id)
         
-        if is_dungeon:
-            for sprite_id in common_dungeon_sprites():
+        if is_underworld:
+            for sprite_id in common_underworld_sprites():
                 choices[spriteset_id].add(sprite_id)
     return choices
 
 def preprocess_simple_overworld_choices(context: Context) -> None:
     context.overworld_choices = _compute_basic_sprite_choices(context)
     
-def preprocess_simple_dungeon_choices(context: Context) -> None:
-    context.dungeon_choices = _compute_basic_sprite_choices(context)
+def preprocess_simple_underworld_choices(context: Context) -> None:
+    context.underworld_choices = _compute_basic_sprite_choices(context)
 
 def preprocess_full_overworld_choices(context: Context) -> None:
     context.overworld_choices = _compute_full_sprite_choices(context, False)
 
-def preprocess_full_dungeon_choices(context: Context) -> None:
-    context.dungeon_choices = _compute_full_sprite_choices(context, True)
+def preprocess_full_underworld_choices(context: Context) -> None:
+    context.underworld_choices = _compute_full_sprite_choices(context, True)

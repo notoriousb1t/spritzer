@@ -78,8 +78,8 @@ class LocalRom:
     _mode = RomMode.READ
 
     room_header_bank = 0x04
-    dungeon_sprite_bank = 0x09
     overworld_sprite_bank = 0x09
+    underworld_sprite_bank = 0x09
 
     sprite_blockset_snes = 0x00DB97
     room_header_pointers_snes = 0x4F1E2

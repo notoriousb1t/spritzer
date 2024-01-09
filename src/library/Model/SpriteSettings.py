@@ -10,7 +10,7 @@ class SpriteSettings:
     can_shuffle_in_area: bool
     """True if this Sprite is allowed to be shuffled in Overworld Areas."""
     can_shuffle_in_room: bool
-    """True if this Sprite is allowed to be shuffled in Dungeon Rooms."""
+    """True if this Sprite is allowed to be shuffled in Underworld Rooms."""
     can_hold_key: bool
     """True if the Sprite can be assigned a key."""
     is_aquatic: bool
@@ -56,7 +56,7 @@ class SpriteSettings:
         )
 
         if role == SpriteType.ENEMY or role == SpriteType.BOSS:
-            # Set defaults that preserve dungeon progression.
+            # Set defaults that preserve underworld progression.
             self.can_hold_key = can_hold_key if can_hold_key != None else True
             self.vulnerability = (
                 vulnerability if vulnerability != None else SpriteVulnerability.ANY

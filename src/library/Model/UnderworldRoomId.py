@@ -1,7 +1,7 @@
 from enum import IntEnum
 
 
-class DungeonRoomId(IntEnum):
+class UnderworldRoomId(IntEnum):
     """An identifier for a room in dungeons, houses, and caves."""
 
     x00_GANON = 0
