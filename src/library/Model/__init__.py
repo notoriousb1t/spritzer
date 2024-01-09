@@ -16,6 +16,7 @@ from .Sprite import *
 from .SpriteId import *
 from .Spriteset import *
 from .SpritesetId import *
+from .SpriteMovement import *
 from .SpriteSettings import *
 from .SpriteSheetId import *
 from .SpriteSubclass import *

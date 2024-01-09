@@ -1,7 +1,6 @@
 from enum import Enum
-from typing import List
 
-from ..Model import SpriteSettings, SpriteId, SpriteVulnerability
+from ..Model import SpriteSettings, SpriteId, SpriteVulnerability, SpriteMovement
 
 
 class Placement(Enum):
@@ -24,6 +23,22 @@ def _is_classification_compatible(
     )
 
 
+def is_movement_compatible(
+    source: SpriteSettings,
+    target: SpriteSettings,
+) -> bool:
+    if source.movement == None or target.movement == None:
+        return False
+
+    if not any(
+        flag in target.movement for flag in SpriteMovement if flag in source.movement
+    ):
+        # Ignore if there is no overlap in movement.
+        return False
+
+    return True
+
+
 def is_compatible(
     source: SpriteId,
     target: SpriteId,
@@ -35,6 +50,9 @@ def is_compatible(
     target_meta = target.meta()
 
     if not _is_classification_compatible(source_meta, target_meta):
+        return False
+
+    if not is_movement_compatible(source_meta, target_meta):
         return False
 
     if placement == Placement.AREA:

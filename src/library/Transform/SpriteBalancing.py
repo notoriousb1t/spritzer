@@ -1,6 +1,6 @@
-from typing import List, Callable
+from typing import List
 from .Context import Context, Balancing
-from ..Model import SpriteId
+from ..Model import SpriteId, SpriteType
 
 
 _casual_blocklist = [
@@ -58,7 +58,9 @@ def _get_weights_balanced(context: Context, sprite_ids: List[SpriteId]) -> List[
     return [
         max(
             0.000001,
-            2
+            1
+            if id.role == SpriteType.HAZARD
+            else 2
             if (index / count) < 0.3
             else 0.1
             if (index / count) > 0.5 or id in _adjusted_enemies
@@ -76,7 +78,9 @@ def _get_weights_casual(context: Context, sprite_ids: List[SpriteId]) -> List[in
         max(
             0.000001,
             (
-                0
+                1
+                if id.role == SpriteType.HAZARD
+                else 0
                 if (index / count) > 0.3
                 else 0.000001
                 if id in _casual_blocklist
@@ -95,7 +99,9 @@ def _get_weights_hero(context: Context, sprite_ids: List[SpriteId]) -> List[int]
         max(
             0.00001,
             (
-                0
+                1
+                if id.role == SpriteType.HAZARD
+                else 0
                 if (index / count) <= 0.7
                 else 5
                 if not id in _hero_blocklist

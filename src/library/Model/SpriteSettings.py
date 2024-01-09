@@ -1,5 +1,6 @@
 from .SpriteType import SpriteType
 from .SpriteVulnerability import SpriteVulnerability
+from .SpriteMovement import SpriteMovement
 
 
 class SpriteSettings:
@@ -20,6 +21,8 @@ class SpriteSettings:
     would get stuck on."""
     role: SpriteType
     """The role of the Entity in the world. Determines randomization strategies."""
+    movement: SpriteMovement
+    """The possible movements for this sprite. This was created largely for hazards."""
 
     def __init__(
         self,
@@ -31,10 +34,12 @@ class SpriteSettings:
         can_shuffle_in_area=None,
         can_shuffle_in_room=None,
         can_hold_key=None,
+        movement=None,
     ) -> None:
         self.role = role
         self.is_aquatic = is_aquatic
         self.is_flying = is_flying
+        self.movement = movement
 
         # By default, all creatures, enemies, and consumables can be shuffled.
         can_shuffle = (

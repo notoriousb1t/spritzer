@@ -3,6 +3,7 @@ from typing import Dict
 
 from .SpriteSettings import SpriteSettings
 from .SpriteType import SpriteType
+from .SpriteMovement import SpriteMovement
 from .SpriteVulnerability import SpriteVulnerability
 
 
@@ -334,7 +335,8 @@ _sprite_settings: Dict[SpriteId, SpriteSettings] = {
     SpriteId.x14_GARGOYLES_DOMAIN_GATE: SpriteSettings(role=SpriteType.OBJECT),
     SpriteId.x15_ANTIFAIRY: SpriteSettings(
         vulnerability=SpriteVulnerability.INVULNERABLE,
-        role=SpriteType.ENEMY,
+        role=SpriteType.HAZARD,
+        movement=SpriteMovement.DIAGONAL,
     ),
     SpriteId.x16_SAHASRAHLA: SpriteSettings(role=SpriteType.NPC),
     SpriteId.x17_BUSH_HOARDER: SpriteSettings(
@@ -389,9 +391,7 @@ _sprite_settings: Dict[SpriteId, SpriteSettings] = {
     ),
     SpriteId.x3F_TUTORIAL_SOLDIER: SpriteSettings(role=SpriteType.NPC),
     SpriteId.x40_LIGHTNING_LOCK: SpriteSettings(role=SpriteType.OBJECT),
-    SpriteId.x41_BLUE_SWORD_SOLDIER: SpriteSettings(
-        vulnerability=SpriteVulnerability.ANY, role=SpriteType.ENEMY
-    ),
+    SpriteId.x41_BLUE_SWORD_SOLDIER: SpriteSettings(role=SpriteType.ENEMY),
     SpriteId.x42_GREEN_SWORD_SOLDIER: SpriteSettings(role=SpriteType.ENEMY),
     SpriteId.x43_RED_SPEAR_SOLDIER: SpriteSettings(role=SpriteType.ENEMY),
     SpriteId.x44_ASSAULT_SWORD_SOLDIER: SpriteSettings(role=SpriteType.ENEMY),
@@ -422,28 +422,55 @@ _sprite_settings: Dict[SpriteId, SpriteSettings] = {
     SpriteId.x58_CRAB: SpriteSettings(role=SpriteType.ENEMY),
     SpriteId.x59_BIRD: SpriteSettings(role=SpriteType.CREATURE),
     SpriteId.x5A_SQUIRREL: SpriteSettings(role=SpriteType.CREATURE),
-    SpriteId.x5B_SPARK_LEFT_TO_RIGHT: SpriteSettings(role=SpriteType.HAZARD),
-    SpriteId.x5C_SPARK_RIGHT_TO_LEFT: SpriteSettings(role=SpriteType.HAZARD),
-    SpriteId.x5D_ROLLER_VERTICAL_MOVING_1: SpriteSettings(role=SpriteType.HAZARD),
-    SpriteId.x5E_ROLLER_VERTICAL_MOVING_2: SpriteSettings(role=SpriteType.HAZARD),
-    SpriteId.x5F_ROLLER: SpriteSettings(role=SpriteType.HAZARD),
-    SpriteId.x60_ROLLER_HORIZONTAL_MOVING: SpriteSettings(role=SpriteType.HAZARD),
-    SpriteId.x61_BEAMOS: SpriteSettings(role=SpriteType.HAZARD),
+    SpriteId.x5B_SPARK_LEFT_TO_RIGHT: SpriteSettings(
+        role=SpriteType.HAZARD, movement=SpriteMovement.SNAKE
+    ),
+    SpriteId.x5C_SPARK_RIGHT_TO_LEFT: SpriteSettings(
+        role=SpriteType.HAZARD, movement=SpriteMovement.SNAKE
+    ),
+    SpriteId.x5D_ROLLER_VERTICAL_MOVING_1: SpriteSettings(
+        role=SpriteType.HAZARD,
+        movement=SpriteMovement.VERTICAL,
+    ),
+    SpriteId.x5E_ROLLER_VERTICAL_MOVING_2: SpriteSettings(
+        role=SpriteType.HAZARD,
+        movement=SpriteMovement.VERTICAL,
+    ),
+    SpriteId.x5F_ROLLER: SpriteSettings(
+        role=SpriteType.HAZARD,
+        movement=SpriteMovement.HORIZONTAL,
+    ),
+    SpriteId.x60_ROLLER_HORIZONTAL_MOVING: SpriteSettings(
+        role=SpriteType.HAZARD,
+        movement=SpriteMovement.HORIZONTAL,
+    ),
+    SpriteId.x61_BEAMOS: SpriteSettings(
+        role=SpriteType.HAZARD,
+        movement=SpriteMovement.FIXED,
+    ),
     SpriteId.x62_MASTER_SWORD: SpriteSettings(role=SpriteType.OBJECT),
     SpriteId.x63_DEVALANT_NON_SHOOTER: SpriteSettings(role=SpriteType.ENEMY),
     SpriteId.x64_DEVALANT_SHOOTER: SpriteSettings(role=SpriteType.ENEMY),
     SpriteId.x65_ARCHERY_GUY: SpriteSettings(role=SpriteType.NPC),
     SpriteId.x66_MOVING_CANNON_BALL_SHOOTERS_RIGHT: SpriteSettings(
-        can_shuffle_in_room=False, role=SpriteType.HAZARD
+        can_shuffle_in_room=False,
+        role=SpriteType.HAZARD,
+        movement=SpriteMovement.EAST,
     ),
     SpriteId.x67_MOVING_CANNON_BALL_SHOOTERS_LEFT: SpriteSettings(
-        can_shuffle_in_room=False, role=SpriteType.HAZARD
+        can_shuffle_in_room=False,
+        role=SpriteType.HAZARD,
+        movement=SpriteMovement.WEST,
     ),
     SpriteId.x68_MOVING_CANNON_BALL_SHOOTERS_DOWN: SpriteSettings(
-        can_shuffle_in_room=False, role=SpriteType.HAZARD
+        can_shuffle_in_room=False,
+        role=SpriteType.HAZARD,
+        movement=SpriteMovement.WEST,
     ),
     SpriteId.x69_MOVING_CANNON_BALL_SHOOTERS_UP: SpriteSettings(
-        can_shuffle_in_room=False, role=SpriteType.HAZARD
+        can_shuffle_in_room=False,
+        role=SpriteType.HAZARD,
+        movement=SpriteMovement.NORTH,
     ),
     SpriteId.x6A_BALL_N_CHAIN_TROOPER: SpriteSettings(role=SpriteType.ENEMY),
     SpriteId.x6B_CANNON_SOLDIER: SpriteSettings(role=SpriteType.ENEMY),
@@ -464,6 +491,7 @@ _sprite_settings: Dict[SpriteId, SpriteSettings] = {
         vulnerability=SpriteVulnerability.INVULNERABLE,
         role=SpriteType.ENEMY,
         can_shuffle_in_room=False,
+        movement=SpriteMovement.DIAGONAL,
     ),
     SpriteId.x78_VILLAGE_ELDER: SpriteSettings(role=SpriteType.NPC),
     SpriteId.x79_BEE: SpriteSettings(role=SpriteType.CONSUMABLE),
@@ -474,18 +502,27 @@ _sprite_settings: Dict[SpriteId, SpriteSettings] = {
         vulnerability=SpriteVulnerability.INVULNERABLE,
         role=SpriteType.ENEMY,
     ),
-    SpriteId.x7D_BIG_SPIKE_TRAP: SpriteSettings(role=SpriteType.HAZARD),
-    SpriteId.x7E_GURUGURU_BAR_CLOCKWISE: SpriteSettings(role=SpriteType.HAZARD),
-    SpriteId.x7F_GURUGURU_BAR_COUNTER_CLOCKWISE: SpriteSettings(role=SpriteType.HAZARD),
-    SpriteId.x80_WINDER: SpriteSettings(role=SpriteType.HAZARD),
+    SpriteId.x7D_BIG_SPIKE_TRAP: SpriteSettings(
+        role=SpriteType.HAZARD,
+        movement=SpriteMovement.HORIZONTAL | SpriteMovement.VERTICAL,
+    ),
+    SpriteId.x7E_GURUGURU_BAR_CLOCKWISE: SpriteSettings(
+        role=SpriteType.HAZARD, movement=SpriteMovement.FIXED
+    ),
+    SpriteId.x7F_GURUGURU_BAR_COUNTER_CLOCKWISE: SpriteSettings(
+        role=SpriteType.HAZARD, movement=SpriteMovement.FIXED
+    ),
+    SpriteId.x80_WINDER: SpriteSettings(
+        role=SpriteType.HAZARD,
+        movement=SpriteMovement.SNAKE,
+    ),
     SpriteId.x81_WATER_TEKTITE: SpriteSettings(is_aquatic=True, role=SpriteType.ENEMY),
     SpriteId.x82_ANTIFAIRY_CIRCLE: SpriteSettings(
         can_shuffle_in_room=False,  # This is tied to Underworld Room mechanics (UnderworldRoomTags)
         role=SpriteType.HAZARD,
+        movement=SpriteMovement.DIAGONAL,
     ),
-    SpriteId.x83_GREEN_EYEGORE_MIMIC: SpriteSettings(
-        vulnerability=SpriteVulnerability.ANY, role=SpriteType.ENEMY
-    ),
+    SpriteId.x83_GREEN_EYEGORE_MIMIC: SpriteSettings(role=SpriteType.ENEMY),
     SpriteId.x84_RED_EYEGORE_MIMIC: SpriteSettings(
         vulnerability=SpriteVulnerability.BOW, role=SpriteType.ENEMY
     ),
@@ -494,7 +531,9 @@ _sprite_settings: Dict[SpriteId, SpriteSettings] = {
     SpriteId.x87_FLAMES: SpriteSettings(role=SpriteType.OBJECT),
     SpriteId.x88_MOTHULA_BOSS: SpriteSettings(role=SpriteType.BOSS),
     SpriteId.x89_MOTHULAS_BEAM: SpriteSettings(role=SpriteType.OBJECT),
-    SpriteId.x8A_SPIKE_TRAP: SpriteSettings(role=SpriteType.HAZARD),
+    SpriteId.x8A_SPIKE_TRAP: SpriteSettings(
+        role=SpriteType.HAZARD, movement=SpriteMovement.HORIZONTAL
+    ),
     SpriteId.x8B_GIBDO: SpriteSettings(role=SpriteType.ENEMY),
     SpriteId.x8C_ARRGHUS_BOSS: SpriteSettings(role=SpriteType.BOSS),
     SpriteId.x8D_ARRGHUS_SPAWN: SpriteSettings(
@@ -510,32 +549,40 @@ _sprite_settings: Dict[SpriteId, SpriteSettings] = {
     SpriteId.x91_STALFOS_KNIGHT: SpriteSettings(role=SpriteType.ENEMY),
     SpriteId.x92_HELMASAUR_KING: SpriteSettings(role=SpriteType.BOSS),
     SpriteId.x93_BUMPER: SpriteSettings(
-        can_shuffle_in_room=False, role=SpriteType.HAZARD
+        can_shuffle_in_room=False, role=SpriteType.HAZARD, movement=SpriteMovement.FIXED
     ),
     SpriteId.x94_SWIMMERS_EVIL: SpriteSettings(is_aquatic=True, role=SpriteType.ENEMY),
     SpriteId.x95_EYE_LASER_RIGHT: SpriteSettings(
-        can_shuffle_in_room=False, role=SpriteType.HAZARD  # Needs directionality
+        role=SpriteType.HAZARD, movement=SpriteMovement.EAST
     ),
     SpriteId.x96_EYE_LASER_LEFT: SpriteSettings(
-        can_shuffle_in_room=False, role=SpriteType.HAZARD  # Needs directionality
+        role=SpriteType.HAZARD,
+        movement=SpriteMovement.WEST,
     ),
     SpriteId.x97_EYE_LASER_DOWN: SpriteSettings(
-        can_shuffle_in_room=False, role=SpriteType.HAZARD  # Needs directionality
+        role=SpriteType.HAZARD,
+        movement=SpriteMovement.SOUTH,
     ),
     SpriteId.x98_EYE_LASER_UP: SpriteSettings(
         role=SpriteType.HAZARD,
-        can_shuffle_in_room=False,  # Needs directionality
+        movement=SpriteMovement.NORTH,
     ),
     SpriteId.x99_PENGATOR: SpriteSettings(role=SpriteType.ENEMY),
     SpriteId.x9A_KYAMERON_WATER_SPLASH: SpriteSettings(
-        role=SpriteType.ENEMY, vulnerability=SpriteVulnerability.INVULNERABLE
+        is_aquatic=True,
+        role=SpriteType.ENEMY,
+        vulnerability=SpriteVulnerability.INVULNERABLE,
     ),
     SpriteId.x9B_WIZZROBE: SpriteSettings(role=SpriteType.ENEMY),
     SpriteId.x9C_VERMIN_HORIZONTAL_PIROGUSU: SpriteSettings(
-        can_hold_key=False, can_shuffle_in_room=False, role=SpriteType.ENEMY
+        can_hold_key=False,
+        role=SpriteType.HAZARD,
+        movement=SpriteMovement.HORIZONTAL,
     ),
     SpriteId.x9D_VERMIN_VERTICAL_PIROGUSU: SpriteSettings(
-        can_hold_key=False, can_shuffle_in_room=False, role=SpriteType.ENEMY
+        can_hold_key=False,
+        role=SpriteType.HAZARD,
+        movement=SpriteMovement.VERTICAL,
     ),
     SpriteId.x9E_OSTRICH_HAUNTED_GROVE: SpriteSettings(role=SpriteType.CREATURE),
     SpriteId.x9F_FLUTE: SpriteSettings(role=SpriteType.OBJECT),
@@ -547,7 +594,10 @@ _sprite_settings: Dict[SpriteId, SpriteSettings] = {
     ),
     SpriteId.xA2_KHOLDSTARE_BOSS: SpriteSettings(role=SpriteType.BOSS),
     SpriteId.xA3_KHOLDSTARES_SHELL: SpriteSettings(role=SpriteType.BOSS),
-    SpriteId.xA4_FALLING_ICE: SpriteSettings(role=SpriteType.HAZARD),
+    SpriteId.xA4_FALLING_ICE: SpriteSettings(
+        role=SpriteType.HAZARD,
+        movement=SpriteMovement.DIAGONAL,
+    ),
     SpriteId.xA5_BLUE_ZAZAK: SpriteSettings(role=SpriteType.ENEMY),
     SpriteId.xA6_RED_ZAZAK: SpriteSettings(role=SpriteType.ENEMY),
     SpriteId.xA7_STALFOS: SpriteSettings(role=SpriteType.ENEMY),
@@ -587,8 +637,18 @@ _sprite_settings: Dict[SpriteId, SpriteSettings] = {
     SpriteId.xC4_THIEF: SpriteSettings(
         vulnerability=SpriteVulnerability.INVULNERABLE, role=SpriteType.ENEMY
     ),
-    SpriteId.xC5_MEDUSA: SpriteSettings(role=SpriteType.HAZARD),
-    SpriteId.xC6_YOMO_MEDUSA: SpriteSettings(role=SpriteType.HAZARD),
+    SpriteId.xC5_MEDUSA: SpriteSettings(
+        role=SpriteType.HAZARD,
+        movement=SpriteMovement.FIXED
+        | SpriteMovement.VERTICAL
+        | SpriteMovement.HORIZONTAL,
+    ),
+    SpriteId.xC6_YOMO_MEDUSA: SpriteSettings(
+        role=SpriteType.HAZARD,
+        movement=SpriteMovement.FIXED
+        | SpriteMovement.VERTICAL
+        | SpriteMovement.HORIZONTAL,
+    ),
     SpriteId.xC7_HOKKU_BOKKU: SpriteSettings(role=SpriteType.ENEMY),
     SpriteId.xC8_GREAT_FAIRY: SpriteSettings(role=SpriteType.NPC),
     SpriteId.xC9_TEKTITE: SpriteSettings(role=SpriteType.ENEMY),
