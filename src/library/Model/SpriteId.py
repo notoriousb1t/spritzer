@@ -340,10 +340,7 @@ _sprite_settings: Dict[SpriteId, SpriteSettings] = {
     SpriteId.x17_BUSH_HOARDER: SpriteSettings(
         can_hold_key=False, role=SpriteType.ENEMY
     ),
-    SpriteId.x18_MINI_MOLDORM: SpriteSettings(
-        can_shuffle_in_room=False,  # Graphics errors in Eastern Palace
-        role=SpriteType.ENEMY,
-    ),
+    SpriteId.x18_MINI_MOLDORM: SpriteSettings(role=SpriteType.ENEMY),
     SpriteId.x19_POE: SpriteSettings(is_flying=True, role=SpriteType.ENEMY),
     SpriteId.x1A_DWARVES: SpriteSettings(role=SpriteType.NPC),
     SpriteId.x1B_ARROW_IN_WALL: SpriteSettings(role=SpriteType.OBJECT),
@@ -391,10 +388,7 @@ _sprite_settings: Dict[SpriteId, SpriteSettings] = {
         can_hold_key=False, role=SpriteType.ENEMY
     ),
     SpriteId.x3F_TUTORIAL_SOLDIER: SpriteSettings(role=SpriteType.NPC),
-    SpriteId.x40_LIGHTNING_LOCK: SpriteSettings(
-        can_shuffle=False,  # This acts as a progression gate. Shuffling this may cause unpredictable results.
-        role=SpriteType.ENEMY,
-    ),
+    SpriteId.x40_LIGHTNING_LOCK: SpriteSettings(role=SpriteType.OBJECT),
     SpriteId.x41_BLUE_SWORD_SOLDIER: SpriteSettings(
         vulnerability=SpriteVulnerability.ANY, role=SpriteType.ENEMY
     ),
@@ -408,9 +402,7 @@ _sprite_settings: Dict[SpriteId, SpriteSettings] = {
     SpriteId.x49_RED_JAVELIN_SOLDIER_2: SpriteSettings(role=SpriteType.ENEMY),
     SpriteId.x4A_RED_BOMB_SOLDIERS: SpriteSettings(role=SpriteType.ENEMY),
     SpriteId.x4B_GREEN_SOLDIER_RECRUITS: SpriteSettings(role=SpriteType.ENEMY),
-    SpriteId.x4C_GELDMAN: SpriteSettings(
-        can_shuffle_in_room=False, role=SpriteType.ENEMY
-    ),
+    SpriteId.x4C_GELDMAN: SpriteSettings(role=SpriteType.ENEMY, can_hold_key=False),
     SpriteId.x4D_TOPPO: SpriteSettings(
         can_shuffle_in_area=False, role=SpriteType.CREATURE
     ),
@@ -423,7 +415,6 @@ _sprite_settings: Dict[SpriteId, SpriteSettings] = {
     SpriteId.x54_LANMOLAS_BOSS: SpriteSettings(role=SpriteType.BOSS),
     SpriteId.x55_FIREBALL_ZORA: SpriteSettings(
         is_aquatic=True,
-        vulnerability=SpriteVulnerability.INVULNERABLE,
         role=SpriteType.ENEMY,
     ),
     SpriteId.x56_WALKING_ZORA: SpriteSettings(role=SpriteType.ENEMY),
@@ -470,7 +461,9 @@ _sprite_settings: Dict[SpriteId, SpriteSettings] = {
     SpriteId.x75_BOTTLE_SALESMAN: SpriteSettings(role=SpriteType.NPC),
     SpriteId.x76_PRINCESS_ZELDA: SpriteSettings(role=SpriteType.NPC),
     SpriteId.x77_ANTIFAIRY_ALTERNATE: SpriteSettings(
-        vulnerability=SpriteVulnerability.INVULNERABLE, role=SpriteType.ENEMY
+        vulnerability=SpriteVulnerability.INVULNERABLE,
+        role=SpriteType.ENEMY,
+        can_shuffle_in_room=False,
     ),
     SpriteId.x78_VILLAGE_ELDER: SpriteSettings(role=SpriteType.NPC),
     SpriteId.x79_BEE: SpriteSettings(role=SpriteType.CONSUMABLE),
@@ -481,9 +474,7 @@ _sprite_settings: Dict[SpriteId, SpriteSettings] = {
         vulnerability=SpriteVulnerability.INVULNERABLE,
         role=SpriteType.ENEMY,
     ),
-    SpriteId.x7D_BIG_SPIKE_TRAP: SpriteSettings(
-        can_shuffle_in_room=False, role=SpriteType.HAZARD
-    ),
+    SpriteId.x7D_BIG_SPIKE_TRAP: SpriteSettings(role=SpriteType.HAZARD),
     SpriteId.x7E_GURUGURU_BAR_CLOCKWISE: SpriteSettings(role=SpriteType.HAZARD),
     SpriteId.x7F_GURUGURU_BAR_COUNTER_CLOCKWISE: SpriteSettings(role=SpriteType.HAZARD),
     SpriteId.x80_WINDER: SpriteSettings(role=SpriteType.HAZARD),
@@ -608,9 +599,7 @@ _sprite_settings: Dict[SpriteId, SpriteSettings] = {
     SpriteId.xCC_TRINEXX_2: SpriteSettings(role=SpriteType.BOSS),
     SpriteId.xCD_TRINEXX_3: SpriteSettings(role=SpriteType.BOSS),
     SpriteId.xCE_BLIND_THE_THIEF_BOSS: SpriteSettings(role=SpriteType.BOSS),
-    SpriteId.xCF_SWAMOLA: SpriteSettings(
-        is_aquatic=True, can_shuffle=False, role=SpriteType.ENEMY
-    ),
+    SpriteId.xCF_SWAMOLA: SpriteSettings(is_aquatic=True, role=SpriteType.ENEMY),
     SpriteId.xD0_LYNEL: SpriteSettings(role=SpriteType.ENEMY),
     SpriteId.xD1_BUNNY_BEAM: SpriteSettings(role=SpriteType.OBJECT),
     SpriteId.xD2_FLOPPING_FISH: SpriteSettings(role=SpriteType.CREATURE),
