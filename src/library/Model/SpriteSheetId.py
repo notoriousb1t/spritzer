@@ -1,7 +1,7 @@
 from enum import IntEnum
 from typing import Dict, List
 
-from .SpriteId import SpriteId
+from library.Model.SpriteId import SpriteId
 
 
 class SpriteSheetId(IntEnum):

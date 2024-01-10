@@ -1,5 +1,6 @@
-from ..Model import get_underworld_groups, SpriteType
-from .Context import Context
+from library.Model.SpriteType import SpriteType
+from library.Model.UnderworldGroup import get_underworld_groups
+from library.Transform.Context import Context
 
 
 def reroll_underworld_blocksets(context: Context) -> None:

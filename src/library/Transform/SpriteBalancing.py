@@ -1,6 +1,8 @@
 from typing import List
-from .Context import Context, Balancing
-from ..Model import SpriteId, SpriteType
+
+from library.Model.SpriteId import SpriteId
+from library.Model.SpriteType import SpriteType
+from library.Transform.Context import Context, Balancing
 
 
 _casual_blocklist = [

@@ -1,5 +1,5 @@
-from .Context import Context
-from ..Model.UnderworldRoomId import UnderworldRoomId
+from library.Model.UnderworldRoomId import UnderworldRoomId
+from library.Transform.Context import Context
 
 
 def reroll_underworld_bosses(context: Context) -> None:

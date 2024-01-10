@@ -1,9 +1,10 @@
 from attr import dataclass
 from enum import Enum, auto
 from typing import Dict, List
-from .UnderworldRoomId import UnderworldRoomId
-from .BlocksetId import BlocksetId
-from .PaletteId import PaletteId
+
+from library.Model.BlocksetId import BlocksetId
+from library.Model.PaletteId import PaletteId
+from library.Model.UnderworldRoomId import UnderworldRoomId
 
 
 class UnderworldGroupId(Enum):

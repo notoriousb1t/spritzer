@@ -1,6 +1,6 @@
-from .SpriteType import SpriteType
-from .SpriteVulnerability import SpriteVulnerability
-from .SpriteMovement import SpriteMovement
+from library.Model.SpriteMovement import SpriteMovement
+from library.Model.SpriteType import SpriteType
+from library.Model.SpriteVulnerability import SpriteVulnerability
 
 
 class SpriteSettings:

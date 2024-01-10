@@ -1,7 +1,8 @@
-from typing import Dict, List
+from typing import Dict
 
-from .LocalRom import LocalRom
-from ..Model import DamageRow, SpriteSubclassId, SpriteSubclass
+from library.Model.SpriteSubclass import SpriteSubclass
+from library.Model.SpriteSubclassId import SpriteSubclassId
+from library.Rom.LocalRom import LocalRom
 
 
 def read_sprite_subclasses(rom: LocalRom) -> Dict[SpriteSubclassId, SpriteSubclass]:

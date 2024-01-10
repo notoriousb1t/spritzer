@@ -1,44 +1,34 @@
 from random import Random
 from typing import Callable, List
 
-from .Options import Options, OverworldEnemyShuffle, UnderworldEnemyShuffle, Balancing
-
-from .Model import create_spriteset_dict
-from library.Rom import (
-    get_local_rom,
-    read_damage_table,
-    read_underworld_rooms,
-    read_overworld_areas,
-    read_sprites,
-    read_spritesets,
-    read_sprite_subclasses,
-    RomMode,
-    write_damage_table,
-    write_underworld_rooms,
-    write_overworld_areas,
-    write_spritesets,
-    write_sprite_settings,
-    write_sprite_subclasses,
-)
-from library.Transform import (
-    Context,
-    create_free_overworld_spriteset_list,
-    preprocess_simple_overworld_choices,
-    preprocess_simple_underworld_choices,
+from library.Model.SpriteSheetId import create_spriteset_dict
+from library.Options import Options, OverworldEnemyShuffle, UnderworldEnemyShuffle
+from library.Rom.DamageIo import read_damage_table, write_damage_table
+from library.Rom.LocalRom import RomMode, get_local_rom
+from library.Rom.OverworldIo import read_overworld_areas, write_overworld_areas
+from library.Rom.SpriteIo import read_sprites, write_sprite_settings
+from library.Rom.SpriteSheetIo import read_spritesets, write_spritesets
+from library.Rom.SubclassIo import read_sprite_subclasses, write_sprite_subclasses
+from library.Rom.UnderworldIo import read_underworld_rooms, write_underworld_rooms
+from library.Transform.BossShuffle import reroll_underworld_bosses
+from library.Transform.Context import Balancing, Context
+from library.Transform.KillableSprite import patch_thief_killable
+from library.Transform.MushroomShuffle import reroll_lost_woods_mushroom
+from library.Transform.OverworldInversion import invert_world
+from library.Transform.OverworldShuffle import reroll_overworld_enemies
+from library.Transform.ShadowBees import patch_shadow_bees
+from library.Transform.SpriteChoices import (
     preprocess_full_overworld_choices,
     preprocess_full_underworld_choices,
-    expand_overworld_sprite_pool,
-    invert_world,
-    patch_shadow_bees,
-    patch_thief_killable,
-    reroll_underworld_bosses,
-    reroll_underworld_palette,
-    reroll_underworld_enemies,
-    reroll_underworld_blocksets,
-    reroll_lost_woods_mushroom,
-    reroll_overworld_enemies,
-    patch_invulnerable_sprites,
+    preprocess_simple_overworld_choices,
+    preprocess_simple_underworld_choices,
 )
+from library.Transform.SpriteExpansion import expand_overworld_sprite_pool
+from library.Transform.SpritesetChoices import create_free_overworld_spriteset_list
+from library.Transform.UnderworldPaletteShuffle import reroll_underworld_palette
+from library.Transform.UnderworldShuffle import reroll_underworld_enemies
+from library.Transform.UnderworldTilesetShuffle import reroll_underworld_blocksets
+from library.Transform.VanillaFixes import patch_invulnerable_sprites
 
 
 def patch(

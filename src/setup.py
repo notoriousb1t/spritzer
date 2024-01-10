@@ -1,5 +1,5 @@
-from cx_Freeze import setup, Executable
 import sys
+from cx_Freeze import setup, Executable
 
 
 # Dependencies are automatically detected, but it might need

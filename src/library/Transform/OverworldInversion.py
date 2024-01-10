@@ -1,6 +1,11 @@
 from typing import Dict, List, Tuple
-from ..Model import OverworldArea, OverworldAreaId, SpriteId, SpriteSheetId, SpritesetId
-from .Context import Context
+
+from library.Model.OverworldArea import OverworldArea
+from library.Model.OverworldAreaId import OverworldAreaId
+from library.Model.SpriteId import SpriteId
+from library.Model.SpriteSheetId import SpriteSheetId
+from library.Model.SpritesetId import SpritesetId
+from library.Transform.Context import Context
 
 
 # List of special areas that require preservation of some of their sheets.

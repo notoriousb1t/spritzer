@@ -1,14 +1,14 @@
 from enum import IntEnum
 from typing import Dict
 
-from .SpriteSettings import SpriteSettings
-from .SpriteType import SpriteType
-from .SpriteMovement import SpriteMovement
-from .SpriteVulnerability import SpriteVulnerability
+from library.Model.SpriteMovement import SpriteMovement
+from library.Model.SpriteSettings import SpriteSettings
+from library.Model.SpriteType import SpriteType
+from library.Model.SpriteVulnerability import SpriteVulnerability
 
 
 class SpriteId(IntEnum):
-    """Describes Entites (aka Sprites) in LTTP."""
+    """Describes Sprites (aka Entities) in ALTTP."""
 
     x0_CROW = 0
     x1_VULTURE = 1

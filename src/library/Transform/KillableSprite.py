@@ -1,5 +1,5 @@
-from .Context import Context
-from ..Model import SpriteId, SpriteSubclassId
+from library.Model import SpriteId, SpriteSubclassId
+from library.Transform.Context import Context
 
 
 def patch_thief_killable(context: Context) -> None:

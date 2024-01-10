@@ -1,5 +1,4 @@
 from enum import IntEnum
-from typing import List
 
 _room_gfx_offset = 64
 
@@ -138,4 +137,3 @@ class SpritesetId(IntEnum):
     @staticmethod
     def from_room_value(value: int):
         return SpritesetId(value + _room_gfx_offset)
-

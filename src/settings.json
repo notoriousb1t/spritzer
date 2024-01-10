@@ -51,7 +51,11 @@
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": "explicit"
     },
-    "python.languageServer": "Default",
+    "python.languageServer": "Pylance",
+    "python.analysis.typeCheckingMode": "strict",
+    "python.analysis.diagnosticMode": "workspace",
+    "python.analysis.importFormat": "absolute",
+    "python.analysis.fixAll": ["source.convertImportFormat", "source.unusedImports"],
     "typescript.preferences.importModuleSpecifier": "relative",
     "git.branchRandomName.enable": true,
     "git.branchProtection": [

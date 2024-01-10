@@ -3,8 +3,8 @@ from enum import IntEnum
 
 class OverworldAreaId(IntEnum):
     """Describes Areas in the overworld both in the light and dark world.
-    
-    Overworld Map: 
+
+    Overworld Map:
       00 01 02 03 04 05 06 07
       08 09 0A 0B 0C 0D 0E 0F
       10 11 12 13 14 15 16 17
@@ -27,7 +27,7 @@ class OverworldAreaId(IntEnum):
     x5_EAST_DEATH_MOUNTAIN = 5
     x6_EAST_DEATH_MOUNTAIN = 6
     x7_EAST_DEATH_MOUNTAIN_WARP_FOR_TURTLE_ROCK = 7
-    
+
     x8_LOST_WOODS = 8
     x9_LOST_WOODS = 9
     xA_ENTRANCE_TO_DEATH_MOUNTAIN = 10

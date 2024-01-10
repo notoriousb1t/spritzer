@@ -4,20 +4,18 @@ from random import Random
 from typing import Dict, List, Set
 
 
-from ..Model import (
-    DamageTable,
-    UnderworldRoom,
-    UnderworldRoomId,
-    OverworldArea,
-    OverworldAreaId,
-    Spriteset,
-    SpritesetId,
-    SpriteId,
-    Sprite,
-    SpriteSubclass,
-    SpriteSubclassId,
-    SpriteSheetId,
-)
+from library.Model.DamageTable import DamageTable
+from library.Model.OverworldArea import OverworldArea
+from library.Model.OverworldAreaId import OverworldAreaId
+from library.Model.Sprite import Sprite
+from library.Model.SpriteId import SpriteId
+from library.Model.Spriteset import Spriteset
+from library.Model.SpritesetId import SpritesetId
+from library.Model.SpriteSheetId import SpriteSheetId
+from library.Model.SpriteSubclass import SpriteSubclass
+from library.Model.SpriteSubclassId import SpriteSubclassId
+from library.Model.UnderworldRoom import UnderworldRoom
+from library.Model.UnderworldRoomId import UnderworldRoomId
 
 
 class Balancing(StrEnum):

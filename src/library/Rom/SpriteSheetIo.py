@@ -1,7 +1,9 @@
 from typing import List, Dict
 
-from ..Model import SpritesetId, Spriteset, SpriteSheetId
-from .LocalRom import LocalRom
+from library.Model.Spriteset import Spriteset
+from library.Model.SpritesetId import SpritesetId
+from library.Model.SpriteSheetId import SpriteSheetId
+from library.Rom.LocalRom import LocalRom
 
 
 def _read_spriteset(rom: LocalRom, id: SpritesetId) -> List[Spriteset]:

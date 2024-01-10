@@ -1,13 +1,11 @@
 from random import Random
 from typing import List, Set
-from .SpriteBalancing import get_weights
 
-
-from . import Context, Placement, is_compatible
-from ..Model import (
-    SpriteId,
-    OverworldSprite,
-)
+from library.Model.OverworldSprite import OverworldSprite
+from library.Model.SpriteId import SpriteId
+from library.Transform.Context import Context
+from library.Transform.Placement import Placement, is_compatible
+from library.Transform.SpriteBalancing import get_weights
 
 
 def _reroll_overworld_sprites(

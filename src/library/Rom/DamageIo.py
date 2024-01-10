@@ -1,5 +1,5 @@
-from .LocalRom import LocalRom
-from ..Model import DamageRow, DamageTable
+from library.Model.DamageTable import DamageRow, DamageTable
+from library.Rom.LocalRom import LocalRom
 
 
 def read_damage_table(rom: LocalRom) -> DamageTable:

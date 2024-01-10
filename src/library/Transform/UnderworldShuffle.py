@@ -2,17 +2,14 @@ from math import floor
 from random import Random
 from typing import List, Dict, Set, Tuple
 
-from ..Model import (
-    UnderworldRoom,
-    SpriteId,
-    SpriteType,
-    UnderworldSprite,
-    UnderworldRoomId,
-)
-
-from .Context import Context
-from .SpriteBalancing import get_weights
-from .Placement import Placement, is_compatible
+from library.Model.SpriteId import SpriteId
+from library.Model.SpriteType import SpriteType
+from library.Model.UnderworldRoom import UnderworldRoom
+from library.Model.UnderworldRoomId import UnderworldRoomId
+from library.Model.UnderworldSprite import UnderworldSprite
+from library.Transform.Context import Context
+from library.Transform.Placement import Placement, is_compatible
+from library.Transform.SpriteBalancing import get_weights
 
 _block_list = [UnderworldRoomId.x24_TURTLE_ROCK_DOUBLE_HOKKU_BOKKU_BIG_CHEST_ROOM]
 

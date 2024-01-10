@@ -1,20 +1,13 @@
-from enum import IntEnum
 from typing import Dict, List
 
-from ..Model import (
-    SpritesetId,
-    OverworldId,
-    OverworldSprite,
-    OverworldAreaId,
-    OverworldAreaVersion,
-)
+from library.Model.OverworldArea import OverworldArea, OverworldAreaVersion
+from library.Model.OverworldAreaId import OverworldAreaId
+from library.Model.OverworldId import OverworldId
+from library.Model.OverworldSprite import OverworldSprite
+from library.Model.SpriteId import SpriteId
+from library.Model.SpritesetId import SpritesetId
+from library.Rom.LocalRom import LocalRom, compute_snes_address
 
-from .LocalRom import LocalRom, compute_snes_address, pc_address_to_snes_address
-
-from ..Model import (
-    OverworldArea,
-    SpriteId,
-)
 
 _stop_marker = 0xFF
 
@@ -89,7 +82,9 @@ def _load_sprites(rom: LocalRom, sprite_address: int) -> List[OverworldSprite]:
         x = rom.read_snes_address(address + 1)
         sprite_id = rom.read_snes_address(address + 2)
 
-        sprites.append(OverworldSprite(address, y=y, x=x, sprite_id=SpriteId(sprite_id)))
+        sprites.append(
+            OverworldSprite(address, y=y, x=x, sprite_id=SpriteId(sprite_id))
+        )
         index += 3
         remaining_max_bytes -= 1
 

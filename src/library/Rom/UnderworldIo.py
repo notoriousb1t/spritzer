@@ -1,18 +1,15 @@
 from typing import List, Dict
 
-from .LocalRom import LocalRom, resolve_address
-
-from ..Model import (
-    BlocksetId,
-    UnderworldRoom,
-    UnderworldRoomFloorId,
-    UnderworldRoomId,
-    UnderworldSprite,
-    UnderworldRoomTag,
-    PaletteId,
-    SpriteId,
-    SpritesetId,
-)
+from library.Model.BlocksetId import BlocksetId
+from library.Model.PaletteId import PaletteId
+from library.Model.SpriteId import SpriteId
+from library.Model.SpritesetId import SpritesetId
+from library.Model.UnderworldRoom import UnderworldRoom
+from library.Model.UnderworldRoomFloorId import UnderworldRoomFloorId
+from library.Model.UnderworldRoomId import UnderworldRoomId
+from library.Model.UnderworldRoomTag import UnderworldRoomTag
+from library.Model.UnderworldSprite import UnderworldSprite
+from library.Rom.LocalRom import LocalRom, resolve_address
 
 
 _stop_marker = 0xFF

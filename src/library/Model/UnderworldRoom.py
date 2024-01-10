@@ -1,13 +1,13 @@
 from attr import dataclass
 from typing import List
 
-from .BlocksetId import BlocksetId
-from .UnderworldRoomFloorId import UnderworldRoomFloorId
-from .UnderworldRoomId import UnderworldRoomId
-from .UnderworldSprite import UnderworldSprite
-from .UnderworldRoomTag import UnderworldRoomTag
-from .PaletteId import PaletteId
-from .SpritesetId import SpritesetId
+from library.Model.BlocksetId import BlocksetId
+from library.Model.PaletteId import PaletteId
+from library.Model.SpritesetId import SpritesetId
+from library.Model.UnderworldRoomFloorId import UnderworldRoomFloorId
+from library.Model.UnderworldRoomId import UnderworldRoomId
+from library.Model.UnderworldRoomTag import UnderworldRoomTag
+from library.Model.UnderworldSprite import UnderworldSprite
 
 
 @dataclass

@@ -1,7 +1,7 @@
 from attr import dataclass
 
-from .SpriteId import SpriteId
-from .SpriteSubclassId import SpriteSubclassId
+from library.Model.SpriteId import SpriteId
+from library.Model.SpriteSubclassId import SpriteSubclassId
 
 
 @dataclass
@@ -76,4 +76,3 @@ class Sprite:
     """True if the Sprite should be ignored for kill rooms count."""
     stay_active_offscreen: bool = None
     tile_hitbox: int = None
-

@@ -1,6 +1,9 @@
 from enum import Enum
 
-from ..Model import SpriteSettings, SpriteId, SpriteVulnerability, SpriteMovement
+from library.Model.SpriteId import SpriteId
+from library.Model.SpriteMovement import SpriteMovement
+from library.Model.SpriteSettings import SpriteSettings
+from library.Model.SpriteVulnerability import SpriteVulnerability
 
 
 class Placement(Enum):
@@ -28,7 +31,7 @@ def is_movement_compatible(
     target: SpriteSettings,
 ) -> bool:
     if source.movement == None or target.movement == None:
-        return False
+        return source.movement == target.movement
 
     if not any(
         flag in target.movement for flag in SpriteMovement if flag in source.movement

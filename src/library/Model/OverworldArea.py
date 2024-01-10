@@ -1,10 +1,11 @@
 from attr import dataclass
 from typing import List
 
-from .OverworldId import OverworldId
-from .OverworldAreaId import OverworldAreaId
-from .OverworldSprite import OverworldSprite
-from .SpritesetId import SpritesetId
+from library.Model.OverworldAreaId import OverworldAreaId
+from library.Model.OverworldId import OverworldId
+from library.Model.OverworldSprite import OverworldSprite
+from library.Model.SpritesetId import SpritesetId
+
 
 @dataclass
 class OverworldAreaVersion:
@@ -39,7 +40,7 @@ class OverworldArea:
         if self.dw:
             configs.append(self.dw)
         return configs
-    
+
     @property
     def all_sprites(self) -> List[OverworldSprite]:
         return [sprite for versions in self.versions for sprite in versions.sprites]

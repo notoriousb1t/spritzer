@@ -1,5 +1,5 @@
 from .Context import Context
-from ..Model import SpriteId, SpriteType
+from ..Model import SpriteId
 
 
 def patch_shadow_bees(context: Context) -> None:
@@ -9,4 +9,3 @@ def patch_shadow_bees(context: Context) -> None:
     bees.statis = True
     bees.boss_damage_sfx = True
     bees.hp = 0x20
-

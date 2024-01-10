@@ -1,6 +1,8 @@
 # This file contains patches inconsistencies in Vanilla that affect randomization.
-from .Context import Context
-from ..Model import SpriteType, SpriteVulnerability, SpriteId
+from library.Model.SpriteId import SpriteId
+from library.Model.SpriteType import SpriteType
+from library.Model.SpriteVulnerability import SpriteVulnerability
+from library.Transform.Context import Context
 
 
 def patch_invulnerable_sprites(context: Context) -> None:

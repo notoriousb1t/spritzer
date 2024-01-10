@@ -1,7 +1,7 @@
 from attr import dataclass
 from enum import IntEnum, auto
-from typing import List
 from math import floor
+from typing import List
 
 
 def snes_address_to_bytes(address: int) -> List[int]:

@@ -1,5 +1,7 @@
-from string import ascii_uppercase, digits
 from math import floor
+from string import ascii_uppercase, digits
+from random import Random
+
 from customtkinter import (
     CTk,
     set_appearance_mode,
@@ -12,11 +14,12 @@ from customtkinter import (
     CTkScrollableFrame,
     CTkComboBox,
 )
-from random import Random
 from tkinter import filedialog, messagebox, BooleanVar, StringVar
+
 from library.Options import Options, UnderworldEnemyShuffle, OverworldEnemyShuffle
-from library.Transform.Context import Balancing
 from library.Patch import patch_file
+from library.Transform.Context import Balancing
+
 
 _PADX = 12
 _PADY = 8

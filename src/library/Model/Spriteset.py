@@ -34,4 +34,3 @@ class Spriteset:
             self.sheet2 = value
         elif index == 3:
             self.sheet3 = value
-    

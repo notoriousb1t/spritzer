@@ -1,6 +1,7 @@
 from typing import List
-from ..Model import SpritesetId
-from .Context import Context
+
+from library.Model.SpritesetId import SpritesetId
+from library.Transform.Context import Context
 
 
 def _get_area_spritesets() -> List[SpritesetId]:

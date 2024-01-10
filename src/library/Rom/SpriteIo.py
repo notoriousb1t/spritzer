@@ -1,7 +1,9 @@
 from typing import Dict
 
-from .LocalRom import LocalRom
-from ..Model import SpriteId, Sprite, SpriteSubclassId
+from library.Model.Sprite import Sprite
+from library.Model.SpriteId import SpriteId
+from library.Model.SpriteSubclassId import SpriteSubclassId
+from library.Rom.LocalRom import LocalRom
 
 
 def _read_sprite(rom: LocalRom, id: SpriteId) -> Sprite:

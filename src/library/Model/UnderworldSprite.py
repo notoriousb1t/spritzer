@@ -1,5 +1,6 @@
 from attr import dataclass
-from .SpriteId import SpriteId
+
+from library.Model.SpriteId import SpriteId
 
 
 @dataclass
