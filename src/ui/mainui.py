@@ -21,7 +21,7 @@ from library.model.balancing import Balancing
 from library.options.options import Options
 from library.options.overworld_enemy_shuffle import OverworldEnemyShuffle
 from library.options.underworld_enemy_shuffle import UnderworldEnemyShuffle
-from library.patch import patch_file
+from library.patcher import patch_file
 
 
 _PADX = 12
@@ -29,7 +29,7 @@ _PADY = 8
 _WINDOW: tuple[int, int] = (600, 400)
 
 
-class Adjuster:
+class MainUi:
     def __init__(self) -> None:
         self.app = CTk()
 

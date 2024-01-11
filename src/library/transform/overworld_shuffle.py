@@ -3,7 +3,7 @@ from typing import List, Set
 from library.model.overworld_sprite import OverworldSprite
 from library.model.sprite_id import SpriteId
 from library.model.model import Model
-from library.transform.placement import Placement, is_compatible
+from library.transform.compatibility import Placement, is_compatible
 from library.transform.sprite_balancing import get_weights
 
 

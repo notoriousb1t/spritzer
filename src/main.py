@@ -1,5 +1,5 @@
-from ui.adjuster import Adjuster
+from ui.mainui import MainUi
 
 
 if __name__ == "__main__":
-    Adjuster().start()
+    MainUi().start()
