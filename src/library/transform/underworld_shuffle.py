@@ -6,7 +6,7 @@ from library.model.sprite_type import SpriteType
 from library.model.underworld_room_id import UnderworldRoomId
 from library.model.underworld_sprite import UnderworldSprite
 from library.model.model import Model
-from library.transform.placement import Placement, is_compatible
+from library.transform.compatibility import Placement, is_compatible
 from library.transform.sprite_balancing import get_weights
 
 _block_list: list[UnderworldRoomId] = [
