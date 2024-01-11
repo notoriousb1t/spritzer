@@ -1,11 +1,11 @@
 from math import floor
 from random import Random
 from typing import List, Dict, Set, Tuple
+from library.model.model import Model
 from library.model.sprite_id import SpriteId
 from library.model.sprite_type import SpriteType
 from library.model.underworld_room_id import UnderworldRoomId
 from library.model.underworld_sprite import UnderworldSprite
-from library.model.model import Model
 from library.transform.compatibility import Placement, is_compatible
 from library.transform.sprite_balancing import get_weights
 
@@ -122,63 +122,73 @@ def _generate_sprite_selections(
                 context=context,
                 sprite_ids=possible_matches,
             )
-            distance_map[dungeon_sprite.distance_from_midpoint] = random.choices(
+            possibilities: list[SpriteId] = random.choices(
                 population=possible_matches,
                 weights=weights,
-            )[0]
+                k=2,  # Roll up to 2 possibilities
+            )
+            # Try to use the first non-same match, but fall back if there is only really one match.
+            replacement_sprite_id: SpriteId = next(
+                (it for it in possibilities if it != dungeon_sprite.sprite_id),
+                possibilities[0],
+            )
+            distance_map[dungeon_sprite.distance_from_midpoint] = replacement_sprite_id
     return distance_map
+
+
+def _group_by_role(sprites: List[UnderworldSprite]) -> List[List[UnderworldSprite]]:
+    dungeon_sprites_by_role: Dict[SpriteType, List[UnderworldSprite]] = {
+        it: list() for it in list(SpriteType)
+    }
+    for sprite in sprites:
+        if sprite.sprite_id.configuration().can_shuffle_in_room:
+            dungeon_sprites_by_role[sprite.sprite_id.role].append(sprite)
+    return [its for its in dungeon_sprites_by_role.values() if len(its) > 0]
 
 
 def reroll_underworld_enemies(context: Model) -> None:
     random = Random()
     random.seed(a=context.seed)
 
-    for dungeon_room in context.underworld_rooms.values():
-        if dungeon_room.id in _block_list:
+    for underworld_room in context.underworld_rooms.values():
+        if underworld_room.id in _block_list:
             # Ignore rooms that are problematic (for example, kill room logic isn't working)
             continue
 
         # Randomize using Entities that occur anywhere in that Dungeon Room.
         if any(
-            it for it in dungeon_room.sprites if it.sprite_id.role == SpriteType.BOSS
+            it for it in underworld_room.sprites if it.sprite_id.role == SpriteType.BOSS
         ):
             # Skip all boss rooms, we shouldn't try to reroll those through this option.
             continue
 
-        choices: Set[SpriteId] = context.underworld_choices[dungeon_room.spriteset_id]
+        choices: Set[SpriteId] = context.underworld_choices[
+            underworld_room.spriteset_id
+        ]
         if len(choices) < 1:
             # Skip if there is nothing to switch.
             continue
 
         placement: Placement = (
             Placement.KILL_ROOM
-            if dungeon_room.tag1.is_kill_room() or dungeon_room.tag2.is_kill_room()
+            if underworld_room.tag1.is_kill_room()
+            or underworld_room.tag2.is_kill_room()
             else Placement.ROOM
         )
-        dungeon_sprites_by_role: Dict[SpriteType, List[UnderworldSprite]] = {
-            it: list() for it in list(SpriteType)
-        }
-        for dungeon_sprite in dungeon_room.sprites:
-            if dungeon_sprite.sprite_id.configuration().can_shuffle_in_room:
-                dungeon_sprites_by_role[dungeon_sprite.sprite_id.role].append(
-                    dungeon_sprite
-                )
 
-        for dungeon_sprites in dungeon_sprites_by_role.values():
+        for sprites in _group_by_role(sprites=underworld_room.sprites):
             distance_map: Dict[int, SpriteId] = _generate_sprite_selections(
                 context=context,
                 random=random,
-                dungeon_room_sprites=dungeon_sprites,
+                dungeon_room_sprites=sprites,
                 choices=choices,
                 placement=placement,
             )
 
-            for dungeon_sprite in dungeon_sprites:
-                next_sprite_id: SpriteId = distance_map[
-                    dungeon_sprite.distance_from_midpoint
-                ]
-                if next_sprite_id != dungeon_sprite.sprite_id:
+            for sprite in sprites:
+                next_sprite_id: SpriteId = distance_map[sprite.distance_from_midpoint]
+                if next_sprite_id != sprite.sprite_id:
                     # Clear aux data because it may be unpredictable.
-                    dungeon_sprite.aux0 = 0
-                    dungeon_sprite.aux1 = 0
-                dungeon_sprite.sprite_id = next_sprite_id
+                    sprite.aux0 = 0
+                    sprite.aux1 = 0
+                sprite.sprite_id = next_sprite_id

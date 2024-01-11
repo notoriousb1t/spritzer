@@ -25,4 +25,4 @@ class UnderworldSprite:
     """May be set when performing shuffling/randomization to evaluate distance from the center of a group of enemies."""
 
     def has_key(self) -> bool:
-        return self.item == SpriteId.xE4_KEY or self.item == SpriteId.xE5_BIG_KEY
+        return self.item == SpriteId.xE4_SMALL_KEY or self.item == SpriteId.xE5_BIG_KEY

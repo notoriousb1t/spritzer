@@ -21,8 +21,8 @@ def _peek_item(rom: LocalRom, sprite_address: int) -> Union[SpriteId, None]:
         return None
 
     byte5 = rom.read_address(address=sprite_address + 5)
-    if byte5 == SpriteId.xE4_KEY:
-        return SpriteId.xE4_KEY
+    if byte5 == SpriteId.xE4_SMALL_KEY:
+        return SpriteId.xE4_SMALL_KEY
     if byte5 == SpriteId.xE5_BIG_KEY:
         return SpriteId.xE5_BIG_KEY
     return None

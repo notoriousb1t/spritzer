@@ -32,7 +32,7 @@ def _reroll_overworld_sprites(
             ]
 
             if len(possible_matches) == 0:
-                sprite_id = SpriteId.xE3_FAIRY
+                sprite_id = SpriteId.xC5_MEDUSA
                 break
 
             # Try to find a suitable match, if not just leave the Sprite as is.
@@ -58,10 +58,10 @@ def reroll_overworld_enemies(context: Model) -> None:
         # Reroll all Overworld Areas using the choices collected from related Overworld Areas.
         for version in overworld_area.versions:
             # Get the possibly Overworld Sprites from the current graphics block
-            choices = context.overworld_choices[version.spriteset_id]
+            choices: Set[SpriteId] = context.overworld_choices[version.spriteset_id]
             _reroll_overworld_sprites(
-                context,
-                random,
-                version.sprites,
-                choices,
+                context=context,
+                random=random,
+                overworld_sprites=version.sprites,
+                choices=choices,
             )

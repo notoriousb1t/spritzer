@@ -9,8 +9,8 @@ class SpriteMovement(IntFlag):
     SOUTH = 1 << 4
     DIAGONAL = 1 << 5
     SNAKE = 1 << 6
-    VERTICAL = 1 << 7
-    HORIZONTAL = 1 << 8
+    VERTICAL = EAST | WEST
+    HORIZONTAL = NORTH | SOUTH
 
     def __str__(self) -> str:
         return self.name

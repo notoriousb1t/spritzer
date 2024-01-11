@@ -12,6 +12,6 @@ def patch_invulnerable_sprites(context: Model) -> None:
         if (
             meta.role == SpriteType.HAZARD
             or meta.vulnerability == SpriteVulnerability.INVULNERABLE
-            or sprite.id == SpriteId.xD8_GREEN_BOMB
+            or sprite.id == SpriteId.xD8_HEART
         ):
             sprite.statis = True

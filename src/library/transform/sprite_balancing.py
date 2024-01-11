@@ -9,18 +9,18 @@ from library.model.model import Model
 
 
 _casual_blocklist: list[SpriteId] = [
-    SpriteId.x43_RED_SPEAR_SOLDIER,
-    SpriteId.x48_RED_JAVELIN_SOLDIER,
-    SpriteId.x49_RED_JAVELIN_SOLDIER_2,
-    SpriteId.x4A_RED_BOMB_SOLDIERS,
+    SpriteId.x43_RED_SPEAR_GUARD,
+    SpriteId.x48_RED_JAVELIN_GUARD,
+    SpriteId.x49_RED_GUARD_BUSH,
+    SpriteId.x4A_RED_BOMB_GUARD,
     SpriteId.xD0_LYNEL,
 ]
 
 _hero_blocklist: list[SpriteId] = [
-    SpriteId.x42_GREEN_SWORD_SOLDIER,
-    SpriteId.x45_GREEN_SPEAR_SOLDIER,
-    SpriteId.x47_GREEN_ARCHER,
-    SpriteId.x4B_GREEN_SOLDIER_RECRUITS,
+    SpriteId.x42_GREEN_GUARD,
+    SpriteId.x45_GREEN_ASSAULT_GUARD,
+    SpriteId.x47_GREEN_GUARD_BUSH,
+    SpriteId.x4B_GREEN_KNIFE_GUARD,
     SpriteId.x27_DEADROCK,
     SpriteId.xC4_THIEF,
 ]
@@ -28,9 +28,9 @@ _hero_blocklist: list[SpriteId] = [
 # Used in balanced to reduce harder to kill enemies who rank lower
 # in difficulty but are perceived to be more difficult.
 _adjusted_enemies: list[SpriteId] = [
-    SpriteId.x43_RED_SPEAR_SOLDIER,
-    SpriteId.x48_RED_JAVELIN_SOLDIER,
-    SpriteId.x49_RED_JAVELIN_SOLDIER_2,
+    SpriteId.x43_RED_SPEAR_GUARD,
+    SpriteId.x48_RED_JAVELIN_GUARD,
+    SpriteId.x49_RED_GUARD_BUSH,
     SpriteId.xD0_LYNEL,
 ]
 
