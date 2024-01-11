@@ -1,9 +1,8 @@
 from enum import Enum
-
-from library.Model.SpriteId import SpriteId
-from library.Model.SpriteMovement import SpriteMovement
-from library.Model.SpriteSettings import SpriteSettings
-from library.Model.SpriteVulnerability import SpriteVulnerability
+from library.model.sprite_id import SpriteId
+from library.model.sprite_movement import SpriteMovement
+from library.model.sprite_configuration import SpriteConfiguration
+from library.model.sprite_vulnerability import SpriteVulnerability
 
 
 class Placement(Enum):
@@ -13,8 +12,8 @@ class Placement(Enum):
 
 
 def _is_classification_compatible(
-    source_meta: SpriteSettings,
-    target_meta: SpriteSettings,
+    source_meta: SpriteConfiguration,
+    target_meta: SpriteConfiguration,
 ) -> bool:
     return (
         source_meta.role == target_meta.role
@@ -27,8 +26,8 @@ def _is_classification_compatible(
 
 
 def is_movement_compatible(
-    source: SpriteSettings,
-    target: SpriteSettings,
+    source: SpriteConfiguration,
+    target: SpriteConfiguration,
 ) -> bool:
     if source.movement == None or target.movement == None:
         return source.movement == target.movement
@@ -46,16 +45,16 @@ def is_compatible(
     source: SpriteId,
     target: SpriteId,
     placement: Placement,
-    has_key=False,
+    has_key: bool=False,
 ) -> bool:
     """True if the source can be replaced with the target"""
-    source_meta = source.meta()
-    target_meta = target.meta()
+    source_meta: SpriteConfiguration = source.configuration()
+    target_meta: SpriteConfiguration = target.configuration()
 
-    if not _is_classification_compatible(source_meta, target_meta):
+    if not _is_classification_compatible(source_meta=source_meta, target_meta=target_meta):
         return False
 
-    if not is_movement_compatible(source_meta, target_meta):
+    if not is_movement_compatible(source=source_meta, target=target_meta):
         return False
 
     if placement == Placement.AREA:

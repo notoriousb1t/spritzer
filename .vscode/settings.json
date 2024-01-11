@@ -1,0 +1,11 @@
+{
+    "python.analysis.diagnosticMode": "workspace",
+    "python.analysis.inlayHints.callArgumentNames": "all",
+    "python.analysis.inlayHints.functionReturnTypes": true,
+    "python.analysis.inlayHints.pytestParameters": true,
+    "python.analysis.inlayHints.variableTypes": true,
+    "python.analysis.logLevel": "Error",
+    "python.analysis.typeCheckingMode": "strict",
+    "python.analysis.autoFormatStrings": true,
+    "python.analysis.indexing": false
+}

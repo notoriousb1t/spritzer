@@ -1,7 +1,8 @@
 from attr import dataclass
+from typing import Union
 
-from .SpritesetId import SpritesetId
-from .SpriteSheetId import SpriteSheetId
+from library.model.spriteset_id import SpritesetId
+from library.model.sprite_sheet_id import SpriteSheetId
 
 
 @dataclass
@@ -9,12 +10,12 @@ class Spriteset:
     """Loads the a blockset of sprites. This contains up to 4 sprite sets that load in individual sprites"""
 
     id: SpritesetId
-    sheet0: SpriteSheetId = None
-    sheet1: SpriteSheetId = None
-    sheet2: SpriteSheetId = None
-    sheet3: SpriteSheetId = None
+    sheet0: SpriteSheetId = SpriteSheetId.x0_FREESPACE
+    sheet1: SpriteSheetId = SpriteSheetId.x0_FREESPACE
+    sheet2: SpriteSheetId = SpriteSheetId.x0_FREESPACE
+    sheet3: SpriteSheetId = SpriteSheetId.x0_FREESPACE
 
-    def get_at(self, index: int) -> SpriteSheetId:
+    def get_at(self, index: int) -> Union[SpriteSheetId, None]:
         if index == 0:
             return self.sheet0
         if index == 1:

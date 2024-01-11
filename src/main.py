@@ -1,4 +1,4 @@
-from ui.Adjuster import Adjuster
+from ui.adjuster import Adjuster
 
 
 if __name__ == "__main__":

@@ -1,3 +1,4 @@
+# pyright: reportMissingTypeStubs=false, reportUnknownVariableType=false
 import sys
 from cx_Freeze import setup, Executable
 
@@ -11,7 +12,7 @@ build_options = {
     "build_exe": "../build",
 }
 
-executables = [Executable("main.py", base=base, target_name="spritzer-ui")]
+executables: list[Executable] = [Executable(script="main.py", base=base, target_name="spritzer-ui")]
 
 setup(
     name="spritzer",
