@@ -37,7 +37,7 @@ def _replace_cannon_overlord_with_big_cannons(context: Model, rom: LocalRom) -> 
 
 
 def _noop(context: Model, rom: LocalRom) -> None:
-    pass
+    return
 
 
 def reroll_overlords(context: Model, rom: LocalRom) -> None:
@@ -56,4 +56,3 @@ def reroll_overlords(context: Model, rom: LocalRom) -> None:
 def reroll_eastern_palace_overlords(context: Model, rom: LocalRom) -> None:
     random = Random()
     random.seed(a=context.seed)
-
