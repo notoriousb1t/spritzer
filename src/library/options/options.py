@@ -10,6 +10,8 @@ class Options:
     """Provide a random generated seed. See the adjuster.py file for an example of how to generate this."""
     boss_shuffle = False
     """Experimental"""
+    overlord_shuffle = False
+    """Experimental"""
     overworld_balancing: Balancing = Balancing.BALANCED
     """Controls the general difficulty of enemies and other settings in the overworld."""
     overworld_enemy_shuffle: OverworldEnemyShuffle = OverworldEnemyShuffle.VANILLA

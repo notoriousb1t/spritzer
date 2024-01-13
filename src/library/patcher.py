@@ -1,4 +1,3 @@
-from random import Random
 from typing import Callable, List
 from library.model.sprite_sheet_id import create_spriteset_dict
 from library.options.options import Options
@@ -19,6 +18,7 @@ from library.transform.boss_shuffle import reroll_underworld_bosses
 from library.model.model import Model
 from library.transform.killable_sprite import patch_thief_killable
 from library.transform.mushroom_shuffle import reroll_lost_woods_mushroom
+from library.transform.overlord_shuffle import reroll_eastern_palace_overlords, reroll_overlords
 from library.transform.overworld_inversion import invert_world
 from library.transform.overworld_shuffle import reroll_overworld_enemies
 from library.transform.shadow_bees import patch_shadow_bees
@@ -36,15 +36,12 @@ from library.transform.underworld_tileset_shuffle import reroll_underworld_block
 from library.transform.vanilla_fixes import patch_invulnerable_sprites
 
 
-def patch_buffer(
-    buffer: bytearray,
-    options: Options,
-    random: Random = Random(),
-) -> None:
+def patch_buffer(buffer: bytearray, options: Options) -> None:
     """Patch a buffer containing Zelda3. It must have the smc header removed."""
     # Setup all transforms. The order is signficant.
-    transform_list: List[Callable[[Model], None]] = list()
-    preprocess_list: List[Callable[[Model], None]] = list()
+    preprocess_list: List[Callable[[Model], None]] = []
+    transform_list: List[Callable[[Model], None]] = []
+    postprocess_list: List[Callable[[Model, LocalRom], None]] = []
 
     if options.killable_thieves:
         transform_list.append(patch_thief_killable)
@@ -63,6 +60,10 @@ def patch_buffer(
 
     if options.boss_shuffle:
         transform_list.append(reroll_underworld_bosses)
+
+    if options.overlord_shuffle:
+        postprocess_list.append(reroll_overlords)
+        postprocess_list.append(reroll_eastern_palace_overlords)
 
     if options.underworld_enemy_shuffle == UnderworldEnemyShuffle.SIMPLE:
         preprocess_list.append(preprocess_simple_underworld_choices)
@@ -129,12 +130,20 @@ def patch_buffer(
 
     # Write the data back to the ROM.
     rom.set_mode(mode=RomMode.WRITE)
+
+    # Perform direct writes to addresses.
+    for postprocess in postprocess_list:
+        postprocess(context, rom)
+    
+    # Write all the standard objects back. This needs to happen afterward in case
+    # a direct write needs to modify an object before it is written.
     write_damage_subclasses(rom=rom, subclasses=context.sprite_subclasses)
     write_damage_table(rom=rom, damage_table=context.damage_table)
     write_sprite_settings(rom=rom, sprite_dict=context.sprites)
     write_spritesets(rom=rom, blocksets=context.spritesets)
     write_overworld_areas(rom=rom, overworld_areas=context.overworld_areas)
     write_underworld_rooms(rom=rom, dungeon_room_dict=context.underworld_rooms)
+
     # Write CRC to the ROM.
     rom.set_mode(mode=RomMode.CRC)
     rom.write_crc()
@@ -154,11 +163,7 @@ def patch_file(
         if len(buffer) % 0x400 == 0x200:
             buffer: bytearray = buffer[0x200:]
 
-    random = Random()
-    if options.seed:
-        # Makes the seed determistic
-        random.seed(a=options.seed)
-    patch_buffer(buffer=buffer, options=options, random=random)
+    patch_buffer(buffer=buffer, options=options)
 
     with open(file=output_path, mode="wb") as outfile:
         outfile.write(buffer)

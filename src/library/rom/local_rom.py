@@ -128,10 +128,22 @@ class LocalRom:
             raise "Wrong phase, cannot write"  # type: ignore
         self._current_buffer[address] = value
 
+    def write_bytes(self, address: int, values: List[int]) -> None:
+        if self._mode != RomMode.WRITE:
+            raise "Wrong phase, cannot write"  # type: ignore
+        for i, val in enumerate(iterable=values):
+            self._current_buffer[address + i] = val
+
     def write_snes_address(self, snes_address: int, value: int) -> None:
         return self.write_address(
             address=compute_pc_address(address=snes_address),
             value=value,
+        )
+
+    def write_snes_bytes(self, snes_address: int, values: List[int]) -> None:
+        return self.write_bytes(
+            address=compute_pc_address(address=snes_address),
+            values=values,
         )
 
     def write_crc(self) -> None:

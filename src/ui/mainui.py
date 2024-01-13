@@ -55,6 +55,7 @@ class MainUi:
         self.underworld_palette_shuffle = BooleanVar(master=self.app, value=False)
         self.underworld_tileset_shuffle = BooleanVar(master=self.app, value=False)
         self.shadow_bees = BooleanVar(master=self.app, value=False)
+        self.overlord_shuffle = BooleanVar(master=self.app, value=False)
 
         self.boss_shuffle = BooleanVar(master=self.app, value=False)
         self.killable_thieves = BooleanVar(master=self.app, value=False)
@@ -140,6 +141,11 @@ class MainUi:
             master=self.option_frame,
             text="Shadow Bees",
             variable=self.shadow_bees,
+        )
+        self.overlord_shuffle_checkbox = CTkCheckBox(
+            master=self.option_frame,
+            text="Overlord Shuffle (WIP)",
+            variable=self.overlord_shuffle
         )
         self.footer = CTkFrame(
             master=self.app,
@@ -241,6 +247,7 @@ class MainUi:
             self.enable_boss_shuffle_checkbox,
             self.underworld_tileset_shuffle_checkbox,
             self.killable_thieves_checkbox,
+            self.overlord_shuffle_checkbox,
         ]
 
         # Overcomplicated code that lays checkboxes into columns.
@@ -294,6 +301,7 @@ class MainUi:
         options.underworld_tileset_shuffle = self.underworld_tileset_shuffle.get()
         options.killable_thieves = self.killable_thieves.get()
         options.mushroom_shuffle = self.mushroom_shuffle.get()
+        options.overlord_shuffle = self.overlord_shuffle.get()
         options.shadow_bees = self.shadow_bees.get()
         options.underworld_balancing = Balancing(value=self.underworld_balancing.get())
         options.underworld_enemy_shuffle = UnderworldEnemyShuffle(
