@@ -9,7 +9,7 @@ base = "Win32GUI" if sys.platform == "win32" else None
 
 executables: list[Executable] = [
     Executable(
-        script="./src/main.py",
+        script="./main.py",
         base=base,
         target_name="spritzer-ui",
     )
