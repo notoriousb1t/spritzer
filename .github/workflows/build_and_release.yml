@@ -22,9 +22,9 @@ jobs:
       with:
         python-version: 3.11
     - name: Installing Requirements
-      run: pip install -r src/requirements.txt cx_freeze
+      run: pip install -r requirements.txt cx_freeze
     - name: Packaging
-      run: cd ./src; python setup.py build
+      run: python setup.py build
     - name: Archiving
       run: mkdir dist; tar -cvzf ./dist/spritzer.tar.gz ./build
     - name: Uploading
