@@ -1,0 +1,18 @@
+[package]
+edition = "2021"
+name = "spritzer_py"
+version = "0.1.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+crate-type = ["cdylib"]
+name = "spritzer_py"
+path = "lib.rs"
+
+[dependencies]
+indexmap = "2.2.4"
+pyo3 = "0.20.3"
+simplelog = {version = "^0.12.1", features = ["paris"]}
+spritzer = {path = "../library"}
+strum = "0.26.1"
+strum_macros = "0.26.1"

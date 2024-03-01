@@ -1,0 +1,17 @@
+[package]
+name = "assembly"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "assembly"
+crate-type = ["lib"]
+path = "lib.rs"
+
+[dependencies]
+strum = "0.26.1"
+strum_macros = "0.26.1"
+
+[build-dependencies]
+log = "0.4.20"
+sha256 = "1.5.0"

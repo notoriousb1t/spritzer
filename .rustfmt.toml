@@ -1,0 +1,8 @@
+# Use `cargo +nightly fmt` to perform formats.
+unstable_features = true
+comment_width = 120
+group_imports = "StdExternalCrate"
+# The rationale is that item level imports while repetive are less likely to create conflicting diffs
+imports_granularity = "Item"
+imports_layout = "Vertical"
+wrap_comments = true

@@ -1,0 +1,9 @@
+pub(crate) const FIXED: u8 = 1 << 0;
+pub(crate) const EAST: u8 = 1 << 1;
+pub(crate) const WEST: u8 = 1 << 2;
+pub(crate) const NORTH: u8 = 1 << 3;
+pub(crate) const SOUTH: u8 = 1 << 4;
+pub(crate) const DIAGONAL: u8 = 1 << 5;
+pub(crate) const SNAKE: u8 = 1 << 6;
+pub(crate) const VERTICAL: u8 = EAST | WEST;
+pub(crate) const HORIZONTAL: u8 = NORTH | SOUTH;

@@ -1,0 +1,23 @@
+[package]
+name = "docs"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "docs"
+path = "lib.rs"
+crate-type = ["cdylib"]
+
+[dependencies]
+console_error_panic_hook = "0.1.7"
+gloo-utils = "0.2.0"
+spritzer = { path = "../library" }
+wasm-bindgen = "0.2"
+
+[target.'cfg(target_arch = "wasm32")']
+# Specify wasm32 target settings
+rustflags = [
+    "-C", "link-arg=-s",
+    "-C", "link-arg=--no-entry",
+    "-C", "link-arg=--export-table",
+]

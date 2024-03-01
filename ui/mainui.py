@@ -2,6 +2,8 @@
 from math import floor
 from string import ascii_uppercase, digits
 from random import Random
+import time
+import spritzer_py
 
 from customtkinter import (
     CTk,
@@ -16,13 +18,6 @@ from customtkinter import (
     CTkComboBox,
 )
 from tkinter import filedialog, messagebox, BooleanVar, StringVar
-
-from library.model.balancing import Balancing
-from library.options.options import Options
-from library.options.overworld_enemy_shuffle import OverworldEnemyShuffle
-from library.options.underworld_enemy_shuffle import UnderworldEnemyShuffle
-from library.patcher import patch_file
-
 
 _PADX = 12
 _PADY = 8
@@ -42,23 +37,13 @@ class MainUi:
         )
 
         self.seed = StringVar(master=self.app, value=random_seed)
-        self.overworld_enemy_balancing = StringVar(
-            master=self.app, value=Balancing.BALANCED
-        )
-        self.overworld_enemy_shuffle = StringVar(
-            master=self.app, value=OverworldEnemyShuffle.SIMPLE
-        )
-        self.underworld_balancing = StringVar(master=self.app, value=Balancing.BALANCED)
-        self.underworld_enemy_shuffle = StringVar(
-            master=self.app, value=UnderworldEnemyShuffle.SIMPLE
-        )
-        self.underworld_palette_shuffle = BooleanVar(master=self.app, value=False)
-        self.underworld_tileset_shuffle = BooleanVar(master=self.app, value=False)
+        self.overworld_enemy_balancing = StringVar(master=self.app, value="Balanced")
+        self.overworld_enemy_shuffle = StringVar(master=self.app, value="Simple")
+        self.underworld_balancing = StringVar(master=self.app, value="Balanced")
+        self.underworld_enemy_shuffle = StringVar(master=self.app, value="Simple")
         self.shadow_bees = BooleanVar(master=self.app, value=False)
-        self.overlord_shuffle = BooleanVar(master=self.app, value=False)
 
         self.boss_shuffle = BooleanVar(master=self.app, value=False)
-        self.killable_thieves = BooleanVar(master=self.app, value=False)
         self.mushroom_shuffle = BooleanVar(master=self.app, value=False)
 
         self.create_window()
@@ -68,6 +53,7 @@ class MainUi:
 
         set_appearance_mode(mode_string="System")
         set_default_color_theme(color_string="dark-blue")
+        spritzer_py.init();
 
     def create_window(self) -> None:
         # create root window
@@ -85,7 +71,7 @@ class MainUi:
         )
         self.underworld_balancing_combobox = CTkComboBox(
             master=self.option_frame,
-            values=list(Balancing),
+            values=spritzer_py.list_balancing_options(),
             variable=self.underworld_balancing,
         )
         self.underworld_enemy_shuffle_label = CTkLabel(
@@ -93,7 +79,7 @@ class MainUi:
         )
         self.underworld_enemy_shuffle_combobox = CTkComboBox(
             master=self.option_frame,
-            values=list(UnderworldEnemyShuffle),
+            values=spritzer_py.list_underworld_enemy_shuffle_options(),
             variable=self.underworld_enemy_shuffle,
         )
         self.overworld_balancing_label = CTkLabel(
@@ -101,7 +87,7 @@ class MainUi:
         )
         self.overworld_balancing_combobox = CTkComboBox(
             master=self.option_frame,
-            values=list(Balancing),
+            values=spritzer_py.list_balancing_options(),
             variable=self.overworld_enemy_balancing,
         )
         self.overworld_enemy_shuffle_label = CTkLabel(
@@ -109,28 +95,13 @@ class MainUi:
         )
         self.overworld_enemy_shuffle_combobox = CTkComboBox(
             master=self.option_frame,
-            values=list(OverworldEnemyShuffle),
+            values=spritzer_py.list_overworld_enemy_shuffle_options(),
             variable=self.overworld_enemy_shuffle,
         )
         self.enable_boss_shuffle_checkbox = CTkCheckBox(
             master=self.option_frame,
             text="Boss Shuffle (WIP)",
             variable=self.boss_shuffle,
-        )
-        self.underworld_palette_shuffle_checkbox = CTkCheckBox(
-            master=self.option_frame,
-            text="Underworld Palette Shuffle",
-            variable=self.underworld_palette_shuffle,
-        )
-        self.underworld_tileset_shuffle_checkbox = CTkCheckBox(
-            master=self.option_frame,
-            text="Underworld Tileset Shuffle (WIP)",
-            variable=self.underworld_tileset_shuffle,
-        )
-        self.killable_thieves_checkbox = CTkCheckBox(
-            master=self.option_frame,
-            text="Killable Thieves (WIP)",
-            variable=self.killable_thieves,
         )
         self.mushroom_shuffle_checkbox = CTkCheckBox(
             master=self.option_frame,
@@ -141,11 +112,6 @@ class MainUi:
             master=self.option_frame,
             text="Shadow Bees",
             variable=self.shadow_bees,
-        )
-        self.overlord_shuffle_checkbox = CTkCheckBox(
-            master=self.option_frame,
-            text="Overlord Shuffle (WIP)",
-            variable=self.overlord_shuffle
         )
         self.footer = CTkFrame(
             master=self.app,
@@ -241,13 +207,9 @@ class MainUi:
         )
 
         boolean_options: list[CTkCheckBox] = [
-            self.underworld_palette_shuffle_checkbox,
             self.mushroom_shuffle_checkbox,
             self.shadow_bees_checkbox,
             self.enable_boss_shuffle_checkbox,
-            self.underworld_tileset_shuffle_checkbox,
-            self.killable_thieves_checkbox,
-            self.overlord_shuffle_checkbox,
         ]
 
         # Overcomplicated code that lays checkboxes into columns.
@@ -295,39 +257,35 @@ class MainUi:
         )
 
     def patch_rom(self) -> None:
-        options = Options(seed=self.seed.get())
-        options.boss_shuffle = self.boss_shuffle.get()
-        options.underworld_palette_shuffle = self.underworld_palette_shuffle.get()
-        options.underworld_tileset_shuffle = self.underworld_tileset_shuffle.get()
-        options.killable_thieves = self.killable_thieves.get()
-        options.mushroom_shuffle = self.mushroom_shuffle.get()
-        options.overlord_shuffle = self.overlord_shuffle.get()
-        options.shadow_bees = self.shadow_bees.get()
-        options.underworld_balancing = Balancing(value=self.underworld_balancing.get())
-        options.underworld_enemy_shuffle = UnderworldEnemyShuffle(
-            value=self.underworld_enemy_shuffle.get()
-        )
-        options.overworld_enemy_shuffle = OverworldEnemyShuffle(
-            value=self.overworld_enemy_shuffle.get()
-        )
-        options.overworld_balancing = Balancing(
-            value=self.overworld_enemy_balancing.get()
-        )
-
         input_path: str = filedialog.askopenfilename(
             filetypes=[("Zelda3 JPN", "*.sfc")]
         )
         if not input_path:
             return
 
-        patch_file(
-            options=options,
-            input_path=input_path,
-            output_path=input_path,
-        )
+        with open(file=input_path, mode="rb") as stream:
+            buffer = bytearray(stream.read())
+
+        options = spritzer_py.Options(seed=self.seed.get())
+        options.boss_shuffle = self.boss_shuffle.get()
+        options.mushroom_shuffle = self.mushroom_shuffle.get()
+        options.overworld_balancing = self.overworld_enemy_balancing.get()
+        options.overworld_enemy_shuffle = self.overworld_enemy_shuffle.get()
+        options.shadow_bees = self.shadow_bees.get()
+        options.underworld_balancing = self.underworld_balancing.get()
+        options.underworld_enemy_shuffle = self.underworld_enemy_shuffle.get()
+
+        start = time.time()
+        buffer = spritzer_py.randomize_zelda3(buffer, options)
+        end = time.time()
+        print(f"{(end - start) * 1000} ms")
+
+        with open(file=input_path, mode="wb") as outfile:
+            outfile.write(buffer)
+
         message = messagebox.Message(
             master=self.app,
-            message="ROM Patched -- Have a wonderful journey!",
+            message="Done -- Have a wonderful journey!",
         )
         message.show()
 

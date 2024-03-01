@@ -1,0 +1,8 @@
+[workspace]
+members = [
+  "assembly",
+  "library",
+  "python",
+  "docs",
+]
+resolver = "2"
