@@ -6,13 +6,12 @@ import WasmPackPlugin from "@wasm-tool/wasm-pack-plugin";
 
 /** @type {import('vite').UserConfig} */
 export default defineUserConfig({
-  lang: "en-US",
   base: '/spritzer/',
   title: "Spritzer",
   description: "Zelda: A Link to the Past Dungeon Randomizer",
 
   theme: defaultTheme({
-    colorMode: 'dark',
+    colorMode: 'light',
     colorModeSwitch: false,
     contributors: false,
     editLink: false,
@@ -43,6 +42,7 @@ export default defineUserConfig({
             pluginLogLevel: 'info',
             args: '--log-level warn',
             extraArgs: '--no-typescript',
+
           })
         ],
         experiments: {
