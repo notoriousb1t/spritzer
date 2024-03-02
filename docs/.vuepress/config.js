@@ -7,7 +7,7 @@ import WasmPackPlugin from "@wasm-tool/wasm-pack-plugin";
 /** @type {import('vite').UserConfig} */
 export default defineUserConfig({
   lang: "en-US",
-
+  base: '/spritzer/',
   title: "Spritzer",
   description: "Zelda: A Link to the Past Dungeon Randomizer",
 
