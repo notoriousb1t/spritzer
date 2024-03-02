@@ -31,6 +31,11 @@ export default defineUserConfig({
     scss: {},
     configureWebpack() {
       return {
+        infrastructureLogging: {
+          colors: true,
+          appendOnly: true,
+          level: 'verbose',
+        },
         plugins: [
           new WasmPackPlugin({
             crateDirectory: path.resolve(__dirname, process.cwd() + "/docs"),
