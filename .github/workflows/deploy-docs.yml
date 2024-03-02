@@ -19,9 +19,21 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          # if your docs needs submodules, uncomment the following line
-          # submodules: true
 
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+            target: wasm32-unknown-unknown
+
+      - name: Install wasm-pack
+        # Use workspace target directory for cargo install's build,
+        # so that the build of wasm-pack will be cached by rust-cache action.
+        run: CARGO_TARGET_DIR=`pwd`/target cargo install wasm-pack
+
+        # Ensure this can be built.
+      - name: Run Cargo Build
+        run: cargo build --release
+      
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:

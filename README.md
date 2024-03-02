@@ -93,26 +93,3 @@ Some features are enabled as a result of other enabled features:
 1. Run the new .sfc file
 
 
-## Pre-reqs for Building
-
-1. Install Rust
-2. Install Visual Studio Code and the Rust Analyzer extension
-3. Run `rustup target add wasm32-unknown-unknown` to install the web assembly compiler
-4. Install the wasm-bindgen-cli `cargo install wasm-bindgen-cli`
-5. Install Maturin -- This adds compiler support for Python bindings
-
-## Running
-
-- Run the task, "Python: Main UI" from the Visual Studio Code debug menu.
-- Run `npm run docs:dev` to run the docs site.
-
-> NOTE: The assembly project requires Windows to run and a copy of asar.exe in the directory to rebuild .asm files. But if changes to the asm are not required, this is not required to make contributions. For ASM changes, the
-
-## Architecture
-
-This is a workspace project for Rust. At any time, running `cargo build` will compile all compilable targets. There are a few different projects:
-
-- assembly - Contains direct Assembly code needed to reprogram parts of the game. This automatically generates Rust code that contains the bytes generated from the code. However, this does not use a copy of the game and instead diffs off an "empty" file of 4MB. As a result, it is not possible to `org` 2 addresses that are not at least 2 bytes away from each other. The current marker is 0xFF 0xFF to detect "empty".
-- library - This contains the main logic of the randomizer and contains models for working with objects in the game, reader/writers for performing conversions, and logic to perform transformations on dungeons, sprites, overworld, etc. This is the majority of code in the project.
-- python - This contains bindings to convert Rust code to python, so this project can be run from python frontends.
-- ui - A python UI for running the mod.
