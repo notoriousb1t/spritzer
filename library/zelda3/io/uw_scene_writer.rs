@@ -1,5 +1,6 @@
-use std::collections::HashMap;
 use assembly::zelda3::Symbol;
+use std::collections::hash_map::Entry;
+use std::collections::HashMap;
 
 use crate::common::readerwriter::WriteObject;
 use crate::snes::SnesGame;
@@ -18,20 +19,29 @@ impl WriteObject<HashMap<UWRoomId, UWScene>> for SnesGame {
     fn write_objects(&mut self, scenes: &HashMap<UWRoomId, UWScene>) {
         // Group room ids that have exact layouts, objects, and entrances.
         let mut map: HashMap<&UWScene, Vec<UWRoomId>> = HashMap::default();
-        for (id, layout) in scenes.iter() {
-            if map.contains_key(layout) {
-                map.get_mut(layout).unwrap().push(*id);
-            } else {
-                map.insert(layout, vec![*id]);
-            }
+        let mut scenes_tuples = scenes.iter().collect::<Vec<_>>();
+        scenes_tuples.sort_by_key(|it| it.0);
+
+        for (id, scene) in scenes_tuples {
+            let values = match map.entry(scene) {
+                Entry::Occupied(o) => o.into_mut(),
+                Entry::Vacant(v) => v.insert(vec![]),
+            };
+            values.push(*id);
         }
+
+        // Sort groups by the first room that occurs in them. This must be stable, and this is good enough.
+        // Without this, the seed string isn't stable and it is hard to pinpoint issues or have two players
+        // play the same game.
+        let mut groups = map.iter().collect::<Vec<_>>();
+        groups.sort_by_key(|it| it.1[0]);
 
         // Write layouts and pointers for each layout and entrance configuration.
         // Layouts and doors, despite having separate pointer tables must be exactly sequential to
         // each other. That is, each layout must be followed by the correct door
         // configuration. If this is not done sequentially, it introduces hard to find gamebreaking
         // bugs.
-        for (scene, ids) in map.iter() {
+        for (scene, ids) in groups {
             let layout_bytes = layout_to_bytes(&scene.layout);
             let entrance_bytes = doorlist_to_bytes(&scene.doors);
             let scene_bytes = layout_bytes

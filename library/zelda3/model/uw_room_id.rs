@@ -5,7 +5,7 @@ use strum_macros::FromRepr;
 /// An identifier for a room in dungeons, houses, and caves.
 #[repr(u16)]
 #[allow(non_camel_case_types)]
-#[derive(Copy, Clone, Debug, Display, Eq, PartialEq, Hash, FromRepr, EnumIter)]
+#[derive(Copy, Clone, Debug, Display, Eq, PartialEq, Hash, FromRepr, EnumIter, PartialOrd, Ord)]
 pub(crate) enum UWRoomId {
     x00_GANON = 0,
     x01_HYRULE_CASTLE_NORTH_CORRIDOR = 1,

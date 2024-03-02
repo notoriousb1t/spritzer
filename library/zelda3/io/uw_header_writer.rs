@@ -1,5 +1,5 @@
-use std::collections::HashMap;
 use assembly::zelda3::Symbol;
+use std::collections::HashMap;
 
 use crate::common::readerwriter::WriteObject;
 use crate::snes::SnesGame;
@@ -9,7 +9,10 @@ use crate::zelda3::model::UnderworldRoomHeader;
 impl WriteObject<HashMap<UWRoomId, UnderworldRoomHeader>> for SnesGame {
     fn write_objects(&mut self, headers: &HashMap<UWRoomId, UnderworldRoomHeader>) {
         // Start writing the underworld sprites wherever the overworld sprites left off.
-        for (_id, room) in headers.iter() {
+        let mut headers = headers.values().collect::<Vec<_>>();
+        headers.sort_by_key(|it| it.id);
+
+        for room in headers {
             _write_metadata(self, room);
         }
     }

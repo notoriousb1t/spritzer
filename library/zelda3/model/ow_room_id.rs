@@ -18,7 +18,7 @@ use strum_macros::FromRepr;
 /// 40 = Master Sword Glave and Under bridge
 /// 41 = Zoras Domain
 #[repr(u8)]
-#[derive(Copy, Clone, Debug, Display, Eq, PartialEq, Hash, FromRepr, EnumIter)]
+#[derive(Copy, Clone, Debug, Display, Eq, PartialEq, Hash, FromRepr, EnumIter, PartialOrd, Ord)]
 #[allow(non_camel_case_types)]
 pub(crate) enum OWRoomId {
     x0_LOST_WOODS = 0,

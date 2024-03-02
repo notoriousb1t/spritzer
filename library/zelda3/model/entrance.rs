@@ -24,7 +24,7 @@ pub(crate) struct Entrance {
 }
 
 #[repr(u8)]
-#[derive(Copy, Clone, Debug, Display, Eq, PartialEq, Hash, EnumIter)]
+#[derive(Copy, Clone, Debug, Display, Eq, PartialEq, Hash, EnumIter, PartialOrd, Ord)]
 #[allow(non_camel_case_types)]
 pub(crate) enum EntranceId {
     X00_Links_House = 0x00,

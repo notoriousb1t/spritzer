@@ -24,7 +24,10 @@ use crate::zelda3::model::Z3Model;
 pub(crate) fn shuffle_underworld_sprites(model: &mut Z3Model) {
     let mut rng = model.create_rng();
 
-    for room in &mut model.uw_sprites.values_mut() {
+    let mut sprite_lists = model.uw_sprites.values_mut().collect::<Vec<_>>();
+    sprite_lists.sort_by_key(|it| it.uw_room_id);
+
+    for room in sprite_lists {
         // Grab all sprites that can be shuffled (just enemies that don't hold keys).
         let mut enemies: Vec<&mut UWSprite> = room
             .sprites
@@ -59,15 +62,13 @@ pub(crate) fn shuffle_underworld_sprites(model: &mut Z3Model) {
 pub(crate) fn reroll_underworld_sprites(model: &mut Z3Model) {
     let mut rng = model.create_rng();
 
-    let rooms: Vec<UWSpriteList> = model
-        .uw_sprites
-        .clone()
-        .values()
-        .map(|underworld_room| _reroll_underworld_room(model, &mut rng, underworld_room))
-        .collect();
+    let mut ids = model.uw_sprites.keys().cloned().collect::<Vec<_>>();
+    ids.sort();
 
-    for room in rooms {
-        model.uw_sprites.insert(room.uw_room_id, room);
+    for id in ids {
+        let room = model.uw_sprites.get(&id).unwrap();
+        let room = _reroll_underworld_room(model, &mut rng, room);
+        model.uw_sprites.insert(id, room);
     }
 }
 
@@ -228,7 +229,6 @@ fn _reroll_underworld_room(
     rng: &mut StdRng,
     original_room: &UWSpriteList,
 ) -> UWSpriteList {
-    let header = model.uw_headers.get(&original_room.uw_room_id).unwrap();
     let mut underworld_room = original_room.clone();
 
     // Randomize using Entities that occur anywhere in that Dungeon Room.
@@ -241,6 +241,7 @@ fn _reroll_underworld_room(
         return underworld_room;
     }
 
+    let header = model.uw_headers.get(&original_room.uw_room_id).unwrap();
     let choices = &model.sprite_pool[&header.spriteset_id];
     if choices.is_empty() {
         // Skip if there is nothing to switch.
@@ -252,30 +253,33 @@ fn _reroll_underworld_room(
         false => Placement::Room,
     };
 
-    let mut dungeon_sprites_by_type: HashMap<SpriteType, Vec<&UWSprite>> =
-        HashMap::from_iter(SpriteType::iter().map(|it| (it, Vec::new())));
-    let mut preserved_sprites: Vec<UWSprite> = vec![];
+    let mut sprite_ids = SpriteType::iter().collect::<Vec<_>>();
+    sprite_ids.sort();
 
-    for sprite in underworld_room.sprites.iter() {
+    let mut dungeon_sprites_by_type: HashMap<SpriteType, Vec<&UWSprite>> =
+        HashMap::from_iter(sprite_ids.iter().map(|it| (*it, Vec::new())));
+    let mut new_sprites: Vec<UWSprite> = vec![];
+
+    let mut sorted_sprites = underworld_room.sprites.iter().collect::<Vec<_>>();
+    sorted_sprites.sort_by_key(|it| (it.y_pos, it.x_pos));
+
+    for sprite in sorted_sprites.iter() {
         if can_shuffle_in_underworld(&sprite.id) {
             if let Some(list) = dungeon_sprites_by_type.get_mut(&get_sprite_type(&sprite.id)) {
                 list.push(sprite);
             }
         } else {
-            preserved_sprites.push(*sprite);
+            new_sprites.push(**sprite);
         }
     }
 
-    let mut randomized_sprites = dungeon_sprites_by_type
-        .values()
-        .clone()
-        .flat_map(|sprites| _reroll_underworld_sprites(model, rng, sprites, choices, placement))
-        .collect::<Vec<_>>();
-
-    while let Some(sprite) = randomized_sprites.pop() {
-        preserved_sprites.push(sprite);
+    for sprite_id in sprite_ids {
+        let sprites = dungeon_sprites_by_type.get(&sprite_id).unwrap();
+        for sprite in _reroll_underworld_sprites(model, rng, sprites, choices, placement) {
+            new_sprites.push(sprite);
+        }
     }
 
-    underworld_room.sprites = preserved_sprites;
+    underworld_room.sprites = new_sprites;
     underworld_room
 }

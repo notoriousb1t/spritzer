@@ -4,11 +4,10 @@ use crate::common::random::string_to_hash;
 use crate::common::readerwriter::ReadObject;
 use crate::common::readerwriter::WriteObject;
 use crate::snes::SnesGame;
+use crate::snes::SnesSize;
 use crate::zelda3::features::apply_options;
 use crate::zelda3::model::Z3Model;
 use crate::zelda3::options::Z3Options;
-
-const SIZE: usize = 0x400000;
 
 pub fn randomize_zelda3(bytes: &[u8], options: &Z3Options) -> Vec<u8> {
     let mut game = create_game(bytes);
@@ -31,17 +30,14 @@ pub fn randomize_zelda3(bytes: &[u8], options: &Z3Options) -> Vec<u8> {
 
 fn create_game(bytes: &[u8]) -> SnesGame {
     // Unconditionally strip SMC headers.
-    let mut bytes: Vec<u8> = match bytes.len() % 0x400 == 0x200 {
+    let bytes: Vec<u8> = match bytes.len() % 0x400 == 0x200 {
         true => bytes[0x200..].to_vec(),
         false => bytes.to_vec(),
     };
 
-    // Resize to 4MB to make additional room. Fill with 0.
-    if bytes.len() < SIZE {
-        bytes.resize(SIZE, 0);
-    }
-
+    // Resize to 4MB to make additional room. Fill with 0xFF.
     let mut game = SnesGame::new(&bytes);
+    game.resize(SnesSize::Size4mb);
 
     // Add base patch to the game. This includes direct fixes to the game.
     for (address, data) in get_patch_data() {
@@ -69,7 +65,7 @@ fn get_free_space() -> Vec<(u8, u16, u16)> {
         (0x1B, 0xB1D7, 0xB7FF), // Empty Space.
         (0x1C, 0xF3D5, 0xF500), // Empty Space.
         (0x1C, 0xFD8E, 0xFFFF), // Empty Space.
-        (0x1F, 0x8780, 0xFFFF), // Initially Contains Doors and Layout.
+        (0x1F, 0x878A, 0xFFFF), // Initially Contains Doors and Layout.
     ]
 }
 
@@ -113,8 +109,8 @@ mod tests {
             overworld_balancing: Balancing::Random,
             mushroom_shuffle: true,
             shadow_bees: true,
-            overworld_enemy_shuffle: OverworldEnemyShuffle::Simple,
-            underworld_enemy_shuffle: UnderworldEnemyShuffle::Simple,
+            overworld_enemy_shuffle: OverworldEnemyShuffle::Full,
+            underworld_enemy_shuffle: UnderworldEnemyShuffle::Full,
             boss_shuffle: true,
             ..Z3Options::default()
         };

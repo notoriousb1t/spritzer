@@ -41,40 +41,40 @@ NOP ; Required to cancel out an otherwise invalid instruction.
 
 ; Replace Eyegore Sprites in Room 0x10C (Mimic Cave) with Mimic.
 org $09EBCD
-db $14, $07, !SPRITE_MIMIC ; Red Mimic
+db $14, $07, !SPRITE_MIMIC
 org $09EBD0
-db $14, $08, !SPRITE_MIMIC ; Red Mimic
+db $14, $08, !SPRITE_MIMIC
 org $09EBD3
-db $14, $0C, !SPRITE_MIMIC ; Red Mimic
+db $14, $0C, !SPRITE_MIMIC
 org $09EBD6
-db $1A, $0C, !SPRITE_MIMIC ; Red Mimic
+db $1A, $0C, !SPRITE_MIMIC
 
 ; Replace Eyegore Sprites in Room 0x1B (POD) with Mimic.
 org $09DB19
-db $14, $07, !SPRITE_RED_EYEGORE ; Red EyeGore instead
+db $14, $07, !SPRITE_MIMIC
 org $09DB1C
-db $1C, $03, !SPRITE_MIMIC ; Red Mimic
+db $1C, $03, !SPRITE_GREEN_EYEGORE
 org $09DB1F
-db $1C, $0C, !SPRITE_MIMIC ; Red Mimic
+db $1C, $0C, !SPRITE_MIMIC
 
 ; Replace Eyegore Sprites in Room 0x4B (POD) with Mimic.
 org $09DEEB
-db $04, $07, !SPRITE_RED_EYEGORE ; Red EyeGore instead
+db $04, $07, !SPRITE_MIMIC
 org $09DEF4
-db $08, $04, !SPRITE_MIMIC ; Red Mimic
+db $08, $04, !SPRITE_GREEN_EYEGORE
 org $09DEF7
-db $08, $0B, !SPRITE_MIMIC ; Red Mimic
+db $08, $0B, !SPRITE_MIMIC
 
 ; Replace Eyegore Sprites in Room 0x6B (GT) with Mimic.
 org $09E199
-db $06, $0A, !SPRITE_MIMIC ; Red Mimic
+db $06, $0A, !SPRITE_MIMIC
 org $09E19C
-db $09, $06, !SPRITE_RED_EYEGORE ; Red EyeGore instead.
+db $09, $06, !SPRITE_MIMIC
 org $09E1A5
-db $18, $03, !SPRITE_MIMIC ; Red Mimic
+db $18, $03, !SPRITE_MIMIC
 org $09E1AE
-db $1B, $0C, !SPRITE_MIMIC ; Red Mimic
+db $1B, $0C, !SPRITE_MIMIC
 org $09E1B1
-db $15, $17, !SPRITE_MIMIC ; Red Mimic
+db $15, $17, !SPRITE_MIMIC
 org $09E1BA
-db $1B, $18, !SPRITE_MIMIC ; Red Mimic
+db $1B, $18, !SPRITE_MIMIC

@@ -1,7 +1,7 @@
 use strum_macros::Display;
 use strum_macros::EnumIter;
 
-#[derive(Copy, Clone, Debug, Display, Eq, PartialEq, Hash, EnumIter)]
+#[derive(Copy, Clone, Debug, Display, Eq, PartialEq, Hash, EnumIter, Ord, PartialOrd)]
 #[allow(non_camel_case_types)]
 pub(crate) enum OWStateId {
     LIGHT_WORLD_V0 = 0,

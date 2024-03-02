@@ -16,7 +16,9 @@ const STOP_MARKER: u8 = 0xFF;
 
 impl WriteObject<HashMap<OWRoomId, OWRoom>> for SnesGame {
     fn write_objects(&mut self, rooms: &HashMap<OWRoomId, OWRoom>) {
-        let rooms = rooms.values().collect::<Vec<_>>();
+        let mut rooms = rooms.values().collect::<Vec<_>>();
+        rooms.sort_by_key(|room| room.id);
+
         write_headers(self, &rooms);
         write_spritelists(self, &rooms);
     }
@@ -67,12 +69,18 @@ fn write_spritelists(game: &mut SnesGame, rooms: &[&OWRoom]) {
         }
     }
 
-    for (sprites, update_list) in map.iter() {
+    let mut sorted_entries = map.iter().collect::<Vec<_>>();
+    sorted_entries.sort_by_key(|it| it.1[0]);
+
+    for (sprites, update_list) in sorted_entries {
         // Start building the bytes for this overworld sprite list.
         let mut bytes: Vec<u8> = vec![];
 
         // Rewrite Overworld Sprites back into the same spots.
-        for sprite in sprites.iter() {
+        let mut sorted_sprites = sprites.iter().collect::<Vec<_>>();
+        sorted_sprites.sort_by_key(|it| (it.y, it.x));
+
+        for sprite in sorted_sprites {
             bytes.extend(&[sprite.y, sprite.x, sprite.id as u8]);
         }
 
@@ -117,6 +125,8 @@ fn get_affected_state_ids(area: &OWRoom, overworld_id: OWStateId) -> Vec<OWState
         OWStateId::DARK_WORLD_V2 => {
             vec![OWStateId::DARK_WORLD_V1, OWStateId::DARK_WORLD_V2]
         }
-        _ => vec![OWStateId::LIGHT_WORLD_V1],
+        OWStateId::LIGHT_WORLD_V0 => vec![OWStateId::LIGHT_WORLD_V0],
+        OWStateId::LIGHT_WORLD_V1 => vec![OWStateId::LIGHT_WORLD_V1],
+        _ => vec![],
     }
 }

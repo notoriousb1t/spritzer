@@ -1,5 +1,5 @@
-use std::collections::HashMap;
 use assembly::zelda3::Symbol;
+use std::collections::HashMap;
 use strum::IntoEnumIterator;
 
 use crate::common::readerwriter::ReadObject;

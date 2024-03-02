@@ -5,7 +5,7 @@ use strum_macros::FromRepr;
 use super::uw_room_id::UWRoomId;
 
 #[repr(u8)]
-#[derive(Debug, Eq, PartialEq, Hash, Clone, Copy, FromRepr)]
+#[derive(Debug, Eq, PartialEq, Hash, Clone, Copy, FromRepr, PartialOrd, Ord)]
 #[allow(dead_code, non_camel_case_types)]
 pub(crate) enum DungeonId {
     X00_Sewers = 0x00,
@@ -29,7 +29,7 @@ impl Display for DungeonId {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             DungeonId::X00_Sewers => write!(f, "Sewers"),
-            DungeonId::X02_HyruleCastle => write!(f, "Hyyrule Castle"),
+            DungeonId::X02_HyruleCastle => write!(f, "Hyrule Castle"),
             DungeonId::X04_EasternPalace => write!(f, "Eastern Palace"),
             DungeonId::X06_DesertPalace => write!(f, "Desert Palace"),
             DungeonId::X08_AgahnimsTower => write!(f, "Agahimn's Tower"),

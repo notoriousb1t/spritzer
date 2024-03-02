@@ -12,6 +12,18 @@ pub(crate) struct SnesGame {
     pub(crate) free_space: Vec<FreeSpace>,
 }
 
+#[repr(u8)]
+#[derive(Clone, Copy)]
+#[allow(dead_code)]
+pub(crate) enum SnesSize {
+    Size1mb = 0xA,
+    Size2mb = 0xB,
+    Size4mb = 0xC,
+    Size8mb = 0xD,
+    Size16mb = 0xE,
+    Size32mb = 0xF,
+}
+
 impl SnesGame {
     /// Constructs a new SNES game and expands it to the correct size.
     pub(crate) fn new(bytes: &[u8]) -> Self {
@@ -19,6 +31,13 @@ impl SnesGame {
             buffer: bytes.to_vec(),
             free_space: vec![],
         }
+    }
+
+    /// Resizes the ROM and updates the header.. Empty space is filled with 0xFF.
+    pub fn resize(&mut self, size: SnesSize) {
+        let new_size = (1 << (size as usize)) * 1024;
+        self.buffer.resize(new_size, 0xFF);
+        self.write(0x7FD6, size as u8);
     }
 
     /// This fills all known freespace with 0s and merges declared freespace.
@@ -42,7 +61,7 @@ impl SnesGame {
             .collect::<Vec<_>>();
 
         for (address, capacity) in areas_to_clear {
-            self.write_all(address, &vec![0x0; capacity]);
+            self.write_all(address, &vec![0; capacity]);
             debug!(
                 "Clearing from ${:06X} to ${:06X}",
                 address,

@@ -20,7 +20,10 @@ impl WriteObject<HashMap<UWRoomId, UWSpriteList>> for SnesGame {
             Symbol::RoomSpritesStart.into(),
         );
 
-        for (_id, room) in spritelists.iter() {
+        let mut rooms = spritelists.values().collect::<Vec<_>>();
+        rooms.sort_by_key(|it| it.uw_room_id);
+
+        for room in rooms.iter() {
             _write_sprites(self, room);
         }
     }
@@ -29,8 +32,12 @@ impl WriteObject<HashMap<UWRoomId, UWSpriteList>> for SnesGame {
 fn _write_sprites(game: &mut SnesGame, room: &UWSpriteList) {
     let mut buffer: Vec<u8> = vec![];
 
+    // Sort sprites by their Coordinates to make the ordering more stable.
+    let mut sprites = room.sprites.iter().collect::<Vec<_>>();
+    sprites.sort_by_key(|it| (it.y_pos, it.x_pos));
+
     // Rewrite new Dungeon Sprites.
-    for dungeon_sprite in room.sprites.iter() {
+    for dungeon_sprite in sprites.iter() {
         let lower_layer_bit = match dungeon_sprite.lower_layer {
             true => 0b1000_0000,
             false => 0,

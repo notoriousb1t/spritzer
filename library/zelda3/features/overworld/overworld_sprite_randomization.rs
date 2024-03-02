@@ -16,7 +16,10 @@ use rand::seq::SliceRandom;
 pub(crate) fn shuffle_overworld_sprites(model: &mut Z3Model) {
     let mut rng = model.create_rng();
 
-    for room in &mut model.ow_rooms.values_mut() {
+    let mut rooms = model.ow_rooms.values_mut().collect::<Vec<_>>();
+    rooms.sort_by_key(|room| room.id);
+
+    for room in rooms {
         for version in room.versions_mut() {
             // Grab all sprites that can be shuffled (just enemies that don't hold keys).
             let mut enemies: Vec<&mut OWSprite> = version
@@ -48,8 +51,10 @@ pub(crate) fn reroll_overworld_sprites(model: &mut Z3Model) {
 
     let types = vec![SpriteType::Enemy, SpriteType::Creature, SpriteType::Boss];
     // Randomize using Entities that occur anywhere in that Overworld Area.
-    // Copy the keys so they can be iterated over in a deterministic order.
-    let ids = model.ow_rooms.keys().cloned().collect::<Vec<_>>();
+    // Copy and sort the keys so this is a deterministic iteration.
+    let mut ids = model.ow_rooms.keys().cloned().collect::<Vec<_>>();
+    ids.sort();
+
     for overworld_id in ids {
         let mut area = model.ow_rooms.get_mut(&overworld_id).unwrap().clone();
         if let Some(version) = &mut area.lw_pre_aga {

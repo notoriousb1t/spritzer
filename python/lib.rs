@@ -57,7 +57,7 @@ fn randomize_zelda3_py<'a>(
 /// Call to setup logging, etc.
 fn init() {
     CombinedLogger::init(vec![TermLogger::new(
-        LevelFilter::Info,
+        LevelFilter::Debug,
         Config::default(),
         TerminalMode::Mixed,
         ColorChoice::Auto,
