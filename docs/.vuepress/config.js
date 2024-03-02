@@ -31,7 +31,6 @@ export default defineUserConfig({
     scss: {},
     configureWebpack() {
       return {
-        ignoreWarnings: true,
         infrastructureLogging: {
           colors: true,
           appendOnly: true,

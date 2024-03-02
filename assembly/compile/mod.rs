@@ -43,7 +43,7 @@ fn get_rust_path(_project_path: &Path, asm_path: &Path) -> PathBuf {
 fn rebuild_if_necessary(project_path: &Path, asm_path: &Path) {
     let rs_path = get_rust_path(project_path, asm_path);
     let hash = get_hash(asm_path);
-    if rs_path.exists() && hash == get_hash_from_rust_file(&rs_path) {
+    if rs_path.exists() && !get_hash_from_rust_file(&rs_path).is_empty() {
         return;
     }
 
