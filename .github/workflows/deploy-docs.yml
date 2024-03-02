@@ -30,7 +30,7 @@ jobs:
 
         # Ensure this can be built.
       - name: Run Cargo Build
-        run: cargo build --release --skip-asm
+        run: cargo build --release
       
       - name: Setup Node.js
         uses: actions/setup-node@v3
