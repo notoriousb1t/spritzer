@@ -2,7 +2,7 @@
 //! rooms associated with overworld enemies. For example, soldiers are swapped with dark world
 //! soldiers.
 
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use strum::IntoEnumIterator;
 
 use crate::zelda3::model::OWRoom;
@@ -180,7 +180,7 @@ fn invert_rooms(model: &mut Z3Model) {
 
 fn invert_special_overworld_versions(
     configuration: (Vec<usize>, Vec<usize>),
-    spritesets: &mut HashMap<SpritesetId, Spriteset>,
+    spritesets: &mut BTreeMap<SpritesetId, Spriteset>,
     unused_spritesets: &mut Vec<SpritesetId>,
     area: &mut OWRoom,
 ) {

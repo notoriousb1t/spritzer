@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 use crate::zelda3::model::get_sprite_challenge;
 use crate::zelda3::model::get_sprite_type;
@@ -11,14 +11,14 @@ use crate::zelda3::options::Balancing;
 pub(crate) fn get_weights(
     balancing: &Balancing,
     sprite_ids: &[&SpriteId],
-) -> HashMap<SpriteId, usize> {
+) -> BTreeMap<SpriteId, usize> {
     let weight_fn = match balancing {
         Balancing::Random => get_weights_random,
         Balancing::Casual => get_weights_casual,
         Balancing::Balanced => get_weights_balanced,
         Balancing::Hero => get_weights_hero,
     };
-    return HashMap::from_iter(
+    return BTreeMap::from_iter(
         sprite_ids
             .iter()
             .map(|&sprite_id| (*sprite_id, weight_fn(sprite_id))),

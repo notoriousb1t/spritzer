@@ -5,7 +5,7 @@ use strum_macros::FromRepr;
 const _ROOM_GFX_OFFSET: u8 = 64;
 
 #[repr(u8)]
-#[derive(Copy, Clone, Debug, Display, Eq, PartialEq, Hash, FromRepr, EnumIter, PartialOrd)]
+#[derive(Copy, Clone, Debug, Display, Eq, PartialEq, Hash, FromRepr, EnumIter, PartialOrd, Ord)]
 #[allow(non_camel_case_types)]
 pub(crate) enum SpritesetId {
     // Overworld Area Graphics Range 0-64

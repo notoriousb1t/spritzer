@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use assembly::zelda3::Symbol;
 use strum::IntoEnumIterator;
 
@@ -12,13 +12,13 @@ use crate::zelda3::model::UWRoomId;
 use crate::zelda3::model::UWRoomTag;
 use crate::zelda3::model::UnderworldRoomHeader;
 
-impl ReadObject<HashMap<UWRoomId, UnderworldRoomHeader>> for SnesGame {
-    fn read_objects(&self) -> HashMap<UWRoomId, UnderworldRoomHeader> {
+impl ReadObject<BTreeMap<UWRoomId, UnderworldRoomHeader>> for SnesGame {
+    fn read_objects(&self) -> BTreeMap<UWRoomId, UnderworldRoomHeader> {
         let mut values: Vec<(UWRoomId, UnderworldRoomHeader)> = vec![];
         for id in UWRoomId::iter() {
             values.push((id, _read_header(self, id)));
         }
-        HashMap::from_iter(values)
+        BTreeMap::from_iter(values)
     }
 }
 

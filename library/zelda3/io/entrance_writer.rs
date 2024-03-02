@@ -1,5 +1,5 @@
 use assembly::zelda3::Symbol;
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 use super::entrance_utils::BLOCKSET_SIZE;
 use super::entrance_utils::CAMERA_SCROLL_BOUNDARIES_SIZE;
@@ -24,13 +24,9 @@ use crate::snes::SnesGame;
 use crate::zelda3::model::Entrance;
 use crate::zelda3::model::EntranceId;
 
-impl WriteObject<HashMap<EntranceId, Entrance>> for SnesGame {
-    fn write_objects(&mut self, entrances: &HashMap<EntranceId, Entrance>) {
-        let mut ids = entrances.keys().collect::<Vec<_>>();
-        ids.sort();
-
-        for id in ids {
-            let entrance = entrances.get(id).unwrap();
+impl WriteObject<BTreeMap<EntranceId, Entrance>> for SnesGame {
+    fn write_objects(&mut self, entrances: &BTreeMap<EntranceId, Entrance>) {
+        for entrance in entrances.values() {
             write_entrance(self, entrance);
         }
     }

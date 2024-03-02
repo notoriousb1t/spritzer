@@ -1,5 +1,5 @@
 use assembly::zelda3::Symbol;
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use strum::IntoEnumIterator;
 
 use crate::common::readerwriter::ReadObject;
@@ -19,9 +19,9 @@ const STOP_MARKER: u8 = 0xFF;
 const LAYER_MARKER: u8 = 0xFF;
 const END_MARKER: u8 = 0xF0;
 
-impl ReadObject<HashMap<UWRoomId, UWScene>> for SnesGame {
-    fn read_objects(&self) -> HashMap<UWRoomId, UWScene> {
-        HashMap::from_iter(UWRoomId::iter().map(|id| {
+impl ReadObject<BTreeMap<UWRoomId, UWScene>> for SnesGame {
+    fn read_objects(&self) -> BTreeMap<UWRoomId, UWScene> {
+        BTreeMap::from_iter(UWRoomId::iter().map(|id| {
             let layout = read_layout(self, id);
             let doors = read_doors(self, id);
             (id, UWScene { layout, doors })

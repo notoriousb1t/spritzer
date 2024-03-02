@@ -3,7 +3,7 @@ extern crate wasm_bindgen;
 use std::panic;
 
 use gloo_utils::format::JsValueSerdeExt;
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use wasm_bindgen::prelude::*;
 
 use spritzer::zelda3::{
@@ -43,7 +43,7 @@ pub fn process_zelda3(
 
 #[wasm_bindgen]
 pub fn get_balancing_options() -> JsValue {
-    let mut map: HashMap<i32, String> = HashMap::new();
+    let mut map: BTreeMap<i32, String> = BTreeMap::new();
     for option in Balancing::all() {
         map.insert(option as i32, option.to_string());
     }
@@ -52,7 +52,7 @@ pub fn get_balancing_options() -> JsValue {
 
 #[wasm_bindgen]
 pub fn get_ow_enemy_shuffle_options() -> JsValue {
-    let mut map: HashMap<i32, String> = HashMap::new();
+    let mut map: BTreeMap<i32, String> = BTreeMap::new();
     for option in OverworldEnemyShuffle::all() {
         map.insert(option as i32, option.to_string());
     }
@@ -61,7 +61,7 @@ pub fn get_ow_enemy_shuffle_options() -> JsValue {
 
 #[wasm_bindgen]
 pub fn get_uw_enemy_shuffle_options() -> JsValue {
-    let mut map: HashMap<i32, String> = HashMap::new();
+    let mut map: BTreeMap<i32, String> = BTreeMap::new();
     for option in UnderworldEnemyShuffle::all() {
         map.insert(option as i32, option.to_string());
     }

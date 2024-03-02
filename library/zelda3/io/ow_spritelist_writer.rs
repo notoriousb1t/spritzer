@@ -1,5 +1,6 @@
 use assembly::zelda3::Symbol;
 use std::collections::hash_map::Entry;
+use std::collections::BTreeMap;
 use std::collections::HashMap;
 
 use super::ow_spritelist_utils::get_palette_address;
@@ -14,8 +15,8 @@ use crate::zelda3::model::OWStateId;
 
 const STOP_MARKER: u8 = 0xFF;
 
-impl WriteObject<HashMap<OWRoomId, OWRoom>> for SnesGame {
-    fn write_objects(&mut self, rooms: &HashMap<OWRoomId, OWRoom>) {
+impl WriteObject<BTreeMap<OWRoomId, OWRoom>> for SnesGame {
+    fn write_objects(&mut self, rooms: &BTreeMap<OWRoomId, OWRoom>) {
         let mut rooms = rooms.values().collect::<Vec<_>>();
         rooms.sort_by_key(|room| room.id);
 

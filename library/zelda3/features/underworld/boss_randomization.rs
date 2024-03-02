@@ -47,15 +47,12 @@ pub(crate) fn shuffle_bosses(model: &mut Z3Model) {
     }
 
     // Get the list of main boss rooms and filter out blocklisted ones.
-    let mut original_dungeons = model
+    let original_dungeons = model
         .dungeons
         .keys()
         .filter(|it| can_shuffle_dungeon(it))
         .copied()
         .collect::<Vec<_>>();
-    // Sort so they are always in the same order before shuffling. Hashmap keys are not
-    // iterated over in a deterministic order.
-    original_dungeons.sort();
 
     // Create a copy and shuffle the copy
     let mut shuffled_dungeons = original_dungeons.clone();

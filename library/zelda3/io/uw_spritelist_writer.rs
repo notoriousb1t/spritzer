@@ -1,5 +1,5 @@
-use std::collections::HashMap;
 use assembly::zelda3::Symbol;
+use std::collections::BTreeMap;
 
 use crate::common::readerwriter::WriteObject;
 use crate::snes::SnesGame;
@@ -12,18 +12,14 @@ const _OVERLORD_OFFSET: u16 = 0x100;
 const SMALL_KEY_MARKER: u8 = 0xFE;
 const BIG_KEY_MARKER: u8 = 0xFD;
 
-impl WriteObject<HashMap<UWRoomId, UWSpriteList>> for SnesGame {
-    fn write_objects(&mut self, spritelists: &HashMap<UWRoomId, UWSpriteList>) {
+impl WriteObject<BTreeMap<UWRoomId, UWSpriteList>> for SnesGame {
+    fn write_objects(&mut self, spritelists: &BTreeMap<UWRoomId, UWSpriteList>) {
         // Move the room header references to point to the new location.
         self.write_pointer_int16(
             Symbol::RoomData_SpritePointers_Ref0.into(),
             Symbol::RoomSpritesStart.into(),
         );
-
-        let mut rooms = spritelists.values().collect::<Vec<_>>();
-        rooms.sort_by_key(|it| it.uw_room_id);
-
-        for room in rooms.iter() {
+        for room in spritelists.values() {
             _write_sprites(self, room);
         }
     }
@@ -32,12 +28,8 @@ impl WriteObject<HashMap<UWRoomId, UWSpriteList>> for SnesGame {
 fn _write_sprites(game: &mut SnesGame, room: &UWSpriteList) {
     let mut buffer: Vec<u8> = vec![];
 
-    // Sort sprites by their Coordinates to make the ordering more stable.
-    let mut sprites = room.sprites.iter().collect::<Vec<_>>();
-    sprites.sort_by_key(|it| (it.y_pos, it.x_pos));
-
     // Rewrite new Dungeon Sprites.
-    for dungeon_sprite in sprites.iter() {
+    for dungeon_sprite in room.sprites.iter() {
         let lower_layer_bit = match dungeon_sprite.lower_layer {
             true => 0b1000_0000,
             false => 0,
@@ -87,7 +79,7 @@ fn _write_sprites(game: &mut SnesGame, room: &UWSpriteList) {
     // Write on top of where the sprites used to start. The room sprite pointers are moved in
     // front of all sprites so the overworld and underworld can share space.
     game.write_pointer_int16(
-        Symbol::RoomSpritesStart as usize + (room.uw_room_id as usize * 2),
+        Symbol::RoomSpritesStart as usize + (room.room_id as usize * 2),
         sprites_location,
     );
 }

@@ -1,5 +1,6 @@
 use assembly::zelda3::Symbol;
 use std::collections::hash_map::Entry;
+use std::collections::BTreeMap;
 use std::collections::HashMap;
 
 use crate::common::readerwriter::WriteObject;
@@ -15,10 +16,10 @@ const STOP_MARKER: u8 = 0xFF;
 const LAYER_MARKER: u8 = 0xFF;
 const END_MARKER: u8 = 0xF0;
 
-impl WriteObject<HashMap<UWRoomId, UWScene>> for SnesGame {
-    fn write_objects(&mut self, scenes: &HashMap<UWRoomId, UWScene>) {
+impl WriteObject<BTreeMap<UWRoomId, UWScene>> for SnesGame {
+    fn write_objects(&mut self, scenes: &BTreeMap<UWRoomId, UWScene>) {
         // Group room ids that have exact layouts, objects, and entrances.
-        let mut map: HashMap<&UWScene, Vec<UWRoomId>> = HashMap::default();
+        let mut map: HashMap<&UWScene, Vec<UWRoomId>> = HashMap::new();
         let mut scenes_tuples = scenes.iter().collect::<Vec<_>>();
         scenes_tuples.sort_by_key(|it| it.0);
 

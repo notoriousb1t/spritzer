@@ -1,6 +1,6 @@
 use core::panic;
 
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use strum::IntoEnumIterator;
 
 use super::ow_spritelist_utils::get_palette_address;
@@ -18,14 +18,14 @@ use crate::zelda3::model::SpritesetId;
 
 const STOP_MARKER: u8 = 0xFF;
 
-impl ReadObject<HashMap<OWRoomId, OWRoom>> for SnesGame {
+impl ReadObject<BTreeMap<OWRoomId, OWRoom>> for SnesGame {
     /// Returns OW Sprite List for each OW Room.
-    fn read_objects(&self) -> HashMap<OWRoomId, OWRoom> {
+    fn read_objects(&self) -> BTreeMap<OWRoomId, OWRoom> {
         let mut values: Vec<(OWRoomId, OWRoom)> = vec![];
         for id in OWRoomId::iter() {
             values.push((id, read_room(self, id)));
         }
-        HashMap::from_iter(values)
+        BTreeMap::from_iter(values)
     }
 }
 

@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 use rand::rngs::StdRng;
 use rand::SeedableRng;
@@ -35,11 +35,11 @@ pub(crate) struct Z3Model {
     /// The amount of damage each weapon type creates at base value.
     pub damage_subclasses: [DamageSubclass; 10],
     /// A lookup of associated underworld areas.
-    pub dungeons: HashMap<DungeonId, Dungeon>,
+    pub dungeons: BTreeMap<DungeonId, Dungeon>,
     /// The general difficulty of randomization of sprites in the overworld
     pub ow_balancing: Balancing,
     /// The current set of areas in the overworld map
-    pub ow_rooms: HashMap<OWRoomId, OWRoom>,
+    pub ow_rooms: BTreeMap<OWRoomId, OWRoom>,
     /// A list of remaining spritesets that can be mapped to overworld sprite sheets
     pub ow_spritesets_unused: Vec<SpritesetId>,
     /// The list of patches to apply after write all other data. This is typically where direct
@@ -47,24 +47,24 @@ pub(crate) struct Z3Model {
     /// rest of the model to describe the desired change.
     pub patches: Vec<Patch>,
     /// The association between spritesets (graphics) and the sprites that are available there.
-    pub sprite_pool: HashMap<SpritesetId, Vec<SpriteId>>,
+    pub sprite_pool: BTreeMap<SpritesetId, Vec<SpriteId>>,
     /// The Settings of each Sprite. Please note that the game logic may have hard coded values as
     /// well.
-    pub sprite_settings: HashMap<SpriteId, Sprite>,
+    pub sprite_settings: BTreeMap<SpriteId, Sprite>,
     /// The Spriteset blocks used to rendered sprites. There are 4 associated with each ID.
-    pub spritesets: HashMap<SpritesetId, Spriteset>,
+    pub spritesets: BTreeMap<SpritesetId, Spriteset>,
     /// The general difficulty of randomization of sprites in the underworld
     pub uw_balancing: Balancing,
     /// Contains all known entrances.
-    pub uw_entrances: HashMap<EntranceId, Entrance>,
+    pub uw_entrances: BTreeMap<EntranceId, Entrance>,
     /// The general metadata about a room.
-    pub uw_headers: HashMap<UWRoomId, UnderworldRoomHeader>,
+    pub uw_headers: BTreeMap<UWRoomId, UnderworldRoomHeader>,
     /// A list of remaining spritesets that can be mapped to underworld sprite sheets
     pub uw_spritesets_unused: Vec<SpritesetId>,
     /// The current set of rooms in caves, dungeons, etc. in the underworld
-    pub uw_sprites: HashMap<UWRoomId, UWSpriteList>,
+    pub uw_sprites: BTreeMap<UWRoomId, UWSpriteList>,
     /// The layouts and doors associated with an underworld room.
-    pub uw_scenes: HashMap<UWRoomId, UWScene>,
+    pub uw_scenes: BTreeMap<UWRoomId, UWScene>,
 }
 
 impl Z3Model {
@@ -74,19 +74,19 @@ impl Z3Model {
             debug_string: "".to_owned(),
             damage_classes: [DamageClass::default(); 10],
             damage_subclasses: [DamageSubclass::default(); 10],
-            dungeons: HashMap::default(),
+            dungeons: BTreeMap::default(),
             ow_balancing: Balancing::Random,
-            ow_rooms: HashMap::default(),
+            ow_rooms: BTreeMap::default(),
             ow_spritesets_unused: create_free_ow_spriteset_list(),
             patches: Vec::new(),
-            sprite_pool: HashMap::default(),
-            sprite_settings: HashMap::default(),
-            spritesets: HashMap::default(),
+            sprite_pool: BTreeMap::default(),
+            sprite_settings: BTreeMap::default(),
+            spritesets: BTreeMap::default(),
             uw_balancing: Balancing::Random,
-            uw_entrances: HashMap::default(),
-            uw_headers: HashMap::default(),
-            uw_scenes: HashMap::default(),
-            uw_sprites: HashMap::default(),
+            uw_entrances: BTreeMap::default(),
+            uw_headers: BTreeMap::default(),
+            uw_scenes: BTreeMap::default(),
+            uw_sprites: BTreeMap::default(),
             uw_spritesets_unused: create_free_uw_spriteset_list(),
         }
     }

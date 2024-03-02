@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 use crate::common::readerwriter::ReadObject;
 use crate::snes::SnesGame;
@@ -6,14 +6,14 @@ use crate::zelda3::model::Dungeon;
 use crate::zelda3::model::DungeonId;
 use crate::zelda3::model::UWRoomId;
 
-impl ReadObject<HashMap<DungeonId, Dungeon>> for SnesGame {
-    fn read_objects(&self) -> HashMap<DungeonId, Dungeon> {
+impl ReadObject<BTreeMap<DungeonId, Dungeon>> for SnesGame {
+    fn read_objects(&self) -> BTreeMap<DungeonId, Dungeon> {
         // Note: We can probably get similar data at 0xAFBF4 (pointers)
         get_dungeons()
     }
 }
 
-fn get_dungeons() -> HashMap<DungeonId, Dungeon> {
+fn get_dungeons() -> BTreeMap<DungeonId, Dungeon> {
     let dungeons = vec![
         Dungeon {
             dungeon_id: DungeonId::X00_Sewers,
@@ -308,7 +308,7 @@ fn get_dungeons() -> HashMap<DungeonId, Dungeon> {
         },
     ];
 
-    HashMap::from_iter(
+    BTreeMap::from_iter(
         dungeons
             .iter()
             .map(|group| (group.dungeon_id, group.clone())),

@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use assembly::zelda3::Symbol;
 use strum::IntoEnumIterator;
 
@@ -8,13 +8,13 @@ use crate::zelda3::model::SpriteSheetId;
 use crate::zelda3::model::Spriteset;
 use crate::zelda3::model::SpritesetId;
 
-impl ReadObject<HashMap<SpritesetId, Spriteset>> for SnesGame {
-    fn read_objects(&self) -> HashMap<SpritesetId, Spriteset> {
+impl ReadObject<BTreeMap<SpritesetId, Spriteset>> for SnesGame {
+    fn read_objects(&self) -> BTreeMap<SpritesetId, Spriteset> {
         let mut values: Vec<(SpritesetId, Spriteset)> = vec![];
         for id in SpritesetId::iter() {
             values.push((id, _read_spriteset(self, id)));
         }
-        HashMap::from_iter(values)
+        BTreeMap::from_iter(values)
     }
 }
 

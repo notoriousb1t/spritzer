@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use assembly::zelda3::Symbol;
 
 use crate::common::readerwriter::WriteObject;
@@ -6,8 +6,8 @@ use crate::snes::SnesGame;
 use crate::zelda3::model::Sprite;
 use crate::zelda3::model::SpriteId;
 
-impl WriteObject<HashMap<SpriteId, Sprite>> for SnesGame {
-    fn write_objects(&mut self, sprites: &HashMap<SpriteId, Sprite>) {
+impl WriteObject<BTreeMap<SpriteId, Sprite>> for SnesGame {
+    fn write_objects(&mut self, sprites: &BTreeMap<SpriteId, Sprite>) {
         for (id, sprite) in sprites.iter() {
             if *id as usize >= 0xF3 {
                 // Skip overlords, they aren't real Sprites.

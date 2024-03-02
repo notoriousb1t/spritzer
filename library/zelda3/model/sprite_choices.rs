@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use strum::IntoEnumIterator;
 
 use crate::zelda3::model::get_sprite_requirements;
@@ -18,12 +18,12 @@ fn is_spritesheet_satisfied(
 }
 
 /// Compute sprite choices based on what is possible in a Spriteset.
-pub(crate) fn calculate_sprite_pool(model: &Z3Model) -> HashMap<SpritesetId, Vec<SpriteId>> {
+pub(crate) fn calculate_sprite_pool(model: &Z3Model) -> BTreeMap<SpritesetId, Vec<SpriteId>> {
     let sprite_requirements = SpriteId::iter()
         .map(|sprite_id| (sprite_id, get_sprite_requirements(&sprite_id)))
         .collect::<Vec<_>>();
 
-    HashMap::from_iter(model.spritesets.iter().map(|(spriteset_id, spriteset)| {
+    BTreeMap::from_iter(model.spritesets.iter().map(|(spriteset_id, spriteset)| {
         (
             *spriteset_id,
             sprite_requirements

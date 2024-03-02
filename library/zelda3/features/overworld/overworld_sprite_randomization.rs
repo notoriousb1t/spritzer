@@ -50,12 +50,8 @@ pub(crate) fn reroll_overworld_sprites(model: &mut Z3Model) {
     let mut rng = model.create_rng();
 
     let types = vec![SpriteType::Enemy, SpriteType::Creature, SpriteType::Boss];
-    // Randomize using Entities that occur anywhere in that Overworld Area.
-    // Copy and sort the keys so this is a deterministic iteration.
-    let mut ids = model.ow_rooms.keys().cloned().collect::<Vec<_>>();
-    ids.sort();
-
-    for overworld_id in ids {
+    let keys = model.ow_rooms.keys().cloned().collect::<Vec<_>>();
+    for overworld_id in keys {
         let mut area = model.ow_rooms.get_mut(&overworld_id).unwrap().clone();
         if let Some(version) = &mut area.lw_pre_aga {
             _reroll_overworld_sprites(model, &mut rng, version, &types);

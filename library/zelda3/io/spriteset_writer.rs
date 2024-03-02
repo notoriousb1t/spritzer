@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use assembly::zelda3::Symbol;
 
 use crate::common::readerwriter::WriteObject;
@@ -6,8 +6,8 @@ use crate::snes::SnesGame;
 use crate::zelda3::model::Spriteset;
 use crate::zelda3::model::SpritesetId;
 
-impl WriteObject<HashMap<SpritesetId, Spriteset>> for SnesGame {
-    fn write_objects(&mut self, spritesets: &HashMap<SpritesetId, Spriteset>) {
+impl WriteObject<BTreeMap<SpritesetId, Spriteset>> for SnesGame {
+    fn write_objects(&mut self, spritesets: &BTreeMap<SpritesetId, Spriteset>) {
         for spriteset in spritesets.values() {
             self.write(
                 Symbol::Spriteset as usize + (spriteset.id as usize * 4),

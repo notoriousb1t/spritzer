@@ -4,7 +4,7 @@
 
 use rand::rngs::StdRng;
 use rand::seq::SliceRandom;
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use strum::IntoEnumIterator;
 
 use crate::zelda3::features::sprites::get_weights;
@@ -24,10 +24,7 @@ use crate::zelda3::model::Z3Model;
 pub(crate) fn shuffle_underworld_sprites(model: &mut Z3Model) {
     let mut rng = model.create_rng();
 
-    let mut sprite_lists = model.uw_sprites.values_mut().collect::<Vec<_>>();
-    sprite_lists.sort_by_key(|it| it.uw_room_id);
-
-    for room in sprite_lists {
+    for room in model.uw_sprites.values_mut() {
         // Grab all sprites that can be shuffled (just enemies that don't hold keys).
         let mut enemies: Vec<&mut UWSprite> = room
             .sprites
@@ -62,9 +59,7 @@ pub(crate) fn shuffle_underworld_sprites(model: &mut Z3Model) {
 pub(crate) fn reroll_underworld_sprites(model: &mut Z3Model) {
     let mut rng = model.create_rng();
 
-    let mut ids = model.uw_sprites.keys().cloned().collect::<Vec<_>>();
-    ids.sort();
-
+    let ids = model.uw_sprites.keys().cloned().collect::<Vec<_>>();
     for id in ids {
         let room = model.uw_sprites.get(&id).unwrap();
         let room = _reroll_underworld_room(model, &mut rng, room);
@@ -143,8 +138,8 @@ fn _generate_sprite_selections(
     dungeon_room_sprites: Vec<UWSprite>,
     choices: &[SpriteId],
     placement: Placement,
-) -> HashMap<i32, SpriteId> {
-    let mut distance_map: HashMap<i32, SpriteId> = HashMap::new();
+) -> BTreeMap<i32, SpriteId> {
+    let mut distance_map: BTreeMap<i32, SpriteId> = BTreeMap::new();
     let dungeon_sprite_groups = [
         dungeon_room_sprites
             .iter()
@@ -241,7 +236,7 @@ fn _reroll_underworld_room(
         return underworld_room;
     }
 
-    let header = model.uw_headers.get(&original_room.uw_room_id).unwrap();
+    let header = model.uw_headers.get(&original_room.room_id).unwrap();
     let choices = &model.sprite_pool[&header.spriteset_id];
     if choices.is_empty() {
         // Skip if there is nothing to switch.
@@ -256,8 +251,8 @@ fn _reroll_underworld_room(
     let mut sprite_ids = SpriteType::iter().collect::<Vec<_>>();
     sprite_ids.sort();
 
-    let mut dungeon_sprites_by_type: HashMap<SpriteType, Vec<&UWSprite>> =
-        HashMap::from_iter(sprite_ids.iter().map(|it| (*it, Vec::new())));
+    let mut dungeon_sprites_by_type: BTreeMap<SpriteType, Vec<&UWSprite>> =
+        BTreeMap::from_iter(sprite_ids.iter().map(|it| (*it, Vec::new())));
     let mut new_sprites: Vec<UWSprite> = vec![];
 
     let mut sorted_sprites = underworld_room.sprites.iter().collect::<Vec<_>>();

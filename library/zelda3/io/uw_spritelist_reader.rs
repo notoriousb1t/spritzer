@@ -1,5 +1,5 @@
-use std::collections::HashMap;
 use assembly::zelda3::Symbol;
+use std::collections::BTreeMap;
 use strum::IntoEnumIterator;
 
 use crate::common::readerwriter::ReadObject;
@@ -14,24 +14,25 @@ const _OVERLORD_OFFSET: u16 = 0x100;
 const SMALL_KEY_MARKER: u8 = 0xFE;
 const BIG_KEY_MARKER: u8 = 0xFD;
 
-impl ReadObject<HashMap<UWRoomId, UWSpriteList>> for SnesGame {
-    fn read_objects(&self) -> HashMap<UWRoomId, UWSpriteList> {
+impl ReadObject<BTreeMap<UWRoomId, UWSpriteList>> for SnesGame {
+    fn read_objects(&self) -> BTreeMap<UWRoomId, UWSpriteList> {
         let mut values: Vec<(UWRoomId, UWSpriteList)> = vec![];
         for id in UWRoomId::iter() {
             values.push((id, _read_room(self, id)));
         }
-        HashMap::from_iter(values)
+        BTreeMap::from_iter(values)
     }
 }
 
-fn _read_room(game: &SnesGame, id: UWRoomId) -> UWSpriteList {
-    let base_address = game.read_pointer_int16(Symbol::UwSpritePtrs as usize + (id as usize * 2));
-    let layering = game.read(base_address) > 0;
+fn _read_room(game: &SnesGame, room_id: UWRoomId) -> UWSpriteList {
+    let base_address =
+        game.read_pointer_int16(Symbol::UwSpritePtrs as usize + (room_id as usize * 2));
+    let sorted = game.read(base_address) > 0;
     let sprites = _read_sprites(game, base_address);
 
     UWSpriteList {
-        uw_room_id: id,
-        sorted: layering,
+        room_id,
+        sorted,
         sprites,
     }
 }

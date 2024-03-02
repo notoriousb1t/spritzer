@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use assembly::zelda3::Symbol;
 use strum::IntoEnumIterator;
 
@@ -28,9 +28,9 @@ use crate::zelda3::model::EntranceId;
 use crate::zelda3::model::UWBlocksetId;
 use crate::zelda3::model::UWRoomId;
 
-impl ReadObject<HashMap<EntranceId, Entrance>> for SnesGame {
-    fn read_objects(&self) -> HashMap<EntranceId, Entrance> {
-        HashMap::from_iter(EntranceId::iter().map(|id: EntranceId| (id, read_entrance(self, id))))
+impl ReadObject<BTreeMap<EntranceId, Entrance>> for SnesGame {
+    fn read_objects(&self) -> BTreeMap<EntranceId, Entrance> {
+        BTreeMap::from_iter(EntranceId::iter().map(|id: EntranceId| (id, read_entrance(self, id))))
     }
 }
 
