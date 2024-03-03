@@ -153,6 +153,7 @@ dependencies = [
  "console_error_panic_hook",
  "gloo-utils",
  "spritzer",
+ "strum_macros",
  "wasm-bindgen",
 ]
 

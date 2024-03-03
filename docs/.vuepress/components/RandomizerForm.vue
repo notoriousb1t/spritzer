@@ -5,57 +5,47 @@
   </div>
 
   <div v-if="state == 'FILE_SELECTED'" class="randomize-option-form">
+
+    <a-input v-model:value="seed" addonBefore="Seed" placeholder="Please enter a random string" />
+
+
     <div class="randomizer-option-field" role="presentation">
-      <label for="seed">Seed</label>
-      <input id="seed" v-model="seed" />
+      <label>Overworld Balancing</label>
+      <a-select ref="select" v-model:value="owBalancing" style="width: 120px">
+        <a-select-option v-for="option in balancingOptions" :value="option">{{ option }}</a-select-option>
+      </a-select>
     </div>
 
     <div class="randomizer-option-field" role="presentation">
-      <label for="shadow-bees">Shadow Bees</label>
-      <input id="shadow-bees" type="checkbox" v-model="shadowBees" />
+      <label>Overworld Enemy Shuffle</label>
+      <a-select ref="select" v-model:value="owEnemyShuffle" style="width: 120px">
+        <a-select-option v-for="option in owEnemyShuffleOptions" :value="option">{{ option }}</a-select-option>
+      </a-select>
     </div>
 
     <div class="randomizer-option-field" role="presentation">
-      <label for="boss-shuffle">Boss Shuffle</label>
-      <input id="boss-shuffle" type="checkbox" v-model="bossShuffle" />
+      <label>Underworld Balancing</label>
+      <a-select ref="select" v-model:value="uwBalancing" style="width: 120px">
+        <a-select-option v-for="option in balancingOptions" :value="option">{{ option }}</a-select-option>
+      </a-select>
     </div>
 
     <div class="randomizer-option-field" role="presentation">
-      <label for="mushrrom-shuffle">Mushroom Shuffle</label>
-      <input id="mushrrom-shuffle" type="checkbox" v-model="mushroomShuffle" />
+      <label>Underworld Enemy Shuffle</label>
+      <a-select ref="select" v-model:value="uwEnemyShuffle" style="width: 120px">
+        <a-select-option v-for="option in owEnemyShuffleOptions" :value="option">{{ option }}</a-select-option>
+      </a-select>
     </div>
 
-    <div class="randomizer-option-field" role="presentation">
-      <label for="ow-balancing">Overworld Balancing</label>
-      <select id="ow-balancing" v-model="owBalancing">
-        <option v-for="(display, value) in balancingOptions" :key="value" :value="value">{{ display }}</option>
-      </select>
+    <div>
+      <br/> <!-- Gasp! -->
+      <a-checkbox v-model:checked="shadowBees">Shadow Bees</a-checkbox>
+      <a-checkbox v-model:checked="bossShuffle">Boss Shuffle</a-checkbox>
+      <a-checkbox v-model:checked="mushroomShuffle">Mushroom Shuffle</a-checkbox>
     </div>
-
-    <div class="randomizer-option-field" role="presentation">
-      <label for="ow-balancing">Overworld Enemy Shuffle</label>
-      <select id="ow-balancing" v-model="owEnemyShuffle">
-        <option v-for="(display, value) in owEnemyShuffleOptions" :key="value" :value="value">{{ display }}</option>
-      </select>
-    </div>
-
-    <div class="randomizer-option-field" role="presentation">
-      <label for="uw-balancing">Underworld Balancing</label>
-      <select id="uw-balancing" v-model="uwBalancing">
-        <option v-for="(display, value) in balancingOptions" :key="value" :value="value">{{ display }}</option>
-      </select>
-    </div>
-
-    <div class="randomizer-option-field" role="presentation">
-      <label for="ow-balancing">Underworld Enemy Shuffle</label>
-      <select id="ow-balancing" v-model="uwEnemyShuffle">
-        <option v-for="(display, value) in uwEnemyShuffleOptions" :key="value" :value="value">{{ display }}</option>
-      </select>
-    </div>
-
 
     <div class="randomize-option-footer">
-      <button @click="processZelda3()">Generate!</button>
+      <a-button type="primary" @click="processZelda3()">Generate</a-button>
     </div>
   </div>
 
@@ -80,6 +70,7 @@
 }
 
 .randomizer-option-field {
+  align-items: center;
   display: grid;
   grid-template-columns: 1fr auto;
 }
@@ -107,15 +98,15 @@ export default {
       errorMessage: '',
       timeElapsed: undefined,
       // Options
-      balancingOptions: {},
-      owEnemyShuffleOptions: {},
-      uwEnemyShuffleOptions: {},
+      balancingOptions: [],
+      owEnemyShuffleOptions: [],
+      uwEnemyShuffleOptions: [],
       // Properties to send to randomizer.
       buffer: undefined,
       seed: '',
       bossShuffle: false,
       mushroomShuffle: false,
-      owBalancing: 0,
+      owBalancing: "Vanilla",
       owEnemyShuffle: 0,
       shadowBees: false,
       uwBalancing: 0,
@@ -125,9 +116,11 @@ export default {
   created() {
     pkg.init();
 
-    this.balancingOptions = pkg.get_balancing_options();
-    this.owEnemyShuffleOptions = pkg.get_ow_enemy_shuffle_options();
-    this.uwEnemyShuffleOptions = pkg.get_uw_enemy_shuffle_options();
+    let options = pkg.get_options();
+    console.log(options);
+    this.balancingOptions = options.balancingOptions;
+    this.owEnemyShuffleOptions = options.owEnemyShuffleOptions;
+    this.uwEnemyShuffleOptions = options.uwEnemyShuffleOptions;
     this.initialize();
   },
   methods: {
@@ -146,11 +139,11 @@ export default {
       this.seed = generateUID();
       this.bossShuffle = false;
       this.mushroomShuffle = false;
-      this.owBalancing = 0;
-      this.owEnemyShuffle = 0;
+      this.owBalancing = "Vanilla";
+      this.owEnemyShuffle = "Random";
       this.shadowBees = false;
-      this.uwBalancing = 0;
-      this.uwEnemyShuffle = 0;
+      this.uwBalancing = "Vanilla";
+      this.uwEnemyShuffle = "Random";
     },
     processZelda3() {
       try {
@@ -162,11 +155,11 @@ export default {
           this.seed,
           this.bossShuffle,
           this.mushroomShuffle,
-          Number(this.owBalancing),
-          Number(this.owEnemyShuffle),
+          this.owBalancing,
+          this.owEnemyShuffle,
           this.shadowBees,
-          Number(this.uwBalancing),
-          Number(this.uwEnemyShuffle),
+          this.uwBalancing,
+          this.uwEnemyShuffle,
           this.buffer,
         );
 
