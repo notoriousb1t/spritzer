@@ -41,9 +41,6 @@ export default defineUserConfig({
             crateDirectory: path.resolve(__dirname, process.cwd() + "/docs"),
             outDir: path.resolve(__dirname, "./pkg"),
             pluginLogLevel: 'info',
-            args: '--log-level warn',
-            extraArgs: '--no-typescript',
-
           })
         ],
         experiments: {

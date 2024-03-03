@@ -106,11 +106,11 @@ export default {
       seed: '',
       bossShuffle: false,
       mushroomShuffle: false,
-      owBalancing: "Vanilla",
-      owEnemyShuffle: 0,
+      owBalancing: "Random",
+      owEnemyShuffle: "Simple",
       shadowBees: false,
-      uwBalancing: 0,
-      uwEnemyShuffle: 0,
+      uwBalancing: "Random",
+      uwEnemyShuffle: "Simple",
     };
   },
   created() {
@@ -139,11 +139,11 @@ export default {
       this.seed = generateUID();
       this.bossShuffle = false;
       this.mushroomShuffle = false;
-      this.owBalancing = "Vanilla";
-      this.owEnemyShuffle = "Random";
+      this.owBalancing = "Random";
+      this.owEnemyShuffle = "Simple";
       this.shadowBees = false;
-      this.uwBalancing = "Vanilla";
-      this.uwEnemyShuffle = "Random";
+      this.uwBalancing = "Random";
+      this.uwEnemyShuffle = "Simple";
     },
     processZelda3() {
       try {
