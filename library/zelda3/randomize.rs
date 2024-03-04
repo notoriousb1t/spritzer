@@ -1,4 +1,5 @@
 use assembly::zelda3::get_patch_data;
+use log::info;
 
 use crate::common::random::string_to_hash;
 use crate::common::readerwriter::ReadObject;
@@ -10,6 +11,8 @@ use crate::zelda3::model::Z3Model;
 use crate::zelda3::options::Z3Options;
 
 pub fn randomize_zelda3(bytes: &[u8], options: &Z3Options) -> Vec<u8> {
+    info!("Len={}", bytes.len());
+
     let mut game = create_game(bytes);
 
     let mut model: Z3Model = game.read_objects();

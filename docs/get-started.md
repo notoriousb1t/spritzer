@@ -87,9 +87,3 @@ Some features are enabled as a result of other enabled features:
 1. Connect via Lua as normal
 
 > NOTE: Archipelago will replace the .sfc each time it is run, so it is a good idea to keep a backup of the generated file if you need to restart.
-
-## How to patch an ALTTPR game
-
-1. Generate the ALTTPR game on [A Link to the Past Randomizer](http://alttpr.com)
-1. Generate the file in [Randomize](randomize.html)
-1. Run the new .sfc file

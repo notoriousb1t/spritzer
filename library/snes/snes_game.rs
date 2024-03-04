@@ -1,6 +1,7 @@
 use std::str::from_utf8;
 
 use log::debug;
+use log::info;
 
 use super::free_space::FreeSpace;
 use super::patch::Patch;
@@ -8,8 +9,11 @@ use super::snes_address::bytes_to_address;
 use super::snes_address::int32_to_bytes;
 use super::snes_address::snes_to_pc;
 
+const TITLE_ADDRESS: usize = 0xFFC0;
+const SIZE_ADDRESS: usize = 0xFFD6;
+
 /// Manages reading and writing to the Game data.
-pub(crate) struct SnesGame {
+pub struct SnesGame {
     pub(crate) buffer: Vec<u8>,
     pub(crate) free_space: Vec<FreeSpace>,
 }
@@ -17,7 +21,7 @@ pub(crate) struct SnesGame {
 #[repr(u8)]
 #[derive(Clone, Copy)]
 #[allow(dead_code)]
-pub(crate) enum SnesSize {
+pub enum SnesSize {
     Size1mb = 0xA,
     Size2mb = 0xB,
     Size4mb = 0xC,
@@ -28,7 +32,7 @@ pub(crate) enum SnesSize {
 
 impl SnesGame {
     /// Constructs a new SNES game and expands it to the correct size.
-    pub(crate) fn new(bytes: &[u8]) -> Self {
+    pub fn new(bytes: &[u8]) -> Self {
         Self {
             buffer: bytes.to_vec(),
             free_space: vec![],
@@ -36,25 +40,25 @@ impl SnesGame {
     }
 
     pub fn set_game_title(&mut self, title: &str) {
-        let values = title
-            .as_bytes()
-            .into_iter()
-            .take(20)
-            .cloned()
-            .collect::<Vec<_>>();
+        let values = title.as_bytes().into_iter().cloned().collect::<Vec<_>>();
 
-        self.write_all(0x7FD5, &values);
+        self.write_all(TITLE_ADDRESS, &values);
     }
 
     pub fn get_game_title(&self) -> &str {
-        from_utf8(self.read_all(0x7FD5, 20)).unwrap()
+        from_utf8(self.read_all(TITLE_ADDRESS, 21)).unwrap()
     }
 
     /// Resizes the ROM and updates the header.. Empty space is filled with 0xFF.
     pub fn resize(&mut self, size: SnesSize) {
         let new_size = (1 << (size as usize)) * 1024;
-        self.buffer.resize(new_size, 0xFF);
-        self.write(0x7FD6, size as u8);
+        if new_size < self.buffer.len() {
+            info!("Resizing skipped {} < {}", new_size, self.buffer.len());
+        } else {
+            info!("Resizing game {} -> {}", new_size, self.buffer.len());
+            self.buffer.resize(new_size, 0xFF);
+            self.write(SIZE_ADDRESS, size as u8);
+        }
     }
 
     /// This fills all known freespace with 0s and merges declared freespace.

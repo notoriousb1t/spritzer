@@ -4,92 +4,11 @@
 
 A The Legend of Zelda: A Link to the Past Sprite + Dungeon Randomizer
 
+Visit [Spritzer](https://notoriousb1t.github.io/spritzer) to randomize your games.
+
 ## About
 
 This program supplements Item randomizers such as Archipelago with enemy and dungeon randomization. This includes changing the general theme of a dungeon. For example, Thieves Town can be converted to Ice Palace theme and enemies, etc.
 
 This mod preserves all item logic present in the game, but will switch the hazards, enemies, and sometimes the NPCs to make the game fresher for fans of Zelda 3.
-
-## Options
-
-### Overworld Balancing
-
-Balancing controls how difficult sprites, hazards, and consumables are for the player in the overworld. This affects rerolling of enemies, consumables, hazards, and traps (aka Overlords)
-
-1. **Random** - There is an equal chance of swaps within a category.
-1. **Casual** - The game is biased to make the game easier for the player.
-1. **Balanced** - This generally should feel similar to the original game.
-1. **Hero** - The game is biased to make the game more difficult for the player.
-
-### Overworld Enemy Shuffle
-
-Enemy Shuffle controls which enemies/etc. appear within the overworld
-
-1. **Vanilla** - Changes to the enemies placed are avoided
-1. **Simple** - Enemies are shuffled, but each screen should contain the same enemies overall.
-1. **Full** - Enemies are rerolled. Enemies that appear together are chosen at random.
-1. **Inverted** - Dark and light world enemies may be swapped and rerolled. Kakariko NPCs are moved to the dark world except for Bottle Salesman, who is moved to Lumberjack's house to preserve item logic.
-1. **Chaos** - TBD - planned to mix light and dark world indiscriminately
-1. **Insanity** - TBD - planned to indescriminately place hazards and enemies from any location.
-
-### Mushroom Shuffle
-
-Shuffles the location of the overworld Mushroom location in the Lost Woods. The item here may appear at any of the locations of Fake Swords or the original location at random.
-
-Swap boss, tileset, and palettes as possible. Additional options are planned including Boss Chaos and Advanced Boss Logic.
-
-### Underworld Balancing
-
-Balancing controls how difficult sprites, hazards, and consumables are for the player in the underworld. This affects rerolling of enemies, consumables, hazards, and traps (aka Overlords)
-
-1. **Random** - There is an equal chance of swaps within a category.
-1. **Casual** - The game is biased to make the game easier for the player.
-1. **Balanced** - This generally should feel similar to the original game.
-1. **Hero** - The game is biased to make the game more difficult for the player.
-
-### Underworld Enemy Shuffle
-
-Enemy Shuffle controls which enemies/etc. appear within the underworld (dungeons + caves)
-
-1. **Vanilla** - Changes to the enemies placed are avoided
-1. **Simple** - Enemies are shuffled, but each supertile should contain the same enemies overall.
-1. **Full** - Enemies are rerolled. Enemies that appear together are chosen at random.
-1. **Chaos** - TBD - planned to mix enemies between dungeons
-1. **Insanity** - TBD - planned to indescriminately place hazards and enemies from any location
-
-### Seed
-
-Controls randomization. Is intended to produce the same result given the same general options.
-
-> Some special values are present for debugging purposes. For example, if the word "moldorm4" appears in the seed, all bosses will change to Moldorm and Moldorm will have four eyes. Debug strings are not guaranteed to produce a winnable game. For example, agahnim will replace all bosses with agahnim but they currently do not drop boss prizes.
-
-### Shadow Bees
-
-Changes bees to be more powerful and partially invisible.
-
-## Other World Changes
-
-Some features are enabled as a result of other enabled features:
-
-1. **Killable Thieves** - Any value other than Vanilla for Overworld and Underworld Shuffle will enable killable thieves. If there is demand to make this togglable, please file an issue.
-1. **Dungeon Shuffle** - By default, shuffling bosses also shuffles the appearance and characteristics of the dungeons. In some cases, like Tower of Hera, the boss room may change appearance. Please file an issue, if there is demand to turn this off.
-1. **Visual Enemy Changes** - Some enemies have changed color palettes to be more stable across different locations. For example, mini-moldorm uses the blue palette index since it is more consistent in different areas. Also moldorm has a randomized number of eyes.
-1. **Overworld Simplication** - Enemies/NPCs will remain the same before and after killing Agahnim unless the room has a specific item logic. i.e. Hyrule Castle, Lumberjack's house, etc.
-
-## How to patch an Archipelago game
-
-1. Generate a game on [Archipelago](http://https://archipelago.gg)
-1. Download the patch file and run the alttp file. Do not close Archipelago or connect via Lua.
-1. Generate the file in [Randomize](randomize.html)
-1. Replace the .sfc generated by Archipelago
-1. Connect via Lua as normal
-
-> NOTE: Archipelago will replace the .sfc each time it is run, so it is a good idea to keep a backup of the generated file if you need to restart.
-
-## How to patch an ALTTPR game
-
-1. Generate the ALTTPR game on [A Link to the Past Randomizer](http://alttpr.com)
-1. Generate the file in [Randomize](randomize.html)
-1. Run the new .sfc file
-
 

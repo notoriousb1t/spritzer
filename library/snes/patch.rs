@@ -1,7 +1,7 @@
 use super::snes_address::int32_to_bytes;
 
 #[derive(Debug, Clone)]
-pub(crate) struct Patch {
+pub struct Patch {
     /// The SNES address to write this data.
     pub address: usize,
     /// The values to write.
@@ -9,12 +9,10 @@ pub(crate) struct Patch {
 }
 
 impl Patch {
-    #[allow(dead_code)]
     pub fn of(address: usize, value: u8) -> Self {
         Self::from(address, &[value])
     }
 
-    #[allow(dead_code)]
     pub fn from(address: usize, values: &[u8]) -> Self {
         Patch {
             address,
@@ -22,7 +20,6 @@ impl Patch {
         }
     }
 
-    #[allow(dead_code)]
     /// Adds a patch that changes a local pointer.
     pub fn update_local_pointer(address: usize, pointer: usize) -> Self {
         let bytes = int32_to_bytes(pointer);
