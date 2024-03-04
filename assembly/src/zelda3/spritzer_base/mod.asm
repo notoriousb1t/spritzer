@@ -16,6 +16,7 @@ incsrc uw_spawn_hooks.asm
 
 ; Code
 org $368000
+incsrc seed_info.asm ; Must be first.
 incsrc blind.asm
 incsrc killable.asm
 incsrc mimic.asm

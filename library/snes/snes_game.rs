@@ -1,3 +1,5 @@
+use std::str::from_utf8;
+
 use log::debug;
 
 use super::free_space::FreeSpace;
@@ -31,6 +33,21 @@ impl SnesGame {
             buffer: bytes.to_vec(),
             free_space: vec![],
         }
+    }
+
+    pub fn set_game_title(&mut self, title: &str) {
+        let values = title
+            .as_bytes()
+            .into_iter()
+            .take(20)
+            .cloned()
+            .collect::<Vec<_>>();
+
+        self.write_all(0x7FD5, &values);
+    }
+
+    pub fn get_game_title(&self) -> &str {
+        from_utf8(self.read_all(0x7FD5, 20)).unwrap()
     }
 
     /// Resizes the ROM and updates the header.. Empty space is filled with 0xFF.
