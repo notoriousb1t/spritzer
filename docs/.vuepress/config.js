@@ -36,26 +36,22 @@ export default defineUserConfig({
     postcss: {},
     vue: {},
     scss: {},
-    configureWebpack(config, isServer, isBuild) {
+    configureWebpack(config) {
       config.infrastructureLogging = {
         colors: true,
         appendOnly: true,
         level: 'verbose',
       };
-
       config.experiments = { asyncWebAssembly: true };
-
-      if (!isBuild && !isServer) {
-        config.plugins.push(new WasmPackPlugin({
-          crateDirectory: path.resolve(__dirname, process.cwd() + "/docs"),
-          args: "--log-level info",
-          extraArgs: '--no-typescript',
-          // forceMode: "production",
-          forceWatch: true,
-          outDir: path.resolve(__dirname, "./pkg"),
-          pluginLogLevel: 'info',
-        }));
-      }
+      config.plugins.push(new WasmPackPlugin({
+        crateDirectory: path.resolve(__dirname, process.cwd() + "/docs"),
+        args: "--log-level info",
+        extraArgs: '--no-typescript',
+        // forceMode: "production",
+        forceWatch: true,
+        outDir: path.resolve(__dirname, "./pkg"),
+        pluginLogLevel: 'info',
+      }));
     }
   }),
 });
