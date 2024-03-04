@@ -145,7 +145,7 @@ export default {
       output_buffer: undefined,
     };
   },
-  created() {
+  mounted() {
     // TODO: Run this in enhance.
     if (!window.__init_spritzer) {
       window.__init_spritzer = true;
