@@ -48,7 +48,6 @@ export default defineUserConfig({
         args: "--log-level info",
         extraArgs: '--no-typescript',
         // forceMode: "production",
-        forceWatch: true,
         outDir: path.resolve(__dirname, "./pkg"),
         pluginLogLevel: 'info',
       }));
