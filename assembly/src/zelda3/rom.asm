@@ -16,6 +16,12 @@ pub_OwSpecialGraphics:
 org $02E596
 pub_OwSpecialPalette:
 
+org $01B5DD
+pub_UWHeaderRef0:
+
+org $01B5E7
+pub_UWHeaderBank:
+
 org $04F1E2
 pub_UwHeaderPtrs:
 

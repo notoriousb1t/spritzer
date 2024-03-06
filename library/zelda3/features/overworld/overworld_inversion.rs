@@ -8,7 +8,6 @@ use strum::IntoEnumIterator;
 use crate::zelda3::model::OWRoom;
 use crate::zelda3::model::OWRoomId;
 use crate::zelda3::model::OWSprite;
-use crate::zelda3::model::PaletteIndex;
 use crate::zelda3::model::SpriteId;
 use crate::zelda3::model::SpriteSheetId;
 use crate::zelda3::model::Spriteset;
@@ -23,7 +22,6 @@ pub(crate) fn invert_world(model: &mut Z3Model) {
 }
 
 /// Remove the bottle salesman and move to lumberjack house.
-/// Give the salesman a ghost look for fun.
 /// This makes inverted mode and advanced shuffles a lot simpler.
 fn move_salesman(model: &mut Z3Model) {
     let lumberjacks_house = model
@@ -43,15 +41,6 @@ fn move_salesman(model: &mut Z3Model) {
             .push(bottle_salesman.clone());
     }
     lumberjacks_house.lw.sprites.push(bottle_salesman);
-
-    if let Some(sprite) = model
-        .sprite_settings
-        .iter_mut()
-        .find(|it| it.0 == &SpriteId::x75_BOTTLE_SALESMAN)
-    {
-        // The bottle salesman is dead.
-        sprite.1.palette = PaletteIndex::XA;
-    }
 
     if let Some(kakariko) = model.ow_rooms.get_mut(&OWRoomId::x18_KAKARIKO_VILLAGE) {
         // Add a thief to the same spot in DW where the salesman is in lightworld.
@@ -89,19 +78,6 @@ fn invert_kakariko(model: &mut Z3Model) {
             // in order to gain access to Thieves Town.
             let gate = dw_sprites.remove(gate_position);
             lw_sprites.push(gate);
-        }
-
-        for sprite_id in [
-            SpriteId::x74_RUNNING_MAN,
-            SpriteId::x2A_SWEEPING_LADY,
-            SpriteId::x34_SNITCH_YOUNG,
-            SpriteId::x3D_SNITCH_OLD,
-        ] {
-            if let Some(sprite) = model.sprite_settings.get_mut(&sprite_id) {
-                // Add a ghost effect to all NPCs who appear in Kakariko. This affects all
-                // instances.
-                sprite.palette = PaletteIndex::XA;
-            }
         }
 
         kak_18.lw.sprites = dw_sprites;

@@ -15,7 +15,7 @@ incsrc moldorm_hooks.asm
 incsrc uw_spawn_hooks.asm
 
 ; Code
-org $368000
+org $808000
 incsrc seed_info.asm ; Must be first.
 incsrc blind.asm
 incsrc killable.asm

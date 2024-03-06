@@ -84,7 +84,7 @@
   </div>
 
   <div v-if="state == 'ERROR'">
-    <pre><code>{{ errorMessage }}</code></pre>
+    <pre class="language-bash"><code>{{ errorMessage }}</code></pre>
     <a-button type="primary" @click="processZelda3()">Retry</a-button>
   </div>
 

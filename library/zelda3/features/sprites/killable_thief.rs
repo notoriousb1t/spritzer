@@ -11,6 +11,6 @@ pub(crate) fn patch_killable_thieves(model: &mut Z3Model) {
     ));
 
     if let Some(thief) = model.sprite_settings.get_mut(&SpriteId::xC4_THIEF) {
-        thief.hp = 16;
+        thief.hp = 6;
     }
 }

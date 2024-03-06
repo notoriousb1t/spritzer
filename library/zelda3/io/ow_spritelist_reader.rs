@@ -1,6 +1,7 @@
 use core::panic;
 
 use std::collections::BTreeMap;
+use log::info;
 use strum::IntoEnumIterator;
 
 use super::ow_spritelist_utils::get_palette_address;
@@ -70,8 +71,9 @@ fn read_room(game: &SnesGame, id: OWRoomId) -> OWRoom {
 // Reads an Area from the ROM and returns it as a data class.
 fn read_room_state(game: &SnesGame, id: OWRoomId, overworld_id: OWStateId) -> OWRoomState {
     // Resolve the sprite graphics and sprite palette id.
-    let spriteset_id =
-        SpritesetId::from_repr(game.read(get_sprite_graphics_address(id, overworld_id))).unwrap();
+    let spriteset_id_value = game.read(get_sprite_graphics_address(id, overworld_id));
+    info!("graphics {} {}", id, spriteset_id_value);
+    let spriteset_id = SpritesetId::from_repr(spriteset_id_value).unwrap();
     let sprite_palette_id = game.read(get_palette_address(id, overworld_id));
     let sprites = read_sprites(game, id, overworld_id);
 

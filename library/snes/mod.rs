@@ -6,4 +6,5 @@ mod snes_game;
 
 pub(crate) use instruction::*;
 pub use patch::*;
+pub(crate) use snes_address::*;
 pub use snes_game::*;

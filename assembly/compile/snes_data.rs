@@ -35,7 +35,6 @@ pub(super) fn create_empty_snes_data() -> Vec<u8> {
 /// Returns the deltas between the original ROM and the data provided.
 pub(super) fn get_snes_deltas(data: &Vec<u8>) -> Vec<(usize, Vec<u8>)> {
     let mut deltas: Vec<(usize, Vec<u8>)> = vec![];
-
     let mut last_address: Option<usize> = None;
     let mut current_slice: Option<Vec<u8>> = None;
 

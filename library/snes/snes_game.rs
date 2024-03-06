@@ -52,7 +52,7 @@ impl SnesGame {
     /// Resizes the ROM and updates the header.. Empty space is filled with 0xFF.
     pub fn resize(&mut self, size: SnesSize) {
         let new_size = (1 << (size as usize)) * 1024;
-        if new_size < self.buffer.len() {
+        if new_size <= self.buffer.len() {
             info!("Resizing skipped {} < {}", new_size, self.buffer.len());
         } else {
             info!("Resizing game {} -> {}", new_size, self.buffer.len());
