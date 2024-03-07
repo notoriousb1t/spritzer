@@ -2,7 +2,7 @@ import path from 'path';
 import { defaultTheme } from "@vuepress/theme-default";
 import { defineUserConfig } from "vuepress/cli";
 import { webpackBundler } from '@vuepress/bundler-webpack'
-import WasmPackPlugin from "@wasm-tool/wasm-pack-plugin";
+import WasmPackPlugin from "@wasm-tool/wasm-pack-plugin"; import { palettePlugin } from '@vuepress/plugin-palette'
 
 /** @type {import('vite').UserConfig} */
 export default defineUserConfig({
@@ -13,11 +13,12 @@ export default defineUserConfig({
   language: 'en-US',
   title: "Spritzer",
   description: "Zelda: A Link to the Past Dungeon Sprite + Dungeon Randomizer",
-  plugins: [{
-    '@vuepress/medium-zoom': {
-      selector: 'img.zoom-custom-imgs',
-    }
-  }],
+  plugins: [
+    {
+      '@vuepress/medium-zoom': {
+        selector: 'img.zoom-custom-imgs',
+      }
+    }],
   theme: defaultTheme({
     colorMode: 'light',
     colorModeSwitch: false,
@@ -35,7 +36,13 @@ export default defineUserConfig({
   bundler: webpackBundler({
     postcss: {},
     vue: {},
-    scss: {},
+    scss: {
+      sassOptions: {
+        css: {
+          url: false,
+        }
+      }
+    },
     configureWebpack(config) {
       config.infrastructureLogging = {
         colors: true,

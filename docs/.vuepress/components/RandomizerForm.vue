@@ -84,6 +84,7 @@
   </div>
 
   <div v-if="state == 'ERROR'">
+    <h1>Whoopsie doopsie!</h1>
     <pre class="language-bash"><code>{{ errorMessage }}</code></pre>
     <a-button type="primary" @click="processZelda3()">Retry</a-button>
   </div>
@@ -118,6 +119,7 @@
   margin: 16px 0;
   text-align: end;
 }
+
 .unsupported {
   text-align: center;
 }
