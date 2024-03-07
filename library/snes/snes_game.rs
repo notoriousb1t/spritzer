@@ -46,16 +46,16 @@ impl SnesGame {
     }
 
     pub fn get_game_title(&self) -> &str {
-        from_utf8(self.read_all(TITLE_ADDRESS, 21)).unwrap()
+        from_utf8(self.read_all(TITLE_ADDRESS, 21)).expect("SNES game should have title")
     }
 
     /// Resizes the ROM and updates the header.. Empty space is filled with 0xFF.
     pub fn resize(&mut self, size: SnesSize) {
         let new_size = (1 << (size as usize)) * 1024;
         if new_size <= self.buffer.len() {
-            info!("Resizing skipped {} < {}", new_size, self.buffer.len());
+            info!("Resizing skipped {} <= {}", new_size, self.buffer.len());
         } else {
-            info!("Resizing game {} -> {}", new_size, self.buffer.len());
+            info!("Resizing game {} >= {}", new_size, self.buffer.len());
             self.buffer.resize(new_size, 0xFF);
             self.write(SIZE_ADDRESS, size as u8);
         }

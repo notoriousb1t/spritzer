@@ -1,5 +1,5 @@
-use std::collections::BTreeMap;
 use assembly::zelda3::Symbol;
+use std::collections::BTreeMap;
 use strum::IntoEnumIterator;
 
 use crate::common::readerwriter::ReadObject;
@@ -19,17 +19,27 @@ impl ReadObject<BTreeMap<SpritesetId, Spriteset>> for SnesGame {
 }
 
 fn _read_spriteset(game: &SnesGame, id: SpritesetId) -> Spriteset {
-    let sheet0 = game.read(Symbol::Spriteset as usize + (id as usize * 4));
-    let sheet1 = game.read(Symbol::Spriteset as usize + (id as usize * 4) + 1);
-    let sheet2 = game.read(Symbol::Spriteset as usize + (id as usize * 4) + 2);
-    let sheet3 = game.read(Symbol::Spriteset as usize + (id as usize * 4) + 3);
+    let bytes = game.read_all(Symbol::Spriteset as usize + (id as usize * 4), 4);
+
     Spriteset {
         id,
         sheets: [
-            SpriteSheetId::from_repr(sheet0).unwrap(),
-            SpriteSheetId::from_repr(sheet1).unwrap(),
-            SpriteSheetId::from_repr(sheet2).unwrap(),
-            SpriteSheetId::from_repr(sheet3).unwrap(),
+            SpriteSheetId::from_repr(bytes[0]).expect(&format!(
+                "Spriteset {} spritesheet ${:02X} id failure in slot 0",
+                id, bytes[0]
+            )),
+            SpriteSheetId::from_repr(bytes[1]).expect(&format!(
+                "Spriteset {} spritesheet ${:02X} id failure in slot 1",
+                id, bytes[1]
+            )),
+            SpriteSheetId::from_repr(bytes[2]).expect(&format!(
+                "Spriteset {} spritesheet ${:02X} id failure in slot 2",
+                id, bytes[2]
+            )),
+            SpriteSheetId::from_repr(bytes[3]).expect(&format!(
+                "Spriteset {} spritesheet ${:02X} id failure in slot 3",
+                id, bytes[3]
+            )),
         ],
     }
 }

@@ -5,7 +5,8 @@ const BLANK: u8 = 0xFF;
 
 /// Creates fake SNES data.
 pub(super) fn create_empty_snes_data() -> Vec<u8> {
-    let mut buffer = vec![BLANK; 4 * 1024 * 1024];
+    // Generate a 4MB SNES image.
+    let mut buffer = vec![BLANK; (1 << 0xC) * 1024];
 
     // 0x7FC0 = 21 length Cartridge title. (ignored)
 
@@ -14,7 +15,7 @@ pub(super) fn create_empty_snes_data() -> Vec<u8> {
     // Chipset
     buffer[0x7FD6] = 1;
     // ROM size in killobytes 1 << N
-    buffer[0x7FD7] = 12;
+    buffer[0x7FD7] = 0xC;
     // RAM size in killobytes 1 << N
     buffer[0x7FD8] = 5;
     // Country (NTSC/PAL)
@@ -33,7 +34,7 @@ pub(super) fn create_empty_snes_data() -> Vec<u8> {
 }
 
 /// Returns the deltas between the original ROM and the data provided.
-pub(super) fn get_snes_deltas(data: &Vec<u8>) -> Vec<(usize, Vec<u8>)> {
+pub fn get_snes_deltas(data: &Vec<u8>) -> Vec<(usize, Vec<u8>)> {
     let mut deltas: Vec<(usize, Vec<u8>)> = vec![];
     let mut last_address: Option<usize> = None;
     let mut current_slice: Option<Vec<u8>> = None;

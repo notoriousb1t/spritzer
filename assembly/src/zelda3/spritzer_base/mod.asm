@@ -14,8 +14,8 @@ incsrc mimic_hooks.asm
 incsrc moldorm_hooks.asm
 incsrc uw_spawn_hooks.asm
 
-; Code
-org $808000
+; Code goes in bank $39. This avoids conflicts with Enemizer and Archipelago/z3randomizer code.
+org $398000
 incsrc seed_info.asm ; Must be first.
 incsrc blind.asm
 incsrc killable.asm

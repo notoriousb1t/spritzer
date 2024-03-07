@@ -99,8 +99,14 @@ fn update_arena(model: &mut Z3Model, rng: &mut StdRng, source_id: DungeonId, tar
         return;
     }
 
-    let source_dungeon = model.dungeons.get(&source_id).unwrap();
-    let target_dungeon = model.dungeons.get(&target_id).unwrap();
+    let source_dungeon = model
+        .dungeons
+        .get(&source_id)
+        .expect(&format!("Dungeon {} should exist", &source_id));
+    let target_dungeon = model
+        .dungeons
+        .get(&target_id)
+        .expect(&format!("Dungeon {} should exist", &target_id));
     if source_dungeon.boss.is_none() || target_dungeon.boss.is_none() {
         // We can only switch a boss if there is one.
         debug!("  {} »", target_id);

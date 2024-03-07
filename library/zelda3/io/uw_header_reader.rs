@@ -1,5 +1,4 @@
 use assembly::zelda3::Symbol;
-use log::info;
 use std::collections::BTreeMap;
 use strum::IntoEnumIterator;
 
@@ -33,26 +32,54 @@ fn _read_header(game: &SnesGame, pointer_address: usize, id: UWRoomId) -> Underw
     // Find the address of the Dungeon Room and read in graphics block and tags.
     let header_address = game.read_pointer_int16(pointer_address + (id as usize * 2));
     let data = game.read_all(header_address, 14);
-    info!("Room {}; data {:?}", id, data);
 
     // Read in the graphics block which controls the spritesheets
     // and tags which declare behaviors.
     let bg2_property = data[0];
-    let palette_id: PaletteId = PaletteId::from_repr(data[1]).unwrap();
-    let blockset_id = UWBlocksetId::from_repr(data[2]).unwrap();
+    let palette_id: PaletteId = PaletteId::from_repr(data[1]).expect(&format!(
+        "UW Room {} palette load error {:02x}",
+        id, data[1]
+    ));
+    let blockset_id = UWBlocksetId::from_repr(data[2]).expect(&format!(
+        "UW Room {} spriteset load error {:02x}",
+        id, data[2]
+    ));
 
     let spriteset_id = SpritesetId::from_room_value(data[3]);
     let bgmove = data[4];
-    let tag1 = UWRoomTag::from_repr(data[5]).unwrap();
-    let tag2 = UWRoomTag::from_repr(data[6]).unwrap();
-    let floor_upper = UWFloorId::from_repr(data[7]).unwrap();
+    let tag1 = UWRoomTag::from_repr(data[5])
+        .expect(&format!("UW Room {} tag1 load error {:02x}", id, data[5]));
+    let tag2 = UWRoomTag::from_repr(data[6])
+        .expect(&format!("UW Room {} tag2 load error {:02x}", id, data[6]));
+    let floor_upper = UWFloorId::from_repr(data[7]).expect(&format!(
+        "UW Room {} floor upper load error {:02x}",
+        id, data[7]
+    ));
 
-    let floor_lower = UWFloorId::from_repr(data[8]).unwrap();
-    let warp = UWRoomId::from_repr(data[9] as u16).unwrap();
-    let stairs0 = UWRoomId::from_repr(data[10] as u16).unwrap();
-    let stairs1 = UWRoomId::from_repr(data[11] as u16).unwrap();
-    let stairs2 = UWRoomId::from_repr(data[12] as u16).unwrap();
-    let stairs3 = UWRoomId::from_repr(data[13] as u16).unwrap();
+    let floor_lower = UWFloorId::from_repr(data[8]).expect(&format!(
+        "UW Room {} floor lower load error {:02x}",
+        id, data[8]
+    ));
+    let warp = UWRoomId::from_repr(data[9] as u16).expect(&format!(
+        "UW Room {} warp/pit load error {:02x}",
+        id, data[9]
+    ));
+    let stairs0 = UWRoomId::from_repr(data[10] as u16).expect(&format!(
+        "UW Room {} stairs slot 0 load error {:02x}",
+        id, data[10]
+    ));
+    let stairs1 = UWRoomId::from_repr(data[11] as u16).expect(&format!(
+        "UW Room {} stairs slot 1 load error {:02x}",
+        id, data[11]
+    ));
+    let stairs2 = UWRoomId::from_repr(data[12] as u16).expect(&format!(
+        "UW Room {} stairs slot 2 load error {:02x}",
+        id, data[12]
+    ));
+    let stairs3 = UWRoomId::from_repr(data[13] as u16).expect(&format!(
+        "UW Room {} stairs slot 3 load error {:02x}",
+        id, data[13]
+    ));
 
     UnderworldRoomHeader {
         id,

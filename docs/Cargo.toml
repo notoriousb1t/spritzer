@@ -1,19 +1,19 @@
 [package]
+edition = "2021"
 name = "docs"
 version = "0.1.0"
-edition = "2021"
-
-[lib]
-name = "docs"
-path = "lib.rs"
-crate-type = ["cdylib"]
 
 [dependencies]
 console_error_panic_hook = "0.1.7"
 gloo-utils = "0.2.0"
 log = "0.4.21"
-spritzer = { path = "../library" }
+spritzer = {path = "../library"}
 strum_macros = "0.26.1"
-uuid = { version = "1.7.0", features = ["js", "v4"] }
+uuid = {version = "1.7.0", features = ["js", "v4"]}
 wasm-bindgen = "0.2"
 wasm-logger = "0.2.0"
+
+[lib]
+crate-type = ["cdylib"]
+name = "docs"
+path = "lib.rs"

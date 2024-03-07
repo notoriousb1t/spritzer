@@ -85,8 +85,9 @@ mod tests {
     use crate::zelda3::randomize_zelda3;
 
     #[test]
+    #[ignore]
     fn randomization_causes_deltas() {
-        let original = get_file_as_byte_vec("./testdata/base.sfc");
+        let original = get_file_as_byte_vec("./.testdata/base.sfc");
         let options = Z3Options {
             seed: "kholdstare".to_owned(),
             overworld_balancing: Balancing::Balanced,
@@ -103,9 +104,10 @@ mod tests {
     }
 
     #[test]
+    #[ignore]
     fn zero_deltas_for_exact_options() {
         // This is manual test that can be run on
-        let original = get_file_as_byte_vec("./testdata/base.sfc");
+        let original = get_file_as_byte_vec("./.testdata/base.sfc");
         let options = Z3Options {
             seed: "test".to_owned(),
             underworld_balancing: Balancing::Random,

@@ -11,9 +11,9 @@ use options::{DetectOptionsResult, Z3WasmOptions};
 use uuid::Uuid;
 use wasm_bindgen::prelude::*;
 
-use spritzer::snes::SnesGame;
 use spritzer::zelda3::{
-    randomize_zelda3, Balancing, OverworldEnemyShuffle, UnderworldEnemyShuffle, Z3Options,
+    detect_game, randomize_zelda3, Balancing, OverworldEnemyShuffle, UnderworldEnemyShuffle,
+    Z3Options,
 };
 
 #[wasm_bindgen]
@@ -31,13 +31,15 @@ pub fn process_zelda3(buffer: &[u8], options: Z3WasmOptions) -> Vec<u8> {
         seed: options.seed.to_owned(),
         boss_shuffle: options.boss_shuffle,
         mushroom_shuffle: options.mushroom_shuffle,
-        overworld_balancing: Balancing::from_str(&options.ow_balancing).unwrap(),
+        overworld_balancing: Balancing::from_str(&options.ow_balancing)
+            .expect("Overworld Balancing should be valid"),
         overworld_enemy_shuffle: OverworldEnemyShuffle::from_str(&options.ow_enemy_shuffle)
-            .unwrap(),
+            .expect("Overworld Enemy Shuffle should be valid"),
         shadow_bees: options.shadow_bees,
-        underworld_balancing: Balancing::from_str(&options.uw_balancing).unwrap(),
+        underworld_balancing: Balancing::from_str(&options.uw_balancing)
+            .expect("Underworld Balancing should be valid"),
         underworld_enemy_shuffle: UnderworldEnemyShuffle::from_str(&options.uw_enemy_shuffle)
-            .unwrap(),
+            .expect("Underworld Enemy Shuffle should be valid"),
     };
 
     randomize_zelda3(buffer, &options)
@@ -47,11 +49,8 @@ pub fn process_zelda3(buffer: &[u8], options: Z3WasmOptions) -> Vec<u8> {
 pub fn detect_options(buffer: &[u8]) -> DetectOptionsResult {
     info!("Detecting Zelda3 Game");
 
-    let game = SnesGame::new(buffer);
-    let title = game.get_game_title();
-
-    let (game_type, supported) = detect_game(title);
-    info!("game_type = {}; title = {}; supported = {}", game_type, title, supported);
+    let game_info = detect_game(buffer);
+    info!("game_type = {}; supported = {}", &game_info.version, game_info.supported);
     let seed = Uuid::new_v4().as_hyphenated().to_string();
 
     let balancing_options = Balancing::all()
@@ -68,8 +67,8 @@ pub fn detect_options(buffer: &[u8]) -> DetectOptionsResult {
         .collect::<Vec<_>>();
 
     DetectOptionsResult {
-        supported,
-        game_type: game_type.to_owned(),
+        supported: game_info.supported,
+        game_type: game_info.version.to_string(),
         options: Z3WasmOptions {
             balancing_options,
             boss_shuffle: false,
@@ -83,19 +82,5 @@ pub fn detect_options(buffer: &[u8]) -> DetectOptionsResult {
             uw_enemy_shuffle_options,
             uw_enemy_shuffle: UnderworldEnemyShuffle::Full.to_string(),
         },
-    }
-}
-
-fn detect_game(title: &str) -> (&str, bool) {
-    if title.starts_with("ZELDANODENSETSU") {
-        ("Zelda JP 1.0", false)
-    } else if title.starts_with("THE LEGEND OF ZELDA") {
-        ("Zelda US", false)
-    } else if title.starts_with("AP") {
-        ("Archipelago", true)
-    } else if title.starts_with("VT") {
-        ("A Link to the Past Randomizer", false)
-    } else {
-        ("Unknown Game", false)
     }
 }

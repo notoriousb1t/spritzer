@@ -4,5 +4,7 @@
     ],
     "rust-analyzer.showUnlinkedFileNotification": false,
     "rust-analyzer.debug.openDebugPane": true,
-    "rust-analyzer.inlayHints.chainingHints.enable": false
+    "rust-analyzer.inlayHints.chainingHints.enable": false,
+    "debugpy.debugJustMyCode": true,
+    "debug.allowBreakpointsEverywhere": true
 }

@@ -57,14 +57,13 @@ pub(super) fn get_hash(path: &Path) -> String {
     sha256::try_digest(std::path::Path::new(path)).unwrap()
 }
 
-pub(super) fn replace_segment(
-    path: &Path,
-    segment_to_replace: &str,
-    new_segment: &str,
-) -> Option<PathBuf> {
+pub(super) fn replace_segment(path: &Path, segment_to_replace: &str, new_segment: &str) -> PathBuf {
     // Find the index of the segment to replace
     let segments: Vec<_> = path.components().map(|c| c.as_os_str()).collect();
-    let idx = segments.iter().position(|&s| s == segment_to_replace)?;
+    let idx = segments
+        .iter()
+        .position(|&s| s == segment_to_replace)
+        .expect("Path segment to exist");
 
     // Construct the new path with the replaced segment
     let mut new_path = PathBuf::new();
@@ -75,6 +74,5 @@ pub(super) fn replace_segment(
             new_path.push(segment);
         }
     }
-
-    Some(new_path)
+    new_path
 }

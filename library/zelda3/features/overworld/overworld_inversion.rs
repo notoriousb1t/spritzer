@@ -27,7 +27,7 @@ fn move_salesman(model: &mut Z3Model) {
     let lumberjacks_house = model
         .ow_rooms
         .get_mut(&OWRoomId::x2_LUMBER_JACK_HOUSE)
-        .unwrap();
+        .expect("Lumberjack House should exist");
 
     let bottle_salesman = OWSprite {
         x: 21,
@@ -63,7 +63,7 @@ fn invert_kakariko(model: &mut Z3Model) {
     let kak_18 = model
         .ow_rooms
         .get_mut(&OWRoomId::x18_KAKARIKO_VILLAGE)
-        .unwrap();
+        .expect("Kakariko Village should exist");
 
     // Swap all sprites.
     if let Some(dw) = &mut kak_18.dw {
@@ -166,7 +166,10 @@ fn invert_special_overworld_versions(
         return;
     }
 
-    let dw = area.dw.as_mut().unwrap();
+    let dw = area
+        .dw
+        .as_mut()
+        .expect(&format!("{} should have Dark World", area.id));
 
     // Specific patches to preserve NPCs and objects, but non-restrictive overall.
     let (preserved_lw_sheets, preserved_dw_sheets) = &configuration;
@@ -187,8 +190,12 @@ fn invert_special_overworld_versions(
     } else if preserved_lw_sheets.len() == 4 {
         // If we are preserving all 4 spots, do nothing.
     } else {
-        let spriteset_id = unused_spritesets.pop().unwrap();
-        let spriteset = spritesets.get_mut(&spriteset_id).unwrap();
+        let spriteset_id = unused_spritesets
+            .pop()
+            .expect("Spritesets should have available slots");
+        let spriteset = spritesets
+            .get_mut(&spriteset_id)
+            .expect(&format!("Spriteset {} should exist", &spriteset_id));
 
         if let Some(lw_v1) = &mut area.lw_pre_aga {
             lw_v1.spriteset_id = spriteset_id;
@@ -209,8 +216,12 @@ fn invert_special_overworld_versions(
         // If we are preserving all 4 spots, do nothing.
     } else {
         // Free a spriteset up and reassign this version to that spriteset.
-        let spriteset_id = unused_spritesets.pop().unwrap();
-        let spriteset = spritesets.get_mut(&spriteset_id).unwrap();
+        let spriteset_id = unused_spritesets
+            .pop()
+            .expect("Spritesets should have available slots");
+        let spriteset = spritesets
+            .get_mut(&spriteset_id)
+            .expect(&format!("Spriteset {} should exist", &spriteset_id));
         dw.spriteset_id = spriteset_id;
 
         for index in 0..4 {

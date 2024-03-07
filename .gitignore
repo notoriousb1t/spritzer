@@ -5,6 +5,7 @@ testdata/
 pkg/
 node_modules/
 .temp/
+.testdata/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -17,6 +18,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
+.build/
 .venv/
 env/
 bin/
@@ -29,7 +31,6 @@ lib64/
 parts/
 sdist/
 var/
-testdata/
 include/
 man/
 venv/

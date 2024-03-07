@@ -611,6 +611,7 @@ dependencies = [
  "getrandom",
  "log",
  "rand",
+ "simplelog",
  "strum",
  "strum_macros",
 ]
