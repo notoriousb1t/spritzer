@@ -1,15 +1,26 @@
 <template>
-    <h1>Select the game file</h1>
-    <p>
-        NOTE: This application runs entirely in your browser. No files are uploaded to any server.
-    </p>
-    <a-upload :before-upload="fileSelected">
-        <a-button type="primary" shape="round" size="large">
-            <upload-outlined></upload-outlined>
-            Locate Game File (.sfc, .smc)
-        </a-button>
-    </a-upload>
+    <div role="presentation" class="el">
+        <h1>Select the game file</h1>
+        <a-upload-dragger name="file" :before-upload="fileSelected">
+            <div class="uploader-hint">
+                <p class="ant-upload-text">Click this or drag file (.sfc, .smc) to this area</p>
+                <p class="ant-upload-hint">
+                    This application runs entirely in your browser. No files are uploaded to any server
+                </p>
+            </div>
+        </a-upload-dragger>
+    </div>
 </template>
+
+<style lang="scss">
+.el {
+    text-align: center;
+}
+
+.uploader-hint {
+    padding: 32px;
+}
+</style>
 
 <script>
 export default {
@@ -22,7 +33,7 @@ export default {
     methods: {
         async fileSelected(file) {
             let bytes = await readFileAsBytes(file);
-            this.$emit('file-selected', bytes);
+            this.$emit('file-selected', { bytes, name: file.name || 'download.sfc' });
             return false;
         },
     },

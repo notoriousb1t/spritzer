@@ -1,5 +1,7 @@
 use std::fmt::Display;
 
+use assembly::zelda3::Symbol;
+
 use crate::snes::SnesGame;
 
 pub enum GameVersion {
@@ -50,11 +52,27 @@ pub fn detect_game(buffer: &[u8]) -> GameInfo {
             supported: false,
         }
     } else if title.starts_with("AP") {
+        let room_header_bank = game.read(Symbol::UWHeaderBank.into());
+        if room_header_bank == 0x36 {
+            return GameInfo {
+                version: GameVersion::ArchipelagoEnemizer,
+                supported: false,
+            };
+        }
+
         GameInfo {
             version: GameVersion::Archipelago,
             supported: true,
         }
     } else if title.starts_with("VT") {
+        let room_header_bank = game.read(Symbol::UWHeaderBank.into());
+        if room_header_bank == 0x36 {
+            return GameInfo {
+                version: GameVersion::AlttprEnemizer,
+                supported: false,
+            };
+        }
+
         GameInfo {
             version: GameVersion::Alttpr,
             supported: false,

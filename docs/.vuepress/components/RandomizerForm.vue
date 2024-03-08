@@ -1,4 +1,11 @@
 <template>
+  <a-config-provider :theme="{
+    token: {
+      colorPrimary: '#127900',
+    },
+  }">
+  </a-config-provider>
+
   <div v-if="state == 'INIT'">
     <FileSelect @file-selected="fileSelected($event)" />
   </div>
@@ -8,7 +15,7 @@
       <h1>Options</h1>
 
       <div class="randomizer-option-field" role="presentation">
-        <label>Game Type</label>
+        <label>Item Randomizer</label>
         <GameTypeImage :game_type />
       </div>
       <div class="randomizer-option-field" role="presentation">
@@ -68,23 +75,25 @@
       </div>
 
       <div class="randomize-option-footer">
-        <a-button type="primary" shape="round" size="large" @click="processZelda3()">Randomize!</a-button>
+        <a-button type="primary" shape="round" size="large" @click="processZelda3()">Roll Game</a-button>
       </div>
     </template>
 
     <template v-else>
       <div class="unsupported">
-        <GameTypeImage :game_type />
         <h1>Sorry :(</h1>
+        <GameTypeImage :game_type />
         <p>
-          <em>This game is not supported, yet</em>
+          <em>This game/combination is not supported, yet</em>
         </p>
+        <p>Check <a href="/spritzer/guide.html#unsupported-games">Unsupported Games</a> in the guide to troubleshoot
+          this. You may need to remove some options from your Item Randomizer</p>
       </div>
     </template>
   </div>
 
   <div v-if="state == 'ERROR'">
-    <h1>Whoopsie doopsie!</h1>
+    <h1>I AM ERROR</h1>
     <pre class="language-bash"><code>{{ errorMessage }}</code></pre>
     <a-button type="primary" @click="processZelda3()">Retry</a-button>
   </div>
@@ -143,6 +152,7 @@ export default {
       game_type: '',
       supported: false,
       opts: {},
+      input_name: "",
       input_buffer: undefined,
       output_buffer: undefined,
     };
@@ -155,8 +165,9 @@ export default {
     }
   },
   methods: {
-    fileSelected(bytes) {
+    fileSelected({ bytes, name }) {
       const result = pkg.detect_options(bytes);
+      this.input_name = name;
       this.opts = result.options;
       this.supported = result.supported;
       this.game_type = result.game_type;
@@ -170,14 +181,14 @@ export default {
 
         this.output_buffer = pkg.process_zelda3(this.input_buffer, this.opts);
         this.state = DONE;
-        downloadByteArrayAsFile(this.output_buffer, 'download.sfc');
+        downloadByteArrayAsFile(this.output_buffer, this.input_name);
       } catch (e) {
         this.state = ERROR;
         this.errorMessage = e.stack;
       }
     },
     download() {
-      downloadByteArrayAsFile(this.output_buffer, 'download.sfc');
+      downloadByteArrayAsFile(this.output_buffer, this.input_name);
     },
   },
 };

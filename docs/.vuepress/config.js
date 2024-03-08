@@ -2,18 +2,26 @@ import path from 'path';
 import { defaultTheme } from "@vuepress/theme-default";
 import { defineUserConfig } from "vuepress/cli";
 import { webpackBundler } from '@vuepress/bundler-webpack'
-import WasmPackPlugin from "@wasm-tool/wasm-pack-plugin"; import { palettePlugin } from '@vuepress/plugin-palette'
+import WasmPackPlugin from "@wasm-tool/wasm-pack-plugin"; 
+import { palettePlugin } from '@vuepress/plugin-palette'
 
 /** @type {import('vite').UserConfig} */
 export default defineUserConfig({
   head: [
     ['link', { rel: 'icon', href: '/spritzer/favicon.ico' }],
+    ['link', { rel: 'stylesheet', href: "https://unpkg.com/splitting/dist/splitting.css" }],
+    ['link', { rel: 'stylesheet', href: '/spritzer/base.css' }],
+    ['script', { src: 'https://unpkg.com/splitting/dist/splitting.min.js' }],
   ],
   base: '/spritzer/',
   language: 'en-US',
   title: "Spritzer",
-  description: "Zelda: A Link to the Past Dungeon Sprite + Dungeon Randomizer",
+  description: "ALTTP Sprite + Dungeon Randomizer",
   plugins: [
+    palettePlugin({
+      preset: 'sass',
+      userStyleFile: '.vuepress/index.scss',
+    }),
     {
       '@vuepress/medium-zoom': {
         selector: 'img.zoom-custom-imgs',
@@ -29,7 +37,7 @@ export default defineUserConfig({
     repo: "notoriousb1t/spritzer",
     sidebar: false,
     navbar: [
-      "/get-started",
+      "/guide",
       "/randomize"
     ],
   }),
