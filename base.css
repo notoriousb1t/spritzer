@@ -1,0 +1,48 @@
+@font-face {
+    font-family: "HyliaSerif";
+    font-weight: 400;
+    font-style: normal;
+    font-display: auto;
+    src: local("HyliaSerif"), url('/spritzer/fonts/HyliaSerifBeta-Regular.otf');
+}
+
+@font-face {
+    font-family: "Sheikah";
+    font-weight: 400;
+    font-style: normal;
+    font-display: auto;
+    src: local("Sheikah"), url('/spritzer/fonts/BotW_Sheikah.ttf');
+}
+
+@font-face {
+    font-family: "Tiersias";
+    font-weight: 400;
+    font-style: normal;
+    font-display: auto;
+    src: local("Tiersias"), url('/spritzer/fonts/Tiresias_Infofont.ttf');
+}
+
+.sheika-text .char {
+    position: relative;
+}
+
+.sheika-text .char::after {
+    color: #aa9309 !important;
+    content: attr(data-char);
+    font-family: "Sheikah" !important;
+    font-size: 43%;
+    left: 0;
+    opacity: 1;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    top: 90%;
+    visibility: visible;
+    animation: fade-in 675ms calc(350ms + calc(35ms * var(--char-index))) ease-in backwards;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+}
