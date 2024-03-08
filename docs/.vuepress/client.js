@@ -12,7 +12,7 @@ function runRenderUpdate() {
     // Update API for decorative things after update.
     new Promise((resolve) => void setTimeout(resolve, 450))
         .then(() => {
-            requestAnimationFrame(() => {
+            window.requestAnimationFrame(() => {
                 document.querySelectorAll('h1,h2,h3,h4,h5,h6')
                     .forEach(updateSheikaElement);
             });
@@ -39,8 +39,10 @@ export default defineClientConfig({
         app.component('RandomizerForm', RandomizerForm);
     },
     setup() {
-        const router = useRouter();
-        router.afterEach(runRenderUpdate);
-        onMounted(runRenderUpdate);
+        onMounted(() => {
+            const router = useRouter();
+            router.afterEach(runRenderUpdate);
+            runRenderUpdate()
+        });
     },
 });
