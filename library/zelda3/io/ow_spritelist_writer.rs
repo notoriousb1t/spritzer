@@ -53,12 +53,6 @@ fn write_spritelists(game: &mut SnesGame, rooms: &[&OWRoom]) {
     // and pointed to by multiple states.
     let mut map: HashMap<Vec<OWSprite>, Vec<(OWRoomId, OWStateId)>> = HashMap::default();
     for room in rooms.iter() {
-        if room.id == OWRoomId::x40_MASTER_SWORD_UNDER_BRIDGE
-            || room.id == OWRoomId::x41_ZORAS_DOMAIN
-        {
-            continue;
-        }
-
         for state in room.states() {
             let values = match map.entry(state.sprites.clone()) {
                 Entry::Occupied(o) => o.into_mut(),
