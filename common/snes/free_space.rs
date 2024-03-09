@@ -1,7 +1,7 @@
 use log::debug;
 
 /// This describes a block of free space to put things in
-pub(crate) struct FreeSpace {
+pub struct FreeSpace {
     /// The bank the freespace is in.
     pub bank: u8,
     /// The position that can next be written.
@@ -14,7 +14,7 @@ pub(crate) struct FreeSpace {
 
 impl FreeSpace {
     /// Creates a new block of freespace
-    pub(crate) fn new(bank: u8, start: u16, end: u16) -> Self {
+    pub fn new(bank: u8, start: u16, end: u16) -> Self {
         FreeSpace {
             bank,
             end,
@@ -24,19 +24,19 @@ impl FreeSpace {
     }
 
     /// Returns the long address of the cursor.
-    pub(crate) fn cursor_long(&self) -> usize {
+    pub fn cursor_long(&self) -> usize {
         ((self.bank as usize) << 16) | self.cursor as usize
     }
 
     /// Returns the available range to be written.
-    pub(crate) fn capacity(&self) -> u16 {
+    pub fn capacity(&self) -> u16 {
         self.end - self.cursor
     }
 
     /// Attempts to allocate the space.
     /// Returns None, if there isn't sufficient space.
     /// Returns Some(start, end) if there is.
-    pub(crate) fn allocate(&mut self, length: u16) -> Option<usize> {
+    pub fn allocate(&mut self, length: u16) -> Option<usize> {
         debug!("Alloc bank {} {} bytes", self.bank, length);
         let future_end_address = self.cursor as usize + length as usize;
         if future_end_address > self.end as usize || future_end_address > 0xFFFF {

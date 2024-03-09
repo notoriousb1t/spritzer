@@ -1,9 +1,8 @@
 use assembly::zelda3::Symbol;
+use common::SnesGame;
 use std::collections::BTreeMap;
 use strum::IntoEnumIterator;
 
-use crate::common::readerwriter::ReadObject;
-use crate::snes::SnesGame;
 use crate::zelda3::model::UWDoor;
 use crate::zelda3::model::UWDoorDirection;
 use crate::zelda3::model::UWDoorList;
@@ -19,14 +18,12 @@ const STOP_MARKER: u8 = 0xFF;
 const LAYER_MARKER: u8 = 0xFF;
 const END_MARKER: u8 = 0xF0;
 
-impl ReadObject<BTreeMap<UWRoomId, UWScene>> for SnesGame {
-    fn read_objects(&self) -> BTreeMap<UWRoomId, UWScene> {
-        BTreeMap::from_iter(UWRoomId::iter().map(|id| {
-            let layout = read_layout(self, id);
-            let doors = read_doors(self, id);
-            (id, UWScene { layout, doors })
-        }))
-    }
+pub(super) fn read_uw_scenes(game: &SnesGame) -> BTreeMap<UWRoomId, UWScene> {
+    BTreeMap::from_iter(UWRoomId::iter().map(|id| {
+        let layout = read_layout(game, id);
+        let doors = read_doors(game, id);
+        (id, UWScene { layout, doors })
+    }))
 }
 
 /// Read an underworld layout
@@ -151,13 +148,15 @@ mod tests {
     use strum::IntoEnumIterator;
 
     use super::STOP_MARKER;
-    use crate::snes::SnesGame;
     use crate::zelda3::io::uw_scene_reader::bytes_to_object;
     use crate::zelda3::io::uw_scene_reader::bytes_to_preamble;
     use crate::zelda3::io::uw_scene_reader::read_doors;
     use crate::zelda3::model::UWLayoutId;
     use crate::zelda3::model::UWObject;
     use crate::zelda3::model::UWRoomId;
+    use common::RomSize;
+    use common::RomType;
+    use common::SnesGame;
 
     #[test]
     fn read_empty() {
@@ -177,8 +176,7 @@ mod tests {
     }
 
     fn init_with_empty_doors() -> SnesGame {
-        let mut game = SnesGame::new(&mut vec![0xFF; 0xFFFFF]);
-
+        let mut game = SnesGame::new(RomType::FastLoRom, RomSize::Size4mb);
         let mut ptr_cursor = Symbol::DoorPtrs as usize;
         let mut subroutine_cursor = 0x1F_8780;
         for _ in UWRoomId::iter() {

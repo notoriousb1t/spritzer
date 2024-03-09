@@ -2,7 +2,7 @@ use std::fmt::Debug;
 
 #[allow(dead_code)] // Used for debugging.
 #[derive(Debug, PartialEq, Eq)]
-pub(crate) struct Diff<T>
+pub struct Diff<T>
 where
     T: Eq + PartialEq + Debug + Copy,
 {
@@ -27,7 +27,7 @@ where
 
     /// Returns diffs for testing and debugging purposes.
     #[allow(dead_code)]
-    pub(crate) fn compare(left_inputs: &[T], right_inputs: &[T]) -> Vec<Diff<T>> {
+    pub fn compare(left_inputs: &[T], right_inputs: &[T]) -> Vec<Diff<T>> {
         let mut deltas: Vec<Diff<T>> = vec![];
 
         let mut diff_index: Option<usize> = None;
@@ -95,7 +95,7 @@ where
 
 #[cfg(test)]
 mod tests {
-    use crate::common::diff::Diff;
+    use crate::Diff;
 
     #[test]
     fn diff_empty() {

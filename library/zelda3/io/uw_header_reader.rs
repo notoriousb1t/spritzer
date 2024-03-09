@@ -2,9 +2,6 @@ use assembly::zelda3::Symbol;
 use std::collections::BTreeMap;
 use strum::IntoEnumIterator;
 
-use crate::common::readerwriter::ReadObject;
-use crate::snes::bytes_to_int24;
-use crate::snes::SnesGame;
 use crate::zelda3::model::PaletteId;
 use crate::zelda3::model::SpritesetId;
 use crate::zelda3::model::UWBlocksetId;
@@ -12,20 +9,19 @@ use crate::zelda3::model::UWFloorId;
 use crate::zelda3::model::UWRoomId;
 use crate::zelda3::model::UWRoomTag;
 use crate::zelda3::model::UnderworldRoomHeader;
+use common::bytes_to_int24;
+use common::SnesGame;
 
-impl ReadObject<BTreeMap<UWRoomId, UnderworldRoomHeader>> for SnesGame {
-    fn read_objects(&self) -> BTreeMap<UWRoomId, UnderworldRoomHeader> {
-        let header_16bit_ptr = self.read_all(Symbol::UWHeaderRef0.into(), 2);
-        let header_bank = self.read(Symbol::UWHeaderBank.into());
-        let header_pointer =
-            bytes_to_int24([header_bank, header_16bit_ptr[1], header_16bit_ptr[0]]);
+pub(super) fn read_uw_headers(game: &SnesGame) -> BTreeMap<UWRoomId, UnderworldRoomHeader> {
+    let header_16bit_ptr = game.read_all(Symbol::UWHeaderRef0.into(), 2);
+    let header_bank = game.read(Symbol::UWHeaderBank.into());
+    let header_pointer = bytes_to_int24([header_bank, header_16bit_ptr[1], header_16bit_ptr[0]]);
 
-        let mut values: Vec<(UWRoomId, UnderworldRoomHeader)> = vec![];
-        for id in UWRoomId::iter() {
-            values.push((id, _read_header(self, header_pointer, id)));
-        }
-        BTreeMap::from_iter(values)
+    let mut values: Vec<(UWRoomId, UnderworldRoomHeader)> = vec![];
+    for id in UWRoomId::iter() {
+        values.push((id, _read_header(game, header_pointer, id)));
     }
+    BTreeMap::from_iter(values)
 }
 
 fn _read_header(game: &SnesGame, pointer_address: usize, id: UWRoomId) -> UnderworldRoomHeader {

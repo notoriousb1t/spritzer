@@ -1,27 +1,24 @@
 use assembly::zelda3::Symbol;
+use common::SnesGame;
 use std::collections::BTreeMap;
 use strum::IntoEnumIterator;
 
-use crate::common::readerwriter::ReadObject;
-use crate::snes::SnesGame;
 use crate::zelda3::model::SpriteId;
 use crate::zelda3::model::UWRoomId;
 use crate::zelda3::model::UWSprite;
-use crate::zelda3::model::UWSpriteList; // Required for EnumIter::iter().
+use crate::zelda3::model::UWSpriteList;
 
 const STOP_MARKER: u8 = 0xFF;
 const _OVERLORD_OFFSET: u16 = 0x100;
 const SMALL_KEY_MARKER: u8 = 0xFE;
 const BIG_KEY_MARKER: u8 = 0xFD;
 
-impl ReadObject<BTreeMap<UWRoomId, UWSpriteList>> for SnesGame {
-    fn read_objects(&self) -> BTreeMap<UWRoomId, UWSpriteList> {
-        let mut values: Vec<(UWRoomId, UWSpriteList)> = vec![];
-        for id in UWRoomId::iter() {
-            values.push((id, _read_room(self, id)));
-        }
-        BTreeMap::from_iter(values)
+pub(super) fn read_uw_spritelists(game: &SnesGame) -> BTreeMap<UWRoomId, UWSpriteList> {
+    let mut values: Vec<(UWRoomId, UWSpriteList)> = vec![];
+    for id in UWRoomId::iter() {
+        values.push((id, _read_room(game, id)));
     }
+    BTreeMap::from_iter(values)
 }
 
 fn _read_room(game: &SnesGame, room_id: UWRoomId) -> UWSpriteList {

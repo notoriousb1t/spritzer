@@ -2,9 +2,9 @@
 
 use rand::seq::SliceRandom;
 
-use crate::snes::Patch;
-use crate::snes::BEQ;
-use crate::snes::NEGATIVE_MASK;
+use common::Patch;
+use common::BEQ;
+use common::NEGATIVE_MASK;
 use crate::zelda3::features::sprites::get_weights;
 use crate::zelda3::model::get_sprite_type;
 use crate::zelda3::model::get_sprite_vulnerability;

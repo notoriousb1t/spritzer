@@ -20,8 +20,8 @@ use super::UWRoomId;
 use super::UWScene;
 use super::UWSpriteList;
 use super::UnderworldRoomHeader;
-use crate::snes::Patch;
 use crate::zelda3::options::Balancing;
+use common::Patch;
 
 #[derive(Clone)]
 pub(crate) struct Z3Model {

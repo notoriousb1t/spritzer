@@ -1,19 +1,12 @@
 use std::collections::BTreeMap;
 
-use crate::common::readerwriter::ReadObject;
-use crate::snes::SnesGame;
 use crate::zelda3::model::Dungeon;
 use crate::zelda3::model::DungeonId;
 use crate::zelda3::model::UWRoomId;
 
-impl ReadObject<BTreeMap<DungeonId, Dungeon>> for SnesGame {
-    fn read_objects(&self) -> BTreeMap<DungeonId, Dungeon> {
-        // Note: We can probably get similar data at 0xAFBF4 (pointers)
-        get_dungeons()
-    }
-}
-
-fn get_dungeons() -> BTreeMap<DungeonId, Dungeon> {
+/// Returns the list of dungeons.
+/// Note: Similar data exists at 0xAFBF4, but with what looks to be an error.
+pub(super) fn read_dungeons() -> BTreeMap<DungeonId, Dungeon> {
     let dungeons = vec![
         Dungeon {
             dungeon_id: DungeonId::X00_Sewers,

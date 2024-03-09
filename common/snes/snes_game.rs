@@ -1,13 +1,14 @@
 use std::str::from_utf8;
 
+use crate::Diff;
 use log::debug;
 use log::info;
 use strum_macros::Display;
 use strum_macros::FromRepr;
 
-use super::rom_type::RomType;
 use super::free_space::FreeSpace;
 use super::patch::Patch;
+use super::rom_type::RomType;
 use super::snes_address::bytes_to_int24;
 use super::snes_address::int24_to_bytes;
 use super::snes_address::snes_to_physical;
@@ -18,15 +19,15 @@ const SIZE_ADDRESS: usize = 0xFFD7;
 
 /// Manages reading and writing to the Game data.
 pub struct SnesGame {
-    pub(crate) mode: RomType,
-    pub(crate) buffer: Vec<u8>,
-    pub(crate) free_space: Vec<FreeSpace>,
+    pub mode: RomType,
+    pub buffer: Vec<u8>,
+    pub free_space: Vec<FreeSpace>,
 }
 
 #[repr(u8)]
 #[derive(Clone, Copy, FromRepr, Display)]
 #[allow(dead_code)]
-pub enum SnesSize {
+pub enum RomSize {
     Size1mb = 0xA,
     Size2mb = 0xB,
     Size4mb = 0xC,
@@ -36,8 +37,16 @@ pub enum SnesSize {
 }
 
 impl SnesGame {
+    /// Empty configuration for testing purposes.
+    pub fn new(rom_type: RomType, rom_size: RomSize) -> Self {
+        let mut data = vec![0xFFu8; (1 << rom_size as usize) * 1024];
+        data[0x7FD5] = rom_type as u8;
+        data[0x7FD7] = rom_size as u8;
+        Self::from_bytes(&mut data)
+    }
+
     /// Constructs a new SNES game and expands it to the correct size.
-    pub fn new(bytes: &[u8]) -> Self {
+    pub fn from_bytes(bytes: &[u8]) -> Self {
         let mode_value = bytes[snes_to_physical(RomType::FastLoRom, TYPE_ADDRESS)];
         let mode = RomType::from_repr(mode_value)
             .expect(&format!("SnesMode {:02X} is invalid", mode_value));
@@ -51,9 +60,14 @@ impl SnesGame {
         }
     }
 
-    pub fn get_size(&self) -> SnesSize {
+    /// Returns the deltas between the initial buffer and the current buffer.
+    pub fn diff(&self, original: &[u8]) -> Vec<Diff<u8>> {
+        Diff::compare(original, &self.buffer)
+    }
+
+    pub fn get_size(&self) -> RomSize {
         let value = self.read(SIZE_ADDRESS);
-        return SnesSize::from_repr(value).expect(&format!("SnesSize {:02X} is invalid", value));
+        return RomSize::from_repr(value).expect(&format!("SnesSize {:02X} is invalid", value));
     }
 
     pub fn set_game_title(&mut self, title: &str) {
@@ -67,7 +81,7 @@ impl SnesGame {
     }
 
     /// Resizes the ROM and updates the header.. Empty space is filled with 0xFF.
-    pub fn resize(&mut self, size: SnesSize) {
+    pub fn resize(&mut self, size: RomSize) {
         let new_size = (1 << (size as usize)) * 1024;
         if new_size <= self.buffer.len() {
             info!("Resizing skipped {} <= {}", new_size, self.buffer.len());
@@ -279,34 +293,23 @@ impl SnesGame {
 
 #[cfg(test)]
 mod tests {
+    use crate::snes::rom_type::RomType;
+    use crate::{Diff, RomSize};
     use std::vec;
 
     use super::SnesGame;
-    use crate::common::diff::Diff;
-
-    impl SnesGame {
-        /// Empty configuration for testing purposes.
-        pub(crate) fn empty() -> Self {
-            Self::new(&mut vec![0xFFu8; 0x400000])
-        }
-
-        /// Returns the deltas between the initial buffer and the current buffer.
-        pub(crate) fn diff(&self, original: &[u8]) -> Vec<Diff<u8>> {
-            Diff::compare(original, &self.buffer)
-        }
-    }
 
     #[test]
     fn diff_initial_state_returns_empty() {
         // This is a double check that diffing is setup correctly.
-        let game = SnesGame::empty();
+        let game = SnesGame::new(RomType::FastLoRom, RomSize::Size4mb);
         let original = game.buffer.to_owned();
         assert_eq!(game.diff(&original), vec![]);
     }
 
     #[test]
     fn write_writes() {
-        let mut game = SnesGame::empty();
+        let mut game = SnesGame::new(RomType::FastLoRom, RomSize::Size4mb);
         let original = game.buffer.to_owned();
         game.write(42, 0);
 
@@ -317,12 +320,12 @@ mod tests {
 
     #[test]
     fn write_crc_writes() {
-        let mut game = SnesGame::empty();
+        let mut game = SnesGame::new(RomType::FastLoRom, RomSize::Size4mb);
         let original = game.buffer.to_owned();
         game.write_crc();
 
         let actual = game.diff(&original);
-        let expectation = [Diff::range(0x7FDC, vec![0xFF; 4], vec![253, 1, 2, 254])];
+        let expectation = [Diff::range(0x7FDC, vec![0xFF; 4], vec![191, 3, 64, 252])];
         assert_eq!(actual, expectation);
     }
 }

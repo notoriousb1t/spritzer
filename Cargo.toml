@@ -1,8 +1,9 @@
 [workspace]
 members = [
   "assembly",
+  "common",
+  "docs",
   "library",
   "python",
-  "docs",
 ]
 resolver = "2"

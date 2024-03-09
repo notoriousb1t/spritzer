@@ -1,30 +1,29 @@
 use assembly::zelda3::get_patch_data;
 use log::info;
 
-use crate::common::random::string_to_hash;
-use crate::common::readerwriter::ReadObject;
-use crate::common::readerwriter::WriteObject;
-use crate::snes::SnesGame;
-use crate::snes::SnesSize;
 use crate::zelda3::features::apply_options;
+use crate::zelda3::io::read_model;
 use crate::zelda3::model::Z3Model;
 use crate::zelda3::options::Z3Options;
+use common::string_to_hash;
+use common::SnesGame;
+use common::RomSize;
+
+use super::io::write_model;
 
 pub fn randomize_zelda3(bytes: &[u8], options: &Z3Options) -> Vec<u8> {
     let mut game = create_game(bytes);
-    let mut model: Z3Model = game.read_objects();
+
+    let mut model: Z3Model = read_model(&game);
     // Copy options onto the model.
     model.debug_string = options.seed.to_string();
     model.seed = string_to_hash(options.seed.as_str());
     model.uw_balancing = options.underworld_balancing;
     model.ow_balancing = options.overworld_balancing;
-
     apply_options(&mut model, options);
+    write_model(&mut game, &model);
 
-    game.write_objects(&model);
-    game.patch(&model.patches);
     game.write_crc();
-    // Write back the data to the original buffer.
     game.buffer
 }
 
@@ -36,13 +35,13 @@ fn create_game(bytes: &[u8]) -> SnesGame {
         true => {
             info!("Removing unnecessary header");
             bytes[0x200..].to_vec()
-        },
+        }
         false => bytes.to_vec(),
     };
 
     // Resize to 4MB to make additional room. Fill with 0xFF.
-    let mut game = SnesGame::new(&bytes);
-    game.resize(SnesSize::Size4mb);
+    let mut game = SnesGame::from_bytes(&bytes);
+    game.resize(RomSize::Size4mb);
 
     // Add base patch to the game. This includes direct fixes to the game.
     for (address, data) in get_patch_data() {
@@ -77,12 +76,12 @@ mod tests {
     use std::fs::File;
     use std::io::Read;
 
-    use crate::common::diff::Diff;
     use crate::zelda3::options::Balancing;
     use crate::zelda3::options::OverworldEnemyShuffle;
     use crate::zelda3::options::UnderworldEnemyShuffle;
     use crate::zelda3::options::Z3Options;
     use crate::zelda3::randomize_zelda3;
+    use common::Diff;
 
     #[test]
     #[ignore]

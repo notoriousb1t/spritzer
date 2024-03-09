@@ -1,5 +1,5 @@
-use std::collections::BTreeMap;
 use assembly::zelda3::Symbol;
+use std::collections::BTreeMap;
 use strum::IntoEnumIterator;
 
 use super::entrance_utils::BLOCKSET_SIZE;
@@ -20,18 +20,15 @@ use super::entrance_utils::SONG_SIZE;
 use super::entrance_utils::V_SCROLL_SIZE;
 use super::entrance_utils::X_COORDINATE_SIZE;
 use super::entrance_utils::Y_COORDINATE_SIZE;
-use crate::common::readerwriter::ReadObject;
-use crate::snes::SnesGame;
 use crate::zelda3::model::DungeonId;
 use crate::zelda3::model::Entrance;
 use crate::zelda3::model::EntranceId;
 use crate::zelda3::model::UWBlocksetId;
 use crate::zelda3::model::UWRoomId;
+use common::SnesGame;
 
-impl ReadObject<BTreeMap<EntranceId, Entrance>> for SnesGame {
-    fn read_objects(&self) -> BTreeMap<EntranceId, Entrance> {
-        BTreeMap::from_iter(EntranceId::iter().map(|id: EntranceId| (id, read_entrance(self, id))))
-    }
+pub(super) fn read_entrances(game: &SnesGame) -> BTreeMap<EntranceId, Entrance> {
+    BTreeMap::from_iter(EntranceId::iter().map(|id: EntranceId| (id, read_entrance(game, id))))
 }
 
 fn read_entrance(game: &SnesGame, entrance_id: EntranceId) -> Entrance {

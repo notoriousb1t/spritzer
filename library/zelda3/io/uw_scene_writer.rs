@@ -1,10 +1,9 @@
 use assembly::zelda3::Symbol;
+use common::SnesGame;
 use std::collections::hash_map::Entry;
 use std::collections::BTreeMap;
 use std::collections::HashMap;
 
-use crate::common::readerwriter::WriteObject;
-use crate::snes::SnesGame;
 use crate::zelda3::model::UWDoorList;
 use crate::zelda3::model::UWLayout;
 use crate::zelda3::model::UWLayoutId;
@@ -16,61 +15,59 @@ const STOP_MARKER: u8 = 0xFF;
 const LAYER_MARKER: u8 = 0xFF;
 const END_MARKER: u8 = 0xF0;
 
-impl WriteObject<BTreeMap<UWRoomId, UWScene>> for SnesGame {
-    fn write_objects(&mut self, scenes: &BTreeMap<UWRoomId, UWScene>) {
-        // Group room ids that have exact layouts, objects, and entrances.
-        let mut map: HashMap<&UWScene, Vec<UWRoomId>> = HashMap::new();
-        let mut scenes_tuples = scenes.iter().collect::<Vec<_>>();
-        scenes_tuples.sort_by_key(|it| it.0);
+pub(super) fn write_uw_scenes(game: &mut SnesGame, scenes: &BTreeMap<UWRoomId, UWScene>) {
+    // Group room ids that have exact layouts, objects, and entrances.
+    let mut map: HashMap<&UWScene, Vec<UWRoomId>> = HashMap::new();
+    let mut scenes_tuples = scenes.iter().collect::<Vec<_>>();
+    scenes_tuples.sort_by_key(|it| it.0);
 
-        for (id, scene) in scenes_tuples {
-            let values = match map.entry(scene) {
-                Entry::Occupied(o) => o.into_mut(),
-                Entry::Vacant(v) => v.insert(vec![]),
-            };
-            values.push(*id);
-        }
+    for (id, scene) in scenes_tuples {
+        let values = match map.entry(scene) {
+            Entry::Occupied(o) => o.into_mut(),
+            Entry::Vacant(v) => v.insert(vec![]),
+        };
+        values.push(*id);
+    }
 
-        // Sort groups by the first room that occurs in them. This must be stable, and this is good enough.
-        // Without this, the seed string isn't stable and it is hard to pinpoint issues or have two players
-        // play the same game.
-        let mut groups = map.iter().collect::<Vec<_>>();
-        groups.sort_by_key(|it| it.1[0]);
+    // Sort groups by the first room that occurs in them. This must be stable, and this is good enough.
+    // Without this, the seed string isn't stable and it is hard to pinpoint issues or have two players
+    // play the same game.
+    let mut groups = map.iter().collect::<Vec<_>>();
+    groups.sort_by_key(|it| it.1[0]);
 
-        // Write layouts and pointers for each layout and entrance configuration.
-        // Layouts and doors, despite having separate pointer tables must be exactly sequential to
-        // each other. That is, each layout must be followed by the correct door
-        // configuration. If this is not done sequentially, it introduces hard to find gamebreaking
-        // bugs.
-        for (scene, ids) in groups {
-            let layout_bytes = layout_to_bytes(&scene.layout);
-            let entrance_bytes = doorlist_to_bytes(&scene.doors);
-            let scene_bytes = layout_bytes
-                .iter()
-                .chain(entrance_bytes.iter())
-                .cloned()
-                .collect::<Vec<_>>();
+    // Write layouts and pointers for each layout and entrance configuration.
+    // Layouts and doors, despite having separate pointer tables must be exactly sequential to
+    // each other. That is, each layout must be followed by the correct door
+    // configuration. If this is not done sequentially, it introduces hard to find gamebreaking
+    // bugs.
+    for (scene, ids) in groups {
+        let layout_bytes = layout_to_bytes(&scene.layout);
+        let entrance_bytes = doorlist_to_bytes(&scene.doors);
+        let scene_bytes = layout_bytes
+            .iter()
+            .chain(entrance_bytes.iter())
+            .cloned()
+            .collect::<Vec<_>>();
 
-            if let Some(bank) = self.find_capacity(scene_bytes.len()) {
-                // Write the bytes all at once because multiple freespace objects may exist in the
-                // same bank. Writing both at once guarantees contiguous record.
-                let layout_location = self.write_data(&[bank], &scene_bytes).unwrap();
-                // The entrance location should follow the layout information.
-                let entrance_location = layout_location + layout_bytes.len();
+        if let Some(bank) = game.find_capacity(scene_bytes.len()) {
+            // Write the bytes all at once because multiple freespace objects may exist in the
+            // same bank. Writing both at once guarantees contiguous record.
+            let layout_location = game.write_data(&[bank], &scene_bytes).unwrap();
+            // The entrance location should follow the layout information.
+            let entrance_location = layout_location + layout_bytes.len();
 
-                for id in ids.iter() {
-                    self.write_pointer(
-                        Symbol::LayoutPtrs as usize + (*id as usize * 3),
-                        layout_location,
-                    );
-                    self.write_pointer(
-                        Symbol::DoorPtrs as usize + (*id as usize * 3),
-                        entrance_location,
-                    );
-                }
-            } else {
-                panic!("No space writing layout/entrance for {}", ids[0]);
+            for id in ids.iter() {
+                game.write_pointer(
+                    Symbol::LayoutPtrs as usize + (*id as usize * 3),
+                    layout_location,
+                );
+                game.write_pointer(
+                    Symbol::DoorPtrs as usize + (*id as usize * 3),
+                    entrance_location,
+                );
             }
+        } else {
+            panic!("No space writing layout/entrance for {}", ids[0]);
         }
     }
 }

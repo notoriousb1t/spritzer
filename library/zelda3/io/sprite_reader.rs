@@ -1,22 +1,19 @@
-use std::collections::BTreeMap;
 use assembly::zelda3::Symbol;
+use std::collections::BTreeMap;
 use strum::IntoEnumIterator;
 
-use crate::common::readerwriter::ReadObject;
-use crate::snes::SnesGame;
 use crate::zelda3::model::PaletteIndex;
 use crate::zelda3::model::Sprite;
 use crate::zelda3::model::SpriteId;
 use crate::zelda3::model::X0_NO_DAMAGE;
+use common::SnesGame;
 
-impl ReadObject<BTreeMap<SpriteId, Sprite>> for SnesGame {
-    fn read_objects(&self) -> BTreeMap<SpriteId, Sprite> {
-        let mut values: Vec<(SpriteId, Sprite)> = vec![];
-        for id in SpriteId::iter() {
-            values.push((id, _read_sprite(self, id)));
-        }
-        BTreeMap::from_iter(values)
+pub(crate) fn read_sprites(game: &SnesGame) -> BTreeMap<SpriteId, Sprite> {
+    let mut values: Vec<(SpriteId, Sprite)> = vec![];
+    for id in SpriteId::iter() {
+        values.push((id, _read_sprite(game, id)));
     }
+    BTreeMap::from_iter(values)
 }
 
 fn _read_sprite(game: &SnesGame, id: SpriteId) -> Sprite {

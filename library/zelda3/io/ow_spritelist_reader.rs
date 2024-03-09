@@ -6,8 +6,6 @@ use strum::IntoEnumIterator;
 use super::ow_spritelist_utils::get_palette_address;
 use super::ow_spritelist_utils::get_sprite_graphics_address;
 use super::ow_spritelist_utils::get_sprite_pointer;
-use crate::common::readerwriter::ReadObject;
-use crate::snes::SnesGame;
 use crate::zelda3::model::OWRoom;
 use crate::zelda3::model::OWRoomId;
 use crate::zelda3::model::OWRoomState;
@@ -15,18 +13,17 @@ use crate::zelda3::model::OWSprite;
 use crate::zelda3::model::OWStateId;
 use crate::zelda3::model::SpriteId;
 use crate::zelda3::model::SpritesetId;
+use common::SnesGame;
 
 const STOP_MARKER: u8 = 0xFF;
 
-impl ReadObject<BTreeMap<OWRoomId, OWRoom>> for SnesGame {
-    /// Returns OW Sprite List for each OW Room.
-    fn read_objects(&self) -> BTreeMap<OWRoomId, OWRoom> {
-        let mut values: Vec<(OWRoomId, OWRoom)> = vec![];
-        for id in OWRoomId::iter() {
-            values.push((id, read_room(self, id)));
-        }
-        BTreeMap::from_iter(values)
+/// Returns OW Sprite List for each OW Room.
+pub(super) fn read_ow_sprites_and_headers(game: &SnesGame) -> BTreeMap<OWRoomId, OWRoom> {
+    let mut values: Vec<(OWRoomId, OWRoom)> = vec![];
+    for id in OWRoomId::iter() {
+        values.push((id, read_room(game, id)));
     }
+    BTreeMap::from_iter(values)
 }
 
 fn read_room(game: &SnesGame, id: OWRoomId) -> OWRoom {

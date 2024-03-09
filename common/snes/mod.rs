@@ -1,11 +1,12 @@
-mod rom_type;
 mod free_space;
 mod instruction;
 mod patch;
+mod rom_type;
 mod snes_address;
 mod snes_game;
 
-pub(crate) use instruction::*;
+pub use instruction::*;
 pub use patch::*;
-pub(crate) use snes_address::*;
+pub use rom_type::*;
+pub use snes_address::*;
 pub use snes_game::*;

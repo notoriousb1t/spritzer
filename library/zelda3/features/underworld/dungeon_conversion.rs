@@ -5,7 +5,7 @@ use super::swamp_palace::relayout_swamp_map_chest_room;
 use super::swamp_palace::relayout_swamp_water_treadmill_room;
 use super::thieves_town::prepare_thieves_town_boss;
 use super::tower_of_hera::relayout_hera_boss;
-use crate::snes::Patch;
+use common::Patch;
 use crate::zelda3::model::get_arena_position;
 use crate::zelda3::model::ArenaPosition;
 use crate::zelda3::model::DungeonId;

@@ -19,16 +19,13 @@ use super::entrance_utils::SONG_SIZE;
 use super::entrance_utils::V_SCROLL_SIZE;
 use super::entrance_utils::X_COORDINATE_SIZE;
 use super::entrance_utils::Y_COORDINATE_SIZE;
-use crate::common::readerwriter::WriteObject;
-use crate::snes::SnesGame;
 use crate::zelda3::model::Entrance;
 use crate::zelda3::model::EntranceId;
+use common::SnesGame;
 
-impl WriteObject<BTreeMap<EntranceId, Entrance>> for SnesGame {
-    fn write_objects(&mut self, entrances: &BTreeMap<EntranceId, Entrance>) {
-        for entrance in entrances.values() {
-            write_entrance(self, entrance);
-        }
+pub(super) fn write_entrances(game: &mut SnesGame, entrances: &BTreeMap<EntranceId, Entrance>) {
+    for entrance in entrances.values() {
+        write_entrance(game, entrance);
     }
 }
 

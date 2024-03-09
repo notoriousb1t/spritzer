@@ -6,6 +6,7 @@ edition = "2021"
 [dependencies]
 log = "0.4.20"
 assembly = { path = "../assembly" }
+common = { path = "../common" }
 strum = "0.26.1"
 strum_macros = "0.26.1"
 rand = "0.8.5"

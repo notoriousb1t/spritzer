@@ -6,23 +6,23 @@ use std::collections::HashMap;
 use super::ow_spritelist_utils::get_palette_address;
 use super::ow_spritelist_utils::get_sprite_graphics_address;
 use super::ow_spritelist_utils::get_sprite_pointer;
-use crate::common::readerwriter::WriteObject;
-use crate::snes::SnesGame;
 use crate::zelda3::model::OWRoom;
 use crate::zelda3::model::OWRoomId;
 use crate::zelda3::model::OWSprite;
 use crate::zelda3::model::OWStateId;
+use common::SnesGame;
 
 const STOP_MARKER: u8 = 0xFF;
 
-impl WriteObject<BTreeMap<OWRoomId, OWRoom>> for SnesGame {
-    fn write_objects(&mut self, rooms: &BTreeMap<OWRoomId, OWRoom>) {
-        let mut rooms = rooms.values().collect::<Vec<_>>();
-        rooms.sort_by_key(|room| room.id);
+pub(super) fn write_ow_sprites_and_headers(
+    game: &mut SnesGame,
+    rooms: &BTreeMap<OWRoomId, OWRoom>,
+) {
+    let mut rooms = rooms.values().collect::<Vec<_>>();
+    rooms.sort_by_key(|room| room.id);
 
-        write_headers(self, &rooms);
-        write_spritelists(self, &rooms);
-    }
+    write_headers(game, &rooms);
+    write_spritelists(game, &rooms);
 }
 
 fn write_headers(game: &mut SnesGame, rooms: &[&OWRoom]) {

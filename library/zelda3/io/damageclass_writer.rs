@@ -1,19 +1,16 @@
 use assembly::zelda3::Symbol;
 
-use crate::common::readerwriter::ReadObject;
-use crate::snes::SnesGame;
+use common::SnesGame;
 use crate::zelda3::model::DamageClass;
 
-impl ReadObject<[DamageClass; 10]> for SnesGame {
-    fn read_objects(&self) -> [DamageClass; 10] {
-        let mut damage_table: [DamageClass; 10] = [DamageClass::default(); 10];
-        for index in 0..10 {
-            // Read Link's damage table.
-            let row = damage_table.get_mut(index).unwrap();
-            row.green_mail = self.read(Symbol::DamageClass as usize + (index * 3));
-            row.blue_mail = self.read(Symbol::DamageClass as usize + (index * 3) + 1);
-            row.red_mail = self.read(Symbol::DamageClass as usize + (index * 3) + 2);
-        }
-        damage_table
+pub(super) fn write_damage_classes(game: &mut SnesGame, classes: &[DamageClass; 10]) {
+    for (index, row) in classes.iter().enumerate() {
+        // Write Link's damage table.
+        game.write(Symbol::DamageClass as usize + (index * 3), row.green_mail);
+        game.write(
+            Symbol::DamageClass as usize + (index * 3) + 1,
+            row.blue_mail,
+        );
+        game.write(Symbol::DamageClass as usize + (index * 3) + 2, row.red_mail);
     }
 }

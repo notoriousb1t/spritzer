@@ -1,8 +1,7 @@
 use assembly::zelda3::Symbol;
+use common::SnesGame;
 use std::collections::BTreeMap;
 
-use crate::common::readerwriter::WriteObject;
-use crate::snes::SnesGame;
 use crate::zelda3::model::SpriteId;
 use crate::zelda3::model::UWRoomId;
 use crate::zelda3::model::UWSpriteList;
@@ -12,16 +11,17 @@ const _OVERLORD_OFFSET: u16 = 0x100;
 const SMALL_KEY_MARKER: u8 = 0xFE;
 const BIG_KEY_MARKER: u8 = 0xFD;
 
-impl WriteObject<BTreeMap<UWRoomId, UWSpriteList>> for SnesGame {
-    fn write_objects(&mut self, spritelists: &BTreeMap<UWRoomId, UWSpriteList>) {
-        // Move the room header references to point to the new location.
-        self.write_pointer_int16(
-            Symbol::RoomData_SpritePointers_Ref0.into(),
-            Symbol::RoomSpritesStart.into(),
-        );
-        for room in spritelists.values() {
-            _write_sprites(self, room);
-        }
+pub(super) fn write_uw_spritelists(
+    game: &mut SnesGame,
+    spritelists: &BTreeMap<UWRoomId, UWSpriteList>,
+) {
+    // Move the room header references to point to the new location.
+    game.write_pointer_int16(
+        Symbol::RoomData_SpritePointers_Ref0.into(),
+        Symbol::RoomSpritesStart.into(),
+    );
+    for room in spritelists.values() {
+        _write_sprites(game, room);
     }
 }
 

@@ -1,22 +1,21 @@
 use assembly::zelda3::Symbol;
 use std::collections::BTreeMap;
 
-use crate::common::readerwriter::WriteObject;
-use crate::snes::bytes_to_int24;
-use crate::snes::SnesGame;
 use crate::zelda3::model::UWRoomId;
 use crate::zelda3::model::UnderworldRoomHeader;
+use common::bytes_to_int24;
+use common::SnesGame;
 
-impl WriteObject<BTreeMap<UWRoomId, UnderworldRoomHeader>> for SnesGame {
-    fn write_objects(&mut self, headers: &BTreeMap<UWRoomId, UnderworldRoomHeader>) {
-        let header_16bit_ptr = self.read_all(Symbol::UWHeaderRef0.into(), 2);
-        let header_bank = self.read(Symbol::UWHeaderBank.into());
-        let header_pointer =
-            bytes_to_int24([header_bank, header_16bit_ptr[1], header_16bit_ptr[0]]);
+pub(super) fn write_uw_headers(
+    game: &mut SnesGame,
+    headers: &BTreeMap<UWRoomId, UnderworldRoomHeader>,
+) {
+    let header_16bit_ptr = game.read_all(Symbol::UWHeaderRef0.into(), 2);
+    let header_bank = game.read(Symbol::UWHeaderBank.into());
+    let header_pointer = bytes_to_int24([header_bank, header_16bit_ptr[1], header_16bit_ptr[0]]);
 
-        for room in headers.values() {
-            _write_metadata(self, header_pointer, room);
-        }
+    for room in headers.values() {
+        _write_metadata(game, header_pointer, room);
     }
 }
 

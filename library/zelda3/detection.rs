@@ -1,8 +1,7 @@
 use std::fmt::Display;
 
 use assembly::zelda3::Symbol;
-
-use crate::snes::SnesGame;
+use common::SnesGame;
 
 pub enum GameVersion {
     UNKNOWN = 0,
@@ -38,7 +37,7 @@ pub struct GameInfo {
 }
 
 pub fn detect_game(buffer: &[u8]) -> GameInfo {
-    let game = SnesGame::new(buffer);
+    let game = SnesGame::from_bytes(buffer);
     let title = game.get_game_title();
 
     if title.starts_with("ZELDANODENSETSU") {
