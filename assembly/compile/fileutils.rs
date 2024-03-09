@@ -47,14 +47,15 @@ where
 }
 
 pub(super) fn read_all_bytes(path: &Path) -> Vec<u8> {
-    let mut file = File::open(path).unwrap();
+    let mut file = File::open(path).expect(&format!("Could not open file {:?}", path));
     let mut buffer = vec![];
     let _ = file.read_to_end(&mut buffer);
     buffer
 }
 
 pub(super) fn get_hash(path: &Path) -> String {
-    sha256::try_digest(std::path::Path::new(path)).unwrap()
+    sha256::try_digest(std::path::Path::new(path))
+        .expect(&format!("Could not hash file: {:?}", path))
 }
 
 pub(super) fn replace_segment(path: &Path, segment_to_replace: &str, new_segment: &str) -> PathBuf {

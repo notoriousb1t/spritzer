@@ -1,4 +1,3 @@
-
 use crate::zelda3::model::OWRoomId;
 use crate::zelda3::model::SpriteId;
 use crate::zelda3::model::Z3Model;
@@ -8,7 +7,10 @@ pub(crate) fn reroll_lost_woods_mushroom(model: &mut Z3Model) {
     let mut rng = model.create_rng();
 
     // Find lost woods.
-    let lost_woods_lw = model.ow_rooms.get_mut(&OWRoomId::x0_LOST_WOODS).unwrap();
+    let lost_woods_lw = model
+        .ow_rooms
+        .get_mut(&OWRoomId::x0_LOST_WOODS)
+        .expect(&format!("Missing Lost Woods"));
 
     // Change the mushroom to be a fake sword.
     if let Some(mushroom) = lost_woods_lw

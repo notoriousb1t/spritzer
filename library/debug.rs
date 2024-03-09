@@ -11,7 +11,7 @@ fn main() {
     setup_logging();
 
     let options = hard_mode();
-    let current_dir = std::env::current_dir().unwrap();
+    let current_dir = std::env::current_dir().expect(&format!("Could not get current directory"));
     let input_path = current_dir.join("library/.testdata/alttpr_superquick.sfc");
     let input_bytes = read_file(input_path.as_ref());
 
