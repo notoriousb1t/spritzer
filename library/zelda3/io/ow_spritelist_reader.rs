@@ -71,7 +71,8 @@ fn read_room(game: &SnesGame, id: OWRoomId) -> OWRoom {
 fn read_room_state(game: &SnesGame, id: OWRoomId, overworld_id: OWStateId) -> OWRoomState {
     // Resolve the sprite graphics and sprite palette id.
     let spriteset_id_value = game.read(get_sprite_graphics_address(id, overworld_id));
-    let spriteset_id = SpritesetId::from_repr(spriteset_id_value).unwrap();
+    let spriteset_id = SpritesetId::from_repr(spriteset_id_value)
+        .expect(&format!("Invalid Spriteset {}", spriteset_id_value));
     let sprite_palette_id = game.read(get_palette_address(id, overworld_id));
     let sprites = read_sprites(game, id, overworld_id);
 

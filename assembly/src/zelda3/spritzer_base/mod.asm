@@ -10,15 +10,14 @@ incsrc ../rom.asm
 incsrc ancilla_hooks.asm
 incsrc blind_hooks.asm
 incsrc killable_hooks.asm
-incsrc mimic_hooks.asm
+incsrc goriya_hooks.asm
 incsrc moldorm_hooks.asm
 incsrc uw_spawn_hooks.asm
 
-; Code goes in bank $39. This avoids conflicts with Enemizer and Archipelago/z3randomizer code.
-org $B98000
-incsrc seed_info.asm ; Must be first.
+; Code goes in bank $36. This avoids conflicts with Enemizer and Archipelago/z3randomizer code.
+org $B68000
 incsrc blind.asm
 incsrc killable.asm
-incsrc mimic.asm
+incsrc goriya.asm
 incsrc moldorm.asm
 incsrc uw_spawn.asm
