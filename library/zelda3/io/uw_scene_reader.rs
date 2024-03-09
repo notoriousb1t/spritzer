@@ -183,7 +183,7 @@ mod tests {
         let mut subroutine_cursor = 0x1F_8780;
         for _ in UWRoomId::iter() {
             // Add pointers to the empty position for each room.
-            game.write_int24(ptr_cursor, subroutine_cursor);
+            game.write_pointer(ptr_cursor, subroutine_cursor);
             ptr_cursor += 3;
 
             // Allocate 24 doors.
@@ -199,7 +199,7 @@ mod tests {
         let cursor = 0x1F_8780;
         game.write_all(cursor, &all_doors_bytes);
         // Rewrite the door pointers for ganon.
-        game.write_int24(Symbol::DoorPtrs as usize, cursor);
+        game.write_pointer(Symbol::DoorPtrs as usize, cursor);
         game
     }
 

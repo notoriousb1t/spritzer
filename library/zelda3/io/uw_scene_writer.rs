@@ -59,11 +59,11 @@ impl WriteObject<BTreeMap<UWRoomId, UWScene>> for SnesGame {
                 let entrance_location = layout_location + layout_bytes.len();
 
                 for id in ids.iter() {
-                    self.write_int24(
+                    self.write_pointer(
                         Symbol::LayoutPtrs as usize + (*id as usize * 3),
                         layout_location,
                     );
-                    self.write_int24(
+                    self.write_pointer(
                         Symbol::DoorPtrs as usize + (*id as usize * 3),
                         entrance_location,
                     );

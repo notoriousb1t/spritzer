@@ -2,24 +2,29 @@ use std::str::from_utf8;
 
 use log::debug;
 use log::info;
+use strum_macros::Display;
+use strum_macros::FromRepr;
 
+use super::rom_type::RomType;
 use super::free_space::FreeSpace;
 use super::patch::Patch;
-use super::snes_address::bytes_to_address;
-use super::snes_address::int32_to_bytes;
-use super::snes_address::snes_to_pc;
+use super::snes_address::bytes_to_int24;
+use super::snes_address::int24_to_bytes;
+use super::snes_address::snes_to_physical;
 
 const TITLE_ADDRESS: usize = 0xFFC0;
-const SIZE_ADDRESS: usize = 0xFFD6;
+const TYPE_ADDRESS: usize = 0xFFD5;
+const SIZE_ADDRESS: usize = 0xFFD7;
 
 /// Manages reading and writing to the Game data.
 pub struct SnesGame {
+    pub(crate) mode: RomType,
     pub(crate) buffer: Vec<u8>,
     pub(crate) free_space: Vec<FreeSpace>,
 }
 
 #[repr(u8)]
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, FromRepr, Display)]
 #[allow(dead_code)]
 pub enum SnesSize {
     Size1mb = 0xA,
@@ -33,10 +38,22 @@ pub enum SnesSize {
 impl SnesGame {
     /// Constructs a new SNES game and expands it to the correct size.
     pub fn new(bytes: &[u8]) -> Self {
+        let mode_value = bytes[snes_to_physical(RomType::FastLoRom, TYPE_ADDRESS)];
+        let mode = RomType::from_repr(mode_value)
+            .expect(&format!("SnesMode {:02X} is invalid", mode_value));
+
+        info!("Address mode={}", mode);
+
         Self {
+            mode,
             buffer: bytes.to_vec(),
             free_space: vec![],
         }
+    }
+
+    pub fn get_size(&self) -> SnesSize {
+        let value = self.read(SIZE_ADDRESS);
+        return SnesSize::from_repr(value).expect(&format!("SnesSize {:02X} is invalid", value));
     }
 
     pub fn set_game_title(&mut self, title: &str) {
@@ -56,7 +73,7 @@ impl SnesGame {
             info!("Resizing skipped {} <= {}", new_size, self.buffer.len());
         } else {
             info!("Resizing game {} >= {}", new_size, self.buffer.len());
-            self.buffer.resize(new_size, 0xFF);
+            self.buffer.resize(new_size, 0x0);
             self.write(SIZE_ADDRESS, size as u8);
         }
     }
@@ -117,8 +134,8 @@ impl SnesGame {
     /// useful for debugging.
     #[allow(dead_code)]
     pub fn print_bank(&self, bank: usize) {
-        let start = snes_to_pc(bank << 16);
-        let end = snes_to_pc((bank << 16) | 0x10000);
+        let start = snes_to_physical(self.mode, bank << 16);
+        let end = snes_to_physical(self.mode, (bank << 16) | 0x10000);
         let range = &self.buffer[start..end];
 
         for (index, val) in range.iter().enumerate() {
@@ -135,7 +152,7 @@ impl SnesGame {
 
     /// Reads the byte from the SNES address.
     pub fn read(&self, address: usize) -> u8 {
-        self.buffer[snes_to_pc(address)]
+        self.buffer[snes_to_physical(self.mode, address)]
     }
 
     /// Reads a 16-bit integer from the address.
@@ -146,15 +163,15 @@ impl SnesGame {
 
     /// Reads the byte from the SNES address.
     pub fn read_all(&self, address: usize, count: usize) -> &[u8] {
-        let index = snes_to_pc(address);
+        let index = snes_to_physical(self.mode, address % 0x80_0000);
         &self.buffer[index..(index + count)]
     }
 
     /// Reads a local pointer from the address and returns the address.
     pub fn read_pointer_int16(&self, address: usize) -> usize {
         let ptr = (self.read(address), self.read(address + 1));
-        let address_bytes = int32_to_bytes(address);
-        bytes_to_address([address_bytes[0], ptr.1, ptr.0])
+        let address_bytes = int24_to_bytes(address);
+        bytes_to_int24([address_bytes[0] % 0x80, ptr.1, ptr.0])
     }
 
     /// Reads a global pointer from the address and returns the address.
@@ -164,32 +181,37 @@ impl SnesGame {
             self.read(address + 1),
             self.read(address + 2),
         );
-        bytes_to_address([ptr.2, ptr.1, ptr.0])
+        bytes_to_int24([ptr.2 % 0x80, ptr.1, ptr.0])
     }
 
     /// Writes a byte to the SNES address.
     pub fn write(&mut self, address: usize, value: u8) {
-        self.buffer[snes_to_pc(address)] = value;
+        self.buffer[snes_to_physical(self.mode, address)] = value;
     }
 
     /// Writes all bytes using the SNES address.
     pub fn write_all(&mut self, address: usize, values: &[u8]) {
         for (i, val) in values.iter().enumerate() {
-            self.buffer[snes_to_pc(address + i)] = *val;
+            self.buffer[snes_to_physical(self.mode, address + i)] = *val;
         }
     }
 
     /// Writes a 16-bit integer to the address (little-endian).
     /// This is usually used for data. prefer write_local_pointer() for local pointers.
     pub fn write_int16(&mut self, address: usize, value: u16) {
-        let bytes = int32_to_bytes(value as usize);
+        let bytes = int24_to_bytes(value as usize);
         self.write_all(address, &[bytes[2], bytes[1]]);
     }
 
     /// Writes a 24-bit integer to the address (little-endian).
-    // The most common use case is global pointer. This is common for JSL and JML.
-    pub fn write_int24(&mut self, address: usize, snes_location: usize) {
-        let bytes = &int32_to_bytes(snes_location);
+    /// The most common use case is global pointer. This is common for JSL and JML.
+    /// This writes at a bank offset of 0x80 when FastLoRom is detected.
+    pub fn write_pointer(&mut self, address: usize, snes_location: usize) {
+        let offset = match self.mode {
+            RomType::FastLoRom => 0x80_0000,
+            _ => 0,
+        };
+        let bytes = &int24_to_bytes(snes_location + offset);
         self.write_all(address, &[bytes[2], bytes[1], bytes[0]]);
     }
 
@@ -248,15 +270,7 @@ impl SnesGame {
     /// This will panic if the caller attempts to write a local pointer to a bank where
     /// it is not located.
     pub fn write_pointer_int16(&mut self, address: usize, target_address: usize) {
-        let global_pointer = int32_to_bytes(target_address);
-        let bank_location = int32_to_bytes(address);
-        if bank_location[0] != global_pointer[0] {
-            panic!(
-                "Tried to write a local pointer in bank {} for bank {}",
-                bank_location[0], global_pointer[0]
-            );
-        }
-
+        let global_pointer = int24_to_bytes(target_address);
         // SNES is little-endian, so the least significant byte goes first. Local pointers assume
         // the current bank, so the most significant value is dropped.
         self.write_all(address, &[global_pointer[2], global_pointer[1]]);

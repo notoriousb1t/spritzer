@@ -1,4 +1,4 @@
-use super::snes_address::int32_to_bytes;
+use super::snes_address::int24_to_bytes;
 
 #[derive(Debug, Clone)]
 pub struct Patch {
@@ -22,7 +22,7 @@ impl Patch {
 
     /// Adds a patch that changes a local pointer.
     pub fn update_local_pointer(address: usize, pointer: usize) -> Self {
-        let bytes = int32_to_bytes(pointer);
+        let bytes = int24_to_bytes(pointer);
         Patch {
             address,
             values: vec![bytes[2], bytes[1]],

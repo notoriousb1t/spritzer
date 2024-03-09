@@ -11,10 +11,7 @@ use crate::zelda3::model::Z3Model;
 use crate::zelda3::options::Z3Options;
 
 pub fn randomize_zelda3(bytes: &[u8], options: &Z3Options) -> Vec<u8> {
-    info!("Len={}", bytes.len());
-
     let mut game = create_game(bytes);
-
     let mut model: Z3Model = game.read_objects();
     // Copy options onto the model.
     model.debug_string = options.seed.to_string();
@@ -32,9 +29,14 @@ pub fn randomize_zelda3(bytes: &[u8], options: &Z3Options) -> Vec<u8> {
 }
 
 fn create_game(bytes: &[u8]) -> SnesGame {
+    info!("Original Size={}", bytes.len());
+
     // Unconditionally strip SMC headers.
     let bytes: Vec<u8> = match bytes.len() % 0x400 == 0x200 {
-        true => bytes[0x200..].to_vec(),
+        true => {
+            info!("Removing unnecessary header");
+            bytes[0x200..].to_vec()
+        },
         false => bytes.to_vec(),
     };
 
@@ -56,8 +58,6 @@ fn create_game(bytes: &[u8]) -> SnesGame {
 
 fn get_free_space() -> Vec<(u8, u16, u16)> {
     vec![
-        (0x00, 0x89C2, 0x89DF), // Empty Space
-        (0x00, 0xCF46, 0xCFBF), // Empty Space
         (0x02, 0xFFC7, 0xFFFF), // Empty Space
         (0x03, 0xEB8F, 0xFFFF), // Initially contains Doors and Layout.
         (0x09, 0xCE41, 0xEC9C), // Contains Sprites in OW and UW.

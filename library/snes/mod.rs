@@ -1,3 +1,4 @@
+mod rom_type;
 mod free_space;
 mod instruction;
 mod patch;

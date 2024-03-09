@@ -11,7 +11,7 @@ pub(super) fn create_empty_snes_data() -> Vec<u8> {
     // 0x7FC0 = 21 length Cartridge title. (ignored)
 
     // Rom Speed and Memory Map Mode
-    buffer[0x7FD5] = 0x20;
+    buffer[0x7FD5] = 0x30;
     // Chipset
     buffer[0x7FD6] = 1;
     // ROM size in killobytes 1 << N

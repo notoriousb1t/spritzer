@@ -75,7 +75,7 @@ pub fn detect_game(buffer: &[u8]) -> GameInfo {
 
         GameInfo {
             version: GameVersion::Alttpr,
-            supported: false,
+            supported: true,
         }
     } else {
         GameInfo {

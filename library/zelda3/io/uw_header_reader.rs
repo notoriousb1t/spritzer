@@ -3,7 +3,7 @@ use std::collections::BTreeMap;
 use strum::IntoEnumIterator;
 
 use crate::common::readerwriter::ReadObject;
-use crate::snes::bytes_to_address;
+use crate::snes::bytes_to_int24;
 use crate::snes::SnesGame;
 use crate::zelda3::model::PaletteId;
 use crate::zelda3::model::SpritesetId;
@@ -18,7 +18,7 @@ impl ReadObject<BTreeMap<UWRoomId, UnderworldRoomHeader>> for SnesGame {
         let header_16bit_ptr = self.read_all(Symbol::UWHeaderRef0.into(), 2);
         let header_bank = self.read(Symbol::UWHeaderBank.into());
         let header_pointer =
-            bytes_to_address([header_bank, header_16bit_ptr[1], header_16bit_ptr[0]]);
+            bytes_to_int24([header_bank, header_16bit_ptr[1], header_16bit_ptr[0]]);
 
         let mut values: Vec<(UWRoomId, UnderworldRoomHeader)> = vec![];
         for id in UWRoomId::iter() {

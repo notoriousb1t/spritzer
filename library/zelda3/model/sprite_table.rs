@@ -1850,22 +1850,19 @@ pub(crate) fn get_sprite_requirements(sprite_id: &SpriteId) -> Vec<[SpriteSheetI
             SpriteSheetId::None,
             SpriteSheetId::None,
             SpriteSheetId::None,
-            SpriteSheetId::x19_SWAMOLA_CROW,
-            // SpriteSheetId::x1B_MISCELLANEOUS_DW_1, Test if this is the wrong spritesheet.
+            SpriteSheetId::x1B_MISCELLANEOUS_DW_1,
         ]],
         SpriteId::xA9_BLUE_ZIRRO => vec![[
             SpriteSheetId::None,
             SpriteSheetId::None,
             SpriteSheetId::None,
-            SpriteSheetId::x19_SWAMOLA_CROW,
-            // SpriteSheetId::x1B_MISCELLANEOUS_DW_1, Test if this is the wrong spritesheet.
+            SpriteSheetId::x1B_MISCELLANEOUS_DW_1,
         ]],
         SpriteId::xAA_PIKIT_LIKE_LIKE => vec![[
             SpriteSheetId::None,
             SpriteSheetId::None,
             SpriteSheetId::None,
-            SpriteSheetId::x19_SWAMOLA_CROW,
-            // SpriteSheetId::x1B_MISCELLANEOUS_DW_1, Test if this is the wrong spritesheet.
+            SpriteSheetId::x1B_MISCELLANEOUS_DW_1,
         ]],
         SpriteId::xAB_CRYSTAL_MAIDEN => vec![[
             SpriteSheetId::x55_AGAHNIM,
