@@ -1,7 +1,7 @@
 use assembly::zelda3::Symbol;
+use common::SnesGame;
 
 use crate::zelda3::model::DamageSubclass;
-use common::SnesGame;
 
 pub(super) fn write_damage_subclasses(game: &mut SnesGame, subclasses: &[DamageSubclass; 10]) {
     for (index, row) in subclasses.iter().enumerate() {

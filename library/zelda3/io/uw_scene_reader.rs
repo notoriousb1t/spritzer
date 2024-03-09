@@ -1,6 +1,7 @@
+use std::collections::BTreeMap;
+
 use assembly::zelda3::Symbol;
 use common::SnesGame;
-use std::collections::BTreeMap;
 use strum::IntoEnumIterator;
 
 use crate::zelda3::model::UWDoor;
@@ -145,6 +146,9 @@ fn bytes_to_object(bytes: &[u8]) -> UWObject {
 #[cfg(test)]
 mod tests {
     use assembly::zelda3::Symbol;
+    use common::RomSize;
+    use common::RomType;
+    use common::SnesGame;
     use strum::IntoEnumIterator;
 
     use super::STOP_MARKER;
@@ -154,9 +158,6 @@ mod tests {
     use crate::zelda3::model::UWLayoutId;
     use crate::zelda3::model::UWObject;
     use crate::zelda3::model::UWRoomId;
-    use common::RomSize;
-    use common::RomType;
-    use common::SnesGame;
 
     #[test]
     fn read_empty() {

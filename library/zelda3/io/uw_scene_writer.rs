@@ -1,8 +1,9 @@
-use assembly::zelda3::Symbol;
-use common::SnesGame;
 use std::collections::hash_map::Entry;
 use std::collections::BTreeMap;
 use std::collections::HashMap;
+
+use assembly::zelda3::Symbol;
+use common::SnesGame;
 
 use crate::zelda3::model::UWDoorList;
 use crate::zelda3::model::UWLayout;
@@ -29,9 +30,9 @@ pub(super) fn write_uw_scenes(game: &mut SnesGame, scenes: &BTreeMap<UWRoomId, U
         values.push(*id);
     }
 
-    // Sort groups by the first room that occurs in them. This must be stable, and this is good enough.
-    // Without this, the seed string isn't stable and it is hard to pinpoint issues or have two players
-    // play the same game.
+    // Sort groups by the first room that occurs in them. This must be stable, and this is good
+    // enough. Without this, the seed string isn't stable and it is hard to pinpoint issues or
+    // have two players play the same game.
     let mut groups = map.iter().collect::<Vec<_>>();
     groups.sort_by_key(|it| it.1[0]);
 

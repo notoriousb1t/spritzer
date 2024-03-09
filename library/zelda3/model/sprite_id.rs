@@ -194,7 +194,7 @@ pub(crate) enum SpriteId {
     xB5_BOMB_SALESMAN = 181,
     xB6_KIKI = 182,
     xB7_BLIND_MAIDEN = 183,
-    xB8_MIMIC = 184,
+    xB8_Goriya = 184,
     xB9_BULLY_AND_FRIEND = 185,
     xBA_WHIRLPOOL = 186,
     xBB_SALESMAN = 187,

@@ -204,7 +204,7 @@ pub(crate) fn get_sprite_type(sprite_id: &SpriteId) -> SpriteType {
         SpriteId::xB5_BOMB_SALESMAN => SpriteType::Npc,
         SpriteId::xB6_KIKI => SpriteType::Npc,
         SpriteId::xB7_BLIND_MAIDEN => SpriteType::Npc,
-        SpriteId::xB8_MIMIC => SpriteType::Enemy,
+        SpriteId::xB8_Goriya => SpriteType::Enemy,
         SpriteId::xB9_BULLY_AND_FRIEND => SpriteType::Npc,
         SpriteId::xBA_WHIRLPOOL => SpriteType::Object,
         SpriteId::xBB_SALESMAN => SpriteType::Npc,
@@ -1906,7 +1906,7 @@ pub(crate) fn get_sprite_requirements(sprite_id: &SpriteId) -> Vec<[SpriteSheetI
             SpriteSheetId::None,
             SpriteSheetId::None,
         ]],
-        SpriteId::xB8_MIMIC => vec![[
+        SpriteId::xB8_Goriya => vec![[
             SpriteSheetId::None,
             SpriteSheetId::x2C_BEAM_ME_UP_MR_POPO,
             SpriteSheetId::None,

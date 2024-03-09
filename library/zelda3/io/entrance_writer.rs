@@ -1,5 +1,7 @@
-use assembly::zelda3::Symbol;
 use std::collections::BTreeMap;
+
+use assembly::zelda3::Symbol;
+use common::SnesGame;
 
 use super::entrance_utils::BLOCKSET_SIZE;
 use super::entrance_utils::CAMERA_SCROLL_BOUNDARIES_SIZE;
@@ -21,7 +23,6 @@ use super::entrance_utils::X_COORDINATE_SIZE;
 use super::entrance_utils::Y_COORDINATE_SIZE;
 use crate::zelda3::model::Entrance;
 use crate::zelda3::model::EntranceId;
-use common::SnesGame;
 
 pub(super) fn write_entrances(game: &mut SnesGame, entrances: &BTreeMap<EntranceId, Entrance>) {
     for entrance in entrances.values() {

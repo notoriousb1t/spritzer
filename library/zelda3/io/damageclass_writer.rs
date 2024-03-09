@@ -1,6 +1,6 @@
 use assembly::zelda3::Symbol;
-
 use common::SnesGame;
+
 use crate::zelda3::model::DamageClass;
 
 pub(super) fn write_damage_classes(game: &mut SnesGame, classes: &[DamageClass; 10]) {

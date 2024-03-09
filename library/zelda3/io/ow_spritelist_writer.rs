@@ -1,7 +1,9 @@
-use assembly::zelda3::Symbol;
 use std::collections::hash_map::Entry;
 use std::collections::BTreeMap;
 use std::collections::HashMap;
+
+use assembly::zelda3::Symbol;
+use common::SnesGame;
 
 use super::ow_spritelist_utils::get_palette_address;
 use super::ow_spritelist_utils::get_sprite_graphics_address;
@@ -10,7 +12,6 @@ use crate::zelda3::model::OWRoom;
 use crate::zelda3::model::OWRoomId;
 use crate::zelda3::model::OWSprite;
 use crate::zelda3::model::OWStateId;
-use common::SnesGame;
 
 const STOP_MARKER: u8 = 0xFF;
 

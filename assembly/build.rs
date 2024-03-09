@@ -1,5 +1,6 @@
-use compile::generate_asar_bindings;
 use std::path::Path;
+
+use compile::generate_asar_bindings;
 
 mod compile;
 

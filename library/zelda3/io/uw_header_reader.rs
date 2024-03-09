@@ -1,5 +1,8 @@
-use assembly::zelda3::Symbol;
 use std::collections::BTreeMap;
+
+use assembly::zelda3::Symbol;
+use common::bytes_to_int24;
+use common::SnesGame;
 use strum::IntoEnumIterator;
 
 use crate::zelda3::model::PaletteId;
@@ -9,8 +12,6 @@ use crate::zelda3::model::UWFloorId;
 use crate::zelda3::model::UWRoomId;
 use crate::zelda3::model::UWRoomTag;
 use crate::zelda3::model::UnderworldRoomHeader;
-use common::bytes_to_int24;
-use common::SnesGame;
 
 pub(super) fn read_uw_headers(game: &SnesGame) -> BTreeMap<UWRoomId, UnderworldRoomHeader> {
     let header_16bit_ptr = game.read_all(Symbol::UWHeaderRef0.into(), 2);

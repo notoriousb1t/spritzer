@@ -4,7 +4,6 @@ fn snes_to_pc(address: usize) -> usize {
     (address & 0x7FFF) + ((address / 2) & 0xFF8000)
 }
 
-
 pub fn int24_to_bytes(address: usize) -> [u8; 3] {
     [
         ((address >> 16) & 0xFF) as u8,

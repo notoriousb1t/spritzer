@@ -1,7 +1,8 @@
+use rand::seq::SliceRandom;
+
 use crate::zelda3::model::OWRoomId;
 use crate::zelda3::model::SpriteId;
 use crate::zelda3::model::Z3Model;
-use rand::seq::SliceRandom;
 
 pub(crate) fn reroll_lost_woods_mushroom(model: &mut Z3Model) {
     let mut rng = model.create_rng();

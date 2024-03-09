@@ -1,10 +1,10 @@
 //! Handles shuffling overlords in dungeons. Consider reworking to use assembly directly and flag.
 
-use rand::seq::SliceRandom;
-
 use common::Patch;
 use common::BEQ;
 use common::NEGATIVE_MASK;
+use rand::seq::SliceRandom;
+
 use crate::zelda3::features::sprites::get_weights;
 use crate::zelda3::model::get_sprite_type;
 use crate::zelda3::model::get_sprite_vulnerability;

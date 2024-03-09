@@ -1,20 +1,19 @@
 use assembly::zelda3::get_patch_data;
+use common::string_to_hash;
+use common::RomSize;
+use common::SnesGame;
 use log::info;
 
+use super::io::write_model;
 use crate::zelda3::features::apply_options;
 use crate::zelda3::io::read_model;
 use crate::zelda3::model::Z3Model;
 use crate::zelda3::options::Z3Options;
-use common::string_to_hash;
-use common::SnesGame;
-use common::RomSize;
-
-use super::io::write_model;
 
 pub fn randomize_zelda3(bytes: &[u8], options: &Z3Options) -> Vec<u8> {
     let mut game = create_game(bytes);
-
     let mut model: Z3Model = read_model(&game);
+
     // Copy options onto the model.
     model.debug_string = options.seed.to_string();
     model.seed = string_to_hash(options.seed.as_str());
@@ -76,12 +75,13 @@ mod tests {
     use std::fs::File;
     use std::io::Read;
 
+    use common::Diff;
+
     use crate::zelda3::options::Balancing;
     use crate::zelda3::options::OverworldEnemyShuffle;
     use crate::zelda3::options::UnderworldEnemyShuffle;
     use crate::zelda3::options::Z3Options;
     use crate::zelda3::randomize_zelda3;
-    use common::Diff;
 
     #[test]
     #[ignore]

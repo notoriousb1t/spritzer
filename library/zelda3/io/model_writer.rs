@@ -1,3 +1,4 @@
+use common::SnesGame;
 use log::debug;
 
 use crate::zelda3::io::damageclass_writer::write_damage_classes;
@@ -10,7 +11,6 @@ use crate::zelda3::io::uw_header_writer::write_uw_headers;
 use crate::zelda3::io::uw_scene_writer::write_uw_scenes;
 use crate::zelda3::io::uw_spritelist_writer::write_uw_spritelists;
 use crate::zelda3::model::Z3Model;
-use common::SnesGame;
 
 pub(crate) fn write_model(game: &mut SnesGame, model: &Z3Model) {
     // Clear all known freespace and fill with 0s.

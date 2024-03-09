@@ -1,11 +1,20 @@
 #![allow(dead_code)]
-use log::{error, info, LevelFilter};
-use simplelog::{ColorChoice, CombinedLogger, Config, TermLogger, TerminalMode};
-use spritzer::zelda3::{
-    randomize_zelda3, Balancing, OverworldEnemyShuffle, UnderworldEnemyShuffle, Z3Options,
-};
 use std::fs;
 use std::path::Path;
+
+use log::error;
+use log::info;
+use log::LevelFilter;
+use simplelog::ColorChoice;
+use simplelog::CombinedLogger;
+use simplelog::Config;
+use simplelog::TermLogger;
+use simplelog::TerminalMode;
+use spritzer::zelda3::randomize_zelda3;
+use spritzer::zelda3::Balancing;
+use spritzer::zelda3::OverworldEnemyShuffle;
+use spritzer::zelda3::UnderworldEnemyShuffle;
+use spritzer::zelda3::Z3Options;
 
 fn main() {
     setup_logging();

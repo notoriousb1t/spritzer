@@ -1,12 +1,13 @@
-use assembly::zelda3::Symbol;
 use std::collections::BTreeMap;
+
+use assembly::zelda3::Symbol;
+use common::SnesGame;
 use strum::IntoEnumIterator;
 
 use crate::zelda3::model::PaletteIndex;
 use crate::zelda3::model::Sprite;
 use crate::zelda3::model::SpriteId;
 use crate::zelda3::model::X0_NO_DAMAGE;
-use common::SnesGame;
 
 pub(crate) fn read_sprites(game: &SnesGame) -> BTreeMap<SpriteId, Sprite> {
     let mut values: Vec<(SpriteId, Sprite)> = vec![];

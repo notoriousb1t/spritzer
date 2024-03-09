@@ -8,4 +8,3 @@ pub fn string_to_hash(seed: &str) -> u64 {
     seed.hash(&mut hasher);
     hasher.finish()
 }
-

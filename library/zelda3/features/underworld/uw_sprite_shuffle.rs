@@ -2,9 +2,10 @@
 //! because of mutable borrows. Much of this is a result of porting from questionable
 //! choices in the initial Python implementation.
 
+use std::collections::BTreeMap;
+
 use rand::rngs::StdRng;
 use rand::seq::SliceRandom;
-use std::collections::BTreeMap;
 use strum::IntoEnumIterator;
 
 use crate::zelda3::features::sprites::get_weights;

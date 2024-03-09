@@ -2,6 +2,7 @@
 
 use log::debug;
 use log::info;
+use rand::rngs::StdRng;
 use rand::seq::SliceRandom;
 
 use crate::zelda3::features::underworld::dungeon_conversion::convert_dungeon;
@@ -33,7 +34,6 @@ use crate::zelda3::options::DEBUG_MOLDORM;
 use crate::zelda3::options::DEBUG_MOTHULA;
 use crate::zelda3::options::DEBUG_TRINEXX;
 use crate::zelda3::options::DEBUG_VITREOUS;
-use rand::rngs::StdRng;
 
 /// Attempt to shuffle bosses.
 pub(crate) fn shuffle_bosses(model: &mut Z3Model) {

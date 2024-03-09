@@ -1,4 +1,5 @@
-use strum_macros::{Display, FromRepr};
+use strum_macros::Display;
+use strum_macros::FromRepr;
 
 #[repr(u8)]
 #[derive(Clone, Copy, FromRepr, Display)]

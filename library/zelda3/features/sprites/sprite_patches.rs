@@ -10,13 +10,16 @@ use crate::zelda3::model::get_sprite_type;
 use crate::zelda3::model::get_sprite_vulnerability;
 use crate::zelda3::model::PaletteIndex;
 use crate::zelda3::model::SpriteId;
+use crate::zelda3::model::SpriteSheetId;
 use crate::zelda3::model::SpriteType;
 use crate::zelda3::model::SpriteVulnerability;
+use crate::zelda3::model::SpritesetId;
 use crate::zelda3::model::Z3Model;
 
 pub(crate) fn apply_base_sprite_changes(model: &mut Z3Model) {
     update_settings(model);
     update_color_index(model);
+    update_spritesets(model);
 }
 
 /// Align expectations between the game and Spritzer.
@@ -73,4 +76,15 @@ fn update_color_index(model: &mut Z3Model) {
         // Stablize color to something that works better across rooms.
         sprite.palette = PaletteIndex::XC;
     }
+}
+
+fn update_spritesets(model: &mut Z3Model) {
+    // Get the zora king set and change spritesheet slot 1 to use something else.
+    // Without this change, the game ends up with a lot of Goriya which don't work well
+    // in Zora's domain.
+    let zora_king_set = model
+        .spritesets
+        .get_mut(&SpritesetId::x0E_ZORAS_DOMAIN)
+        .expect("Expected to find Zora king set");
+    zora_king_set.sheets[1] = SpriteSheetId::None;
 }

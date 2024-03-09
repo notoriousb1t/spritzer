@@ -1,6 +1,6 @@
 use assembly::zelda3::Symbol;
-
 use common::Patch;
+
 use crate::zelda3::model::UWLayoutId;
 use crate::zelda3::model::UWObject;
 use crate::zelda3::model::UWObjectId;

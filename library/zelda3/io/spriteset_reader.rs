@@ -1,11 +1,12 @@
-use assembly::zelda3::Symbol;
 use std::collections::BTreeMap;
+
+use assembly::zelda3::Symbol;
+use common::SnesGame;
 use strum::IntoEnumIterator;
 
 use crate::zelda3::model::SpriteSheetId;
 use crate::zelda3::model::Spriteset;
 use crate::zelda3::model::SpritesetId;
-use common::SnesGame;
 
 pub(super) fn read_spritesets(game: &SnesGame) -> BTreeMap<SpritesetId, Spriteset> {
     let mut values: Vec<(SpritesetId, Spriteset)> = vec![];

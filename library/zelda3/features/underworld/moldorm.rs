@@ -1,7 +1,7 @@
 use assembly::zelda3::Symbol;
+use common::Patch;
 use rand::seq::SliceRandom;
 
-use common::Patch;
 use crate::zelda3::model::Z3Model;
 use crate::zelda3::options::DEBUG_MOLDORM_1;
 use crate::zelda3::options::DEBUG_MOLDORM_2;

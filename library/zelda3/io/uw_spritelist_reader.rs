@@ -1,6 +1,7 @@
+use std::collections::BTreeMap;
+
 use assembly::zelda3::Symbol;
 use common::SnesGame;
-use std::collections::BTreeMap;
 use strum::IntoEnumIterator;
 
 use crate::zelda3::model::SpriteId;

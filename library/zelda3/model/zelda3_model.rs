@@ -1,5 +1,6 @@
 use std::collections::BTreeMap;
 
+use common::Patch;
 use rand::rngs::StdRng;
 use rand::SeedableRng;
 
@@ -21,7 +22,6 @@ use super::UWScene;
 use super::UWSpriteList;
 use super::UnderworldRoomHeader;
 use crate::zelda3::options::Balancing;
-use common::Patch;
 
 #[derive(Clone)]
 pub(crate) struct Z3Model {

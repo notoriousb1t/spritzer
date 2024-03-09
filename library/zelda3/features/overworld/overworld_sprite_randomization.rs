@@ -1,3 +1,6 @@
+use rand::rngs::StdRng;
+use rand::seq::SliceRandom;
+
 use crate::zelda3::features::sprites::get_weights;
 use crate::zelda3::features::sprites::is_compatible;
 use crate::zelda3::features::sprites::Placement;
@@ -9,8 +12,6 @@ use crate::zelda3::model::OWSprite;
 use crate::zelda3::model::SpriteId;
 use crate::zelda3::model::SpriteType;
 use crate::zelda3::model::Z3Model;
-use rand::rngs::StdRng;
-use rand::seq::SliceRandom;
 
 /// This re-arranges the positions of non-critical enemies.
 pub(crate) fn shuffle_overworld_sprites(model: &mut Z3Model) {

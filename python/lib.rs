@@ -1,3 +1,7 @@
+use ::spritzer::zelda3::randomize_zelda3;
+use ::spritzer::zelda3::Balancing;
+use ::spritzer::zelda3::OverworldEnemyShuffle;
+use ::spritzer::zelda3::UnderworldEnemyShuffle;
 use options::convert_to_options;
 use pyo3::prelude::*;
 use pyo3::types::PyByteArray;
@@ -8,10 +12,6 @@ use simplelog::Config;
 use simplelog::LevelFilter;
 use simplelog::TermLogger;
 use simplelog::TerminalMode;
-use ::spritzer::zelda3::randomize_zelda3;
-use ::spritzer::zelda3::Balancing;
-use ::spritzer::zelda3::OverworldEnemyShuffle;
-use ::spritzer::zelda3::UnderworldEnemyShuffle;
 use strum::IntoEnumIterator;
 
 use crate::options::OptionsPy;

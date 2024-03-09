@@ -44,7 +44,6 @@ impl OverworldEnemyShuffle {
     }
 }
 
-
 #[repr(i32)]
 #[derive(
     Clone, Copy, PartialEq, PartialOrd, Debug, Display, Eq, EnumString, EnumIter, FromRepr,

@@ -1,7 +1,7 @@
 use assembly::zelda3::Symbol;
+use common::SnesGame;
 
 use crate::zelda3::model::DamageClass;
-use common::SnesGame;
 
 pub(super) fn read_damage_classes(game: &SnesGame) -> [DamageClass; 10] {
     let mut damage_table: [DamageClass; 10] = [DamageClass::default(); 10];

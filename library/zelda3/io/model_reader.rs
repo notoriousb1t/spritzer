@@ -1,4 +1,3 @@
-use crate::zelda3::model::Z3Model;
 use common::SnesGame;
 
 use super::damageclass_reader::read_damage_classes;
@@ -11,6 +10,7 @@ use super::spriteset_reader::read_spritesets;
 use super::uw_header_reader::read_uw_headers;
 use super::uw_scene_reader::read_uw_scenes;
 use super::uw_spritelist_reader::read_uw_spritelists;
+use crate::zelda3::model::Z3Model;
 
 pub(crate) fn read_model(game: &SnesGame) -> Z3Model {
     // Create a new model and read all data types to their respective names.

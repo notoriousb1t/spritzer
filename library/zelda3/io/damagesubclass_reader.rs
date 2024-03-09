@@ -1,7 +1,7 @@
 use assembly::zelda3::Symbol;
+use common::SnesGame;
 
 use crate::zelda3::model::DamageSubclass;
-use common::SnesGame;
 
 /// SNES 0x36F33 - Damage ptr of weapons - 4 bytes (also determines which enemies you can kill
 /// with, and which enemies will be one-hit-ko)

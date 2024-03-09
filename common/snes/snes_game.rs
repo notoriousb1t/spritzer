@@ -1,6 +1,5 @@
 use std::str::from_utf8;
 
-use crate::Diff;
 use log::debug;
 use log::info;
 use strum_macros::Display;
@@ -12,6 +11,7 @@ use super::rom_type::RomType;
 use super::snes_address::bytes_to_int24;
 use super::snes_address::int24_to_bytes;
 use super::snes_address::snes_to_physical;
+use crate::Diff;
 
 const TITLE_ADDRESS: usize = 0xFFC0;
 const TYPE_ADDRESS: usize = 0xFFD5;
@@ -293,11 +293,12 @@ impl SnesGame {
 
 #[cfg(test)]
 mod tests {
-    use crate::snes::rom_type::RomType;
-    use crate::{Diff, RomSize};
     use std::vec;
 
     use super::SnesGame;
+    use crate::snes::rom_type::RomType;
+    use crate::Diff;
+    use crate::RomSize;
 
     #[test]
     fn diff_initial_state_returns_empty() {

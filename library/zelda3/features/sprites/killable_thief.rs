@@ -1,6 +1,6 @@
 use assembly::zelda3::Symbol;
-
 use common::Patch;
+
 use crate::zelda3::model::SpriteId;
 use crate::zelda3::model::Z3Model;
 

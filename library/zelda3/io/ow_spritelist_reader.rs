@@ -1,6 +1,7 @@
 use core::panic;
-
 use std::collections::BTreeMap;
+
+use common::SnesGame;
 use strum::IntoEnumIterator;
 
 use super::ow_spritelist_utils::get_palette_address;
@@ -13,7 +14,6 @@ use crate::zelda3::model::OWSprite;
 use crate::zelda3::model::OWStateId;
 use crate::zelda3::model::SpriteId;
 use crate::zelda3::model::SpritesetId;
-use common::SnesGame;
 
 const STOP_MARKER: u8 = 0xFF;
 

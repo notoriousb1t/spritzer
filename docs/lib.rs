@@ -7,14 +7,16 @@ use std::panic;
 use std::str::FromStr;
 
 use log::info;
-use options::{DetectOptionsResult, Z3WasmOptions};
+use options::DetectOptionsResult;
+use options::Z3WasmOptions;
+use spritzer::zelda3::detect_game;
+use spritzer::zelda3::randomize_zelda3;
+use spritzer::zelda3::Balancing;
+use spritzer::zelda3::OverworldEnemyShuffle;
+use spritzer::zelda3::UnderworldEnemyShuffle;
+use spritzer::zelda3::Z3Options;
 use uuid::Uuid;
 use wasm_bindgen::prelude::*;
-
-use spritzer::zelda3::{
-    detect_game, randomize_zelda3, Balancing, OverworldEnemyShuffle, UnderworldEnemyShuffle,
-    Z3Options,
-};
 
 #[wasm_bindgen]
 pub fn init() {
@@ -50,7 +52,10 @@ pub fn detect_options(buffer: &[u8]) -> DetectOptionsResult {
     info!("Detecting Zelda3 Game");
 
     let game_info = detect_game(buffer);
-    info!("game_type = {}; supported = {}", &game_info.version, game_info.supported);
+    info!(
+        "game_type = {}; supported = {}",
+        &game_info.version, game_info.supported
+    );
     let seed = Uuid::new_v4().as_hyphenated().to_string();
 
     let balancing_options = Balancing::all()

@@ -3,6 +3,7 @@
 //! soldiers.
 
 use std::collections::BTreeMap;
+
 use strum::IntoEnumIterator;
 
 use crate::zelda3::model::OWRoom;

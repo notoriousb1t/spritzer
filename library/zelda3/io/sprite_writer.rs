@@ -1,9 +1,10 @@
-use assembly::zelda3::Symbol;
 use std::collections::BTreeMap;
+
+use assembly::zelda3::Symbol;
+use common::SnesGame;
 
 use crate::zelda3::model::Sprite;
 use crate::zelda3::model::SpriteId;
-use common::SnesGame;
 
 pub(super) fn write_sprites(game: &mut SnesGame, sprites: &BTreeMap<SpriteId, Sprite>) {
     for (id, sprite) in sprites.iter() {

@@ -1,4 +1,5 @@
 use std::collections::BTreeMap;
+
 use strum::IntoEnumIterator;
 
 use crate::zelda3::model::get_sprite_requirements;

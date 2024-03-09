@@ -1,10 +1,11 @@
-use assembly::zelda3::Symbol;
 use std::collections::BTreeMap;
+
+use assembly::zelda3::Symbol;
+use common::bytes_to_int24;
+use common::SnesGame;
 
 use crate::zelda3::model::UWRoomId;
 use crate::zelda3::model::UnderworldRoomHeader;
-use common::bytes_to_int24;
-use common::SnesGame;
 
 pub(super) fn write_uw_headers(
     game: &mut SnesGame,

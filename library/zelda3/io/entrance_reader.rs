@@ -1,5 +1,7 @@
-use assembly::zelda3::Symbol;
 use std::collections::BTreeMap;
+
+use assembly::zelda3::Symbol;
+use common::SnesGame;
 use strum::IntoEnumIterator;
 
 use super::entrance_utils::BLOCKSET_SIZE;
@@ -25,7 +27,6 @@ use crate::zelda3::model::Entrance;
 use crate::zelda3::model::EntranceId;
 use crate::zelda3::model::UWBlocksetId;
 use crate::zelda3::model::UWRoomId;
-use common::SnesGame;
 
 pub(super) fn read_entrances(game: &SnesGame) -> BTreeMap<EntranceId, Entrance> {
     BTreeMap::from_iter(EntranceId::iter().map(|id: EntranceId| (id, read_entrance(game, id))))
