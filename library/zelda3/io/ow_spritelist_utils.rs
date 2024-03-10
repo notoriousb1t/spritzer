@@ -1,5 +1,6 @@
 use assembly::zelda3::Symbol;
 
+use crate::zelda3::model::OWRoom;
 use crate::zelda3::model::OWRoomId;
 use crate::zelda3::model::OWStateId;
 
@@ -47,10 +48,9 @@ pub(super) fn get_sprite_pointer(id: OWRoomId, overworld_id: OWStateId) -> usize
         OWStateId::DARK_WORLD_V2 => Symbol::OwSpritePtrs as usize + 0x220,
     };
 
-    if id as usize >= 0x40 {
-        // Special areas are loaded 160 positions after light and dark world for
-        // a world state.
-        return base_address + 0x100 + ((id as usize - 0x40) * 2);
+    base_address + match id {
+        OWRoomId::x40_MASTER_SWORD_UNDER_BRIDGE => 0x100,
+        OWRoomId::x41_ZORAS_DOMAIN => 0x100 + 2,
+        _ => id as usize * 2,
     }
-    base_address + (id as usize * 2)
 }
