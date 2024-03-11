@@ -5,16 +5,16 @@ use common::BEQ;
 use common::NEGATIVE_MASK;
 use rand::seq::SliceRandom;
 
-use crate::zelda3::features::sprites::get_weights;
 use crate::zelda3::model::get_sprite_type;
 use crate::zelda3::model::get_sprite_vulnerability;
+use crate::zelda3::model::get_weights;
 use crate::zelda3::model::SpriteId;
 use crate::zelda3::model::SpriteType;
 use crate::zelda3::model::SpriteVulnerability;
 use crate::zelda3::model::UWRoomId;
 use crate::zelda3::model::Z3Model;
 
-pub(crate) fn reroll_underworld_overlords(model: &mut Z3Model) {
+pub(crate) fn apply_uw_overlord_shuffle(model: &mut Z3Model) {
     reroll_eastern_palace_overlords(model);
 }
 

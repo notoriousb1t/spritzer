@@ -33,10 +33,10 @@ pub(crate) struct OWRoomState {
 impl OWRoom {
     pub fn states(&self) -> Vec<&OWRoomState> {
         let mut configs: Vec<&OWRoomState> = vec![];
+        configs.push(&self.lw);
         if let Some(it) = &self.lw_rescue {
             configs.push(it);
         }
-        configs.push(&self.lw);
         if let Some(it) = &self.lw_post_aga {
             configs.push(it);
         }
@@ -48,10 +48,10 @@ impl OWRoom {
 
     pub fn versions_mut(&mut self) -> Vec<&mut OWRoomState> {
         let mut configs: Vec<&mut OWRoomState> = vec![];
+        configs.push(&mut self.lw);
         if let Some(it) = &mut self.lw_rescue {
             configs.push(it);
         }
-        configs.push(&mut self.lw);
         if let Some(it) = &mut self.lw_post_aga {
             configs.push(it);
         }

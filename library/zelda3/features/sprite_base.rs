@@ -58,22 +58,24 @@ fn update_color_index(model: &mut Z3Model) {
         // There are two red guards with spears in light world.
         // There are two green guards with spears in the dark world.
         // Assign a different color to differentiate. This creates the iron soldiers.
+        // It might be a good idea to simply remove this soldier since it is effectively duplicate.
         sprite.palette = PaletteIndex::XENoir;
     }
     if let Some(sprite) = model.sprite_settings.get_mut(&SpriteId::x6B_CANNON_GUARD) {
-        // This isn't in the vanilla game so pick a more distingishable color.
-        sprite.palette = PaletteIndex::XENoir;
+        // This isn't in the vanilla game so pick a more distingishable color. They are around
+        // green or blue level difficulty, so make them blue since green doesn't work everywhere.
+        sprite.palette = PaletteIndex::XB;
     }
     if let Some(sprite) = model.sprite_settings.get_mut(&SpriteId::x13_MINI_HELMASAUR) {
-        // Stablize color to something that works better across rooms.
+        // Stablize color to something that works better across rooms. (blue)
         sprite.palette = PaletteIndex::XC;
     }
     if let Some(sprite) = model.sprite_settings.get_mut(&SpriteId::x9B_WIZZROBE) {
-        // Stablize color to something that works better across rooms.
+        // Stablize color to something that works better across rooms. (red)
         sprite.palette = PaletteIndex::XB;
     }
     if let Some(sprite) = model.sprite_settings.get_mut(&SpriteId::x83_GREEN_EYEGORE) {
-        // Stablize color to something that works better across rooms.
+        // Stablize color to something that works better across rooms. (blue)
         sprite.palette = PaletteIndex::XC;
     }
 }

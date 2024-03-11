@@ -8,13 +8,13 @@ use rand::rngs::StdRng;
 use rand::seq::SliceRandom;
 use strum::IntoEnumIterator;
 
-use crate::zelda3::features::sprites::get_weights;
-use crate::zelda3::features::sprites::is_compatible;
-use crate::zelda3::features::sprites::Placement;
 use crate::zelda3::model::can_shuffle_in_underworld;
 use crate::zelda3::model::can_sprite_fly;
 use crate::zelda3::model::can_sprite_swim;
 use crate::zelda3::model::get_sprite_type;
+use crate::zelda3::model::get_weights;
+use crate::zelda3::model::is_compatible;
+use crate::zelda3::model::Placement;
 use crate::zelda3::model::SpriteId;
 use crate::zelda3::model::SpriteType;
 use crate::zelda3::model::UWSprite;
@@ -22,7 +22,7 @@ use crate::zelda3::model::UWSpriteList;
 use crate::zelda3::model::Z3Model;
 
 /// This re-arranges the positions of non-critical enemies.
-pub(crate) fn shuffle_underworld_sprites(model: &mut Z3Model) {
+pub(crate) fn apply_uw_sprites_shuffle(model: &mut Z3Model) {
     let mut rng = model.create_rng();
 
     for room in model.uw_sprites.values_mut() {
@@ -57,7 +57,7 @@ pub(crate) fn shuffle_underworld_sprites(model: &mut Z3Model) {
     }
 }
 
-pub(crate) fn reroll_underworld_sprites(model: &mut Z3Model) {
+pub(crate) fn apply_uw_sprites_reroll(model: &mut Z3Model) {
     let mut rng = model.create_rng();
 
     let ids = model.uw_sprites.keys().cloned().collect::<Vec<_>>();

@@ -19,9 +19,9 @@ use spritzer::zelda3::Z3Options;
 fn main() {
     setup_logging();
 
-    let options = hard_mode();
+    let options = inverted_mode();
     let current_dir = std::env::current_dir().expect(&format!("Could not get current directory"));
-    let input_path = current_dir.join("library/.testdata/jpn.sfc");
+    let input_path = current_dir.join("library/.testdata/p7.sfc");
     let input_bytes = read_file(input_path.as_ref());
 
     let output_bytes = randomize_zelda3(&input_bytes, &options);
@@ -68,6 +68,7 @@ fn base_options() -> Z3Options {
     Z3Options {
         boss_shuffle: false,
         mushroom_shuffle: false,
+        killable_thieves: false,
         overworld_balancing: Balancing::Random,
         overworld_enemy_shuffle: OverworldEnemyShuffle::Vanilla,
         underworld_balancing: Balancing::Random,
@@ -82,6 +83,7 @@ fn easy_mode() -> Z3Options {
     Z3Options {
         boss_shuffle: false,
         mushroom_shuffle: false,
+        killable_thieves: true,
         overworld_balancing: Balancing::Casual,
         overworld_enemy_shuffle: OverworldEnemyShuffle::Simple,
         underworld_balancing: Balancing::Casual,
@@ -96,6 +98,7 @@ fn inverted_mode() -> Z3Options {
     Z3Options {
         boss_shuffle: true,
         mushroom_shuffle: true,
+        killable_thieves: true,
         overworld_balancing: Balancing::Balanced,
         overworld_enemy_shuffle: OverworldEnemyShuffle::Inverted,
         underworld_balancing: Balancing::Balanced,
@@ -110,6 +113,7 @@ fn balanced_mode() -> Z3Options {
     Z3Options {
         boss_shuffle: true,
         mushroom_shuffle: false,
+        killable_thieves: true,
         overworld_balancing: Balancing::Balanced,
         overworld_enemy_shuffle: OverworldEnemyShuffle::Full,
         underworld_balancing: Balancing::Balanced,
@@ -124,6 +128,7 @@ fn hard_mode() -> Z3Options {
     Z3Options {
         boss_shuffle: true,
         mushroom_shuffle: true,
+        killable_thieves: true,
         overworld_balancing: Balancing::Hero,
         overworld_enemy_shuffle: OverworldEnemyShuffle::Insanity,
         underworld_balancing: Balancing::Hero,

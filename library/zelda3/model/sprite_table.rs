@@ -216,7 +216,9 @@ pub(crate) fn get_sprite_type(sprite_id: &SpriteId) -> SpriteType {
         SpriteId::xC1_AGAHNIM_TELEPORTING => SpriteType::Npc,
         SpriteId::xC2_BOULDER => SpriteType::Object,
         SpriteId::xC3_GIBO => SpriteType::Enemy,
-        SpriteId::xC4_THIEF => SpriteType::Enemy,
+        // This one is weird, but thieves are invulnerable with some settings, so set thief to 
+        // be equivalent to a chain chomp and not considered a typical enemy.
+        SpriteId::xC4_THIEF => SpriteType::Hazard,
         SpriteId::xC5_MEDUSA => SpriteType::Hazard,
         SpriteId::xC6_MEDUSA_FOUR_WAY => SpriteType::Hazard,
         SpriteId::xC7_POKEY => SpriteType::Enemy,
@@ -451,6 +453,7 @@ pub(crate) fn sprite_movement(sprite_id: &SpriteId) -> Option<u8> {
         SpriteId::x9C_BABASU_EAST => Some(SOUTH),
         SpriteId::x9D_BABUSU_SOUTH => Some(EAST),
         SpriteId::xA4_FALLING_ICE => Some(DIAGONAL),
+        SpriteId::xC4_THIEF => Some(DIAGONAL | FIXED), // Maybe SNAKE as well?
         SpriteId::xC5_MEDUSA => Some(FIXED),
         SpriteId::xC6_MEDUSA_FOUR_WAY => Some(FIXED),
         SpriteId::xCA_CHAIN_CHOMP => Some(FIXED),

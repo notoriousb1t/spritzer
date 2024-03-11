@@ -14,6 +14,8 @@ pub struct OptionsPy {
     #[pyo3(get, set)]
     pub boss_shuffle: bool,
     #[pyo3(get, set)]
+    pub killable_thieves: bool,
+    #[pyo3(get, set)]
     pub mushroom_shuffle: bool,
     #[pyo3(get, set)]
     pub overworld_balancing: String,
@@ -34,6 +36,7 @@ impl OptionsPy {
         OptionsPy {
             seed,
             boss_shuffle: false,
+            killable_thieves: false,
             mushroom_shuffle: false,
             overworld_balancing: Balancing::Random.to_string(),
             overworld_enemy_shuffle: OverworldEnemyShuffle::Vanilla.to_string(),
@@ -48,6 +51,7 @@ pub(crate) fn convert_to_options(value: &OptionsPy) -> Z3Options {
     Z3Options {
         seed: value.seed.clone(),
         boss_shuffle: value.boss_shuffle,
+        killable_thieves: value.killable_thieves,
         mushroom_shuffle: value.mushroom_shuffle,
         overworld_balancing: Balancing::from_str(&value.overworld_balancing).unwrap(),
         overworld_enemy_shuffle: OverworldEnemyShuffle::from_str(&value.overworld_enemy_shuffle)

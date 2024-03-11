@@ -5,7 +5,7 @@ use log::info;
 use rand::rngs::StdRng;
 use rand::seq::SliceRandom;
 
-use crate::zelda3::features::underworld::dungeon_conversion::convert_dungeon;
+use crate::zelda3::features::dungeon::dungeon_conversion::convert_dungeon;
 use crate::zelda3::model::get_arena_offsets;
 use crate::zelda3::model::get_sprite_requirements;
 use crate::zelda3::model::get_vanilla_encounters;
@@ -36,7 +36,7 @@ use crate::zelda3::options::DEBUG_TRINEXX;
 use crate::zelda3::options::DEBUG_VITREOUS;
 
 /// Attempt to shuffle bosses.
-pub(crate) fn shuffle_bosses(model: &mut Z3Model) {
+pub(crate) fn apply_boss_shuffle(model: &mut Z3Model) {
     let mut rng = model.create_rng();
 
     info!("Dungeon randomization:");

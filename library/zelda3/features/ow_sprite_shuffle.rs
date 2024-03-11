@@ -1,20 +1,20 @@
 use rand::rngs::StdRng;
 use rand::seq::SliceRandom;
 
-use crate::zelda3::features::sprites::get_weights;
-use crate::zelda3::features::sprites::is_compatible;
-use crate::zelda3::features::sprites::Placement;
 use crate::zelda3::model::can_sprite_fly;
 use crate::zelda3::model::can_sprite_swim;
 use crate::zelda3::model::get_sprite_type;
+use crate::zelda3::model::get_weights;
+use crate::zelda3::model::is_compatible;
 use crate::zelda3::model::OWRoomState;
 use crate::zelda3::model::OWSprite;
+use crate::zelda3::model::Placement;
 use crate::zelda3::model::SpriteId;
 use crate::zelda3::model::SpriteType;
 use crate::zelda3::model::Z3Model;
 
 /// This re-arranges the positions of non-critical enemies.
-pub(crate) fn shuffle_overworld_sprites(model: &mut Z3Model) {
+pub(crate) fn apply_ow_sprite_shuffle(model: &mut Z3Model) {
     let mut rng = model.create_rng();
 
     let mut rooms = model.ow_rooms.values_mut().collect::<Vec<_>>();
@@ -47,25 +47,31 @@ pub(crate) fn shuffle_overworld_sprites(model: &mut Z3Model) {
     }
 }
 
-pub(crate) fn reroll_overworld_sprites(model: &mut Z3Model) {
+pub(crate) fn apply_ow_sprite_reroll(model: &mut Z3Model) {
     let mut rng = model.create_rng();
 
-    let types = vec![SpriteType::Enemy, SpriteType::Creature, SpriteType::Boss];
+    let types = vec![
+        SpriteType::Absorbable,
+        SpriteType::Boss,
+        SpriteType::Creature,
+        SpriteType::Enemy,
+        SpriteType::Hazard,
+    ];
     let keys = model.ow_rooms.keys().cloned().collect::<Vec<_>>();
     for overworld_id in keys {
         let mut area = model.ow_rooms.get_mut(&overworld_id).unwrap().clone();
-        _reroll_overworld_sprites(model, &mut rng, &mut area.lw, &types);
+        reroll_sprites(model, &mut rng, &mut area.lw, &types);
         if let Some(version) = &mut area.lw_post_aga {
-            _reroll_overworld_sprites(model, &mut rng, version, &types);
+            reroll_sprites(model, &mut rng, version, &types);
         }
         if let Some(version) = &mut area.dw {
-            _reroll_overworld_sprites(model, &mut rng, version, &types);
+            reroll_sprites(model, &mut rng, version, &types);
         }
         model.ow_rooms.insert(overworld_id, area);
     }
 }
 
-fn _reroll_overworld_sprites(
+fn reroll_sprites(
     model: &Z3Model,
     rng: &mut StdRng,
     version: &mut OWRoomState,

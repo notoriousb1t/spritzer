@@ -115,7 +115,7 @@ fn get_affected_state_ids(area: &OWRoom, overworld_id: OWStateId) -> Vec<OWState
             light_overworld_ids
         }
         OWStateId::LIGHT_WORLD_V2 => vec![OWStateId::LIGHT_WORLD_V2],
-        OWStateId::DARK_WORLD_V2 => {
+        OWStateId::DARK_WORLD_V1 => {
             vec![OWStateId::DARK_WORLD_V1, OWStateId::DARK_WORLD_V2]
         }
         _ => vec![],

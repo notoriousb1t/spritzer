@@ -68,6 +68,13 @@
       </div>
 
       <div class="randomizer-option-field" role="presentation">
+        <label>Killable Thieves</label>
+        <div>
+          <a-switch v-model:checked="opts.killable_thieves" />
+        </div>
+      </div>
+
+      <div class="randomizer-option-field" role="presentation">
         <label>Mushroom Shuffle</label>
         <div>
           <a-switch v-model:checked="opts.mushroom_shuffle" />

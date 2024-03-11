@@ -5,7 +5,7 @@ use common::SnesGame;
 use log::info;
 
 use super::io::write_model;
-use crate::zelda3::features::apply_options;
+use crate::zelda3::features::apply_features;
 use crate::zelda3::io::read_model;
 use crate::zelda3::model::Z3Model;
 use crate::zelda3::options::Z3Options;
@@ -19,7 +19,7 @@ pub fn randomize_zelda3(bytes: &[u8], options: &Z3Options) -> Vec<u8> {
     model.seed = string_to_hash(options.seed.as_str());
     model.uw_balancing = options.underworld_balancing;
     model.ow_balancing = options.overworld_balancing;
-    apply_options(&mut model, options);
+    apply_features(&mut model, options);
     write_model(&mut game, &model);
 
     game.write_crc();

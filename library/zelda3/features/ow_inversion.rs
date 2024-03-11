@@ -15,10 +15,9 @@ use crate::zelda3::model::Spriteset;
 use crate::zelda3::model::SpritesetId;
 use crate::zelda3::model::Z3Model;
 
-pub(crate) fn invert_world(model: &mut Z3Model) {
+pub(crate) fn apply_ow_inversion(model: &mut Z3Model) {
     move_salesman(model);
     invert_kakariko(model);
-    flip_dungeon_soldiers(model);
     invert_rooms(model);
 }
 
@@ -96,18 +95,6 @@ fn invert_kakariko(model: &mut Z3Model) {
         // guarantees all spritesets are the same between each room header for kakariko's overworld.
         if let Some(area) = model.ow_rooms.get_mut(&area_id) {
             swap_spritesets(area);
-        }
-    }
-}
-
-/// Switch any soldiers in dungeons to use the dark world soldier (as possible). This largely
-/// affects the underworld normally associated with the light world.
-fn flip_dungeon_soldiers(model: &mut Z3Model) {
-    for (spriteset_id, spriteset) in model.spritesets.iter_mut() {
-        if spriteset_id >= &SpritesetId::x40_FREESPACE
-            && spriteset.sheets[1] == SpriteSheetId::x49_SOLDIERS
-        {
-            spriteset.sheets[1] = SpriteSheetId::xD_SOLDIERS_DW;
         }
     }
 }
@@ -249,8 +236,8 @@ fn swap_spritesets(area: &mut OWRoom) {
 
     let dark_spriteset_id = dw.spriteset_id;
 
-    if let Some(lw_v1) = &mut area.lw_post_aga {
-        lw_v1.spriteset_id = dark_spriteset_id;
+    if let Some(lw_v2) = &mut area.lw_post_aga {
+        lw_v2.spriteset_id = dark_spriteset_id;
     }
 
     lw.spriteset_id = dark_spriteset_id;
@@ -284,7 +271,7 @@ fn get_overworld_configuration(overworld_id: OWRoomId) -> Option<(Vec<usize>, Ve
         // Desert Statue and Tablet.
         OWRoomId::x30_DESERT_OF_MYSTERY => Some((vec![2], vec![])),
         // Rocks, Friends
-        OWRoomId::x3_WEST_DEATH_MOUNTAIN => Some((vec![2], vec![2])),
+        OWRoomId::x3_WEST_DEATH_MOUNTAIN => Some((vec![3], vec![3])),
         // Electric Barrier / Lighting Lock
         OWRoomId::x1B_HYRULE_CASTLE => Some((vec![3], vec![])),
         // Kiki during unlock animation.

@@ -32,6 +32,7 @@ pub fn process_zelda3(buffer: &[u8], options: Z3WasmOptions) -> Vec<u8> {
     let options = Z3Options {
         seed: options.seed.to_owned(),
         boss_shuffle: options.boss_shuffle,
+        killable_thieves: options.killable_thieves,
         mushroom_shuffle: options.mushroom_shuffle,
         overworld_balancing: Balancing::from_str(&options.ow_balancing)
             .expect("Overworld Balancing should be valid"),
@@ -77,6 +78,7 @@ pub fn detect_options(buffer: &[u8]) -> DetectOptionsResult {
         options: Z3WasmOptions {
             balancing_options,
             boss_shuffle: false,
+            killable_thieves: false,
             mushroom_shuffle: false,
             ow_balancing: Balancing::Balanced.to_string(),
             ow_enemy_shuffle_options,

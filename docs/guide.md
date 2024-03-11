@@ -28,6 +28,10 @@ Enemy Shuffle controls which enemies/etc. appear within the overworld
 1. **Chaos** - TBD - planned to mix light and dark world indiscriminately
 1. **Insanity** - TBD - planned to indescriminately place hazards and enemies from any location.
 
+### Killable Thieves
+
+Makes thieves killable (one or two hits)
+
 ### Mushroom Shuffle
 
 Shuffles the location of the overworld Mushroom location in the Lost Woods. The item here may appear at any of the locations of Fake Swords or the original location at random.
@@ -69,7 +73,6 @@ Changes bees to be more powerful and partially invisible.
 
 Some features are enabled as a result of other enabled features:
 
-1. **Killable Thieves** - Any value other than Vanilla for Overworld and Underworld Shuffle will enable killable thieves. If there is demand to make this togglable, please file an issue.
 1. **Dungeon Shuffle** - By default, shuffling bosses also shuffles the appearance and characteristics of the dungeons. In some cases, like Tower of Hera, the boss room may change appearance. Please file an issue, if there is demand to turn this off.
 1. **Visual Enemy Changes** - Some enemies have changed color palettes to be more stable across different locations. For example, mini-moldorm and Green Eyegore are blue to improve user experience across environments. Also Moldorm has a random number of eyes.
 1. **Overworld Simplication** - Enemies/NPCs will remain the same before and after killing Agahnim unless the room has a specific item logic. i.e. Hyrule Castle, Lumberjack's house, etc.

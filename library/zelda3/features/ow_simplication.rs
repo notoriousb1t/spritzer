@@ -4,7 +4,7 @@ use crate::zelda3::model::OWRoomId;
 use crate::zelda3::model::SpriteId;
 use crate::zelda3::model::Z3Model;
 
-pub(crate) fn simplify_overworld(model: &mut Z3Model) {
+pub(crate) fn apply_ow_simplication(model: &mut Z3Model) {
     replace_problematic_sprites(model);
 }
 

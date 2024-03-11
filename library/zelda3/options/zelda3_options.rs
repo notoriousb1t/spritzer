@@ -67,6 +67,7 @@ pub struct Z3Options {
     pub seed: String,
     pub boss_shuffle: bool,
     pub mushroom_shuffle: bool,
+    pub killable_thieves: bool,
     pub overworld_balancing: Balancing,
     pub overworld_enemy_shuffle: OverworldEnemyShuffle,
     pub shadow_bees: bool,
@@ -81,6 +82,7 @@ impl Z3Options {
             seed: "".to_owned(),
             boss_shuffle: false,
             mushroom_shuffle: false,
+            killable_thieves: false,
             overworld_balancing: Balancing::Random,
             overworld_enemy_shuffle: OverworldEnemyShuffle::Vanilla,
             shadow_bees: false,
@@ -97,6 +99,7 @@ impl Display for Z3Options {
             r#"Options:
   Seed:                 {}
   Boss Shuffle:         {}
+  Killable Thieves:     {}
   Mushroom Shuffle:     {}
   Overworld Balancing:  {}
   Overworld Shuffle:    {}
@@ -106,6 +109,7 @@ impl Display for Z3Options {
 "#,
             self.seed,
             self.boss_shuffle,
+            self.killable_thieves,
             self.mushroom_shuffle,
             self.overworld_balancing,
             self.overworld_enemy_shuffle,

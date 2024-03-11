@@ -48,7 +48,7 @@ fn read_room(game: &SnesGame, id: OWRoomId) -> OWRoom {
     let dw: Option<OWRoomState> = match id {
         OWRoomId::x40_MASTER_SWORD_UNDER_BRIDGE => None,
         OWRoomId::x41_ZORAS_DOMAIN => None,
-        _ => Some(read_room_state(game, id, OWStateId::DARK_WORLD_V2)),
+        _ => Some(read_room_state(game, id, OWStateId::DARK_WORLD_V1)),
     };
 
     OWRoom {

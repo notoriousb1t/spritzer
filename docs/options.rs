@@ -23,6 +23,7 @@ impl DetectOptionsResult {
 #[derive(Clone)]
 pub struct Z3WasmOptions {
     pub boss_shuffle: bool,
+    pub killable_thieves: bool,
     pub mushroom_shuffle: bool,
     pub shadow_bees: bool,
     pub(crate) seed: String,

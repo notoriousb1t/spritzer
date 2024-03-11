@@ -12,7 +12,7 @@ use crate::zelda3::options::DEBUG_MOLDORM_6;
 use crate::zelda3::options::DEBUG_MOLDORM_7;
 use crate::zelda3::options::DEBUG_MOLDORM_8;
 
-pub(crate) fn update_moldorm_eyes(model: &mut Z3Model) {
+pub(crate) fn apply_moldorm_eye_shuffle(model: &mut Z3Model) {
     let mut rng = model.create_rng();
     let eye_count = match check_for_debug_string(&model.debug_string) {
         Some(count) => count,
