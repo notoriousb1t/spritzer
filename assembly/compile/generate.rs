@@ -5,27 +5,22 @@ use std::io::Write;
 use std::path::Path;
 use std::path::PathBuf;
 
+use common::pc_address_to_snes_address;
+use common::RomSize;
+use common::RomType;
+use common::SnesGame;
+
 use super::fileutils::cleanup_temp_file;
 use super::fileutils::find_files;
 use super::fileutils::get_hash;
 use super::fileutils::read_all_bytes;
 use super::fileutils::read_lines;
 use super::fileutils::replace_segment;
-use super::snes_data::create_empty_snes_data;
 use super::snes_data::get_snes_deltas;
-use super::snes_data::pc_address_to_snes_address;
 
 const PUB_SYMBOL_PREFIX: &str = "pub_";
 
 pub fn generate_asar_bindings(project_path: &Path) {
-    println!(
-        "cargo:warning=address ${:02X}",
-        pc_address_to_snes_address(0x3EF070)
-    );
-    println!(
-        "cargo:warning=address ${:02X}",
-        pc_address_to_snes_address(0x3F0000)
-    );
     println!("cargo:warning=Crawling {:?}", project_path);
 
     if let Ok(files) = find_files(project_path, "mod.asm") {
@@ -70,8 +65,9 @@ fn process_mod_asm(project_path: &Path, asm_path: &Path, hash: String) {
     // Create a new file
     println!("cargo:warning=Creating dummy ROM {:?}", &bin_path);
     let mut file = File::create(&bin_path).expect("Could not create dummy file");
-    let base_data = &create_empty_snes_data();
-    let _ = file.write_all(base_data);
+    let game = SnesGame::new(RomType::FastLoRom, RomSize::Size4mb);
+    file.write_all(&game.buffer)
+        .expect("File could not be written");
 
     let output_result = std::process::Command::new(asar_cmd)
         .current_dir(project_path)

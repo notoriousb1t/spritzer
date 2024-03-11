@@ -3,35 +3,6 @@ use std::cmp::min;
 
 const BLANK: u8 = 0xFF;
 
-/// Creates fake SNES data.
-pub(super) fn create_empty_snes_data() -> Vec<u8> {
-    // Generate a 4MB SNES image.
-    let mut buffer = vec![BLANK; (1 << 0xC) * 1024];
-
-    // 0x7FC0 = 21 length Cartridge title. (ignored)
-
-    // Rom Speed and Memory Map Mode
-    buffer[0x7FD5] = 0x30;
-    // Chipset
-    buffer[0x7FD6] = 1;
-    // ROM size in killobytes 1 << N
-    buffer[0x7FD7] = 0xC;
-    // RAM size in killobytes 1 << N
-    buffer[0x7FD8] = 5;
-    // Country (NTSC/PAL)
-    buffer[0x7FD9] = 1;
-    // Developer ID
-    buffer[0x7FDA] = 0;
-    // ROM Version.
-    buffer[0x7FDB] = 0;
-    // Checksum
-    buffer[0x7FDC] = 0;
-    buffer[0x7FDC] = 0;
-    // Compliment (Checksum ^ 0xFFFF)
-    buffer[0x7FDE] = 0;
-    buffer[0x7FDF] = 0;
-    buffer
-}
 
 /// Returns the deltas between the original ROM and the data provided.
 pub fn get_snes_deltas(data: &Vec<u8>) -> Vec<(usize, Vec<u8>)> {
@@ -41,13 +12,14 @@ pub fn get_snes_deltas(data: &Vec<u8>) -> Vec<(usize, Vec<u8>)> {
 
     let size = data.len();
     for (index, byte) in data.iter().enumerate() {
-        if index <= 0x7FDF {
+        if index >= 0x7FD5 && index < 0x7FE0 {
             // Skip the header.
             continue;
         }
 
         if let Some(address) = last_address {
-            // Treat 8 consequetive blank characters as a terminator.
+            // Treat 2 consequetive blank characters as a terminator.
+            // The clear flaw with this is that 0xFF 0xFF could be within data.
             let upper = max(index, min(index + 2, size));
             let is_boundary = (index..upper).all(|i| data[i] == BLANK);
 
@@ -79,19 +51,3 @@ pub fn get_snes_deltas(data: &Vec<u8>) -> Vec<(usize, Vec<u8>)> {
     deltas
 }
 
-pub(super) fn pc_address_to_snes_address(pc_address: usize) -> usize {
-    // The u32eger in big endian bytes.
-    let mut bytes = [
-        (pc_address >> 16) & 0xFF,
-        (pc_address >> 8) & 0xFF,
-        pc_address & 0xFF,
-    ];
-    // Convert to SNES bytes.
-    bytes[0] = max(0, min(bytes[0] * 2, 0xFF));
-    if bytes[1] >= 0x80 {
-        bytes[0] += 1;
-    } else {
-        bytes[1] += 0x80;
-    }
-    (bytes[0] << 16) | (bytes[1] << 8) | bytes[2]
-}
