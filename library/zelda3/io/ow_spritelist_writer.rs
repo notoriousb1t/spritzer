@@ -84,7 +84,7 @@ fn write_spritelists(game: &mut SnesGame, rooms: &[&OWRoom]) {
                 bytes.push(STOP_MARKER);
                 game.write_data(&[0x09], &bytes).unwrap()
             }
-            false => Symbol::RoomEmpty as usize + 1,
+            false => Symbol::OWRoomEmpty.into(),
         };
 
         for (room_id, ow_id) in update_list.iter() {
@@ -96,27 +96,28 @@ fn write_spritelists(game: &mut SnesGame, rooms: &[&OWRoom]) {
 /// Returns the affected overworld state ids based on the area and state id being set.
 fn get_affected_state_ids(area: &OWRoom, overworld_id: OWStateId) -> Vec<OWStateId> {
     match overworld_id {
-        OWStateId::LIGHT_WORLD_V2 => {
+        OWStateId::LIGHT_WORLD_V0 => vec![OWStateId::LIGHT_WORLD_V0],
+        OWStateId::LIGHT_WORLD_V1 => {
             if area.id == OWRoomId::x40_MASTER_SWORD_UNDER_BRIDGE
                 || area.id == OWRoomId::x41_ZORAS_DOMAIN
             {
                 return vec![OWStateId::LIGHT_WORLD_V1, OWStateId::LIGHT_WORLD_V2];
             }
 
-            let mut light_overworld_ids: Vec<OWStateId> = vec![OWStateId::LIGHT_WORLD_V2];
+            let mut light_overworld_ids: Vec<OWStateId> = vec![];
             if area.lw_rescue.is_none() {
                 light_overworld_ids.push(OWStateId::LIGHT_WORLD_V0);
             }
-            if area.lw_pre_aga.is_none() {
-                light_overworld_ids.push(OWStateId::LIGHT_WORLD_V1);
+            light_overworld_ids.push(OWStateId::LIGHT_WORLD_V1);
+            if area.lw_post_aga.is_none() {
+                light_overworld_ids.push(OWStateId::LIGHT_WORLD_V2);
             }
             light_overworld_ids
         }
+        OWStateId::LIGHT_WORLD_V2 => vec![OWStateId::LIGHT_WORLD_V2],
         OWStateId::DARK_WORLD_V2 => {
             vec![OWStateId::DARK_WORLD_V1, OWStateId::DARK_WORLD_V2]
         }
-        OWStateId::LIGHT_WORLD_V0 => vec![OWStateId::LIGHT_WORLD_V0],
-        OWStateId::LIGHT_WORLD_V1 => vec![OWStateId::LIGHT_WORLD_V1],
         _ => vec![],
     }
 }

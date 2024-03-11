@@ -27,14 +27,7 @@ pub(super) fn read_ow_sprites_and_headers(game: &SnesGame) -> BTreeMap<OWRoomId,
 }
 
 fn read_room(game: &SnesGame, id: OWRoomId) -> OWRoom {
-    let lw = match id {
-        OWRoomId::x18_KAKARIKO_VILLAGE => read_kakariko(game, id),
-        OWRoomId::x19_KAKARIKO_VILLAGE => read_kakariko(game, id),
-        OWRoomId::x20_KAKARIKO_VILLAGE => read_kakariko(game, id),
-        OWRoomId::x21_KAKARIKO_VILLAGE => read_kakariko(game, id),
-        _ => read_room_state(game, id, OWStateId::LIGHT_WORLD_V2),
-    };
-    let lw_rescue: Option<OWRoomState> = match id {
+    let lw_v0: Option<OWRoomState> = match id {
         OWRoomId::x1B_HYRULE_CASTLE => Some(read_room_state(game, id, OWStateId::LIGHT_WORLD_V0)),
         OWRoomId::x2B_FOREST_BETWEEN_HAUNTED_GROVE_AND_LINKS_HOUSE => {
             Some(read_room_state(game, id, OWStateId::LIGHT_WORLD_V0))
@@ -42,14 +35,17 @@ fn read_room(game: &SnesGame, id: OWRoomId) -> OWRoom {
         OWRoomId::x2C_LINKS_HOUSE => Some(read_room_state(game, id, OWStateId::LIGHT_WORLD_V0)),
         _ => None,
     };
-    let lw_pre_aga = match id {
-        OWRoomId::x1B_HYRULE_CASTLE => Some(read_room_state(game, id, OWStateId::LIGHT_WORLD_V1)),
+
+    let lw_v1 = read_room_state(game, id, OWStateId::LIGHT_WORLD_V1);
+
+    let lw_post_aga = match id {
+        OWRoomId::x1B_HYRULE_CASTLE => Some(read_room_state(game, id, OWStateId::LIGHT_WORLD_V2)),
         OWRoomId::x2_LUMBER_JACK_HOUSE => {
-            Some(read_room_state(game, id, OWStateId::LIGHT_WORLD_V1))
+            Some(read_room_state(game, id, OWStateId::LIGHT_WORLD_V2))
         }
         _ => None,
     };
-    let dw = match id {
+    let dw: Option<OWRoomState> = match id {
         OWRoomId::x40_MASTER_SWORD_UNDER_BRIDGE => None,
         OWRoomId::x41_ZORAS_DOMAIN => None,
         _ => Some(read_room_state(game, id, OWStateId::DARK_WORLD_V2)),
@@ -57,9 +53,9 @@ fn read_room(game: &SnesGame, id: OWRoomId) -> OWRoom {
 
     OWRoom {
         id,
-        lw_rescue,
-        lw_pre_aga,
-        lw,
+        lw_rescue: lw_v0,
+        lw: lw_v1,
+        lw_post_aga,
         dw,
     }
 }
@@ -79,14 +75,6 @@ fn read_room_state(game: &SnesGame, id: OWRoomId, overworld_id: OWStateId) -> OW
         sprite_palette_id,
         sprites,
     }
-}
-
-fn read_kakariko(game: &SnesGame, id: OWRoomId) -> OWRoomState {
-    // Load lightworld v1 for kakariko to maximize the number of NPCs.
-    let mut kakariko = read_room_state(game, id, OWStateId::LIGHT_WORLD_V1);
-    // Pretend like this is the v2 version.
-    kakariko.overworld_id = OWStateId::LIGHT_WORLD_V2;
-    kakariko
 }
 
 fn read_sprites(

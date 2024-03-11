@@ -4,6 +4,10 @@ pub_Killable:
     LDA !SPRITE_ID,X
     CMP.b #$FF ; Replaced with $C4 in Rust code when this is enabled.
     BEQ Killable_EyeGore
+
+    CMP.b #!SPRITE_GORIYA
+    BEQ Killable_EyeGore
+
     JMP Killable_return
 
 ; Load green eyegore sprite id so we can kill the thing.

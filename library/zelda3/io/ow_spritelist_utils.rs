@@ -1,15 +1,20 @@
 use assembly::zelda3::Symbol;
 
-use crate::zelda3::model::OWRoom;
 use crate::zelda3::model::OWRoomId;
 use crate::zelda3::model::OWStateId;
 
 pub(super) fn get_sprite_graphics_address(id: OWRoomId, overworld_id: OWStateId) -> usize {
     if id == OWRoomId::x40_MASTER_SWORD_UNDER_BRIDGE {
+        if overworld_id == OWStateId::LIGHT_WORLD_V2 {
+            return Symbol::OwSpecialGraphics as usize + 1;
+        }
         return Symbol::OwSpecialGraphics as usize;
     }
     if id == OWRoomId::x41_ZORAS_DOMAIN {
-        return Symbol::OwSpecialGraphics as usize + 1;
+        if overworld_id == OWStateId::LIGHT_WORLD_V2 {
+            return Symbol::OwSpecialGraphics as usize + 3;
+        }
+        return Symbol::OwSpecialGraphics as usize + 2;
     }
 
     let version_offset: usize = match overworld_id {
@@ -48,9 +53,10 @@ pub(super) fn get_sprite_pointer(id: OWRoomId, overworld_id: OWStateId) -> usize
         OWStateId::DARK_WORLD_V2 => Symbol::OwSpritePtrs as usize + 0x220,
     };
 
-    base_address + match id {
-        OWRoomId::x40_MASTER_SWORD_UNDER_BRIDGE => 0x100,
-        OWRoomId::x41_ZORAS_DOMAIN => 0x100 + 2,
-        _ => id as usize * 2,
-    }
+    base_address
+        + match id {
+            OWRoomId::x40_MASTER_SWORD_UNDER_BRIDGE => 0x100,
+            OWRoomId::x41_ZORAS_DOMAIN => 0x100 + 2,
+            _ => id as usize * 2,
+        }
 }

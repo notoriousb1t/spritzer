@@ -7,13 +7,13 @@ use super::spriteset_id::SpritesetId;
 pub(crate) struct OWRoom {
     /// The Area this block describes. DO NOT MODIFY.
     pub id: OWRoomId,
-    /// This is used after defeating Agahnim.
+    /// This is generally the room before Agahnim is defeated.
     pub lw: OWRoomState,
     /// The version to use if pre-rescue is relevant. (Link's House, Hyrule Castle, and forest west
     /// of Link's House)
     pub lw_rescue: Option<OWRoomState>,
-    /// The version to use if pre-aga is relevant. (Lumberjack and Hyrule Castle)
-    pub lw_pre_aga: Option<OWRoomState>,
+    /// The version to use if post-aga is relevant. (Lumberjack and Hyrule Castle)
+    pub lw_post_aga: Option<OWRoomState>,
     // This is used in the dark world.
     pub dw: Option<OWRoomState>,
 }
@@ -36,10 +36,10 @@ impl OWRoom {
         if let Some(it) = &self.lw_rescue {
             configs.push(it);
         }
-        if let Some(it) = &self.lw_pre_aga {
+        configs.push(&self.lw);
+        if let Some(it) = &self.lw_post_aga {
             configs.push(it);
         }
-        configs.push(&self.lw);
         if let Some(it) = &self.dw {
             configs.push(it);
         }
@@ -51,10 +51,10 @@ impl OWRoom {
         if let Some(it) = &mut self.lw_rescue {
             configs.push(it);
         }
-        if let Some(it) = &mut self.lw_pre_aga {
+        configs.push(&mut self.lw);
+        if let Some(it) = &mut self.lw_post_aga {
             configs.push(it);
         }
-        configs.push(&mut self.lw);
         if let Some(it) = &mut self.dw {
             configs.push(it);
         }

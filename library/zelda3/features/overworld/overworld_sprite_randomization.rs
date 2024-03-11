@@ -54,10 +54,10 @@ pub(crate) fn reroll_overworld_sprites(model: &mut Z3Model) {
     let keys = model.ow_rooms.keys().cloned().collect::<Vec<_>>();
     for overworld_id in keys {
         let mut area = model.ow_rooms.get_mut(&overworld_id).unwrap().clone();
-        if let Some(version) = &mut area.lw_pre_aga {
+        _reroll_overworld_sprites(model, &mut rng, &mut area.lw, &types);
+        if let Some(version) = &mut area.lw_post_aga {
             _reroll_overworld_sprites(model, &mut rng, version, &types);
         }
-        _reroll_overworld_sprites(model, &mut rng, &mut area.lw, &types);
         if let Some(version) = &mut area.dw {
             _reroll_overworld_sprites(model, &mut rng, version, &types);
         }

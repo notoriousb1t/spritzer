@@ -19,7 +19,7 @@ pub(super) fn write_uw_spritelists(
     // Move the room header references to point to the new location.
     game.write_pointer_int16(
         Symbol::RoomData_SpritePointers_Ref0.into(),
-        Symbol::RoomSpritesStart.into(),
+        Symbol::RoomSpritesEnd as usize - 0x300,
     );
     for room in spritelists.values() {
         _write_sprites(game, room);
@@ -74,13 +74,13 @@ fn _write_sprites(game: &mut SnesGame, room: &UWSpriteList) {
             buffer.push(STOP_MARKER);
             game.write_data(&[0x09], &buffer).unwrap()
         }
-        false => Symbol::RoomEmpty as usize,
+        false => Symbol::UWRoomEmpty.into(),
     };
 
     // Write on top of where the sprites used to start. The room sprite pointers are moved in
     // front of all sprites so the overworld and underworld can share space.
     game.write_pointer_int16(
-        Symbol::RoomSpritesStart as usize + (room.room_id as usize * 2),
+        Symbol::RoomSpritesEnd as usize - 0x300 + (room.room_id as usize * 2),
         sprites_location,
     );
 }

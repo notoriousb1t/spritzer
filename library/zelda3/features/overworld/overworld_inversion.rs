@@ -36,7 +36,7 @@ fn move_salesman(model: &mut Z3Model) {
         id: SpriteId::x75_BOTTLE_SALESMAN,
     };
 
-    if let Some(lumberjacks_house_pre_aga) = lumberjacks_house.lw_pre_aga.as_mut() {
+    if let Some(lumberjacks_house_pre_aga) = lumberjacks_house.lw_post_aga.as_mut() {
         lumberjacks_house_pre_aga
             .sprites
             .push(bottle_salesman.clone());
@@ -174,7 +174,7 @@ fn invert_special_overworld_versions(
 
     // Specific patches to preserve NPCs and objects, but non-restrictive overall.
     let (preserved_lw_sheets, preserved_dw_sheets) = &configuration;
-    let spriteset_lw_id = match &area.lw_pre_aga {
+    let spriteset_lw_id = match &area.lw_post_aga {
         Some(version) => version.spriteset_id,
         None => area.lw.spriteset_id,
     };
@@ -184,7 +184,7 @@ fn invert_special_overworld_versions(
     let spriteset_dw = spritesets[&spriteset_dw_id].clone();
 
     if preserved_lw_sheets.is_empty() {
-        if let Some(lw_v1) = &mut area.lw_pre_aga {
+        if let Some(lw_v1) = &mut area.lw_post_aga {
             lw_v1.spriteset_id = spriteset_dw_id;
         }
         area.lw.spriteset_id = spriteset_dw_id;
@@ -198,7 +198,7 @@ fn invert_special_overworld_versions(
             .get_mut(&spriteset_id)
             .expect(&format!("Spriteset {} should exist", &spriteset_id));
 
-        if let Some(lw_v1) = &mut area.lw_pre_aga {
+        if let Some(lw_v1) = &mut area.lw_post_aga {
             lw_v1.spriteset_id = spriteset_id;
         }
         area.lw.spriteset_id = spriteset_id;
@@ -249,7 +249,7 @@ fn swap_spritesets(area: &mut OWRoom) {
 
     let dark_spriteset_id = dw.spriteset_id;
 
-    if let Some(lw_v1) = &mut area.lw_pre_aga {
+    if let Some(lw_v1) = &mut area.lw_post_aga {
         lw_v1.spriteset_id = dark_spriteset_id;
     }
 
