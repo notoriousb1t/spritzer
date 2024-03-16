@@ -15,9 +15,9 @@ pub(crate) enum PaletteIndex {
     X8 = 0x8,
     X9 = 0x9,
     XA = 0xA,
-    XB = 0xB,
-    XC = 0xC,
-    XD = 0xD,
+    XBRed = 0xB,
+    XCBlue = 0xC,
+    XDGreen = 0xD,
     XENoir = 0xE,
     XF = 0xF,
 }

@@ -10,7 +10,7 @@ use crate::zelda3::model::OWRoom;
 use crate::zelda3::model::OWRoomId;
 use crate::zelda3::model::OWSprite;
 use crate::zelda3::model::SpriteId;
-use crate::zelda3::model::SpriteSheetId;
+use crate::zelda3::model::SpritesheetId;
 use crate::zelda3::model::Spriteset;
 use crate::zelda3::model::SpritesetId;
 use crate::zelda3::model::Z3Model;
@@ -138,7 +138,7 @@ fn invert_rooms(model: &mut Z3Model) {
 
     // Restores Poes in Dark Kakariko.
     if let Some(spriteset) = model.spritesets.get_mut(&SpritesetId::x15_THIEVES_VILLAGE) {
-        spriteset.sheets[3] = SpriteSheetId::x15_POE_THIEF_DW;
+        spriteset.sheets[3] = SpritesheetId::x15_POE_THIEF_DW;
     }
 }
 

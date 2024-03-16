@@ -1,4 +1,4 @@
-use super::sprite_sheet_id::SpriteSheetId;
+use super::spritesheet_id::SpritesheetId;
 use super::spriteset_id::SpritesetId;
 
 /// Contains up to 4 SpriteSheets that load in individual sprites.
@@ -7,5 +7,5 @@ use super::spriteset_id::SpritesetId;
 #[derive(Clone)]
 pub(crate) struct Spriteset {
     pub id: SpritesetId,
-    pub sheets: [SpriteSheetId; 4],
+    pub sheets: [SpritesheetId; 4],
 }

@@ -46,6 +46,21 @@ impl OWRoom {
         configs
     }
 
+    pub fn versions(&self) -> Vec<&OWRoomState> {
+        let mut configs: Vec<&OWRoomState> = vec![];
+        configs.push(&self.lw);
+        if let Some(it) = &self.lw_rescue {
+            configs.push(it);
+        }
+        if let Some(it) = &self.lw_post_aga {
+            configs.push(it);
+        }
+        if let Some(it) = &self.dw {
+            configs.push(it);
+        }
+        configs
+    }
+
     pub fn versions_mut(&mut self) -> Vec<&mut OWRoomState> {
         let mut configs: Vec<&mut OWRoomState> = vec![];
         configs.push(&mut self.lw);

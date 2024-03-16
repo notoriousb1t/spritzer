@@ -1,13 +1,12 @@
 //! This module performs randomization of bosses.
 
-use log::debug;
-use log::info;
+use log;
 use rand::rngs::StdRng;
 use rand::seq::SliceRandom;
 
 use crate::zelda3::features::dungeon::dungeon_conversion::convert_dungeon;
 use crate::zelda3::model::get_arena_offsets;
-use crate::zelda3::model::get_sprite_requirements;
+use crate::zelda3::model::get_spritesheet_arrangements;
 use crate::zelda3::model::get_vanilla_encounters;
 use crate::zelda3::model::DungeonId;
 use crate::zelda3::model::Encounter;
@@ -15,7 +14,7 @@ use crate::zelda3::model::ObjectInfo;
 use crate::zelda3::model::Offsets;
 use crate::zelda3::model::SpriteId;
 use crate::zelda3::model::SpriteInfo;
-use crate::zelda3::model::SpriteSheetId;
+use crate::zelda3::model::SpritesheetId;
 use crate::zelda3::model::SpritesetId;
 use crate::zelda3::model::UWFloorId;
 use crate::zelda3::model::UWObject;
@@ -39,7 +38,7 @@ use crate::zelda3::options::DEBUG_VITREOUS;
 pub(crate) fn apply_boss_shuffle(model: &mut Z3Model) {
     let mut rng = model.create_rng();
 
-    info!("Dungeon randomization:");
+    log::info!("Dungeon randomization:");
 
     if let Some(source_id) = check_for_debug_string(&model.debug_string) {
         debug_dungeons(model, &mut rng, source_id);
@@ -95,7 +94,7 @@ fn debug_dungeons(model: &mut Z3Model, rng: &mut StdRng, source_id: DungeonId) {
 fn update_arena(model: &mut Z3Model, rng: &mut StdRng, source_id: DungeonId, target_id: DungeonId) {
     if source_id == target_id {
         // Don't bother reconstructing if the target and source rooms are the same.
-        debug!("  {} +", target_id);
+        log::debug!("  {} +", target_id);
         return;
     }
 
@@ -109,7 +108,7 @@ fn update_arena(model: &mut Z3Model, rng: &mut StdRng, source_id: DungeonId, tar
         .expect(&format!("Dungeon {} should exist", &target_id));
     if source_dungeon.boss.is_none() || target_dungeon.boss.is_none() {
         // We can only switch a boss if there is one.
-        debug!("  {} »", target_id);
+        log::debug!("  {} »", target_id);
         return;
     }
 
@@ -158,7 +157,7 @@ fn update_arena(model: &mut Z3Model, rng: &mut StdRng, source_id: DungeonId, tar
     isolate_spriteset(model, target_boss);
     add_objects(model, target_boss, &encounter.objects, &target_room_offsets);
 
-    info!("  {} = {}", target_id, source_id);
+    log::info!("  {} = {}", target_id, source_id);
 }
 
 /// Change the floors if the encounter requires it.
@@ -285,19 +284,19 @@ fn spriteset_usage_count(model: &Z3Model, spriteset_id: SpritesetId) -> usize {
 }
 
 // Returns the first valid combination fo spritesheets that satisfies the SpriteId list.
-fn get_spriteset_for_sprites(sprite_ids: &Vec<SpriteId>) -> [SpriteSheetId; 4] {
+fn get_spriteset_for_sprites(sprite_ids: &Vec<SpriteId>) -> [SpritesheetId; 4] {
     // TODO: move this function somewhere more general and use it for other spriteset swaps.
-    let mut spritesheet = [SpriteSheetId::None; 4];
+    let mut spritesheet = [SpritesheetId::None; 4];
 
     for sprite_id in sprite_ids {
         // This is a bit flawed, since sprites can have multiple requirements.
         // TODO: refactor this so it instead generates all valid unions.
-        let requirement_list: Vec<[SpriteSheetId; 4]> = get_sprite_requirements(sprite_id);
+        let requirement_list: Vec<[SpritesheetId; 4]> = get_spritesheet_arrangements(sprite_id);
         let requirement = requirement_list
             .first()
-            .unwrap_or(&[SpriteSheetId::None; 4]);
+            .unwrap_or(&[SpritesheetId::None; 4]);
         for i in 0..4 {
-            if requirement[i] != SpriteSheetId::None {
+            if requirement[i] != SpritesheetId::None {
                 spritesheet[i] = requirement[i];
             }
         }

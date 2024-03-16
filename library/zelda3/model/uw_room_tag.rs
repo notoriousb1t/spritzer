@@ -6,22 +6,22 @@ use strum_macros::FromRepr;
 #[allow(non_camel_case_types)]
 #[derive(Copy, Clone, Debug, Display, Eq, PartialEq, Hash, FromRepr)]
 pub(crate) enum UWRoomTag {
-    x0_NOTHING = 0,
-    x1_NW_KILL_ENEMY_TO_OPEN = 1,
-    x2_NE_KILL_ENEMY_TO_OPEN = 2,
-    x3_SW_KILL_ENEMY_TO_OPEN = 3,
-    x4_SE_KILL_ENEMY_TO_OPEN = 4,
-    x5_W_KILL_ENEMY_TO_OPEN = 5,
-    x6_E_KILL_ENEMY_TO_OPEN = 6,
-    x7_N_KILL_ENEMY_TO_OPEN = 7,
-    x8_S_KILL_ENEMY_TO_OPEN = 8,
-    x9_CLEAR_QUADRANT_TO_OPEN = 9,
-    xA_CLEAR_ROOM_TO_OPEN = 10,
-    xB_NW_MOVE_BLOCK_TO_OPEN = 11,
-    xC_NE_MOVE_BLOCK_TO_OPEN = 12,
-    xD_SW_MOVE_BLOCK_TO_OPEN = 13,
-    xE_SE_MOVE_BLOCK_TO_OPEN = 14,
-    xF_W_MOVE_BLOCK_TO_OPEN = 15,
+    x00_None = 0,
+    x01_NW_KILL_ENEMY_TO_OPEN = 1,
+    x02_NE_KILL_ENEMY_TO_OPEN = 2,
+    x03_SW_KILL_ENEMY_TO_OPEN = 3,
+    x04_SE_KILL_ENEMY_TO_OPEN = 4,
+    x05_W_KILL_ENEMY_TO_OPEN = 5,
+    x06_E_KILL_ENEMY_TO_OPEN = 6,
+    x07_N_KILL_ENEMY_TO_OPEN = 7,
+    x08_S_KILL_ENEMY_TO_OPEN = 8,
+    x09_CLEAR_QUADRANT_TO_OPEN = 9,
+    x0A_CLEAR_ROOM_TO_OPEN = 10,
+    x0B_NW_MOVE_BLOCK_TO_OPEN = 11,
+    x0C_NE_MOVE_BLOCK_TO_OPEN = 12,
+    x0D_SW_MOVE_BLOCK_TO_OPEN = 13,
+    x0E_SE_MOVE_BLOCK_TO_OPEN = 14,
+    x0F_W_MOVE_BLOCK_TO_OPEN = 15,
     x10_E_MOVE_BLOCK_TO_OPEN = 16,
     x11_N_MOVE_BLOCK_TO_OPEN = 17,
     x12_S_MOVE_BLOCK_TO_OPEN = 18,
@@ -76,9 +76,17 @@ impl UWRoomTag {
     pub fn is_kill_room(self) -> bool {
         matches!(
             self,
-            UWRoomTag::x1_NW_KILL_ENEMY_TO_OPEN
+            UWRoomTag::x01_NW_KILL_ENEMY_TO_OPEN
+                | UWRoomTag::x02_NE_KILL_ENEMY_TO_OPEN
+                | UWRoomTag::x03_SW_KILL_ENEMY_TO_OPEN
+                | UWRoomTag::x04_SE_KILL_ENEMY_TO_OPEN
+                | UWRoomTag::x05_W_KILL_ENEMY_TO_OPEN
+                | UWRoomTag::x06_E_KILL_ENEMY_TO_OPEN
+                | UWRoomTag::x07_N_KILL_ENEMY_TO_OPEN
+                | UWRoomTag::x08_S_KILL_ENEMY_TO_OPEN
+                | UWRoomTag::x09_CLEAR_QUADRANT_TO_OPEN
+                | UWRoomTag::x0A_CLEAR_ROOM_TO_OPEN
                 | UWRoomTag::x15_CLEAR_LEVEL_TO_OPEN_DOOR
-                | UWRoomTag::x2_NE_KILL_ENEMY_TO_OPEN
                 | UWRoomTag::x25_KILL_ENEMY_TO_CLEAR_LEVEL
                 | UWRoomTag::x26_SE_KILL_ENEMY_TO_MOVE_BLOCK
                 | UWRoomTag::x27_TRIGGER_ACTIVATED_CHEST
@@ -89,20 +97,9 @@ impl UWRoomTag {
                 | UWRoomTag::x2D_W_KILL_ENEMY_FOR_CHEST
                 | UWRoomTag::x2E_E_KILL_ENEMY_FOR_CHEST
                 | UWRoomTag::x2F_N_KILL_ENEMY_FOR_CHEST
-                | UWRoomTag::x3_SW_KILL_ENEMY_TO_OPEN
                 | UWRoomTag::x30_S_KILL_ENEMY_FOR_CHEST
                 | UWRoomTag::x31_CLEAR_QUADRANT_FOR_CHEST
                 | UWRoomTag::x32_CLEAR_ROOM_FOR_CHEST
-                | UWRoomTag::x38_AGAHNIMS_ROOM
-                | UWRoomTag::x3D_KILL_TO_OPEN_GANONS_DOOR
-                | UWRoomTag::x3F_KILL_BOSS_AGAIN
-                | UWRoomTag::x4_SE_KILL_ENEMY_TO_OPEN
-                | UWRoomTag::x5_W_KILL_ENEMY_TO_OPEN
-                | UWRoomTag::x6_E_KILL_ENEMY_TO_OPEN
-                | UWRoomTag::x7_N_KILL_ENEMY_TO_OPEN
-                | UWRoomTag::x8_S_KILL_ENEMY_TO_OPEN
-                | UWRoomTag::x9_CLEAR_QUADRANT_TO_OPEN
-                | UWRoomTag::xA_CLEAR_ROOM_TO_OPEN
         )
     }
 }

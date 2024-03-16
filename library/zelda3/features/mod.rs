@@ -1,37 +1,49 @@
+mod dungeon;
 mod killable_thieves;
 mod moldorm_shuffle;
 mod mushroom_shuffle;
 mod ow_inversion;
-mod ow_simplication;
-mod ow_sprite_shuffle;
+mod ow_sprite_full_shuffle;
+mod ow_sprite_simple_shuffle;
+mod ow_spriteset_shuffle;
 mod shadow_bees;
 mod sprite_base;
-mod dungeon;
 mod uw_overlord_shuffle;
-mod uw_sprite_shuffle;
+mod uw_sprite_chaotic_shuffle;
+mod uw_sprite_full_shuffle;
+mod uw_sprite_simple_shuffle;
+mod uw_spriteset_shuffle;
 
+use log;
+
+use crate::zelda3::features::sprite_base::apply_base_sprite_shuffle_changes;
 use crate::zelda3::model::Z3Model;
 use crate::zelda3::options::OverworldEnemyShuffle;
 use crate::zelda3::options::UnderworldEnemyShuffle;
 use crate::zelda3::options::Z3Options;
-use log::info;
 
+use self::dungeon::apply_boss_shuffle;
 use self::killable_thieves::apply_killable_thieves;
 use self::moldorm_shuffle::apply_moldorm_eye_shuffle;
 use self::mushroom_shuffle::apply_mushroom_shuffle;
 use self::ow_inversion::apply_ow_inversion;
-use self::ow_simplication::apply_ow_simplication;
-use self::ow_sprite_shuffle::apply_ow_sprite_reroll;
-use self::ow_sprite_shuffle::apply_ow_sprite_shuffle;
+use self::ow_sprite_full_shuffle::apply_ow_sprite_full_shuffle;
+use self::ow_sprite_simple_shuffle::apply_ow_sprite_shuffle;
+use self::ow_spriteset_shuffle::apply_ow_spriteset_shuffle;
 use self::shadow_bees::apply_shadow_bees;
 use self::sprite_base::apply_base_sprite_changes;
-use self::dungeon::apply_boss_shuffle;
 use self::uw_overlord_shuffle::apply_uw_overlord_shuffle;
-use self::uw_sprite_shuffle::apply_uw_sprites_reroll;
-use self::uw_sprite_shuffle::apply_uw_sprites_shuffle;
+use self::uw_sprite_chaotic_shuffle::apply_uw_sprites_chaotic_shuffle;
+use self::uw_sprite_full_shuffle::apply_uw_sprites_full_shuffle;
+use self::uw_sprite_simple_shuffle::apply_uw_sprites_simple_shuffle;
+use self::uw_spriteset_shuffle::apply_uw_spriteset_shuffle;
 
 pub(crate) fn apply_features(model: &mut Z3Model, options: &Z3Options) {
-    info!("{}", options);
+    log::info!("{}", options);
+
+    let sprites_will_change = options.underworld_enemy_shuffle != UnderworldEnemyShuffle::Vanilla
+        || options.overworld_enemy_shuffle != OverworldEnemyShuffle::Vanilla
+        || options.boss_shuffle;
 
     // Apply common changes that are needed to make sprites work well in most situations.
     apply_base_sprite_changes(model);
@@ -54,12 +66,10 @@ pub(crate) fn apply_features(model: &mut Z3Model, options: &Z3Options) {
         apply_mushroom_shuffle(model);
     }
 
-    if options.underworld_enemy_shuffle != UnderworldEnemyShuffle::Vanilla
-        || options.overworld_enemy_shuffle != OverworldEnemyShuffle::Vanilla
-    {
+    if sprites_will_change {
         // This transformer performs some simplification to the overworld to
         // add additional enemy slots and bonk points. Some NPCs may move as a result.
-        apply_ow_simplication(model);
+        apply_base_sprite_shuffle_changes(model);
     }
 
     if options.overworld_enemy_shuffle == OverworldEnemyShuffle::Inverted {
@@ -69,12 +79,37 @@ pub(crate) fn apply_features(model: &mut Z3Model, options: &Z3Options) {
         apply_ow_inversion(model);
     }
 
-    if options.underworld_enemy_shuffle != UnderworldEnemyShuffle::Vanilla
-        || options.overworld_enemy_shuffle != OverworldEnemyShuffle::Vanilla
-    {
-        // Figure out what sprites can go where. This is cached because it is too
-        // costly to do every time a sprite is evaluated.
+    if sprites_will_change {
+        // Ensure sprite pools are computed before sprite shuffles.
         model.prepare_sprite_pool();
+    }
+
+    // Process spriteset shuffling if applicable for Underworld.
+    // Do this first because overworld can use underworld, but not the inverse.
+    // Doing this first provides more options for overworld.
+    match options.underworld_enemy_shuffle {
+        UnderworldEnemyShuffle::Chaos => {
+            apply_uw_spriteset_shuffle(model);
+        }
+        UnderworldEnemyShuffle::Insanity => {
+            apply_uw_spriteset_shuffle(model);
+        }
+        _ => {}
+    }
+
+    // Process spriteset shuffling if applicable for Overworld.
+    match options.overworld_enemy_shuffle {
+        OverworldEnemyShuffle::Chaos => {
+            apply_ow_spriteset_shuffle(model);
+        }
+        OverworldEnemyShuffle::Insanity => {
+            apply_ow_spriteset_shuffle(model);
+        }
+        _ => {}
+    }
+
+    if options.boss_shuffle {
+        apply_boss_shuffle(model);
     }
 
     match options.overworld_enemy_shuffle {
@@ -82,39 +117,35 @@ pub(crate) fn apply_features(model: &mut Z3Model, options: &Z3Options) {
             apply_ow_sprite_shuffle(model);
         }
         OverworldEnemyShuffle::Inverted => {
-            apply_ow_sprite_reroll(model);
+            apply_ow_sprite_full_shuffle(model);
         }
         OverworldEnemyShuffle::Full => {
-            apply_ow_sprite_reroll(model);
+            apply_ow_sprite_full_shuffle(model);
         }
         OverworldEnemyShuffle::Chaos => {
-            apply_ow_sprite_reroll(model);
+            apply_ow_sprite_full_shuffle(model);
         }
         OverworldEnemyShuffle::Insanity => {
-            apply_ow_sprite_reroll(model);
+            apply_ow_sprite_full_shuffle(model);
         }
         _ => {}
     }
 
     match options.underworld_enemy_shuffle {
         UnderworldEnemyShuffle::Simple => {
-            apply_uw_sprites_shuffle(model);
+            apply_uw_sprites_simple_shuffle(model);
         }
         UnderworldEnemyShuffle::Full => {
-            apply_uw_sprites_reroll(model);
+            apply_uw_sprites_full_shuffle(model);
         }
         UnderworldEnemyShuffle::Chaos => {
-            apply_uw_sprites_reroll(model);
+            apply_uw_sprites_chaotic_shuffle(model);
             apply_uw_overlord_shuffle(model);
         }
         UnderworldEnemyShuffle::Insanity => {
-            apply_uw_sprites_reroll(model);
+            apply_uw_sprites_chaotic_shuffle(model);
             apply_uw_overlord_shuffle(model);
         }
         _ => {}
-    }
-
-    if options.boss_shuffle {
-        apply_boss_shuffle(model);
     }
 }

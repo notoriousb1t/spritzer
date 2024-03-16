@@ -8,12 +8,10 @@ use rand::rngs::StdRng;
 use rand::seq::SliceRandom;
 use strum::IntoEnumIterator;
 
-use crate::zelda3::model::can_shuffle_in_underworld;
-use crate::zelda3::model::can_sprite_fly;
-use crate::zelda3::model::can_sprite_swim;
+use crate::zelda3::model::can_shuffle_in_uw;
 use crate::zelda3::model::get_sprite_type;
 use crate::zelda3::model::get_weights;
-use crate::zelda3::model::is_compatible;
+use crate::zelda3::model::is_fully_compatible;
 use crate::zelda3::model::Placement;
 use crate::zelda3::model::SpriteId;
 use crate::zelda3::model::SpriteType;
@@ -21,59 +19,23 @@ use crate::zelda3::model::UWSprite;
 use crate::zelda3::model::UWSpriteList;
 use crate::zelda3::model::Z3Model;
 
-/// This re-arranges the positions of non-critical enemies.
-pub(crate) fn apply_uw_sprites_shuffle(model: &mut Z3Model) {
-    let mut rng = model.create_rng();
-
-    for room in model.uw_sprites.values_mut() {
-        // Grab all sprites that can be shuffled (just enemies that don't hold keys).
-        let mut enemies: Vec<&mut UWSprite> = room
-            .sprites
-            .iter_mut()
-            .filter(|sprite| {
-                !sprite.has_key()
-                    && matches!(
-                        get_sprite_type(&sprite.id),
-                        SpriteType::Enemy | SpriteType::Hazard
-                    )
-                    && get_sprite_type(&sprite.id) == SpriteType::Enemy
-                    && !can_sprite_fly(&sprite.id)
-                    && !can_sprite_swim(&sprite.id)
-            })
-            .collect();
-
-        let mut positions = enemies
-            .iter()
-            .map(|it| (it.x_pos, it.y_pos, it.lower_layer))
-            .collect::<Vec<_>>();
-        positions.shuffle(&mut rng);
-
-        for (index, enemy) in enemies.iter_mut().enumerate() {
-            let (x, y, lower_layer) = positions[index];
-            enemy.x_pos = x;
-            enemy.y_pos = y;
-            enemy.lower_layer = lower_layer;
-        }
-    }
-}
-
-pub(crate) fn apply_uw_sprites_reroll(model: &mut Z3Model) {
+pub(crate) fn apply_uw_sprites_full_shuffle(model: &mut Z3Model) {
     let mut rng = model.create_rng();
 
     let ids = model.uw_sprites.keys().cloned().collect::<Vec<_>>();
     for id in ids {
         let room = model.uw_sprites.get(&id).unwrap();
-        let room = _reroll_underworld_room(model, &mut rng, room);
+        let room = reroll_underworld_room(model, &mut rng, room);
         model.uw_sprites.insert(id, room);
     }
 }
 
-fn _find_distance(start: (u8, u8), end: (u8, u8)) -> f32 {
+fn find_distance(start: (u8, u8), end: (u8, u8)) -> f32 {
     (((start.0 as i16 - end.0 as i16).pow(2) + (start.1 as i16 - end.1 as i16).pow(2)) as f32)
         .powf(0.5)
 }
 
-fn _detect_room_configuration(dungeon_sprites: &[&UWSprite]) -> (i32, i32, bool) {
+fn detect_room_configuration(dungeon_sprites: &[&UWSprite]) -> (i32, i32, bool) {
     let mut start_x: i32 = 0;
     let mut start_y: i32 = 0;
     let mut end_x: i32 = 0;
@@ -81,7 +43,7 @@ fn _detect_room_configuration(dungeon_sprites: &[&UWSprite]) -> (i32, i32, bool)
     let mut max_distance = 0.0;
     for i in 0..dungeon_sprites.len() {
         for j in (i + 1)..dungeon_sprites.len() {
-            let distance = _find_distance(
+            let distance = find_distance(
                 (dungeon_sprites[i].x_pos, dungeon_sprites[i].y_pos),
                 (dungeon_sprites[j].x_pos, dungeon_sprites[j].y_pos),
             );
@@ -102,7 +64,7 @@ fn _detect_room_configuration(dungeon_sprites: &[&UWSprite]) -> (i32, i32, bool)
     (end_x - start_x, end_y - start_y, is_horizontal)
 }
 
-fn _sort_by_distance(original_sprites: &[UWSprite]) -> Vec<UWSprite> {
+fn sort_by_distance(original_sprites: &[UWSprite]) -> Vec<UWSprite> {
     let mut sprites = original_sprites.to_owned();
     if sprites.len() < 2 {
         return sprites;
@@ -117,7 +79,7 @@ fn _sort_by_distance(original_sprites: &[UWSprite]) -> Vec<UWSprite> {
     sprites.to_vec()
 }
 
-fn _compute_distance(config: (i32, i32, bool), original_sprites: &[&UWSprite]) -> Vec<UWSprite> {
+fn compute_distance(config: (i32, i32, bool), original_sprites: &[&UWSprite]) -> Vec<UWSprite> {
     let mut sprites: Vec<UWSprite> = vec![];
     for &dungeon_sprite in original_sprites.iter() {
         let mut sprite = *dungeon_sprite;
@@ -133,7 +95,7 @@ fn _compute_distance(config: (i32, i32, bool), original_sprites: &[&UWSprite]) -
     sprites
 }
 
-fn _generate_sprite_selections(
+fn generate_sprite_selections(
     model: &Z3Model,
     rng: &mut StdRng,
     dungeon_room_sprites: Vec<UWSprite>,
@@ -164,7 +126,7 @@ fn _generate_sprite_selections(
             let possible_matches: Vec<&SpriteId> = choices
                 .iter()
                 .filter(|&it| {
-                    is_compatible(&dungeon_sprite.id, it, placement, dungeon_sprite.has_key())
+                    is_fully_compatible(&dungeon_sprite.id, it, placement, dungeon_sprite.has_key())
                 })
                 .collect::<Vec<_>>();
 
@@ -191,7 +153,7 @@ fn _generate_sprite_selections(
     distance_map
 }
 
-fn _reroll_underworld_sprites(
+fn reroll_underworld_sprites(
     model: &Z3Model,
     rng: &mut StdRng,
     original_sprites: &[&UWSprite],
@@ -199,11 +161,11 @@ fn _reroll_underworld_sprites(
     placement: Placement,
 ) -> Vec<UWSprite> {
     // Find the center point between all sprites in this list.
-    let config = _detect_room_configuration(original_sprites);
-    let sprites = _compute_distance(config, original_sprites);
+    let config = detect_room_configuration(original_sprites);
+    let sprites = compute_distance(config, original_sprites);
     // Presort Dungeon Room Sprites by distance from the center.
-    let mut sprites2 = _sort_by_distance(&sprites);
-    let distance_map = _generate_sprite_selections(model, rng, sprites, choices, placement);
+    let mut sprites2 = sort_by_distance(&sprites);
+    let distance_map = generate_sprite_selections(model, rng, sprites, choices, placement);
 
     let mut return_sprites: Vec<UWSprite> = vec![];
     sprites2.iter_mut().for_each(|original_sprites| {
@@ -220,7 +182,7 @@ fn _reroll_underworld_sprites(
     return_sprites
 }
 
-fn _reroll_underworld_room(
+fn reroll_underworld_room(
     model: &Z3Model,
     rng: &mut StdRng,
     original_room: &UWSpriteList,
@@ -260,7 +222,7 @@ fn _reroll_underworld_room(
     sorted_sprites.sort_by_key(|it| (it.y_pos, it.x_pos));
 
     for sprite in sorted_sprites.iter() {
-        if can_shuffle_in_underworld(&sprite.id) {
+        if can_shuffle_in_uw(&sprite.id) {
             if let Some(list) = dungeon_sprites_by_type.get_mut(&get_sprite_type(&sprite.id)) {
                 list.push(sprite);
             }
@@ -271,7 +233,7 @@ fn _reroll_underworld_room(
 
     for sprite_id in sprite_ids {
         let sprites = dungeon_sprites_by_type.get(&sprite_id).unwrap();
-        for sprite in _reroll_underworld_sprites(model, rng, sprites, choices, placement) {
+        for sprite in reroll_underworld_sprites(model, rng, sprites, choices, placement) {
             new_sprites.push(sprite);
         }
     }

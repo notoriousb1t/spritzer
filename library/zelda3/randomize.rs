@@ -2,7 +2,7 @@ use assembly::zelda3::get_patch_data;
 use common::string_to_hash;
 use common::RomSize;
 use common::SnesGame;
-use log::info;
+use log;
 
 use super::io::write_model;
 use crate::zelda3::features::apply_features;
@@ -27,12 +27,12 @@ pub fn randomize_zelda3(bytes: &[u8], options: &Z3Options) -> Vec<u8> {
 }
 
 fn create_game(bytes: &[u8]) -> SnesGame {
-    info!("Original Size={}", bytes.len());
+    log::info!("Original Size={}", bytes.len());
 
     // Unconditionally strip SMC headers.
     let bytes: Vec<u8> = match bytes.len() % 0x400 == 0x200 {
         true => {
-            info!("Removing unnecessary header");
+            log::info!("Removing unnecessary header");
             bytes[0x200..].to_vec()
         }
         false => bytes.to_vec(),

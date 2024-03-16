@@ -1,4 +1,4 @@
-use log::debug;
+use log;
 
 /// This describes a block of free space to put things in
 pub struct FreeSpace {
@@ -37,7 +37,7 @@ impl FreeSpace {
     /// Returns None, if there isn't sufficient space.
     /// Returns Some(start, end) if there is.
     pub fn allocate(&mut self, length: u16) -> Option<usize> {
-        debug!("Alloc bank {} {} bytes", self.bank, length);
+        log::debug!("Bank {:02X} -- allocates {:4} bytes", self.bank, length);
         let future_end_address = self.cursor as usize + length as usize;
         if future_end_address > self.end as usize || future_end_address > 0xFFFF {
             // Indicate this can't be allocated if it puts this past the safe range or it

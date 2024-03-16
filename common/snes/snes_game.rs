@@ -1,7 +1,6 @@
 use std::str::from_utf8;
 
-use log::debug;
-use log::info;
+use log;
 use strum_macros::Display;
 use strum_macros::FromRepr;
 
@@ -51,7 +50,7 @@ impl SnesGame {
         let mode = RomType::from_repr(mode_value)
             .expect(&format!("SnesMode {:02X} is invalid", mode_value));
 
-        info!("Address mode={}", mode);
+            log::info!("Address mode={}", mode);
 
         Self {
             mode,
@@ -84,9 +83,9 @@ impl SnesGame {
     pub fn resize(&mut self, size: RomSize) {
         let new_size = (1 << (size as usize)) * 1024;
         if new_size <= self.buffer.len() {
-            info!("Resizing skipped {} <= {}", new_size, self.buffer.len());
+            log::info!("Resizing skipped {} <= {}", new_size, self.buffer.len());
         } else {
-            info!("Resizing game {} >= {}", new_size, self.buffer.len());
+            log::info!("Resizing game {} >= {}", new_size, self.buffer.len());
             self.buffer.resize(new_size, 0x0);
             self.write(SIZE_ADDRESS, size as u8);
         }
@@ -114,8 +113,8 @@ impl SnesGame {
 
         for (address, capacity) in areas_to_clear {
             self.write_all(address, &vec![0; capacity]);
-            debug!(
-                "Clearing from ${:06X} to ${:06X}",
+            log::debug!(
+                "Clearing  ${:06X}..${:06X}",
                 address,
                 address + capacity
             );
@@ -154,13 +153,13 @@ impl SnesGame {
 
         for (index, val) in range.iter().enumerate() {
             if index % 16 == 0 {
-                debug!(
+                log::debug!(
                     "PC[_{:06X}] @ #_{:06X}: ",
                     start + index,
                     (bank << 16) + index
                 );
             }
-            debug!(" {:02X}", val);
+            log::debug!(" {:02X}", val);
         }
     }
 
@@ -252,8 +251,8 @@ impl SnesGame {
     /// Returns None if there was insufficient space
     /// Returns Some(long_address) if successful.
     pub fn write_data(&mut self, banks: &[u8], values: &[u8]) -> Option<usize> {
-        debug!("Check bank {:?} for {} bytes", banks, values.len());
         if values.len() > 0xFFFF {
+            log::debug!("Check bank {:?} for {} bytes", banks, values.len());
             panic!("The values cannot fit into a single bank!");
         }
 

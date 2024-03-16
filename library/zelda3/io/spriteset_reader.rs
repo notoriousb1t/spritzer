@@ -4,7 +4,7 @@ use assembly::zelda3::Symbol;
 use common::SnesGame;
 use strum::IntoEnumIterator;
 
-use crate::zelda3::model::SpriteSheetId;
+use crate::zelda3::model::SpritesheetId;
 use crate::zelda3::model::Spriteset;
 use crate::zelda3::model::SpritesetId;
 
@@ -22,19 +22,19 @@ fn _read_spriteset(game: &SnesGame, id: SpritesetId) -> Spriteset {
     Spriteset {
         id,
         sheets: [
-            SpriteSheetId::from_repr(bytes[0]).expect(&format!(
+            SpritesheetId::from_repr(bytes[0]).expect(&format!(
                 "Spriteset {} spritesheet ${:02X} id failure in slot 0",
                 id, bytes[0]
             )),
-            SpriteSheetId::from_repr(bytes[1]).expect(&format!(
+            SpritesheetId::from_repr(bytes[1]).expect(&format!(
                 "Spriteset {} spritesheet ${:02X} id failure in slot 1",
                 id, bytes[1]
             )),
-            SpriteSheetId::from_repr(bytes[2]).expect(&format!(
+            SpritesheetId::from_repr(bytes[2]).expect(&format!(
                 "Spriteset {} spritesheet ${:02X} id failure in slot 2",
                 id, bytes[2]
             )),
-            SpriteSheetId::from_repr(bytes[3]).expect(&format!(
+            SpritesheetId::from_repr(bytes[3]).expect(&format!(
                 "Spriteset {} spritesheet ${:02X} id failure in slot 3",
                 id, bytes[3]
             )),

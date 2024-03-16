@@ -19,20 +19,20 @@ use spritzer::zelda3::Z3Options;
 fn main() {
     setup_logging();
 
-    let options = inverted_mode();
+    let options = chaos_mode();
     let current_dir = std::env::current_dir().expect(&format!("Could not get current directory"));
-    let input_path = current_dir.join("library/.testdata/p7.sfc");
+    let input_path = current_dir.join("./library/.testdata/p8.sfc");
     let input_bytes = read_file(input_path.as_ref());
 
     let output_bytes = randomize_zelda3(&input_bytes, &options);
-    let output_path = current_dir.join("library/.build/output.sfc");
+    let output_path = current_dir.join("./library/.build/output.sfc");
 
     write_file(output_path.as_path(), &output_bytes);
 }
 
 fn setup_logging() {
     CombinedLogger::init(vec![TermLogger::new(
-        LevelFilter::Info,
+        LevelFilter::Debug,
         Config::default(),
         TerminalMode::Mixed,
         ColorChoice::Auto,
@@ -105,6 +105,21 @@ fn inverted_mode() -> Z3Options {
         underworld_enemy_shuffle: UnderworldEnemyShuffle::Chaos,
         seed: "test".to_owned(),
         shadow_bees: false,
+    }
+}
+
+/// Useful for testing the preferred experience.
+fn chaos_mode() -> Z3Options {
+    Z3Options {
+        boss_shuffle: false,
+        mushroom_shuffle: false,
+        killable_thieves: true,
+        overworld_balancing: Balancing::Random,
+        overworld_enemy_shuffle: OverworldEnemyShuffle::Chaos,
+        underworld_balancing: Balancing::Random,
+        underworld_enemy_shuffle: UnderworldEnemyShuffle::Chaos,
+        seed: "saofinsdofinsdofinsodifnsoidf".to_owned(),
+        shadow_bees: true,
     }
 }
 

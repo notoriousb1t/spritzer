@@ -75,11 +75,11 @@ pub(crate) enum SpriteId {
     x3E_HOARDER_ROCK = 62,
     x3F_TUTORIAL_SOLDIER = 63,
     x40_LIGHTNING_LOCK = 64,
-    x41_BLUE_GUARD = 65,
+    x41BlueSwordGuard = 65,
     x42_GREEN_GUARD = 66,
     x43_RED_SPEAR_GUARD = 67,
     x44_BLUE_ASSAULT_GUARD = 68,
-    x45_BLACK_SPEAR_GUARD = 69,
+    x45RedSpearGuard2 = 69,
     x46_BLUE_ARCHER = 70,
     x47_GREEN_GUARD_BUSH = 71,
     x48_RED_JAVELIN_GUARD = 72,
@@ -134,7 +134,7 @@ pub(crate) enum SpriteId {
     x79_BEE = 121,
     x7A_AGAHNIM = 122,
     x7B_AGAHNIM_ENERGY_BALL = 123,
-    x7C_GREEN_STALFOS = 124,
+    x7C_FloatingStalfosHead = 124,
     x7D_BIG_SPIKE = 125,
     x7E_FIREBAR_CLOCKWISE = 126,
     x7F_FIREBAR_COUNTER_CLOCKWISE = 127,
@@ -254,7 +254,7 @@ pub(crate) enum SpriteId {
     xF1_SOMARIA_PLATFORM_UNUSED_3 = 241,
     xF2_MEDALLION_TABLET = 242,
 
-    // Start Overlords.
+    // Overworld overlords.
     xF3_PERSONS_DOOR_OW_OVERLORD = 243,
     xF4_FALLING_ROCKS_OW_OVERLORD = 244,
     xF5_CANON_BALLS_OW_OVERLORD = 245,
@@ -267,6 +267,8 @@ pub(crate) enum SpriteId {
     xFC_FLOOR_DROP_SQUARE_OW_OVERLORD = 252,
     xFD_FLOOR_DROP_NORTH_PATH_OW_OVERLORD = 253,
     xFE_FLOOR_DROP_EAST_PATH_OW_OVERLORD = 254,
+
+    // Underworld overlords.
     x102_CANON_BALLS_EP_4_WALL_CANONBALLS = 258,
     x103_CANON_BALLS_EP_ENTRY = 259,
     x104_ROPE_DROP_TRAP = 260,
