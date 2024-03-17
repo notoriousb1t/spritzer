@@ -426,6 +426,12 @@ pub(crate) fn can_sprite_hold_key(sprite_id: &SpriteId) -> bool {
         SpriteId::x4C_GELDMAN => false,
         // Exits the screen.
         SpriteId::x6F_KEESE => false,
+        // There isn't a guarantee that this is killable without bombs
+        // and you may not have the sword. In particular, it can be difficult
+        // to complete the standard mode if a stalfos knight is holding the
+        // key in the path of escape, it can be impossible to leave without 
+        // a boomerang/sword and a bomb.
+        SpriteId::x91_STALFOS_KNIGHT => false,
         // Exits the screen.
         SpriteId::x85_YELLOW_STALFOS => false,
         // Needs investigation.

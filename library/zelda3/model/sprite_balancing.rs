@@ -25,6 +25,17 @@ pub(crate) fn get_weights(
     );
 }
 
+// Provides the weighting for a single sprite based on the balancing parameter.
+pub(crate) fn get_weight(balancing: Balancing, sprite_id: SpriteId) -> usize {
+    let weight_fn = match balancing {
+        Balancing::Random => get_weights_random,
+        Balancing::Casual => get_weights_casual,
+        Balancing::Balanced => get_weights_balanced,
+        Balancing::Hero => get_weights_hero,
+    };
+    weight_fn(&sprite_id)
+}
+
 /// Equal chance for randomization. YOLO!
 fn get_weights_random(sprite_id: &SpriteId) -> usize {
     match get_sprite_challenge(sprite_id) {

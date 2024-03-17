@@ -3,16 +3,18 @@ use std::collections::btree_map::Entry;
 use std::collections::{BTreeMap, HashSet};
 
 use log;
+use rand::distributions::{Distribution, WeightedError, WeightedIndex};
 use rand::prelude::SliceRandom;
 use rand::rngs::StdRng;
 use strum::IntoEnumIterator;
 
 use crate::zelda3::model::{
     can_shuffle_in_uw, get_sprite_requirements, get_sprite_type, get_spritesheet_arrangements,
-    is_list_compatible, is_restricted_sprite, is_special_damage_sprite,
+    get_weight, is_list_compatible, is_restricted_sprite, is_special_damage_sprite,
     is_spritesheet_permanent_uw, Placement, SpriteId, SpriteType, Spriteset, SpritesetId,
     SpritesheetId, UWRoomId, Z3Model,
 };
+use crate::zelda3::Balancing;
 
 /// Attempt to re-arrange distribution of spritesets.
 pub(crate) fn apply_uw_spriteset_shuffle(model: &mut Z3Model) {
@@ -94,7 +96,7 @@ fn fill_spritesets(model: &mut Z3Model, rng: &mut StdRng) {
         .filter(|it| it.is_underworld())
         .collect::<Vec<_>>();
 
-    let mut spritesheet_pool = create_spritesheet_pool();
+    let mut spritesheet_pool = create_spritesheet_pool(model.uw_balancing);
 
     for spriteset_id in spritesets {
         let spriteset = model
@@ -116,7 +118,7 @@ fn fill_spritesets(model: &mut Z3Model, rng: &mut StdRng) {
         }
 
         // If there are no suitable sheets left over, refill the pool and try a second time.
-        spritesheet_pool = create_spritesheet_pool();
+        spritesheet_pool = create_spritesheet_pool(model.uw_balancing);
         if fill_spriteset_from_pool(spriteset, rng, &mut spritesheet_pool) {
             continue;
         }
@@ -125,18 +127,24 @@ fn fill_spritesets(model: &mut Z3Model, rng: &mut StdRng) {
     }
 }
 
-fn create_spritesheet_pool() -> Vec<[SpritesheetId; 4]> {
+fn create_spritesheet_pool(balancing: Balancing) -> Vec<(usize, [SpritesheetId; 4])> {
     SpriteId::iter()
         .filter(|it| {
             !is_restricted_sprite(it)
-                && (get_sprite_type(it) == SpriteType::Enemy
-                    || get_sprite_type(it) == SpriteType::Hazard)
+                && matches!(
+                    get_sprite_type(it),
+                    SpriteType::Enemy
+                        | SpriteType::Hazard
+                        | SpriteType::Absorbable
+                        | SpriteType::Creature
+                )
                 && can_shuffle_in_uw(&it)
         })
         .flat_map(|sprite_id| {
+            let weight = get_weight(balancing, sprite_id);
             get_spritesheet_arrangements(&sprite_id)
                 .iter()
-                .map(|spritesheets| *spritesheets)
+                .map(|spritesheets| (weight, *spritesheets))
                 .collect::<Vec<_>>()
         })
         .collect::<Vec<_>>()
@@ -146,13 +154,10 @@ fn create_spritesheet_pool() -> Vec<[SpritesheetId; 4]> {
 fn fill_spriteset_from_pool(
     spriteset: &mut Spriteset,
     rng: &mut StdRng,
-    pool: &mut Vec<[SpritesheetId; 4]>,
+    pool: &mut Vec<(usize, [SpritesheetId; 4])>,
 ) -> bool {
     for _ in 0..128 {
-        if let Some(spritesheets) = {
-            pool.shuffle(rng);
-            pool.pop()
-        } {
+        if let Ok(spritesheets) = choose_from_pool(pool, rng) {
             let is_compatible = spritesheets.iter().enumerate().all(|(i, spritesheet)| {
                 spriteset.sheets[i] == *spritesheet
                     || SpritesheetId::None == *spritesheet
@@ -180,7 +185,21 @@ fn fill_spriteset_from_pool(
             }
         }
     }
-    return false;
+    false
+}
+
+fn choose_from_pool(
+    pool: &mut Vec<(usize, [SpritesheetId; 4])>,
+    rng: &mut StdRng,
+) -> Result<[SpritesheetId; 4], WeightedError> {
+    let weights = pool
+        .iter()
+        .map(|(weight, _)| *weight)
+        .collect::<Vec<_>>();
+    let weighted_index = WeightedIndex::new(&weights)?;
+    let selected_index = weighted_index.sample(rng);
+    let (_, spriteset) = pool.remove(selected_index);
+    Ok(spriteset)
 }
 
 fn choose_new_spriteset(model: &mut Z3Model, rng: &mut StdRng) {
