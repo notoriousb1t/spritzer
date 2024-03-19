@@ -9,25 +9,18 @@ use rand::rngs::StdRng;
 use strum::IntoEnumIterator;
 
 use crate::zelda3::model::{
-    can_shuffle_in_uw, get_sprite_requirements, get_sprite_type, get_spritesheet_arrangements,
-    get_weight, is_list_compatible, is_restricted_sprite, is_special_damage_sprite,
-    is_spritesheet_permanent_uw, Placement, SpriteId, SpriteType, Spriteset, SpritesetId,
-    SpritesheetId, UWRoomId, Z3Model,
+    can_shuffle_in_uw, get_sprite_requirements, get_spritesheet_arrangements, get_weight,
+    is_list_compatible, is_restricted_sprite, is_special_damage_sprite,
+    is_spritesheet_permanent_uw, Placement, SpriteId, Spriteset, SpritesetId, SpritesheetId,
+    UWRoomId, Z3Model,
 };
 use crate::zelda3::Balancing;
 
 /// Attempt to re-arrange distribution of spritesets.
 pub(crate) fn apply_uw_spriteset_shuffle(model: &mut Z3Model) {
     clear_optional_uw_spritesheets(model);
-
-    let mut rng = model.create_rng();
-    fill_spritesets(model, &mut rng);
-
-    // Recalculate sprite pool. If this doesn't happen, the randomization is super disappointing
-    // because most spritesets have nothing in them.
-    model.prepare_sprite_pool();
-
-    choose_new_spriteset(model, &mut rng);
+    fill_spritesets(model);
+    choose_new_spriteset(model);
 }
 
 /// Clear all non-essential spritesheets.
@@ -90,7 +83,8 @@ fn compute_spriteset_requirements(model: &Z3Model) -> BTreeMap<SpritesetId, Hash
     map
 }
 
-fn fill_spritesets(model: &mut Z3Model, rng: &mut StdRng) {
+fn fill_spritesets(model: &mut Z3Model) {
+    let mut rng = model.create_rng();
     // UW can only access a subset of spritesets.
     let spritesets = SpritesetId::iter()
         .filter(|it| it.is_underworld())
@@ -113,13 +107,13 @@ fn fill_spritesets(model: &mut Z3Model, rng: &mut StdRng) {
             continue;
         }
 
-        if fill_spriteset_from_pool(spriteset, rng, &mut spritesheet_pool) {
+        if fill_spriteset_from_pool(spriteset, &mut rng, &mut spritesheet_pool) {
             continue;
         }
 
         // If there are no suitable sheets left over, refill the pool and try a second time.
         spritesheet_pool = create_spritesheet_pool(model.uw_balancing);
-        if fill_spriteset_from_pool(spriteset, rng, &mut spritesheet_pool) {
+        if fill_spriteset_from_pool(spriteset, &mut rng, &mut spritesheet_pool) {
             continue;
         }
 
@@ -129,17 +123,7 @@ fn fill_spritesets(model: &mut Z3Model, rng: &mut StdRng) {
 
 fn create_spritesheet_pool(balancing: Balancing) -> Vec<(usize, [SpritesheetId; 4])> {
     SpriteId::iter()
-        .filter(|it| {
-            !is_restricted_sprite(it)
-                && matches!(
-                    get_sprite_type(it),
-                    SpriteType::Enemy
-                        | SpriteType::Hazard
-                        | SpriteType::Absorbable
-                        | SpriteType::Creature
-                )
-                && can_shuffle_in_uw(&it)
-        })
+        .filter(|it| !is_restricted_sprite(it) && can_shuffle_in_uw(&it))
         .flat_map(|sprite_id| {
             let weight = get_weight(balancing, sprite_id);
             get_spritesheet_arrangements(&sprite_id)
@@ -192,17 +176,17 @@ fn choose_from_pool(
     pool: &mut Vec<(usize, [SpritesheetId; 4])>,
     rng: &mut StdRng,
 ) -> Result<[SpritesheetId; 4], WeightedError> {
-    let weights = pool
-        .iter()
-        .map(|(weight, _)| *weight)
-        .collect::<Vec<_>>();
+    let weights = pool.iter().map(|(weight, _)| *weight).collect::<Vec<_>>();
     let weighted_index = WeightedIndex::new(&weights)?;
     let selected_index = weighted_index.sample(rng);
     let (_, spriteset) = pool.remove(selected_index);
     Ok(spriteset)
 }
 
-fn choose_new_spriteset(model: &mut Z3Model, rng: &mut StdRng) {
+fn choose_new_spriteset(model: &mut Z3Model) {
+    model.prepare_sprite_pool();
+
+    let mut rng = model.create_rng();
     let spritesets = SpritesetId::iter()
         .filter(|it| it.is_underworld())
         .collect::<Vec<_>>();
@@ -211,7 +195,7 @@ fn choose_new_spriteset(model: &mut Z3Model, rng: &mut StdRng) {
     // every spriteset to be somewhat equal in distribution (although not guaranteed).
     // Each time a spriteset is used, it diminishes weight by half with a minimum of 1
     // so that special damage kill rooms always have a choice.
-    const WEIGHT_FULL: usize = 16;
+    const WEIGHT_FULL: usize = 32;
     const WEIGHT_EMPTY: usize = 1;
     let mut weights = BTreeMap::from_iter(
         spritesets
@@ -295,7 +279,7 @@ fn choose_new_spriteset(model: &mut Z3Model, rng: &mut StdRng) {
             .map(|it| *it)
             .collect::<Vec<_>>();
         let maybe_matching_spriteset =
-            compatible_spritesets.choose_weighted(rng, |spriteset_id| weights[spriteset_id]);
+            compatible_spritesets.choose_weighted(&mut rng, |spriteset_id| weights[spriteset_id]);
 
         // Switch spritesets. There should always be at least one match (the original spriteset).
         if let Ok(new_spriteset_id) = maybe_matching_spriteset.copied() {
