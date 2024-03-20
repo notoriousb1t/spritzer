@@ -594,7 +594,7 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
         ],
         SpriteId::x3F_TUTORIAL_SOLDIER => vec![[
             SpritesheetId::x48_SOLDIER,
-            SpritesheetId::None,
+            SpritesheetId::x49_SOLDIERS,
             SpritesheetId::None,
             SpritesheetId::None,
         ]],
@@ -842,7 +842,7 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
         SpriteId::x56_WALKING_ZORA => vec![[
             SpritesheetId::None,
             SpritesheetId::None,
-            SpritesheetId::None,
+            SpritesheetId::xC_OCTOROK_ZORA, // Verify?
             SpritesheetId::x44_ZORAS_DOMAIN,
         ]],
         SpriteId::x57_DESERT_STATUE => vec![[

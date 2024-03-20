@@ -75,7 +75,7 @@ fn reroll_sprites(
 
         // Try to find a suitable match, if not just leave the Sprite as is.
 
-        let weights = get_weights(&model.ow_balancing, &possible_matches);
+        let weights = get_weights(&model.ow_balancing, false, &possible_matches);
         if let Ok(&sprite_id) =
             possible_matches.choose_weighted(rng, |sprite_id| weights[*sprite_id])
         {

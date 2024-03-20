@@ -135,7 +135,7 @@ fn generate_sprite_selections(
                 continue;
             }
 
-            let weights = get_weights(&model.uw_balancing, &possible_matches);
+            let weights = get_weights(&model.uw_balancing, false, &possible_matches);
             if weights.iter().all(|it| it.1 == &0) {
                 // If all weights are zero, continue. This signifies no valid replacements.
                 // Just replace with self in that case.

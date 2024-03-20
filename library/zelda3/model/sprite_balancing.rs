@@ -10,13 +10,17 @@ use crate::zelda3::options::Balancing;
 /// Provides weightings to enforce some sort of difficulty for sprite placement when rerolling.
 pub(crate) fn get_weights(
     balancing: &Balancing,
+    is_adjusted_down: bool,
     sprite_ids: &[&SpriteId],
 ) -> BTreeMap<SpriteId, usize> {
-    let weight_fn = match balancing {
-        Balancing::Random => get_weights_random,
-        Balancing::Casual => get_weights_casual,
-        Balancing::Balanced => get_weights_balanced,
-        Balancing::Hero => get_weights_hero,
+    let weight_fn = match is_adjusted_down {
+        true => get_weights_casual,
+        false => match balancing {
+            Balancing::Random => get_weights_random,
+            Balancing::Casual => get_weights_casual,
+            Balancing::Balanced => get_weights_balanced,
+            Balancing::Hero => get_weights_hero,
+        },
     };
     return BTreeMap::from_iter(
         sprite_ids

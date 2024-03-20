@@ -74,7 +74,9 @@ fn compute_spriteset_requirements(model: &Z3Model) -> BTreeMap<SpritesetId, Hash
 
 fn fill_ow_spritesets(model: &mut Z3Model) {
     let mut rng = model.create_rng();
-    let spritesets = SpritesetId::iter().collect::<Vec<_>>();
+    let spritesets = SpritesetId::iter()
+        .filter(|spriteset_id| !spriteset_id.is_underworld())
+        .collect::<Vec<_>>();
 
     let mut spritesheet_pool = create_spritesheet_pool(model.ow_balancing);
 
@@ -172,7 +174,7 @@ fn choose_from_pool(
 
 fn choose_new_spriteset(model: &mut Z3Model) {
     model.prepare_sprite_pool();
-    
+
     let mut rng = model.create_rng();
     // OW can choose from any spriteset.
     let spritesets = SpritesetId::iter().collect::<Vec<_>>();

@@ -4,8 +4,8 @@ use rand::seq::SliceRandom;
 use strum::IntoEnumIterator;
 
 use crate::zelda3::model::{
-    get_sprite_type, get_weights, is_fully_compatible, is_partially_compatible, Placement,
-    SpriteId, SpriteType, UWRoomId, Z3Model,
+    get_sprite_type, get_weights, is_fully_compatible, is_partially_compatible, DungeonId,
+    Placement, SpriteId, SpriteType, UWRoomId, Z3Model,
 };
 
 pub(crate) fn apply_uw_sprites_chaotic_shuffle(model: &mut Z3Model) {
@@ -44,6 +44,16 @@ fn randomize_sprites(model: &mut Z3Model, rng: &mut StdRng, room_id: UWRoomId) {
         return;
     }
 
+    // If the room is part of escape, artificially lower the difficulty because this could be a standard
+    // run and there are some rooms that are painful given the number of pests normally there.
+    let is_adjusted_down = model
+        .dungeons
+        .iter()
+        .find(|(dungeon_id, dungeon)| {
+            **dungeon_id == DungeonId::X00_Sewers && dungeon.rooms.contains(&room_id)
+        })
+        .is_some();
+
     // Loop through all sprites, marking sprites as needing removal.
     let mut removed_indexes: Vec<usize> = vec![];
     for (index, uw_sprite) in spritelist.sprites.iter_mut().enumerate() {
@@ -75,7 +85,7 @@ fn randomize_sprites(model: &mut Z3Model, rng: &mut StdRng, room_id: UWRoomId) {
         }
 
         // Compute the weights.
-        let weights = get_weights(&model.uw_balancing, &possible_matches);
+        let weights = get_weights(&model.uw_balancing, is_adjusted_down, &possible_matches);
         if weights.iter().all(|it| it.1 == &0) {
             // Mark sprite as irreplaceable.
             continue;
@@ -85,7 +95,12 @@ fn randomize_sprites(model: &mut Z3Model, rng: &mut StdRng, room_id: UWRoomId) {
             .choose_weighted(rng, |&it| weights[it])
             .unwrap();
 
-        log::debug!("UW ${:02X} -- {} -> {}", room_id as u8, uw_sprite.id, sprite_result);
+        log::debug!(
+            "UW ${:02X} -- {} -> {}",
+            room_id as u8,
+            uw_sprite.id,
+            sprite_result
+        );
 
         uw_sprite.id = **sprite_result;
     }

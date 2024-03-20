@@ -39,7 +39,7 @@ pub(crate) fn get_sprite_challenge(sprite_id: &SpriteId) -> SpriteChallenge {
         SpriteId::x22_ROPA => SpriteChallenge::X3Easier,
         SpriteId::x23_RED_BARI => SpriteChallenge::X2Easy,
         SpriteId::x24_BLUE_BARI => SpriteChallenge::X2Easy,
-        SpriteId::x26_HARDHAT_BEETLE => SpriteChallenge::X3Easier,
+        SpriteId::x26_HARDHAT_BEETLE => SpriteChallenge::X5Hard,
         SpriteId::x27_DEADROCK => SpriteChallenge::X5Hard,
         SpriteId::x3E_HOARDER_ROCK => SpriteChallenge::X1Easiest,
         SpriteId::x41BlueSwordGuard => SpriteChallenge::X5Hard,
