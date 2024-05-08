@@ -79,9 +79,8 @@ pub(crate) fn apply_features(model: &mut Z3Model, options: &Z3Options) {
         apply_ow_inversion(model);
     }
 
-    if sprites_will_change {
-        // Ensure sprite pools are computed before sprite shuffles.
-        model.prepare_sprite_pool();
+    if options.boss_shuffle {
+        apply_boss_shuffle(model);
     }
 
     // Process spriteset shuffling if applicable for Underworld.
@@ -108,8 +107,22 @@ pub(crate) fn apply_features(model: &mut Z3Model, options: &Z3Options) {
         _ => {}
     }
 
-    if options.boss_shuffle {
-        apply_boss_shuffle(model);
+    match options.underworld_enemy_shuffle {
+        UnderworldEnemyShuffle::Simple => {
+            apply_uw_sprites_simple_shuffle(model);
+        }
+        UnderworldEnemyShuffle::Full => {
+            apply_uw_sprites_full_shuffle(model);
+        }
+        UnderworldEnemyShuffle::Chaos => {
+            apply_uw_sprites_chaotic_shuffle(model);
+            apply_uw_overlord_shuffle(model);
+        }
+        UnderworldEnemyShuffle::Insanity => {
+            apply_uw_sprites_chaotic_shuffle(model);
+            apply_uw_overlord_shuffle(model);
+        }
+        _ => {}
     }
 
     match options.overworld_enemy_shuffle {
@@ -127,24 +140,6 @@ pub(crate) fn apply_features(model: &mut Z3Model, options: &Z3Options) {
         }
         OverworldEnemyShuffle::Insanity => {
             apply_ow_sprite_full_shuffle(model);
-        }
-        _ => {}
-    }
-
-    match options.underworld_enemy_shuffle {
-        UnderworldEnemyShuffle::Simple => {
-            apply_uw_sprites_simple_shuffle(model);
-        }
-        UnderworldEnemyShuffle::Full => {
-            apply_uw_sprites_full_shuffle(model);
-        }
-        UnderworldEnemyShuffle::Chaos => {
-            apply_uw_sprites_chaotic_shuffle(model);
-            apply_uw_overlord_shuffle(model);
-        }
-        UnderworldEnemyShuffle::Insanity => {
-            apply_uw_sprites_chaotic_shuffle(model);
-            apply_uw_overlord_shuffle(model);
         }
         _ => {}
     }

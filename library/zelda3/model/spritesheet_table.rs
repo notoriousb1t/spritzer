@@ -87,7 +87,7 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
         ]],
         SpriteId::x4_PULL_SWITCH_NORMAL => vec![
             [
-                SpritesheetId::x46_SOLDIERS,
+                SpritesheetId::X46_ELITE_GUARD,
                 SpritesheetId::None,
                 SpritesheetId::None,
                 SpritesheetId::None,
@@ -101,7 +101,7 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
         ],
         SpriteId::x5_PULL_SWITCH_NORMAL_UNUSED => vec![
             [
-                SpritesheetId::x46_SOLDIERS,
+                SpritesheetId::X46_ELITE_GUARD,
                 SpritesheetId::None,
                 SpritesheetId::None,
                 SpritesheetId::None,
@@ -115,7 +115,7 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
         ],
         SpriteId::x6_PULL_SWITCH_TRAP => vec![
             [
-                SpritesheetId::x46_SOLDIERS,
+                SpritesheetId::X46_ELITE_GUARD,
                 SpritesheetId::None,
                 SpritesheetId::None,
                 SpritesheetId::None,
@@ -129,7 +129,7 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
         ],
         SpriteId::x7_PULL_SWITCH_TRAP_UNUSED => vec![
             [
-                SpritesheetId::x46_SOLDIERS,
+                SpritesheetId::X46_ELITE_GUARD,
                 SpritesheetId::None,
                 SpritesheetId::None,
                 SpritesheetId::None,
@@ -303,13 +303,6 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
                 SpritesheetId::None,
                 SpritesheetId::None,
                 SpritesheetId::x1B_MISCELLANEOUS_DW_1,
-            ],
-            // Homebrew (floating skull)
-            [
-                SpritesheetId::None,
-                SpritesheetId::None,
-                SpritesheetId::None,
-                SpritesheetId::x20_STALFOS_KNIGHT_VERMIN,
             ],
             // Homebrew (floating orb)
             [
@@ -634,14 +627,14 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
         ],
         SpriteId::x43_RED_SPEAR_GUARD => vec![
             [
-                SpritesheetId::x46_SOLDIERS,
+                SpritesheetId::X46_ELITE_GUARD,
                 SpritesheetId::x49_SOLDIERS,
                 SpritesheetId::None,
                 SpritesheetId::None,
             ],
             [
                 // Homebrew: Borrow the top half from lightworld.
-                SpritesheetId::x46_SOLDIERS,
+                SpritesheetId::X46_ELITE_GUARD,
                 SpritesheetId::xD_SOLDIERS_DW,
                 SpritesheetId::None,
                 SpritesheetId::None,
@@ -649,13 +642,13 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
         ],
         SpriteId::x44_BLUE_ASSAULT_GUARD => vec![
             [
-                SpritesheetId::x46_SOLDIERS,
+                SpritesheetId::X46_ELITE_GUARD,
                 SpritesheetId::x49_SOLDIERS,
                 SpritesheetId::None,
                 SpritesheetId::None,
             ],
             [
-                SpritesheetId::x46_SOLDIERS,
+                SpritesheetId::X46_ELITE_GUARD,
                 SpritesheetId::xD_SOLDIERS_DW,
                 SpritesheetId::None,
                 SpritesheetId::None,
@@ -704,7 +697,7 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
             ],
         ],
         SpriteId::x48_RED_JAVELIN_GUARD => vec![[
-            SpritesheetId::x46_SOLDIERS,
+            SpritesheetId::X46_ELITE_GUARD,
             SpritesheetId::x49_SOLDIERS,
             SpritesheetId::None,
             SpritesheetId::None,
@@ -718,13 +711,13 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
                 SpritesheetId::None,
             ],
             [
-                SpritesheetId::x46_SOLDIERS,
+                SpritesheetId::X46_ELITE_GUARD,
                 SpritesheetId::x49_SOLDIERS,
                 SpritesheetId::None,
                 SpritesheetId::None,
             ],
             [
-                SpritesheetId::x46_SOLDIERS,
+                SpritesheetId::X46_ELITE_GUARD,
                 SpritesheetId::xD_SOLDIERS_DW,
                 SpritesheetId::None,
                 SpritesheetId::None,
@@ -738,13 +731,13 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
         ],
         SpriteId::x4A_RED_BOMB_GUARD => vec![
             [
-                SpritesheetId::x46_SOLDIERS,
+                SpritesheetId::X46_ELITE_GUARD,
                 SpritesheetId::x49_SOLDIERS,
                 SpritesheetId::None,
                 SpritesheetId::None,
             ],
             [
-                SpritesheetId::x46_SOLDIERS,
+                SpritesheetId::X46_ELITE_GUARD,
                 SpritesheetId::xD_SOLDIERS_DW,
                 SpritesheetId::None,
                 SpritesheetId::None,
@@ -766,7 +759,7 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
             ],
             [
                 SpritesheetId::None,
-                SpritesheetId::x46_SOLDIERS,
+                SpritesheetId::X46_ELITE_GUARD,
                 SpritesheetId::x13_SOLDIER_RECRUITS,
                 SpritesheetId::None,
             ],
@@ -960,20 +953,20 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
             SpritesheetId::None,
         ]],
         SpriteId::x6A_BALL_N_CHAIN_GUARD => vec![[
-            SpritesheetId::x46_SOLDIERS,
+            SpritesheetId::X46_ELITE_GUARD,
             SpritesheetId::None,
             SpritesheetId::None,
             SpritesheetId::None,
         ]],
         SpriteId::x6B_CANNON_GUARD => vec![
             [
-                SpritesheetId::x46_SOLDIERS,
+                SpritesheetId::X46_ELITE_GUARD,
                 SpritesheetId::x49_SOLDIERS,
                 SpritesheetId::None,
                 SpritesheetId::None,
             ],
             [
-                SpritesheetId::x46_SOLDIERS,
+                SpritesheetId::X46_ELITE_GUARD,
                 SpritesheetId::xD_SOLDIERS_DW,
                 SpritesheetId::None,
                 SpritesheetId::None,
@@ -1093,13 +1086,6 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
             SpritesheetId::x43_AGAHNIM,
         ]],
         SpriteId::x7C_FloatingStalfosHead => vec![
-            // Homebrew: Soldier head.
-            [
-                SpritesheetId::x49_SOLDIERS,
-                SpritesheetId::None,
-                SpritesheetId::None,
-                SpritesheetId::None,
-            ],
             [
                 SpritesheetId::x1F_STALFOS_BARI,
                 SpritesheetId::None,
@@ -1649,7 +1635,7 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
             ],
         ],
         // SpriteId::xC6_MEDUSA_FOUR_WAY
-        SpriteId::xC7_POKEY => vec![[
+        SpriteId::xC7_Hokkubokku_Pokey => vec![[
             SpritesheetId::None,
             SpritesheetId::None,
             SpritesheetId::x27_TURTLE_ROCK,
@@ -1894,12 +1880,7 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
         ]],
         // SpriteId::x106_BOMB_DROP1_TRAP
         // SpriteId::x107_MOVING_FLOOR
-        SpriteId::x108_TRANSFORMER_BUNNY_BEAM => vec![[
-            SpritesheetId::None,
-            SpritesheetId::x20_STALFOS_KNIGHT_VERMIN,
-            SpritesheetId::None,
-            SpritesheetId::None,
-        ]],
+        // SpriteId::x108_TRANSFORMER_BUNNY_BEAM
         SpriteId::x109_WALLMASTER_OVERLORD => vec![[
             SpritesheetId::None,
             SpritesheetId::None,

@@ -8,44 +8,45 @@
 ; be changed to not use repru8 directly in rust code.
 
 
-SpritePrep_EyegoreOrGoriya: {
+SpritePrep_EyegoreOrGoriya:
     ; Load sprite at x index and perform special loading if it is a a goriya code.
     LDA !SPRITE_ID,X
     CMP.b #!SPRITE_GORIYA 
-    BEQ .then_load_goriya
+    BEQ SpritePrep_Goriya
     RTL
 
-    .then_load_goriya
-        LDA.w !ROOM_ID
-        CMP.b #$0C ; TODO: This should probably do a CMP.w #10C instead.
-        BEQ .then_its_not_easy_being_green
+SpritePrep_Goriya:
+    LDA.w !ROOM_ID
+    CMP.w #!UW_ROOM_MIMIC_CAVE
+    BEQ SpritePrep_Goriya_Green
+    JMP SpritePrep_Goriya_Red
 
-        ; Use Red Eyegore for all properties.
-        LDA #!SPRITE_RED_EYEGORE 
-        JMP .then_continue
+SpritePrep_Goriya_Green
+    ; Temporarily set to Green Eyegore during property loading.
+    LDA #!SPRITE_GREEN_EYEGORE
+    JMP SpritePrep_Goriya_LoadProperties
 
-    ; Use Green Eyegore props in Mimic Cave.
-    .then_its_not_easy_being_green
-        LDA #!SPRITE_GREEN_EYEGORE ; Temporarily set to Green Eyegore during property loading.
+SpritePrep_Goriya_Red
+    ; Temporarily set to Red Eyegore during property loading.
+    LDA #!SPRITE_RED_EYEGORE
+    JMP SpritePrep_Goriya_LoadProperties
 
-    .then_continue
-        STA !SPRITE_ID,X
-        JSL SpritePrep_LoadProperties
-        
-        LDA #!SPRITE_GORIYA
-        STA !SPRITE_ID,X 
-        
-        LDA !SPRITE_SETTINGS_3,X
-        AND #$FB
-        ORA #$80
-        STZ.w !SPRITE_SETTINGS_3,X
-        
-        INC.w !SPRITE_STATE,X
-        LDA.w !SPRITE_ID,X
-        STZ.w !SPRITE_SETTINGS_3,X
-
-        RTL
-}
+SpritePrep_Goriya_LoadProperties
+    STA !SPRITE_ID,X
+    JSL SpritePrep_LoadProperties
+    
+    LDA #!SPRITE_GORIYA
+    STA !SPRITE_ID,X 
+    
+    LDA !SPRITE_SETTINGS_3,X
+    AND #$FB
+    ORA #$80
+    STZ.w !SPRITE_SETTINGS_3,X
+    
+    INC.w !SPRITE_STATE,X
+    LDA.w !SPRITE_ID,X
+    STZ.w !SPRITE_SETTINGS_3,X
+    RTL
 
 DamageSprite_Goriya: {
     LDA !SPRITE_ID,X
@@ -54,7 +55,7 @@ DamageSprite_Goriya: {
 
     ; Preserve green goriyas in mimic cave.
     LDA.w !ROOM_ID
-    CMP.b #$0C ; TODO: This should probably do a CMP.w #10C instead.
+    CMP.w #!UW_ROOM_MIMIC_CAVE
     BEQ .then_its_not_easy_being_green
 
     ; Use Red Eyegore for collisions.

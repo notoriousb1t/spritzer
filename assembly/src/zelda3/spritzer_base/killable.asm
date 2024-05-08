@@ -3,20 +3,29 @@
 pub_Killable:
     LDA !SPRITE_ID,X
     CMP.b #$FF ; Replaced with $C4 in Rust code when this is enabled.
-    BEQ Killable_EyeGore
+    BEQ Killable_EyeGore_Green
 
     CMP.b #!SPRITE_GORIYA
-    BEQ Killable_EyeGore
+    BEQ Killable_Goriya
 
     JMP Killable_return
 
-; Load green eyegore sprite id so we can kill the thing.
-Killable_EyeGore:
-    LDA !SPRITE_GREEN_EYEGORE
+Killable_Goriya:
+    LDA.w !ROOM_ID
+    CMP.w #!UW_ROOM_MIMIC_CAVE
+    BEQ Killable_EyeGore_Green
+    JMP Killable_EyeGore_Red
+
+Killable_EyeGore_Green:
+    LDA #!SPRITE_GREEN_EYEGORE
+    JMP Killable_return
+
+Killable_EyeGore_Red:
+    LDA #!SPRITE_RED_EYEGORE
     JMP Killable_return
 
 Killable_return:
-    ; Restore part of algorithm that was written over.
+    ; Restore what was written over.
     REP #$20
     ASL #2
     RTL

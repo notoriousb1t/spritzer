@@ -9,6 +9,8 @@ use crate::zelda3::model::{
 };
 
 pub(crate) fn apply_uw_sprites_chaotic_shuffle(model: &mut Z3Model) {
+    model.prepare_sprite_pool();
+    
     let mut rng = model.create_rng();
     for room_id in UWRoomId::iter() {
         randomize_sprites(model, &mut rng, room_id);
@@ -27,8 +29,6 @@ fn randomize_sprites(model: &mut Z3Model, rng: &mut StdRng, room_id: UWRoomId) {
         true => Placement::KillRoom,
         false => Placement::Room,
     };
-    // Get the current sprite choices for the pool.
-    let choices = &model.sprite_pool[&header.spriteset_id];
     // Get the current sprites in the room.
     let spritelist = model
         .uw_sprites
@@ -44,25 +44,24 @@ fn randomize_sprites(model: &mut Z3Model, rng: &mut StdRng, room_id: UWRoomId) {
         return;
     }
 
-    // If the room is part of escape, artificially lower the difficulty because this could be a standard
-    // run and there are some rooms that are painful given the number of pests normally there.
-    let is_adjusted_down = model
+    // If the room is part of escape or rescue, artificially lower the difficulty because this could be a standard
+    // run and there are some rooms that are painful given the number of pests normally there or impossible to kill
+    // with just the arrows.
+    let is_rescue_escape = model
         .dungeons
         .iter()
         .find(|(dungeon_id, dungeon)| {
-            **dungeon_id == DungeonId::X00_Sewers && dungeon.rooms.contains(&room_id)
+            (**dungeon_id == DungeonId::X00_Sewers || **dungeon_id == DungeonId::X02_HyruleCastle)
+                && dungeon.rooms.contains(&room_id)
         })
         .is_some();
+
+    // Get the current sprite choices for the pool.
+    let choices = &model.sprite_pool[&header.spriteset_id];
 
     // Loop through all sprites, marking sprites as needing removal.
     let mut removed_indexes: Vec<usize> = vec![];
     for (index, uw_sprite) in spritelist.sprites.iter_mut().enumerate() {
-        let sprite_type = get_sprite_type(&uw_sprite.id);
-        if sprite_type == SpriteType::Object {
-            // Objects can't be randomized. (Switches, etc.)
-            continue;
-        }
-
         // Find the subset of possible choices.
         let mut possible_matches: Vec<&SpriteId> = choices
             .iter()
@@ -78,14 +77,20 @@ fn randomize_sprites(model: &mut Z3Model, rng: &mut StdRng, room_id: UWRoomId) {
                 })
                 .collect::<Vec<_>>();
             if possible_matches.is_empty() {
-                // Mark sprite as removed.
-                removed_indexes.push(index);
+                match get_sprite_type(&uw_sprite.id) {
+                    SpriteType::Object => {}
+                    SpriteType::Npc => {}
+                    _ => {
+                        // Mark sprite as removed.
+                        removed_indexes.push(index);
+                    }
+                }
                 continue;
             }
         }
 
         // Compute the weights.
-        let weights = get_weights(&model.uw_balancing, is_adjusted_down, &possible_matches);
+        let weights = get_weights(&model.uw_balancing, is_rescue_escape, &possible_matches);
         if weights.iter().all(|it| it.1 == &0) {
             // Mark sprite as irreplaceable.
             continue;

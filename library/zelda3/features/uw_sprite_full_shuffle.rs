@@ -20,6 +20,8 @@ use crate::zelda3::model::UWSpriteList;
 use crate::zelda3::model::Z3Model;
 
 pub(crate) fn apply_uw_sprites_full_shuffle(model: &mut Z3Model) {
+    model.prepare_sprite_pool();
+    
     let mut rng = model.create_rng();
 
     let ids = model.uw_sprites.keys().cloned().collect::<Vec<_>>();

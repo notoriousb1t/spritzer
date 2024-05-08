@@ -19,7 +19,7 @@ use crate::zelda3::Balancing;
 pub(crate) fn apply_ow_spriteset_shuffle(model: &mut Z3Model) {
     reset_ow_spritesets(model);
     fill_ow_spritesets(model);
-    choose_new_spriteset(model);
+    choose_new_spritesets(model);
 }
 
 /// Clear all non-essential spritesheets.
@@ -80,7 +80,7 @@ fn fill_ow_spritesets(model: &mut Z3Model) {
 
     let mut spritesheet_pool = create_spritesheet_pool(model.ow_balancing);
 
-    for spriteset_id in spritesets {
+    for spriteset_id in spritesets.iter() {
         let spriteset = model
             .spritesets
             .get_mut(&spriteset_id)
@@ -106,6 +106,18 @@ fn fill_ow_spritesets(model: &mut Z3Model) {
         }
 
         log::error!("Unable to fill spriteset {}", spriteset_id);
+    }
+
+    for spriteset_id in spritesets.iter() {
+        let sheet = model.spritesets.get(&spriteset_id).unwrap();
+        log::debug!(
+            "SS ${:02X} -- ${:02X} ${:02X} ${:02X} ${:02X}",
+            *spriteset_id as u8,
+            sheet.sheets[0] as u8,
+            sheet.sheets[1] as u8,
+            sheet.sheets[2] as u8,
+            sheet.sheets[3] as u8,
+        );
     }
 }
 
@@ -172,7 +184,7 @@ fn choose_from_pool(
     Ok(spriteset)
 }
 
-fn choose_new_spriteset(model: &mut Z3Model) {
+fn choose_new_spritesets(model: &mut Z3Model) {
     model.prepare_sprite_pool();
 
     let mut rng = model.create_rng();
@@ -211,8 +223,9 @@ fn choose_new_spriteset(model: &mut Z3Model) {
             if has_special_requirements {
                 // Skip rooms with restricted sprites (npcs and bosses)
                 log::debug!(
-                    "OW ${:02X} -- found required  ${:02X}",
+                    "OW ${:02X} v{} -- found required  ${:02X}",
                     room_id as u8,
+                    version.overworld_id,
                     version.spriteset_id as u8,
                 );
                 continue;
@@ -236,6 +249,14 @@ fn choose_new_spriteset(model: &mut Z3Model) {
 
             // Switch spritesets. There should always be at least one match (the original spriteset).
             if let Ok(new_spriteset_id) = maybe_matching_spriteset {
+                log::debug!(
+                    "OW ${:02X} v{} -- spriteset_id ${:02X} -> ${:02X}",
+                    room_id as u8,
+                    version.overworld_id,
+                    version.spriteset_id as u8,
+                    *new_spriteset_id as u8,
+                );
+
                 version.spriteset_id = *new_spriteset_id;
 
                 // Reduce the weight by half when selected.
@@ -244,8 +265,9 @@ fn choose_new_spriteset(model: &mut Z3Model) {
                 weights.insert(*new_spriteset_id, new_weight);
             } else {
                 log::error!(
-                    "OW ${:02X} -- no valid swap for ${:02X}",
+                    "OW ${:02X} v{} -- no valid swap for ${:02X}",
                     room_id as u8,
+                    version.overworld_id,
                     version.spriteset_id as u8,
                 );
             }

@@ -220,7 +220,7 @@ pub(crate) fn get_sprite_type(sprite_id: &SpriteId) -> SpriteType {
         SpriteId::xC4_THIEF => SpriteType::Hazard,
         SpriteId::xC5_MEDUSA => SpriteType::Hazard,
         SpriteId::xC6_MEDUSA_FOUR_WAY => SpriteType::Hazard,
-        SpriteId::xC7_POKEY => SpriteType::Enemy,
+        SpriteId::xC7_Hokkubokku_Pokey => SpriteType::Enemy,
         SpriteId::xC8_GREAT_FAIRY => SpriteType::Npc,
         SpriteId::xC9_TEKTITE => SpriteType::Enemy,
         SpriteId::xCA_CHAIN_CHOMP => SpriteType::Hazard,

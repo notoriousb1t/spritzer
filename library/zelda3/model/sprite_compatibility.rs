@@ -84,17 +84,31 @@ pub(crate) fn is_fully_compatible(
 }
 
 fn is_classification_fully_compatible(source: &SpriteId, target: &SpriteId) -> bool {
-    get_sprite_type(source) == get_sprite_type(target)
-        // Only replace aquatic things with aquatic things.
-        && can_sprite_swim(source) == can_sprite_swim(target)
+    let source_type = get_sprite_type(source);
+    let target_type = get_sprite_type(target);
+
+    if source_type == SpriteType::Object || source_type == SpriteType::Npc {
+        return source == target;
+    }
+
+    if source_type != target_type {
+        return false;
+    }
+
+    // Only replace aquatic things with aquatic things.
+    return can_sprite_swim(source) == can_sprite_swim(target)
         // Flying creatures may have incompatible placement with other types, so only
         // replace flying creatures with flying creatures
-        && can_sprite_fly(source) == can_sprite_fly(target)
+        && can_sprite_fly(source) == can_sprite_fly(target);
 }
 
 fn is_classification_partially_compatible(source: &SpriteId, target: &SpriteId) -> bool {
     let source_type = get_sprite_type(source);
     let target_type = get_sprite_type(target);
+
+    if source_type == SpriteType::Object || source_type == SpriteType::Npc {
+        return source == target;
+    }
 
     if source_type == target_type {
         return true;

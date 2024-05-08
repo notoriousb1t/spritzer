@@ -134,7 +134,7 @@ pub(crate) fn get_sprite_challenge(sprite_id: &SpriteId) -> SpriteChallenge {
         SpriteId::xC4_THIEF => SpriteChallenge::X4Medium,
         SpriteId::xC5_MEDUSA => SpriteChallenge::X3Easier,
         SpriteId::xC6_MEDUSA_FOUR_WAY => SpriteChallenge::X4Medium,
-        SpriteId::xC7_POKEY => SpriteChallenge::X4Medium,
+        SpriteId::xC7_Hokkubokku_Pokey => SpriteChallenge::X6Harder,
         SpriteId::xC9_TEKTITE => SpriteChallenge::X3Easier,
         SpriteId::xCA_CHAIN_CHOMP => SpriteChallenge::X4Medium,
         SpriteId::xCB_TRINEXX_ROCK => SpriteChallenge::X6Harder,

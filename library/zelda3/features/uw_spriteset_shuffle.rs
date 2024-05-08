@@ -20,7 +20,7 @@ use crate::zelda3::Balancing;
 pub(crate) fn apply_uw_spriteset_shuffle(model: &mut Z3Model) {
     clear_optional_uw_spritesheets(model);
     fill_spritesets(model);
-    choose_new_spriteset(model);
+    choose_new_spritesets(model);
 }
 
 /// Clear all non-essential spritesheets.
@@ -92,7 +92,7 @@ fn fill_spritesets(model: &mut Z3Model) {
 
     let mut spritesheet_pool = create_spritesheet_pool(model.uw_balancing);
 
-    for spriteset_id in spritesets {
+    for spriteset_id in spritesets.iter() {
         let spriteset = model
             .spritesets
             .get_mut(&spriteset_id)
@@ -118,6 +118,18 @@ fn fill_spritesets(model: &mut Z3Model) {
         }
 
         log::error!("Unable to fill spriteset {}", spriteset_id);
+    }
+
+    for spriteset_id in spritesets.iter() {
+        let sheet = model.spritesets.get(&spriteset_id).unwrap();
+        log::debug!(
+            "SS ${:02X} -- ${:02X} ${:02X} ${:02X} ${:02X}",
+            *spriteset_id as u8,
+            sheet.sheets[0] as u8,
+            sheet.sheets[1] as u8,
+            sheet.sheets[2] as u8,
+            sheet.sheets[3] as u8,
+        );
     }
 }
 
@@ -183,7 +195,7 @@ fn choose_from_pool(
     Ok(spriteset)
 }
 
-fn choose_new_spriteset(model: &mut Z3Model) {
+fn choose_new_spritesets(model: &mut Z3Model) {
     model.prepare_sprite_pool();
 
     let mut rng = model.create_rng();
@@ -283,6 +295,12 @@ fn choose_new_spriteset(model: &mut Z3Model) {
 
         // Switch spritesets. There should always be at least one match (the original spriteset).
         if let Ok(new_spriteset_id) = maybe_matching_spriteset.copied() {
+            log::debug!(
+                "UW ${:02X} -- spriteset_id ${:02X} -> ${:02X}",
+                uw_room_id as u8,
+                header.spriteset_id as u8,
+                new_spriteset_id as u8,
+            );
             header.spriteset_id = new_spriteset_id;
 
             // Reduce the weight by half when selected.

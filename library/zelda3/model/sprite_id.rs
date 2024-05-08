@@ -209,7 +209,7 @@ pub(crate) enum SpriteId {
     xC4_THIEF = 196,
     xC5_MEDUSA = 197,
     xC6_MEDUSA_FOUR_WAY = 198,
-    xC7_POKEY = 199,
+    xC7_Hokkubokku_Pokey = 199,
     xC8_GREAT_FAIRY = 200,
     xC9_TEKTITE = 201,
     xCA_CHAIN_CHOMP = 202,

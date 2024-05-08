@@ -36,6 +36,7 @@ use crate::zelda3::options::DEBUG_VITREOUS;
 
 /// Attempt to shuffle bosses.
 pub(crate) fn apply_boss_shuffle(model: &mut Z3Model) {
+    model.prepare_sprite_pool();
     let mut rng = model.create_rng();
 
     log::info!("Dungeon randomization:");

@@ -60,7 +60,7 @@ pub(crate) fn apply_base_sprite_shuffle_changes(model: &mut Z3Model) {
         if let Some(room) = model.uw_sprites.get_mut(&uw_id) {
             for sprite in room.sprites.iter_mut() {
                 if let Some(new_id) = match sprite.id {
-                    // Same ratiionale as overworld replacement.
+                    // Same rationale as overworld replacement.
                     SpriteId::x45RedSpearGuard2 => Some(SpriteId::x41BlueSwordGuard),
                     _ => None,
                 } {
@@ -76,14 +76,9 @@ fn update_settings(model: &mut Z3Model) {
     for sprite in model.sprite_settings.values_mut() {
         let sprite_type = get_sprite_type(&sprite.id);
 
-        if sprite_type == SpriteType::Hazard
-            || sprite.id == SpriteId::xD8_HEART
-            || get_sprite_vulnerability(&sprite.id) == SpriteVulnerability::Invulnerable
-        {
-            // This makes sure the game and randomizer are aligned on what is killable for the
-            // purposes of underworld kill rooms.
-            sprite.statis = true;
-        }
+        // This makes sure the game and randomizer are aligned on what is killable for the
+        // purposes of underworld kill rooms.
+        sprite.statis = get_sprite_vulnerability(&sprite.id) == SpriteVulnerability::Invulnerable;
 
         match sprite_type {
             SpriteType::Enemy => {
@@ -94,19 +89,19 @@ fn update_settings(model: &mut Z3Model) {
                 // Flag all enemies as being eligible for boss battles.
                 sprite.boss_prep_preserved = true;
             }
-            _ => {}
+            _ => {
+                // Outside of enemies and hazards, preserve existing logic in game.
+            }
         }
     }
 }
 
 fn update_color_index(model: &mut Z3Model) {
-    if let Some(sprite) = model
-        .sprite_settings
-        .get_mut(&SpriteId::x45RedSpearGuard2)
-    {
+    if let Some(sprite) = model.sprite_settings.get_mut(&SpriteId::x45RedSpearGuard2) {
         // There are two red guards with spears in light world.
         // There are two green guards with spears in the dark world.
-        // Assign a different color to differentiate. This creates the iron soldiers.
+        // Assign a different color to differentiate. This creates the iron soldiers which are removed 
+        // during randmomization.
         sprite.palette = PaletteIndex::XENoir;
     }
     if let Some(sprite) = model.sprite_settings.get_mut(&SpriteId::x6B_CANNON_GUARD) {

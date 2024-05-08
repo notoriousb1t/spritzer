@@ -1,2 +1,0 @@
-org $09C383
-JSL Underworld_LoadSingleSprite_override

@@ -75,7 +75,7 @@ pub(crate) enum SpritesheetId {
     x43_AGAHNIM = 67,
     x44_ZORAS_DOMAIN = 68,
     x45_BIG_BAD_GUY = 69,
-    x46_SOLDIERS = 70,
+    X46_ELITE_GUARD = 70,
     x47_PRIEST = 71,
     x48_SOLDIER = 72,
     x49_SOLDIERS = 73,
