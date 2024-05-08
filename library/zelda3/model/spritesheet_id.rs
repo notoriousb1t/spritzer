@@ -20,7 +20,7 @@ pub(crate) enum SpritesheetId {
     xC_OCTOROK_ZORA = 12,
     xD_SOLDIERS_DW = 13,
     xE_POE_THIEF_LW = 14,
-    xF_DASH_HOARDER = 15,
+    xF_DASH = 15,
     x10_MISC_ROCKS = 16,
     x11_MISC_FAKE_SWORD = 17,
     x12_DESERT_1 = 18,

@@ -63,6 +63,7 @@ impl UnderworldEnemyShuffle {
     }
 }
 
+#[derive(Clone)]
 pub struct Z3Options {
     pub seed: String,
     pub boss_shuffle: bool,

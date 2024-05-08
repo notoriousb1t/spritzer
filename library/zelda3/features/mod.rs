@@ -3,6 +3,7 @@ mod killable_thieves;
 mod moldorm_shuffle;
 mod mushroom_shuffle;
 mod ow_inversion;
+mod ow_sprite_chaotic_shuffle;
 mod ow_sprite_full_shuffle;
 mod ow_sprite_simple_shuffle;
 mod ow_spriteset_shuffle;
@@ -35,6 +36,7 @@ use self::sprite_base::apply_base_sprite_changes;
 use self::uw_overlord_shuffle::apply_uw_overlord_shuffle;
 use self::uw_sprite_chaotic_shuffle::apply_uw_sprites_chaotic_shuffle;
 use self::uw_sprite_full_shuffle::apply_uw_sprites_full_shuffle;
+use self::ow_sprite_chaotic_shuffle::apply_ow_sprites_chaotic_shuffle;
 use self::uw_sprite_simple_shuffle::apply_uw_sprites_simple_shuffle;
 use self::uw_spriteset_shuffle::apply_uw_spriteset_shuffle;
 
@@ -136,11 +138,12 @@ pub(crate) fn apply_features(model: &mut Z3Model, options: &Z3Options) {
             apply_ow_sprite_full_shuffle(model);
         }
         OverworldEnemyShuffle::Chaos => {
-            apply_ow_sprite_full_shuffle(model);
+            apply_ow_sprites_chaotic_shuffle(model);
         }
         OverworldEnemyShuffle::Insanity => {
-            apply_ow_sprite_full_shuffle(model);
+            apply_ow_sprites_chaotic_shuffle(model);
         }
         _ => {}
     }
 }
+

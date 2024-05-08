@@ -36,6 +36,8 @@ The following describes how to run Spritzer locally
 
    Rust Analyzer will also rebuild the file automatically. If an error condition occurs, pause the Rust Analyzer Studio in Visual Studio Code and then run `cargo build`
 
+Please see [./assembly/README.md](./assembly/README.md) for additional maintainers notes.
+
 ## Testing
 
 - Run `cargo test` from the workspace or from a specific project folder. Tests that require real game binary data are ignored unless directly specified.

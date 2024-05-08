@@ -41,29 +41,29 @@ db $14, $0C, !SPRITE_GORIYA
 org $09EBD6
 db $1A, $0C, !SPRITE_GORIYA
 
-; Replace Eyegore Sprites in Room 0x1B (POD) with Goriya.
+; Replace Eyegore Sprites in Room 0x1B (POD) with Red Eyegore.
 org $09DB19
-db $14, $07, !SPRITE_GORIYA
+db $14, $07, !SPRITE_RED_EYEGORE
 org $09DB1C
 db $1C, $03, !SPRITE_GREEN_EYEGORE
 org $09DB1F
-db $1C, $0C, !SPRITE_GORIYA
+db $1C, $0C, !SPRITE_RED_EYEGORE
 
 ; Replace Eyegore Sprites in Room 0x4B (POD) with Goriya.
 org $09DEEB
-db $04, $07, !SPRITE_GORIYA
+db $04, $07, !SPRITE_RED_EYEGORE
 org $09DEF4
 db $08, $04, !SPRITE_GREEN_EYEGORE
 org $09DEF7
-db $08, $0B, !SPRITE_GORIYA
+db $08, $0B, !SPRITE_RED_EYEGORE
 
 ; Replace Eyegore Sprites in Room 0x6B (GT) with Goriya.
 org $09E199
-db $06, $0A, !SPRITE_GORIYA
+db $06, $0A, !SPRITE_RED_EYEGORE
 org $09E19C
-db $09, $06, !SPRITE_GORIYA
+db $09, $06, !SPRITE_RED_EYEGORE
 org $09E1A5
-db $18, $03, !SPRITE_GORIYA
+db $18, $03, !SPRITE_RED_EYEGORE
 org $09E1AE
 db $1B, $0C, !SPRITE_GORIYA
 org $09E1B1

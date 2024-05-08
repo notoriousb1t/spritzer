@@ -7,6 +7,7 @@ incsrc ../ram.asm
 incsrc ../rom.asm
 
 ; Hooks (should be limited to direct replacements or labeling addresses)
+incsrc overworld_fixes.asm
 incsrc ancilla_hooks.asm
 incsrc blind_hooks.asm
 incsrc killable_hooks.asm

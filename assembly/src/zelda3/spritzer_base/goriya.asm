@@ -12,26 +12,13 @@ SpritePrep_EyegoreOrGoriya:
     ; Load sprite at x index and perform special loading if it is a a goriya code.
     LDA !SPRITE_ID,X
     CMP.b #!SPRITE_GORIYA 
-    BEQ SpritePrep_Goriya
+    BEQ SpritePrep_Goriya_Green
     RTL
 
-SpritePrep_Goriya:
-    LDA.w !ROOM_ID
-    CMP.w #!UW_ROOM_MIMIC_CAVE
-    BEQ SpritePrep_Goriya_Green
-    JMP SpritePrep_Goriya_Red
-
-SpritePrep_Goriya_Green
+SpritePrep_Goriya_Green:
     ; Temporarily set to Green Eyegore during property loading.
     LDA #!SPRITE_GREEN_EYEGORE
-    JMP SpritePrep_Goriya_LoadProperties
 
-SpritePrep_Goriya_Red
-    ; Temporarily set to Red Eyegore during property loading.
-    LDA #!SPRITE_RED_EYEGORE
-    JMP SpritePrep_Goriya_LoadProperties
-
-SpritePrep_Goriya_LoadProperties
     STA !SPRITE_ID,X
     JSL SpritePrep_LoadProperties
     
@@ -53,18 +40,9 @@ DamageSprite_Goriya: {
     CMP.b #!SPRITE_GORIYA
     BNE .then_continue
 
-    ; Preserve green goriyas in mimic cave.
-    LDA.w !ROOM_ID
-    CMP.w #!UW_ROOM_MIMIC_CAVE
-    BEQ .then_its_not_easy_being_green
-
-    ; Use Red Eyegore for collisions.
-    LDA #!SPRITE_RED_EYEGORE
+    ; Use Green Eyegore for collisions.
+    LDA #!SPRITE_GREEN_EYEGORE
     JMP .then_continue
-
-    ; Use Green Eyegore for collisions in Mimic Cave.
-    .then_its_not_easy_being_green
-        LDA #!SPRITE_GREEN_EYEGORE
 
     ; restore comparison that this JSL wrote over.
     .then_continue

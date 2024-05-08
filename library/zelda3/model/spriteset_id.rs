@@ -36,7 +36,7 @@ pub(crate) enum SpritesetId {
     x18_PATH = 24,
     x19_LAKE = 25,
     x1A_PATH = 26,
-    xAB_DIGGING_GAME = 27,
+    x1B_DIGGING_GAME = 27,
     x1C_HYRULE_CASTLE = 28,
     x1D_THIEVES_VILLAGE = 29,
     x1E_UNUSED = 30,

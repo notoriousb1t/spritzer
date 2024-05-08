@@ -87,60 +87,34 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
         ]],
         SpriteId::x4_PULL_SWITCH_NORMAL => vec![
             [
-                SpritesheetId::X46_ELITE_GUARD,
                 SpritesheetId::None,
                 SpritesheetId::None,
                 SpritesheetId::None,
+                SpritesheetId::x52_ObjectsHazards,
             ],
             [
-                SpritesheetId::x55_AgahnimCrystalMaiden,
                 SpritesheetId::None,
                 SpritesheetId::None,
                 SpritesheetId::None,
+                SpritesheetId::x53_ObjectsHazards,
             ],
         ],
-        SpriteId::x5_PULL_SWITCH_NORMAL_UNUSED => vec![
-            [
-                SpritesheetId::X46_ELITE_GUARD,
-                SpritesheetId::None,
-                SpritesheetId::None,
-                SpritesheetId::None,
-            ],
-            [
-                SpritesheetId::x55_AgahnimCrystalMaiden,
-                SpritesheetId::None,
-                SpritesheetId::None,
-                SpritesheetId::None,
-            ],
-        ],
+        // SpriteId::x5_PULL_SWITCH_NORMAL_UNUSED
         SpriteId::x6_PULL_SWITCH_TRAP => vec![
             [
-                SpritesheetId::X46_ELITE_GUARD,
                 SpritesheetId::None,
                 SpritesheetId::None,
                 SpritesheetId::None,
+                SpritesheetId::x52_ObjectsHazards,
             ],
             [
-                SpritesheetId::x55_AgahnimCrystalMaiden,
                 SpritesheetId::None,
                 SpritesheetId::None,
                 SpritesheetId::None,
+                SpritesheetId::x53_ObjectsHazards,
             ],
         ],
-        SpriteId::x7_PULL_SWITCH_TRAP_UNUSED => vec![
-            [
-                SpritesheetId::X46_ELITE_GUARD,
-                SpritesheetId::None,
-                SpritesheetId::None,
-                SpritesheetId::None,
-            ],
-            [
-                SpritesheetId::x55_AgahnimCrystalMaiden,
-                SpritesheetId::None,
-                SpritesheetId::None,
-                SpritesheetId::None,
-            ],
-        ],
+        // SpriteId::x7_PULL_SWITCH_TRAP_UNUSED
         SpriteId::x8_OCTOROK => vec![
             [
                 SpritesheetId::None,
@@ -175,12 +149,13 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
                 SpritesheetId::None,
             ],
         ],
+        // TODO: investigate ID (magic bat). It might be funny.
         SpriteId::xB_CUCCO => vec![
             [
                 SpritesheetId::None,
                 SpritesheetId::None,
                 SpritesheetId::None,
-                SpritesheetId::xE_POE_THIEF_LW,
+                SpritesheetId::x50_CUCCO_FOR_NPCS,
             ],
             [
                 SpritesheetId::None,
@@ -238,18 +213,21 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
             SpritesheetId::None,
         ]],
         // SpriteId::x14_THIEVES_TOWN_GRATE
-        SpriteId::x15_ANTIFAIRY => vec![[
-            SpritesheetId::None,
-            SpritesheetId::None,
-            SpritesheetId::None,
-            SpritesheetId::x53_ObjectsHazards,
-        ]],
-        SpriteId::x16_SAHASRAHLA => vec![[
-            SpritesheetId::None,
-            SpritesheetId::None,
-            SpritesheetId::x4C_SAHASRAHLA_WITCH,
-            SpritesheetId::None,
-        ]],
+        SpriteId::x15_ANTIFAIRY => vec![
+            [
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::x52_ObjectsHazards,
+            ],
+            [
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::x53_ObjectsHazards,
+            ],
+        ],
+        // SpriteId::x16_SAHASRAHLA
         SpriteId::x17_HOARDER => vec![
             [
                 SpritesheetId::None,
@@ -304,62 +282,21 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
                 SpritesheetId::None,
                 SpritesheetId::x1B_MISCELLANEOUS_DW_1,
             ],
-            // Homebrew (floating orb)
+        ],
+        SpriteId::x1A_SMITHY => vec![
             [
                 SpritesheetId::None,
+                SpritesheetId::x4D_OLD_MAN_MAIDEN,
                 SpritesheetId::None,
                 SpritesheetId::None,
-                SpritesheetId::x25_WIZZROBE_SLUGGULA,
             ],
-            // Homebrew (floating orb)
             [
                 SpritesheetId::None,
                 SpritesheetId::None,
                 SpritesheetId::None,
-                SpritesheetId::x26_FROSTY_FRIENDS,
-            ],
-            // Homebrew (floating orb)
-            [
-                SpritesheetId::None,
-                SpritesheetId::None,
-                SpritesheetId::None,
-                SpritesheetId::x36_MASTER_SWORD,
-            ],
-            // Homebrew (floating orb)
-            [
-                SpritesheetId::None,
-                SpritesheetId::None,
-                SpritesheetId::None,
-                SpritesheetId::x39_ARRGHUS_BOSS,
-            ],
-            // Homebrew (floating eye)
-            [
-                SpritesheetId::None,
-                SpritesheetId::None,
-                SpritesheetId::None,
-                SpritesheetId::x3D_VITREOUS_BOSS,
-            ],
-            // Homebrew (floating eye)
-            [
-                SpritesheetId::None,
-                SpritesheetId::None,
-                SpritesheetId::None,
-                SpritesheetId::x41_BIG_BAD_GUY,
-            ],
-            // Homebrew (floating rabbit)
-            [
-                SpritesheetId::None,
-                SpritesheetId::None,
-                SpritesheetId::None,
-                SpritesheetId::x4E_OSTR_DUCK_RABBIT_FLUTEBOY,
+                SpritesheetId::x15_POE_THIEF_DW,
             ],
         ],
-        SpriteId::x1A_SMITHY => vec![[
-            SpritesheetId::None,
-            SpritesheetId::None,
-            SpritesheetId::x4A_KAKARIKO,
-            SpritesheetId::None,
-        ]],
         // SpriteId::x1B_ARROW
         SpriteId::x1C_STATUE => vec![
             [
@@ -375,12 +312,7 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
                 SpritesheetId::x53_ObjectsHazards,
             ],
         ],
-        SpriteId::x1D_FLUTEQUEST => vec![[
-            SpritesheetId::None,
-            SpritesheetId::None,
-            SpritesheetId::x4E_OSTR_DUCK_RABBIT_FLUTEBOY,
-            SpritesheetId::None,
-        ]],
+        // SpriteId::x1D_FLUTEQUEST
         SpriteId::x1E_CRYSTAL_SWITCH => vec![
             [
                 SpritesheetId::None,
@@ -442,7 +374,7 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
                 SpritesheetId::None,
                 SpritesheetId::None,
                 SpritesheetId::None,
-                SpritesheetId::x19_SWAMOLA_CROW,
+                SpritesheetId::x15_POE_THIEF_DW,
             ],
         ],
         SpriteId::x26_HARDHAT_BEETLE => vec![[
@@ -463,12 +395,20 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
             SpritesheetId::None,
             SpritesheetId::None,
         ]],
-        SpriteId::x29_BLIND_HIDEOUT_ATTENDANT => vec![[
-            SpritesheetId::x4F_OLD_MAN_RUNNER,
-            SpritesheetId::None,
-            SpritesheetId::None,
-            SpritesheetId::None,
-        ]],
+        SpriteId::x29_BLIND_HIDEOUT_ATTENDANT => vec![
+            [
+                SpritesheetId::xE_POE_THIEF_LW,
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::None,
+            ],
+            [
+                SpritesheetId::x4F_OLD_MAN_RUNNER,
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::None,
+            ],
+        ],
         SpriteId::x2A_SWEEPING_LADY => vec![[
             SpritesheetId::None,
             SpritesheetId::None,
@@ -497,8 +437,8 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
             [
                 SpritesheetId::None,
                 SpritesheetId::None,
-                SpritesheetId::x4C_SAHASRAHLA_WITCH,
                 SpritesheetId::None,
+                SpritesheetId::x4C_SAHASRAHLA_WITCH,
             ],
         ],
         SpriteId::x2F_RACE_LADY => vec![[
@@ -544,7 +484,7 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
         SpriteId::x39_LOCKSMITH => vec![[
             SpritesheetId::None,
             SpritesheetId::None,
-            SpritesheetId::x12_DESERT_1,
+            SpritesheetId::None,
             SpritesheetId::x11_MISC_FAKE_SWORD,
         ]],
         SpriteId::x3A_MAGIC_BAT => vec![[
@@ -553,12 +493,20 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
             SpritesheetId::None,
             SpritesheetId::x1D_ARMOS_BOSS_LOCK_BAT,
         ]],
-        SpriteId::x3B_BONK_ITEM => vec![[
-            SpritesheetId::xF_DASH_HOARDER,
-            SpritesheetId::None,
-            SpritesheetId::None,
-            SpritesheetId::None,
-        ]],
+        SpriteId::x3B_BONK_ITEM => vec![
+            [
+                SpritesheetId::xF_DASH,
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::None,
+            ],
+            [
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::None,
+            ],
+        ],
         SpriteId::x3C_VILLAGE_KID => vec![[
             SpritesheetId::None,
             SpritesheetId::None,
@@ -573,7 +521,7 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
         ]],
         SpriteId::x3E_HOARDER_ROCK => vec![
             [
-                SpritesheetId::xF_DASH_HOARDER,
+                SpritesheetId::None,
                 SpritesheetId::None,
                 SpritesheetId::None,
                 SpritesheetId::x11_MISC_FAKE_SWORD,
@@ -591,12 +539,21 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
             SpritesheetId::None,
             SpritesheetId::None,
         ]],
-        SpriteId::x40_LIGHTNING_LOCK => vec![[
-            SpritesheetId::None,
-            SpritesheetId::None,
-            SpritesheetId::x1C_PESTS,
-            SpritesheetId::x1D_ARMOS_BOSS_LOCK_BAT,
-        ]],
+        SpriteId::x40_LIGHTNING_LOCK => vec![
+            [
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::x1D_ARMOS_BOSS_LOCK_BAT,
+            ],
+            // TODO: verify that this is being added by Z3 randomizer. It seems like it is, or Archipelago.
+            [
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::x3F_TRINEXX_BOSS,
+            ],
+        ],
         SpriteId::x41BlueSwordGuard => vec![
             [
                 SpritesheetId::None,
@@ -627,14 +584,13 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
         ],
         SpriteId::x43_RED_SPEAR_GUARD => vec![
             [
-                SpritesheetId::X46_ELITE_GUARD,
+                SpritesheetId::None,
                 SpritesheetId::x49_SOLDIERS,
                 SpritesheetId::None,
                 SpritesheetId::None,
             ],
             [
-                // Homebrew: Borrow the top half from lightworld.
-                SpritesheetId::X46_ELITE_GUARD,
+                SpritesheetId::None,
                 SpritesheetId::xD_SOLDIERS_DW,
                 SpritesheetId::None,
                 SpritesheetId::None,
@@ -1073,26 +1029,27 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
             SpritesheetId::None,
         ]],
         // SpriteId::x79_BEE
-        SpriteId::x7A_AGAHNIM => vec![[
-            SpritesheetId::x55_AgahnimCrystalMaiden,
-            SpritesheetId::x1A_AGAHNIM,
-            SpritesheetId::x42_AGAHNIM,
-            SpritesheetId::x43_AGAHNIM,
-        ]],
-        SpriteId::x7B_AGAHNIM_ENERGY_BALL => vec![[
-            SpritesheetId::x55_AgahnimCrystalMaiden,
-            SpritesheetId::x1A_AGAHNIM,
-            SpritesheetId::x42_AGAHNIM,
-            SpritesheetId::x43_AGAHNIM,
-        ]],
-        SpriteId::x7C_FloatingStalfosHead => vec![
+        SpriteId::x7A_AGAHNIM => vec![
             [
-                SpritesheetId::x1F_STALFOS_BARI,
-                SpritesheetId::None,
-                SpritesheetId::None,
-                SpritesheetId::None,
+                SpritesheetId::x55_AgahnimCrystalMaiden,
+                SpritesheetId::x1A_AGAHNIM,
+                SpritesheetId::x42_AGAHNIM,
+                SpritesheetId::x43_AGAHNIM,
+            ],
+            [
+                SpritesheetId::x55_AgahnimCrystalMaiden,
+                SpritesheetId::x3D_VITREOUS_BOSS,
+                SpritesheetId::x42_AGAHNIM,
+                SpritesheetId::x43_AGAHNIM,
             ],
         ],
+        // SpriteId::x7B_AGAHNIM_ENERGY_BALL
+        SpriteId::x7C_FloatingStalfosHead => vec![[
+            SpritesheetId::x1F_STALFOS_BARI,
+            SpritesheetId::None,
+            SpritesheetId::None,
+            SpritesheetId::None,
+        ]],
         SpriteId::x7D_BIG_SPIKE => vec![
             [
                 SpritesheetId::None,
@@ -1200,12 +1157,20 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
             SpritesheetId::x22_WATER_TEKTITES,
             SpritesheetId::None,
         ]],
-        SpriteId::x82_ANTIFAIRY_CIRCLE => vec![[
-            SpritesheetId::None,
-            SpritesheetId::None,
-            SpritesheetId::None,
-            SpritesheetId::x53_ObjectsHazards,
-        ]],
+        SpriteId::x82_ANTIFAIRY_CIRCLE => vec![
+            [
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::x52_ObjectsHazards,
+            ],
+            [
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::x53_ObjectsHazards,
+            ],
+        ],
         SpriteId::x83_GREEN_EYEGORE => vec![[
             SpritesheetId::None,
             SpritesheetId::None,
@@ -1226,16 +1191,11 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
         ]],
         SpriteId::x86_KODONGO => vec![[
             SpritesheetId::None,
-            SpritesheetId::x2A_HAZARDS,
+            SpritesheetId::None,
             SpritesheetId::x2A_HAZARDS,
             SpritesheetId::None,
         ]],
-        SpriteId::x87_KODONGO_FIRE => vec![[
-            SpritesheetId::None,
-            SpritesheetId::x2A_HAZARDS,
-            SpritesheetId::x2A_HAZARDS,
-            SpritesheetId::None,
-        ]],
+        // SpriteId::x87_KODONGO_FIRE
         SpriteId::x88_MOTHULA => vec![[
             SpritesheetId::None,
             SpritesheetId::None,
@@ -1282,7 +1242,7 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
         ]],
         SpriteId::x8E_TERRORPIN => vec![[
             SpritesheetId::None,
-            SpritesheetId::x2A_HAZARDS,
+            SpritesheetId::None,
             SpritesheetId::x2A_HAZARDS,
             SpritesheetId::None,
         ]],
@@ -1518,12 +1478,7 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
         // SpriteId::xB0_RIGHT_PIPE
         // SpriteId::xB1_LEFT_PIPE
         // SpriteId::xB2_GOOD_BEE
-        SpriteId::xB3_PEDESTAL_PLAQUE => vec![[
-            SpritesheetId::None,
-            SpritesheetId::None,
-            SpritesheetId::x12_DESERT_1,
-            SpritesheetId::None,
-        ]],
+        // SpriteId::xB3_PEDESTAL_PLAQUE
         SpriteId::xB4_PURPLE_CHEST => vec![[
             SpritesheetId::x15_POE_THIEF_DW,
             SpritesheetId::None,
@@ -1560,18 +1515,33 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
             SpritesheetId::None,
             SpritesheetId::x14_FRIENDLY_LYNEL,
         ]],
-        SpriteId::xBA_WHIRLPOOL => vec![[
-            SpritesheetId::None,
-            SpritesheetId::None,
-            SpritesheetId::xC_OCTOROK_ZORA,
-            SpritesheetId::None,
-        ]],
-        SpriteId::xBB_SALESMAN => vec![[
-            SpritesheetId::None,
-            SpritesheetId::None,
-            SpritesheetId::x4A_KAKARIKO,
-            SpritesheetId::None,
-        ]],
+        // SpriteId::xBA_WHIRLPOOL
+        SpriteId::xBB_SALESMAN => vec![
+            [
+                SpritesheetId::x15_POE_THIEF_DW,
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::None,
+            ],
+            [
+                SpritesheetId::xE_POE_THIEF_LW,
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::None,
+            ],
+            [
+                SpritesheetId::x4B_ARCHERY,
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::None,
+            ],
+            [
+                SpritesheetId::None,
+                SpritesheetId::x4D_OLD_MAN_MAIDEN,
+                SpritesheetId::None,
+                SpritesheetId::None,
+            ],
+        ],
         SpriteId::xBC_DRUNK_IN_THE_INN => vec![[
             SpritesheetId::x4F_OLD_MAN_RUNNER,
             SpritesheetId::None,
@@ -1604,7 +1574,7 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
         ]],
         SpriteId::xC1_AGAHNIM_TELEPORTING => vec![[
             SpritesheetId::x55_AgahnimCrystalMaiden,
-            SpritesheetId::x1A_AGAHNIM,
+            SpritesheetId::x3D_VITREOUS_BOSS,
             SpritesheetId::x42_AGAHNIM,
             SpritesheetId::x43_AGAHNIM,
         ]],
@@ -1707,7 +1677,7 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
         SpriteId::xD5_DIGGING_GAME_PROPRIETOR => vec![[
             SpritesheetId::None,
             SpritesheetId::x2A_HAZARDS,
-            SpritesheetId::x2A_HAZARDS,
+            SpritesheetId::None,
             SpritesheetId::None,
         ]],
         SpriteId::xD6_GANON => vec![[
@@ -1794,12 +1764,7 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
             SpritesheetId::x12_DESERT_1,
             SpritesheetId::None,
         ]],
-        SpriteId::xF3_PERSONS_DOOR_OW_OVERLORD => vec![[
-            SpritesheetId::None,
-            SpritesheetId::None,
-            SpritesheetId::None,
-            SpritesheetId::x10_MISC_ROCKS,
-        ]],
+        // SpriteId::xF3_PERSONS_DOOR_OW_OVERLORD
         SpriteId::xF4_FALLING_ROCKS_OW_OVERLORD => vec![[
             SpritesheetId::None,
             SpritesheetId::None,

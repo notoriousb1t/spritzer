@@ -35,17 +35,15 @@ pub(crate) fn apply_base_sprite_shuffle_changes(model: &mut Z3Model) {
             for sprite in area.sprites_mut() {
                 if let Some(new_id) = match sprite.id {
                     // Turns talking trees into bonkable trees. (no spritesheet requirements)
-                    SpriteId::x25_TALKING_TREE => Some(SpriteId::xD8_HEART),
+                    // SpriteId::x25_TALKING_TREE => Some(SpriteId::xD8_HEART),
                     // Places a bee somewhere nearby a TOPPO location. (no spritesheet requirements)
                     SpriteId::x4D_TOPPO => Some(SpriteId::x79_BEE),
                     // Swaps flopping fish for enemy that is already in area in vanilla.
                     SpriteId::xD2_FLOPPING_FISH => Some(SpriteId::xF_OCTOBALLOON),
                     // Swaps fake master sword for another enemy common to the area in vanilla.
                     SpriteId::xE8_FAKE_MASTER_SWORD => Some(SpriteId::xD_BUZZBLOB),
-                    // Swaps all red spear guard 2s for blue guards so they can be removed from shuffle.
-                    // Black spear guard is one of two variants of red spear guard in vanilla. Because of its
-                    // low spritesheet requirements, it occurs two frequently. The other variant is more flexible
-                    // since the head can be swapped with a bunch of spritesheets.
+                    // Remove red spear guard 2 entirely and replace with blue sword guard. This 
+                    // reduces the total number of red spear guards to 1 and improves how the game feels.
                     SpriteId::x45RedSpearGuard2 => Some(SpriteId::x41BlueSwordGuard),
                     _ => None,
                 } {
@@ -77,34 +75,34 @@ fn update_settings(model: &mut Z3Model) {
         let sprite_type = get_sprite_type(&sprite.id);
 
         // This makes sure the game and randomizer are aligned on what is killable for the
-        // purposes of underworld kill rooms.
+        // purposes of underworld kill rooms. Many sprites aren't flagged because they don't occur in
+        // kill rooms in vanilla, but are effectively unkillable (or shouldn't count)
         sprite.statis = get_sprite_vulnerability(&sprite.id) == SpriteVulnerability::Invulnerable;
 
         match sprite_type {
             SpriteType::Enemy => {
-                // Flag all enemies as being eligible for boss battles.
+                // Flag all enemies as being eligible for boss battles. This allows, for example, adding
+                // mini moldorm to moldorm boss.
                 sprite.boss_prep_preserved = true;
             }
             SpriteType::Hazard => {
-                // Flag all enemies as being eligible for boss battles.
+                // Flag all hazards as being eligible for boss battles. This allows for medusas and fire bars.
                 sprite.boss_prep_preserved = true;
             }
-            _ => {
-                // Outside of enemies and hazards, preserve existing logic in game.
-            }
+            // Otherwise, preserve existing logic in game.
+            _ => {}
         }
     }
 }
 
 fn update_color_index(model: &mut Z3Model) {
     if let Some(sprite) = model.sprite_settings.get_mut(&SpriteId::x45RedSpearGuard2) {
-        // There are two red guards with spears in light world.
-        // There are two green guards with spears in the dark world.
         // Assign a different color to differentiate. This creates the iron soldiers which are removed 
-        // during randmomization.
+        // during randmomization. This is largely here to make it more obvious when this is added by accident.
         sprite.palette = PaletteIndex::XENoir;
     }
     if let Some(sprite) = model.sprite_settings.get_mut(&SpriteId::x6B_CANNON_GUARD) {
+        // Cannon guards are super easy, so mark them with green like the other easy guards.
         sprite.palette = PaletteIndex::XDGreen;
     }
     if let Some(sprite) = model.sprite_settings.get_mut(&SpriteId::x13_MINI_HELMASAUR) {
@@ -116,14 +114,15 @@ fn update_color_index(model: &mut Z3Model) {
         sprite.palette = PaletteIndex::XBRed;
     }
     if let Some(sprite) = model.sprite_settings.get_mut(&SpriteId::x83_GREEN_EYEGORE) {
-        // Stablize color to something that works better across rooms. (blue)
+        // Stablize color to something that works better across rooms. (blue) Without this change, there
+        // are palette combinations that result in green eyegores being red and that is super confusing.
         sprite.palette = PaletteIndex::XCBlue;
     }
 }
 
 fn update_spritesets(model: &mut Z3Model) {
     // Get the zora king set and change spritesheet slot 1 to use something else.
-    // Without this change, the game ends up with a lot of Goriya which don't work well
+    // Without this change, the game ends up with a lot of Goriya which doesn't work well
     // in Zora's domain.
     let zora_king_set = model
         .spritesets

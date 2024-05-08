@@ -111,12 +111,12 @@ fn inverted_mode() -> Z3Options {
 /// Useful for testing the preferred experience.
 fn chaos_mode() -> Z3Options {
     Z3Options {
-        boss_shuffle: false,
+        boss_shuffle: true,
         mushroom_shuffle: false,
         killable_thieves: true,
-        overworld_balancing: Balancing::Casual,
+        overworld_balancing: Balancing::Random,
         overworld_enemy_shuffle: OverworldEnemyShuffle::Chaos,
-        underworld_balancing: Balancing::Casual,
+        underworld_balancing: Balancing::Random,
         underworld_enemy_shuffle: UnderworldEnemyShuffle::Chaos,
         seed: "saofinsdofinsdofinsodifnsoidf".to_owned(),
         shadow_bees: true,

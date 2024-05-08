@@ -11,6 +11,8 @@ use crate::zelda3::model::SpriteType;
 use crate::zelda3::model::Z3Model;
 
 pub(crate) fn apply_ow_sprite_full_shuffle(model: &mut Z3Model) {
+    model.prepare_sprite_pool();
+    
     let mut rng = model.create_rng();
 
     let types = vec![
