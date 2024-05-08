@@ -11,6 +11,7 @@ The following describes how to run Spritzer locally
 
 ### Building `docs` project
 
+1. Ensure a Visual C++ Redistributable (Windows) or GCC (Linux) is installed
 1. Run `rustup target add wasm32-unknown-unknown` to install the web assembly compiler
 1. Run `cargo install wasm-bindgen-cli wasm-pack` (Web Assembly toolchains)
 1. Install the LTS version of [NodeJs](https://nodejs.org/en)
