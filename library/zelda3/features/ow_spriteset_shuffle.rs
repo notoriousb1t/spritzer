@@ -1,29 +1,57 @@
-use std::cmp::{max, min};
+use std::cmp::max;
+use std::cmp::min;
 use std::collections::btree_map::Entry;
-use std::collections::{BTreeMap, HashSet};
+use std::collections::BTreeMap;
+use std::collections::HashSet;
 
 use log;
-use rand::distributions::{Distribution, WeightedError, WeightedIndex};
+use rand::distributions::Distribution;
+use rand::distributions::WeightedError;
+use rand::distributions::WeightedIndex;
 use rand::prelude::SliceRandom;
 use rand::rngs::StdRng;
 use strum::IntoEnumIterator;
 
-use crate::zelda3::model::{
-    can_shuffle_in_ow, get_sprite_requirements, get_spritesheet_arrangements, get_weight,
-    is_list_compatible, is_restricted_sprite, OWRoomId, Placement, SpriteId, Spriteset,
-    SpritesetId, SpritesheetId, Z3Model,
-};
+use crate::zelda3::model::can_shuffle_in_ow;
+use crate::zelda3::model::get_sprite_requirements;
+use crate::zelda3::model::get_spritesheet_arrangements;
+use crate::zelda3::model::get_weight;
+use crate::zelda3::model::is_list_compatible;
+use crate::zelda3::model::is_restricted_sprite;
+use crate::zelda3::model::OWRoomId;
+use crate::zelda3::model::Rule;
+use crate::zelda3::model::SpriteId;
+use crate::zelda3::model::Spriteset;
+use crate::zelda3::model::SpritesetId;
+use crate::zelda3::model::SpritesheetId;
+use crate::zelda3::model::Z3Model;
 use crate::zelda3::Balancing;
 
 /// Attempt to re-arrange distribution of spritesets.
 pub(crate) fn apply_ow_spriteset_shuffle(model: &mut Z3Model) {
-    reset_ow_spritesets(model);
+    clear_optional_ow_spritesheets(model);
     fill_ow_spritesets(model);
+    model.prepare_sprite_pool();
     choose_new_spritesets(model);
+
+    let spritesets = SpritesetId::iter()
+        .filter(|it| !it.is_underworld())
+        .collect::<Vec<_>>();
+    for spriteset_id in spritesets.iter() {
+        let sheet = model.spritesets.get(&spriteset_id).unwrap();
+        log::debug!(
+            "Spritesheets {} {} {} {} set in ${}",
+            sheet.sheets[0],
+            sheet.sheets[1],
+            sheet.sheets[2],
+            sheet.sheets[3],
+            *spriteset_id,
+        );
+    }
 }
 
 /// Clear all non-essential spritesheets.
-fn reset_ow_spritesets(model: &mut Z3Model) {
+fn clear_optional_ow_spritesheets(model: &mut Z3Model) {
     // Clear unnecessary spritesheets from spritesets
     let sprites_map = compute_spriteset_requirements(model);
     for (spriteset_id, sprite_ids) in sprites_map.iter() {
@@ -107,18 +135,6 @@ fn fill_ow_spritesets(model: &mut Z3Model) {
 
         log::error!("Unable to fill spriteset {}", spriteset_id);
     }
-
-    for spriteset_id in spritesets.iter() {
-        let sheet = model.spritesets.get(&spriteset_id).unwrap();
-        log::debug!(
-            "SS ${:02X} -- ${:02X} ${:02X} ${:02X} ${:02X}",
-            *spriteset_id as u8,
-            sheet.sheets[0] as u8,
-            sheet.sheets[1] as u8,
-            sheet.sheets[2] as u8,
-            sheet.sheets[3] as u8,
-        );
-    }
 }
 
 fn create_spritesheet_pool(balancing: Balancing) -> Vec<(usize, [SpritesheetId; 4])> {
@@ -134,7 +150,6 @@ fn create_spritesheet_pool(balancing: Balancing) -> Vec<(usize, [SpritesheetId; 
         .collect::<Vec<_>>()
 }
 
-/// Fills a spriteset with spritesheets from the provided pools of sprites.
 /// Fills a spriteset with spritesheets from the provided pools of sprites.
 fn fill_spriteset_from_pool(
     spriteset: &mut Spriteset,
@@ -154,7 +169,9 @@ fn fill_spriteset_from_pool(
             }
 
             for i in 0..4 {
-                if spritesheets[i] != SpritesheetId::None {
+                if spritesheets[i] != SpritesheetId::None
+                    && spriteset.sheets[i] == SpritesheetId::None
+                {
                     // Set all spritesheets in their respective slots.
                     spriteset.sheets[i] = spritesheets[i];
                 }
@@ -170,7 +187,7 @@ fn fill_spriteset_from_pool(
             }
         }
     }
-    return false;
+    false
 }
 
 fn choose_from_pool(
@@ -185,11 +202,10 @@ fn choose_from_pool(
 }
 
 fn choose_new_spritesets(model: &mut Z3Model) {
-    model.prepare_sprite_pool();
-
     let mut rng = model.create_rng();
-    // OW can choose from any spriteset.
-    let spritesets = SpritesetId::iter().collect::<Vec<_>>();
+    let spriteset_ids = SpritesetId::iter()
+        .filter(|it| !it.is_underworld())
+        .collect::<Vec<_>>();
 
     // Create weights to prevent the same spriteset from being over-used. This encourages
     // every spriteset to be somewhat equal in distribution (although not guaranteed).
@@ -198,7 +214,7 @@ fn choose_new_spritesets(model: &mut Z3Model) {
     const WEIGHT_FULL: usize = 32;
     const WEIGHT_EMPTY: usize = 1;
     let mut weights = BTreeMap::from_iter(
-        spritesets
+        spriteset_ids
             .iter()
             .map(|spriteset_id| (*spriteset_id, WEIGHT_FULL)),
     );
@@ -208,12 +224,14 @@ fn choose_new_spritesets(model: &mut Z3Model) {
             .ow_rooms
             .get_mut(&room_id)
             .expect("OWRoom should exist");
+
         for version in room.versions_mut() {
             // Get a list of the sprite ids dereferenced.
             let existing_sprite_ids = version
                 .sprites
                 .iter()
                 .map(|sprite| sprite.id)
+                .filter(|sprite_id| is_restricted_sprite(sprite_id))
                 .collect::<Vec<_>>();
 
             let has_special_requirements = existing_sprite_ids
@@ -232,14 +250,13 @@ fn choose_new_spritesets(model: &mut Z3Model) {
             }
 
             // Find all spritesets capable of switching to this spriteset.
-            let compatible_spritesets = spritesets
+            let compatible_spritesets = spriteset_ids
                 .iter()
                 .filter(|spriteset| {
                     is_list_compatible(
                         &existing_sprite_ids,
-                        model.sprite_pool.get(&spriteset),
-                        Placement::Area,
-                        false,
+                        model.sprite_pool.get(&spriteset).unwrap(),
+                        &[Rule::Overworld],
                     )
                 })
                 .map(|it| *it)
@@ -247,14 +264,15 @@ fn choose_new_spritesets(model: &mut Z3Model) {
             let maybe_matching_spriteset = compatible_spritesets
                 .choose_weighted(&mut rng, |spriteset_id| weights[spriteset_id]);
 
-            // Switch spritesets. There should always be at least one match (the original spriteset).
+            // Switch spritesets. There should always be at least one match (the original
+            // spriteset).
             if let Ok(new_spriteset_id) = maybe_matching_spriteset {
                 log::debug!(
-                    "OW ${:02X} v{} -- spriteset_id ${:02X} -> ${:02X}",
-                    room_id as u8,
+                    "OW Spriteset update {} v{}: {} -> {}",
+                    room_id,
                     version.overworld_id,
-                    version.spriteset_id as u8,
-                    *new_spriteset_id as u8,
+                    version.spriteset_id,
+                    *new_spriteset_id,
                 );
 
                 version.spriteset_id = *new_spriteset_id;
@@ -265,10 +283,10 @@ fn choose_new_spritesets(model: &mut Z3Model) {
                 weights.insert(*new_spriteset_id, new_weight);
             } else {
                 log::error!(
-                    "OW ${:02X} v{} -- no valid swap for ${:02X}",
-                    room_id as u8,
+                    "OW Spriteset no valid swap for {} v{}: {}",
+                    room_id,
                     version.overworld_id,
-                    version.spriteset_id as u8,
+                    version.spriteset_id,
                 );
             }
         }

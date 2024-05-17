@@ -4,9 +4,9 @@ use assembly::zelda3::Symbol;
 use common::SnesGame;
 use strum::IntoEnumIterator;
 
-use crate::zelda3::model::SpritesheetId;
 use crate::zelda3::model::Spriteset;
 use crate::zelda3::model::SpritesetId;
+use crate::zelda3::model::SpritesheetId;
 
 pub(super) fn read_spritesets(game: &SnesGame) -> BTreeMap<SpritesetId, Spriteset> {
     let mut values: Vec<(SpritesetId, Spriteset)> = vec![];

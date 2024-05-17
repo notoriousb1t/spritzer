@@ -50,7 +50,7 @@ impl SnesGame {
         let mode = RomType::from_repr(mode_value)
             .expect(&format!("SnesMode {:02X} is invalid", mode_value));
 
-            log::info!("Address mode={}", mode);
+        log::info!("Address mode={}", mode);
 
         Self {
             mode,
@@ -113,11 +113,7 @@ impl SnesGame {
 
         for (address, capacity) in areas_to_clear {
             self.write_all(address, &vec![0; capacity]);
-            log::debug!(
-                "Clearing  ${:06X}..${:06X}",
-                address,
-                address + capacity
-            );
+            log::debug!("Clearing  ${:06X}..${:06X}", address, address + capacity);
         }
     }
 

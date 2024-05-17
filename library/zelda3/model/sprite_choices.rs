@@ -4,8 +4,8 @@ use strum::IntoEnumIterator;
 
 use crate::zelda3::model::get_spritesheet_arrangements;
 use crate::zelda3::model::SpriteId;
-use crate::zelda3::model::SpritesheetId;
 use crate::zelda3::model::SpritesetId;
+use crate::zelda3::model::SpritesheetId;
 use crate::zelda3::model::Z3Model;
 
 fn is_spritesheet_satisfied(

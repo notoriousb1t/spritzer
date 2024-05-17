@@ -30,7 +30,7 @@ pub(crate) fn get_sprite_type(sprite_id: &SpriteId) -> SpriteType {
         SpriteId::x8_OCTOROK => SpriteType::Enemy,
         SpriteId::x9_MOLDORM => SpriteType::Boss,
         SpriteId::xA_OCTOROK_FOUR_WAY => SpriteType::Enemy,
-        SpriteId::xB_CUCCO => SpriteType::Npc,
+        SpriteId::xB_CUCCO => SpriteType::Creature,
         SpriteId::xC_OCTOROK_STONE => SpriteType::Object,
         SpriteId::xD_BUZZBLOB => SpriteType::Enemy,
         SpriteId::xE_SNAPDRAGON => SpriteType::Enemy,
@@ -42,7 +42,7 @@ pub(crate) fn get_sprite_type(sprite_id: &SpriteId) -> SpriteType {
         SpriteId::x14_THIEVES_TOWN_GRATE => SpriteType::Object,
         SpriteId::x15_ANTIFAIRY => SpriteType::Hazard,
         SpriteId::x16_SAHASRAHLA => SpriteType::Npc,
-        SpriteId::x17_HOARDER => SpriteType::Enemy,
+        SpriteId::x17_HOARDER => SpriteType::Creature,
         SpriteId::x18_MINI_MOLDORM => SpriteType::Enemy,
         SpriteId::x19_POE => SpriteType::Enemy,
         SpriteId::x1A_SMITHY => SpriteType::Npc,
@@ -58,7 +58,7 @@ pub(crate) fn get_sprite_type(sprite_id: &SpriteId) -> SpriteType {
         SpriteId::x24_BLUE_BARI => SpriteType::Enemy,
         SpriteId::x25_TALKING_TREE => SpriteType::Npc,
         SpriteId::x26_HARDHAT_BEETLE => SpriteType::Enemy,
-        SpriteId::x27_DEADROCK => SpriteType::Enemy,
+        SpriteId::x27_DEADROCK => SpriteType::Creature,
         SpriteId::x28_HINT_PC_DW => SpriteType::Npc,
         SpriteId::x29_BLIND_HIDEOUT_ATTENDANT => SpriteType::Npc,
         SpriteId::x2A_SWEEPING_LADY => SpriteType::Npc,
@@ -81,7 +81,7 @@ pub(crate) fn get_sprite_type(sprite_id: &SpriteId) -> SpriteType {
         SpriteId::x3B_BONK_ITEM => SpriteType::Object,
         SpriteId::x3C_VILLAGE_KID => SpriteType::Npc,
         SpriteId::x3D_SNITCH_OLD => SpriteType::Npc,
-        SpriteId::x3E_HOARDER_ROCK => SpriteType::Enemy,
+        SpriteId::x3E_HOARDER_ROCK => SpriteType::Creature,
         SpriteId::x3F_TUTORIAL_SOLDIER => SpriteType::Npc,
         SpriteId::x40_LIGHTNING_LOCK => SpriteType::Object,
         SpriteId::x41BlueSwordGuard => SpriteType::Enemy,
@@ -138,7 +138,7 @@ pub(crate) fn get_sprite_type(sprite_id: &SpriteId) -> SpriteType {
         SpriteId::x74_RUNNING_MAN => SpriteType::Npc,
         SpriteId::x75_BOTTLE_SALESMAN => SpriteType::Npc,
         SpriteId::x76_ZELDA => SpriteType::Npc,
-        SpriteId::x77_ANTIFAIRY_2 => SpriteType::Enemy,
+        SpriteId::x77_ANTIFAIRY_2 => SpriteType::Hazard,
         SpriteId::x78_VILLAGE_ELDER => SpriteType::Npc,
         SpriteId::x79_BEE => SpriteType::Absorbable,
         SpriteId::x7A_AGAHNIM => SpriteType::Boss,
@@ -197,7 +197,7 @@ pub(crate) fn get_sprite_type(sprite_id: &SpriteId) -> SpriteType {
         SpriteId::xAF_UP_PIPE => SpriteType::Object,
         SpriteId::xB0_RIGHT_PIPE => SpriteType::Object,
         SpriteId::xB1_LEFT_PIPE => SpriteType::Object,
-        SpriteId::xB2_GOOD_BEE => SpriteType::Npc,
+        SpriteId::xB2_GOOD_BEE => SpriteType::Creature,
         SpriteId::xB3_PEDESTAL_PLAQUE => SpriteType::Object,
         SpriteId::xB4_PURPLE_CHEST => SpriteType::Object,
         SpriteId::xB5_BOMB_SALESMAN => SpriteType::Npc,
@@ -216,8 +216,8 @@ pub(crate) fn get_sprite_type(sprite_id: &SpriteId) -> SpriteType {
         SpriteId::xC2_BOULDER => SpriteType::Object,
         SpriteId::xC3_GIBO => SpriteType::Enemy,
         // This one is weird, but thieves are invulnerable with some settings, so set thief to
-        // be equivalent to a chain chomp and not considered a typical enemy.
-        SpriteId::xC4_THIEF => SpriteType::Hazard,
+        // be equivalent to a creature (no statis and can be safely ignored)
+        SpriteId::xC4_THIEF => SpriteType::Creature,
         SpriteId::xC5_MEDUSA => SpriteType::Hazard,
         SpriteId::xC6_MEDUSA_FOUR_WAY => SpriteType::Hazard,
         SpriteId::xC7_Hokkubokku_Pokey => SpriteType::Enemy,
@@ -232,11 +232,8 @@ pub(crate) fn get_sprite_type(sprite_id: &SpriteId) -> SpriteType {
         SpriteId::xD0_LYNEL => SpriteType::Enemy,
         SpriteId::xD1_BUNNY_BEAM => SpriteType::Hazard,
         SpriteId::xD2_FLOPPING_FISH => SpriteType::Creature,
-        // Set stal as hazards since they require activation and should not be
-        // considered alive for the purpose of kill rooms. Setting this to hazard
-        // should also flag the sprite as statis.
-        SpriteId::xD3_STAL => SpriteType::Hazard,
-        SpriteId::xD4_LANDMINE => SpriteType::Hazard,
+        SpriteId::xD3_STAL => SpriteType::Creature,
+        SpriteId::xD4_LANDMINE => SpriteType::Creature,
         SpriteId::xD5_DIGGING_GAME_PROPRIETOR => SpriteType::Npc,
         SpriteId::xD6_GANON => SpriteType::Boss,
         SpriteId::xD7_GANON_INVINCIBLE => SpriteType::Npc,
@@ -349,7 +346,6 @@ pub(crate) fn is_restricted_sprite(sprite_id: &SpriteId) -> bool {
     }
 }
 
-
 /// True if the type implies that it can be shuffled automatically.
 fn can_shuffle_type(sprite_id: &SpriteId) -> bool {
     matches!(
@@ -383,6 +379,23 @@ pub(crate) fn can_shuffle_in_ow(sprite_id: &SpriteId) -> bool {
         // Needs investigation
         SpriteId::xA1_FREEZOR => false,
         _ => can_shuffle_type(sprite_id),
+    }
+}
+
+
+
+/// This is used to restrict shuffling in the the light overworld.
+pub(crate) fn can_shuffle_in_lw(sprite_id: &SpriteId) -> bool {
+    match sprite_id {
+        _ => can_shuffle_in_ow(sprite_id),
+    }
+}
+
+/// This is used to restrict shuffling in the the dark overworld.
+pub(crate) fn can_shuffle_in_dw(sprite_id: &SpriteId) -> bool {
+    match sprite_id {
+        SpriteId::xD4_LANDMINE => false,
+        _ => can_shuffle_in_ow(sprite_id),
     }
 }
 
@@ -429,7 +442,7 @@ pub(crate) fn can_sprite_hold_key(sprite_id: &SpriteId) -> bool {
         // There isn't a guarantee that this is killable without bombs
         // and you may not have the sword. In particular, it can be difficult
         // to complete the standard mode if a stalfos knight is holding the
-        // key in the path of escape, it can be impossible to leave without 
+        // key in the path of escape, it can be impossible to leave without
         // a boomerang/sword and a bomb.
         SpriteId::x91_STALFOS_KNIGHT => false,
         // Exits the screen.

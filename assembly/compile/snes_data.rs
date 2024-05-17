@@ -3,7 +3,6 @@ use std::cmp::min;
 
 const BLANK: u8 = 0xFF;
 
-
 /// Returns the deltas between the original ROM and the data provided.
 pub fn get_snes_deltas(data: &Vec<u8>) -> Vec<(usize, Vec<u8>)> {
     let mut deltas: Vec<(usize, Vec<u8>)> = vec![];
@@ -50,4 +49,3 @@ pub fn get_snes_deltas(data: &Vec<u8>) -> Vec<(usize, Vec<u8>)> {
     }
     deltas
 }
-

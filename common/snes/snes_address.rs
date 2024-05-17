@@ -1,4 +1,5 @@
-use std::cmp::{max, min};
+use std::cmp::max;
+use std::cmp::min;
 
 use super::rom_type::RomType;
 

@@ -1,5 +1,6 @@
 #![allow(dead_code)]
 use std::fs;
+use std::fs::File;
 use std::path::Path;
 
 use log::error;
@@ -10,6 +11,7 @@ use simplelog::CombinedLogger;
 use simplelog::Config;
 use simplelog::TermLogger;
 use simplelog::TerminalMode;
+use simplelog::WriteLogger;
 use spritzer::zelda3::randomize_zelda3;
 use spritzer::zelda3::Balancing;
 use spritzer::zelda3::OverworldEnemyShuffle;
@@ -31,12 +33,19 @@ fn main() {
 }
 
 fn setup_logging() {
-    CombinedLogger::init(vec![TermLogger::new(
-        LevelFilter::Debug,
-        Config::default(),
-        TerminalMode::Mixed,
-        ColorChoice::Auto,
-    )])
+    CombinedLogger::init(vec![
+        TermLogger::new(
+            LevelFilter::Info,
+            Config::default(),
+            TerminalMode::Mixed,
+            ColorChoice::Auto,
+        ),
+        WriteLogger::new(
+            LevelFilter::Debug,
+            Config::default(),
+            File::create("./library/.build/output.sfc.log").unwrap(),
+        ),
+    ])
     .expect("Logger failed to setup");
 }
 
@@ -85,9 +94,9 @@ fn easy_mode() -> Z3Options {
         mushroom_shuffle: false,
         killable_thieves: true,
         overworld_balancing: Balancing::Casual,
-        overworld_enemy_shuffle: OverworldEnemyShuffle::Simple,
+        overworld_enemy_shuffle: OverworldEnemyShuffle::Chaos,
         underworld_balancing: Balancing::Casual,
-        underworld_enemy_shuffle: UnderworldEnemyShuffle::Simple,
+        underworld_enemy_shuffle: UnderworldEnemyShuffle::Chaos,
         seed: "test".to_owned(),
         shadow_bees: false,
     }
@@ -112,13 +121,13 @@ fn inverted_mode() -> Z3Options {
 fn chaos_mode() -> Z3Options {
     Z3Options {
         boss_shuffle: true,
-        mushroom_shuffle: false,
+        mushroom_shuffle: true,
         killable_thieves: true,
         overworld_balancing: Balancing::Random,
         overworld_enemy_shuffle: OverworldEnemyShuffle::Chaos,
         underworld_balancing: Balancing::Random,
         underworld_enemy_shuffle: UnderworldEnemyShuffle::Chaos,
-        seed: "saofinsdofinsdofinsodifnsoidf".to_owned(),
+        seed: "test".to_owned(),
         shadow_bees: true,
     }
 }

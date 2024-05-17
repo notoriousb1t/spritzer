@@ -10,8 +10,8 @@ use super::ow_spritelist_utils::get_sprite_pointer;
 use crate::zelda3::model::OWRoom;
 use crate::zelda3::model::OWRoomId;
 use crate::zelda3::model::OWRoomState;
-use crate::zelda3::model::OWSprite;
 use crate::zelda3::model::OWStateId;
+use crate::zelda3::model::Sprite;
 use crate::zelda3::model::SpriteId;
 use crate::zelda3::model::SpritesetId;
 
@@ -81,12 +81,12 @@ fn read_sprites(
     game: &SnesGame,
     overworld_area_id: OWRoomId,
     overworld_id: OWStateId,
-) -> Vec<OWSprite> {
+) -> Vec<Sprite> {
     let sprite_address = get_sprite_pointer(overworld_area_id, overworld_id);
     // Find the base address of Overworld Sprites in this Overworld Area.
     let sprite_table_base_address = game.read_pointer_int16(sprite_address);
 
-    let mut sprites: Vec<OWSprite> = vec![];
+    let mut sprites: Vec<Sprite> = vec![];
     let mut index = 0;
     let mut remaining_max_bytes = 10000;
     loop {
@@ -106,10 +106,14 @@ fn read_sprites(
         let x = game.read(address + 1);
         let sprite_value = game.read(address + 2);
         let sprite_id = SpriteId::from_repr(sprite_value as u16).unwrap();
-        sprites.push(OWSprite {
+        sprites.push(Sprite {
             y,
             x,
             id: sprite_id,
+            is_lower_layer: false,
+            item: None,
+            aux0: None,
+            aux1: None,
         });
         index += 3;
         remaining_max_bytes -= 3;

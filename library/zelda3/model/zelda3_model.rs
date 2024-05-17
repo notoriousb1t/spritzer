@@ -13,8 +13,8 @@ use super::Entrance;
 use super::EntranceId;
 use super::OWRoom;
 use super::OWRoomId;
-use super::Sprite;
 use super::SpriteId;
+use super::SpriteProperties;
 use super::Spriteset;
 use super::SpritesetId;
 use super::UWRoomId;
@@ -50,7 +50,7 @@ pub(crate) struct Z3Model {
     pub sprite_pool: BTreeMap<SpritesetId, Vec<SpriteId>>,
     /// The Settings of each Sprite. Please note that the game logic may have hard coded values as
     /// well.
-    pub sprite_settings: BTreeMap<SpriteId, Sprite>,
+    pub sprite_settings: BTreeMap<SpriteId, SpriteProperties>,
     /// The Spriteset blocks used to rendered sprites. There are 4 associated with each ID.
     pub spritesets: BTreeMap<SpritesetId, Spriteset>,
     /// The general difficulty of randomization of sprites in the underworld
@@ -121,29 +121,28 @@ fn create_free_ow_spriteset_list() -> Vec<SpritesetId> {
         SpritesetId::x3D_FREESPACE,
         SpritesetId::x3E_FREESPACE,
         SpritesetId::x3F_FREESPACE,
-        SpritesetId::x40_FREESPACE,
     ]
 }
 
 /// Returns a list of spritesheets that are considered empty and can be used for swapping.
 fn create_free_uw_spriteset_list() -> Vec<SpritesetId> {
     vec![
-        SpritesetId::x2C_UNDERWORLD_FREESPACE,
-        SpritesetId::x2D_UNDERWORLD_FREESPACE,
-        SpritesetId::x2E_UNDERWORLD_FREESPACE,
-        SpritesetId::x3F_UNDERWORLD_FREESPACE,
-        SpritesetId::x30_UNDERWORLD_FREESPACE,
-        SpritesetId::x31_UNDERWORLD_FREESPACE,
-        SpritesetId::x32_UNDERWORLD_FREESPACE,
-        SpritesetId::x33_UNDERWORLD_FREESPACE,
-        SpritesetId::x34_UNDERWORLD_FREESPACE,
-        SpritesetId::x35_UNDERWORLD_FREESPACE,
-        SpritesetId::x36_UNDERWORLD_FREESPACE,
-        SpritesetId::x37_UNDERWORLD_FREESPACE,
-        SpritesetId::x38_UNDERWORLD_FREESPACE,
-        SpritesetId::x39_UNDERWORLD_FREESPACE,
-        SpritesetId::x3A_UNDERWORLD_FREESPACE,
-        SpritesetId::x3B_UNDERWORLD_FREESPACE,
-        SpritesetId::x3C_UNDERWORLD_FREESPACE,
+        SpritesetId::x6C_UNDERWORLD_FREESPACE,
+        SpritesetId::x6D_UNDERWORLD_FREESPACE,
+        SpritesetId::x6E_UNDERWORLD_FREESPACE,
+        SpritesetId::x6F_UNDERWORLD_FREESPACE,
+        SpritesetId::x70_UNDERWORLD_FREESPACE,
+        SpritesetId::x71_UNDERWORLD_FREESPACE,
+        SpritesetId::x72_UNDERWORLD_FREESPACE,
+        SpritesetId::x73_UNDERWORLD_FREESPACE,
+        SpritesetId::x74_UNDERWORLD_FREESPACE,
+        SpritesetId::x75_UNDERWORLD_FREESPACE,
+        SpritesetId::x76_UNDERWORLD_FREESPACE,
+        SpritesetId::x77_UNDERWORLD_FREESPACE,
+        SpritesetId::x78_UNDERWORLD_FREESPACE,
+        SpritesetId::x79_UNDERWORLD_FREESPACE,
+        SpritesetId::x7A_UNDERWORLD_FREESPACE,
+        SpritesetId::x7B_UNDERWORLD_FREESPACE,
+        SpritesetId::x7C_UNDERWORLD_FREESPACE,
     ]
 }

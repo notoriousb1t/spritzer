@@ -10,8 +10,8 @@ use super::ow_spritelist_utils::get_sprite_graphics_address;
 use super::ow_spritelist_utils::get_sprite_pointer;
 use crate::zelda3::model::OWRoom;
 use crate::zelda3::model::OWRoomId;
-use crate::zelda3::model::OWSprite;
 use crate::zelda3::model::OWStateId;
+use crate::zelda3::model::Sprite;
 
 const STOP_MARKER: u8 = 0xFF;
 
@@ -46,7 +46,7 @@ fn write_headers(game: &mut SnesGame, rooms: &[&OWRoom]) {
 fn write_spritelists(game: &mut SnesGame, rooms: &[&OWRoom]) {
     // Group room + state by sprites since identical sprite lists can be written as a single one
     // and pointed to by multiple states.
-    let mut map: HashMap<Vec<OWSprite>, Vec<(OWRoomId, OWStateId)>> = HashMap::default();
+    let mut map: HashMap<Vec<Sprite>, Vec<(OWRoomId, OWStateId)>> = HashMap::default();
     for room in rooms.iter() {
         for state in room.states() {
             let values = match map.entry(state.sprites.clone()) {

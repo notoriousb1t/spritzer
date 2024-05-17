@@ -1,4 +1,5 @@
-use super::{SpriteId, SpritesheetId};
+use super::SpriteId;
+use super::SpritesheetId;
 
 /// Evaluates an array of spritesheets and list of sprite_ids and determines which Spritesheets are
 /// required to render that list of sprites.
@@ -38,10 +39,6 @@ pub(crate) fn get_sprite_requirements(
 /// True if the spritesheet cannot be reassigned under any circumstance.
 pub(crate) fn is_spritesheet_permanent_uw(spritesheet_id: &SpritesheetId) -> bool {
     match spritesheet_id {
-        // Although uncle and priest are on the same sprite, they don't use
-        // the same offsets, so the sprite graphics are not interchangeable.
-        SpritesheetId::x47_PRIEST => true,
-        SpritesheetId::x51_UNCLE_PRIEST_SICK_BOY => true,
         // Somaria platforms are spawned in, so it is impossible to tell if a room has this without
         // checking tile data.
         SpritesheetId::x27_TURTLE_ROCK => true,
@@ -227,7 +224,12 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
                 SpritesheetId::x53_ObjectsHazards,
             ],
         ],
-        // SpriteId::x16_SAHASRAHLA
+        SpriteId::x16_SAHASRAHLA => vec![[
+            SpritesheetId::None,
+            SpritesheetId::None,
+            SpritesheetId::x4C_SAHASRAHLA_WITCH,
+            SpritesheetId::None,
+        ]],
         SpriteId::x17_HOARDER => vec![
             [
                 SpritesheetId::None,
@@ -546,7 +548,8 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
                 SpritesheetId::None,
                 SpritesheetId::x1D_ARMOS_BOSS_LOCK_BAT,
             ],
-            // TODO: verify that this is being added by Z3 randomizer. It seems like it is, or Archipelago.
+            // TODO: verify that this is being added by Z3 randomizer. It seems like it is, or
+            // Archipelago.
             [
                 SpritesheetId::None,
                 SpritesheetId::None,
@@ -1016,12 +1019,20 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
             SpritesheetId::None,
         ]],
         // SpriteId::x76_ZELDA
-        SpriteId::x77_ANTIFAIRY_2 => vec![[
-            SpritesheetId::None,
-            SpritesheetId::None,
-            SpritesheetId::None,
-            SpritesheetId::x53_ObjectsHazards,
-        ]],
+        SpriteId::x77_ANTIFAIRY_2 => vec![
+            [
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::x52_ObjectsHazards,
+            ],
+            [
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::x53_ObjectsHazards,
+            ],
+        ],
         SpriteId::x78_VILLAGE_ELDER => vec![[
             SpritesheetId::None,
             SpritesheetId::None,
@@ -1793,24 +1804,48 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
             SpritesheetId::x23_WALLMASTER_GIBDO,
             SpritesheetId::None,
         ]],
-        SpriteId::xFC_FLOOR_DROP_SQUARE_OW_OVERLORD => vec![[
-            SpritesheetId::None,
-            SpritesheetId::None,
-            SpritesheetId::None,
-            SpritesheetId::x52_ObjectsHazards,
-        ]],
-        SpriteId::xFD_FLOOR_DROP_NORTH_PATH_OW_OVERLORD => vec![[
-            SpritesheetId::None,
-            SpritesheetId::None,
-            SpritesheetId::None,
-            SpritesheetId::x52_ObjectsHazards,
-        ]],
-        SpriteId::xFE_FLOOR_DROP_EAST_PATH_OW_OVERLORD => vec![[
-            SpritesheetId::None,
-            SpritesheetId::None,
-            SpritesheetId::None,
-            SpritesheetId::x52_ObjectsHazards,
-        ]],
+        SpriteId::xFC_FLOOR_DROP_SQUARE_OW_OVERLORD => vec![
+            [
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::x52_ObjectsHazards,
+            ],
+            [
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::x53_ObjectsHazards,
+            ],
+        ],
+        SpriteId::xFD_FLOOR_DROP_NORTH_PATH_OW_OVERLORD => vec![
+            [
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::x52_ObjectsHazards,
+            ],
+            [
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::x53_ObjectsHazards,
+            ],
+        ],
+        SpriteId::xFE_FLOOR_DROP_EAST_PATH_OW_OVERLORD => vec![
+            [
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::x52_ObjectsHazards,
+            ],
+            [
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::x53_ObjectsHazards,
+            ],
+        ],
         SpriteId::x102_CANON_BALLS_EP_4_WALL_CANONBALLS => vec![[
             SpritesheetId::None,
             SpritesheetId::None,
@@ -1852,18 +1887,34 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
             SpritesheetId::x23_WALLMASTER_GIBDO,
             SpritesheetId::None,
         ]],
-        SpriteId::x10A_FLOOR_DROP_SQUARE => vec![[
-            SpritesheetId::None,
-            SpritesheetId::None,
-            SpritesheetId::None,
-            SpritesheetId::x52_ObjectsHazards,
-        ]],
-        SpriteId::x10B_FLOOR_DROP_NORTH => vec![[
-            SpritesheetId::None,
-            SpritesheetId::None,
-            SpritesheetId::None,
-            SpritesheetId::x52_ObjectsHazards,
-        ]],
+        SpriteId::x10A_FLOOR_DROP_SQUARE => vec![
+            [
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::x52_ObjectsHazards,
+            ],
+            [
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::x53_ObjectsHazards,
+            ],
+        ],
+        SpriteId::x10B_FLOOR_DROP_NORTH => vec![
+            [
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::x52_ObjectsHazards,
+            ],
+            [
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::x53_ObjectsHazards,
+            ],
+        ],
         SpriteId::x110_PIROGUSU_SPAWNER_RIGHT => vec![[
             SpritesheetId::None,
             SpritesheetId::None,
@@ -1888,12 +1939,20 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
             SpritesheetId::x22_WATER_TEKTITES,
             SpritesheetId::None,
         ]],
-        SpriteId::x114_FLYING_FLOOR_TILE_TRAP => vec![[
-            SpritesheetId::None,
-            SpritesheetId::None,
-            SpritesheetId::None,
-            SpritesheetId::x52_ObjectsHazards,
-        ]],
+        SpriteId::x114_FLYING_FLOOR_TILE_TRAP => vec![
+            [
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::x52_ObjectsHazards,
+            ],
+            [
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::None,
+                SpritesheetId::x53_ObjectsHazards,
+            ],
+        ],
         SpriteId::x115_WIZZROBE_SPAWNER => vec![
             [
                 SpritesheetId::None,

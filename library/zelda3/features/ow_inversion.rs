@@ -8,11 +8,11 @@ use strum::IntoEnumIterator;
 
 use crate::zelda3::model::OWRoom;
 use crate::zelda3::model::OWRoomId;
-use crate::zelda3::model::OWSprite;
+use crate::zelda3::model::Sprite;
 use crate::zelda3::model::SpriteId;
-use crate::zelda3::model::SpritesheetId;
 use crate::zelda3::model::Spriteset;
 use crate::zelda3::model::SpritesetId;
+use crate::zelda3::model::SpritesheetId;
 use crate::zelda3::model::Z3Model;
 
 pub(crate) fn apply_ow_inversion(model: &mut Z3Model) {
@@ -29,10 +29,14 @@ fn move_salesman(model: &mut Z3Model) {
         .get_mut(&OWRoomId::x2_LUMBER_JACK_HOUSE)
         .expect("Lumberjack House should exist");
 
-    let bottle_salesman = OWSprite {
+    let bottle_salesman = Sprite {
         x: 21,
         y: 20,
         id: SpriteId::x75_BOTTLE_SALESMAN,
+        is_lower_layer: false,
+        item: None,
+        aux0: None,
+        aux1: None,
     };
 
     if let Some(lumberjacks_house_pre_aga) = lumberjacks_house.lw_post_aga.as_mut() {
@@ -51,7 +55,7 @@ fn move_salesman(model: &mut Z3Model) {
             .position(|it| it.id == SpriteId::x75_BOTTLE_SALESMAN)
         {
             if let Some(dw) = &mut kakariko.dw {
-                let mut thief: OWSprite = kakariko.lw.sprites.remove(sprite_pos);
+                let mut thief: Sprite = kakariko.lw.sprites.remove(sprite_pos);
                 thief.id = SpriteId::xC4_THIEF;
                 dw.sprites.push(thief);
             }

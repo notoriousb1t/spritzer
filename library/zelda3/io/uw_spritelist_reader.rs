@@ -4,9 +4,9 @@ use assembly::zelda3::Symbol;
 use common::SnesGame;
 use strum::IntoEnumIterator;
 
+use crate::zelda3::model::Sprite;
 use crate::zelda3::model::SpriteId;
 use crate::zelda3::model::UWRoomId;
-use crate::zelda3::model::UWSprite;
 use crate::zelda3::model::UWSpriteList;
 
 const STOP_MARKER: u8 = 0xFF;
@@ -35,9 +35,9 @@ fn _read_room(game: &SnesGame, room_id: UWRoomId) -> UWSpriteList {
     }
 }
 
-fn _read_sprites(game: &SnesGame, base_address: usize) -> Vec<UWSprite> {
+fn _read_sprites(game: &SnesGame, base_address: usize) -> Vec<Sprite> {
     let mut index = 1; // byte 0 handles sprite ordering.
-    let mut underworld_sprites: Vec<UWSprite> = vec![];
+    let mut underworld_sprites: Vec<Sprite> = vec![];
 
     loop {
         // Read the sprite table for this Dungeon Room.
@@ -75,15 +75,14 @@ fn _read_sprites(game: &SnesGame, base_address: usize) -> Vec<UWSprite> {
         };
         let item = _check_for_key(game, address);
 
-        underworld_sprites.push(UWSprite {
+        underworld_sprites.push(Sprite {
             id: sprite_id,
-            y_pos: y,
-            x_pos: x,
-            lower_layer,
-            aux0,
-            aux1,
+            y,
+            x,
+            is_lower_layer: lower_layer,
+            aux0: Some(aux0),
+            aux1: Some(aux1),
             item,
-            distance_from_midpoint: 0,
         });
         if item.is_some() {
             index += 6;

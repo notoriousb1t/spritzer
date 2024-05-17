@@ -5,7 +5,7 @@ use crate::zelda3::io::damageclass_writer::write_damage_classes;
 use crate::zelda3::io::damagesubclass_writer::write_damage_subclasses;
 use crate::zelda3::io::entrance_writer::write_entrances;
 use crate::zelda3::io::ow_spritelist_writer::write_ow_sprites_and_headers;
-use crate::zelda3::io::sprite_writer::write_sprites;
+use crate::zelda3::io::sprite_property_writer::write_sprites;
 use crate::zelda3::io::spriteset_writer::write_spritesets;
 use crate::zelda3::io::uw_header_writer::write_uw_headers;
 use crate::zelda3::io::uw_scene_writer::write_uw_scenes;

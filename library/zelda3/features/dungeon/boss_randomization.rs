@@ -12,15 +12,15 @@ use crate::zelda3::model::DungeonId;
 use crate::zelda3::model::Encounter;
 use crate::zelda3::model::ObjectInfo;
 use crate::zelda3::model::Offsets;
+use crate::zelda3::model::Sprite;
 use crate::zelda3::model::SpriteId;
 use crate::zelda3::model::SpriteInfo;
-use crate::zelda3::model::SpritesheetId;
 use crate::zelda3::model::SpritesetId;
+use crate::zelda3::model::SpritesheetId;
 use crate::zelda3::model::UWFloorId;
 use crate::zelda3::model::UWObject;
 use crate::zelda3::model::UWObjectId;
 use crate::zelda3::model::UWRoomId;
-use crate::zelda3::model::UWSprite;
 use crate::zelda3::model::Z3Model;
 use crate::zelda3::options::DEBUG_AGAHNIM1;
 use crate::zelda3::options::DEBUG_ARMOS;
@@ -361,16 +361,15 @@ fn add_objects(
     }
 }
 
-fn create_sprite(sprite_info: &SpriteInfo, offsets: &Offsets) -> UWSprite {
-    UWSprite {
+fn create_sprite(sprite_info: &SpriteInfo, offsets: &Offsets) -> Sprite {
+    Sprite {
         id: sprite_info.id,
-        x_pos: sprite_info.x + offsets.x,
-        y_pos: sprite_info.y + offsets.y,
-        lower_layer: offsets.lower_layer,
+        x: sprite_info.x + offsets.x,
+        y: sprite_info.y + offsets.y,
+        is_lower_layer: offsets.lower_layer,
         item: None,
-        aux0: 0,
-        aux1: 0,
-        distance_from_midpoint: 0,
+        aux0: None,
+        aux1: None,
     }
 }
 

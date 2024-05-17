@@ -5,22 +5,22 @@ use common::SnesGame;
 use strum::IntoEnumIterator;
 
 use crate::zelda3::model::PaletteIndex;
-use crate::zelda3::model::Sprite;
 use crate::zelda3::model::SpriteId;
+use crate::zelda3::model::SpriteProperties;
 use crate::zelda3::model::X0_NO_DAMAGE;
 
-pub(crate) fn read_sprites(game: &SnesGame) -> BTreeMap<SpriteId, Sprite> {
-    let mut values: Vec<(SpriteId, Sprite)> = vec![];
+pub(crate) fn read_sprites(game: &SnesGame) -> BTreeMap<SpriteId, SpriteProperties> {
+    let mut values: Vec<(SpriteId, SpriteProperties)> = vec![];
     for id in SpriteId::iter() {
         values.push((id, _read_sprite(game, id)));
     }
     BTreeMap::from_iter(values)
 }
 
-fn _read_sprite(game: &SnesGame, id: SpriteId) -> Sprite {
+fn _read_sprite(game: &SnesGame, id: SpriteId) -> SpriteProperties {
     if id as usize >= 0xF3 {
         // Addresses above this value are overlords, this is not applicable.
-        return Sprite {
+        return SpriteProperties {
             id,
             allow_pits: false,
             big_shadow: false,
@@ -122,7 +122,7 @@ fn _read_sprite(game: &SnesGame, id: SpriteId) -> Sprite {
     let immune_to_arrows = (settings_7_byte & 0b100_0000) != 0;
     let prevent_permadeath = (settings_7_byte & 0b1000_0000) != 0;
 
-    Sprite {
+    SpriteProperties {
         id,
         allow_pits,
         big_shadow,

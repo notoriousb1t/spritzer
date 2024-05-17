@@ -30,7 +30,6 @@ impl Balancing {
 )]
 pub enum OverworldEnemyShuffle {
     Vanilla = 0,
-    Simple = 1,
     Inverted = 2,
     Full = 3,
     Chaos = 4,
@@ -50,7 +49,6 @@ impl OverworldEnemyShuffle {
 )]
 pub enum UnderworldEnemyShuffle {
     Vanilla = 0,
-    Simple = 1,
     Full = 2,
     Chaos = 3,
     Insanity = 4,

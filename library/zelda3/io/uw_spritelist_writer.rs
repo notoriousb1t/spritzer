@@ -31,9 +31,9 @@ fn _write_sprites(game: &mut SnesGame, room: &UWSpriteList) {
 
     // Rewrite new Dungeon Sprites.
     for dungeon_sprite in room.sprites.iter() {
-        let lower_layer_bit = match dungeon_sprite.lower_layer {
+        let lower_layer_bit = match dungeon_sprite.is_lower_layer {
             true => 0b1000_0000,
-            false => 0,
+            _ => 0,
         };
         let overlord_bits = match dungeon_sprite.id as u16 >= _OVERLORD_OFFSET {
             true => _OVERLORD_OFFSET,
@@ -41,11 +41,19 @@ fn _write_sprites(game: &mut SnesGame, room: &UWSpriteList) {
         } as u8;
         let aux1 = match dungeon_sprite.id as u16 >= _OVERLORD_OFFSET {
             true => 0b111,
-            false => dungeon_sprite.aux1 & 0b111,
+            false => match dungeon_sprite.aux1 {
+                Some(aux1) => aux1 & 0b111,
+                _ => 0,
+            },
         };
 
-        let y_byte = lower_layer_bit | ((dungeon_sprite.aux0 & 0b11) << 5) | dungeon_sprite.y_pos;
-        let x_byte = dungeon_sprite.x_pos | (aux1 << 5);
+        let y_byte = lower_layer_bit
+            | (match dungeon_sprite.aux0 {
+                Some(aux0) => aux0 & 0b11,
+                _ => 0,
+            })
+            | dungeon_sprite.y;
+        let x_byte = dungeon_sprite.x | (aux1 << 5);
         let sprite_byte = dungeon_sprite.id as u8 - overlord_bits;
 
         buffer.extend(&[y_byte, x_byte, sprite_byte]);

@@ -26,8 +26,8 @@ pub(crate) fn apply_base_sprite_changes(model: &mut Z3Model) {
     update_spritesets(model);
 }
 
-/// Applies sprite instance changes across overworld and darkworld. This is largely a find and replace to make
-/// shuffles safer or feel better.
+/// Applies sprite instance changes across overworld and darkworld. This is largely a find and
+/// replace to make shuffles safer or feel better.
 pub(crate) fn apply_base_sprite_shuffle_changes(model: &mut Z3Model) {
     // See if there is a required replacement across all versions of all rooms.
     for overworld_id in OWRoomId::iter() {
@@ -42,8 +42,9 @@ pub(crate) fn apply_base_sprite_shuffle_changes(model: &mut Z3Model) {
                     SpriteId::xD2_FLOPPING_FISH => Some(SpriteId::xF_OCTOBALLOON),
                     // Swaps fake master sword for another enemy common to the area in vanilla.
                     SpriteId::xE8_FAKE_MASTER_SWORD => Some(SpriteId::xD_BUZZBLOB),
-                    // Remove red spear guard 2 entirely and replace with blue sword guard. This 
-                    // reduces the total number of red spear guards to 1 and improves how the game feels.
+                    // Remove red spear guard 2 entirely and replace with blue sword guard. This
+                    // reduces the total number of red spear guards to 1 and improves how the game
+                    // feels.
                     SpriteId::x45RedSpearGuard2 => Some(SpriteId::x41BlueSwordGuard),
                     _ => None,
                 } {
@@ -75,18 +76,19 @@ fn update_settings(model: &mut Z3Model) {
         let sprite_type = get_sprite_type(&sprite.id);
 
         // This makes sure the game and randomizer are aligned on what is killable for the
-        // purposes of underworld kill rooms. Many sprites aren't flagged because they don't occur in
-        // kill rooms in vanilla, but are effectively unkillable (or shouldn't count)
+        // purposes of underworld kill rooms. Many sprites aren't flagged because they don't occur
+        // in kill rooms in vanilla, but are effectively unkillable (or shouldn't count)
         sprite.statis = get_sprite_vulnerability(&sprite.id) == SpriteVulnerability::Invulnerable;
 
         match sprite_type {
             SpriteType::Enemy => {
-                // Flag all enemies as being eligible for boss battles. This allows, for example, adding
-                // mini moldorm to moldorm boss.
+                // Flag all enemies as being eligible for boss battles. This allows, for example,
+                // adding mini moldorm to moldorm boss.
                 sprite.boss_prep_preserved = true;
             }
             SpriteType::Hazard => {
-                // Flag all hazards as being eligible for boss battles. This allows for medusas and fire bars.
+                // Flag all hazards as being eligible for boss battles. This allows for medusas and
+                // fire bars.
                 sprite.boss_prep_preserved = true;
             }
             // Otherwise, preserve existing logic in game.
@@ -97,8 +99,9 @@ fn update_settings(model: &mut Z3Model) {
 
 fn update_color_index(model: &mut Z3Model) {
     if let Some(sprite) = model.sprite_settings.get_mut(&SpriteId::x45RedSpearGuard2) {
-        // Assign a different color to differentiate. This creates the iron soldiers which are removed 
-        // during randmomization. This is largely here to make it more obvious when this is added by accident.
+        // Assign a different color to differentiate. This creates the iron soldiers which are
+        // removed during randmomization. This is largely here to make it more obvious when
+        // this is added by accident.
         sprite.palette = PaletteIndex::XENoir;
     }
     if let Some(sprite) = model.sprite_settings.get_mut(&SpriteId::x6B_CANNON_GUARD) {
@@ -114,8 +117,9 @@ fn update_color_index(model: &mut Z3Model) {
         sprite.palette = PaletteIndex::XBRed;
     }
     if let Some(sprite) = model.sprite_settings.get_mut(&SpriteId::x83_GREEN_EYEGORE) {
-        // Stablize color to something that works better across rooms. (blue) Without this change, there
-        // are palette combinations that result in green eyegores being red and that is super confusing.
+        // Stablize color to something that works better across rooms. (blue) Without this change,
+        // there are palette combinations that result in green eyegores being red and that
+        // is super confusing.
         sprite.palette = PaletteIndex::XCBlue;
     }
 }

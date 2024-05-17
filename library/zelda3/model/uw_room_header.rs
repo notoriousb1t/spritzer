@@ -1,9 +1,9 @@
 use super::dungeon_blockset_id::UWBlocksetId;
 use super::palette_id::PaletteId;
+use super::room_logic::RoomLogic;
 use super::spriteset_id::SpritesetId;
 use super::uw_room_floor_id::UWFloorId;
 use super::uw_room_id::UWRoomId;
-use super::uw_room_tag::UWRoomTag;
 
 #[derive(Clone)]
 pub(crate) struct UnderworldRoomHeader {
@@ -21,9 +21,9 @@ pub(crate) struct UnderworldRoomHeader {
     /// The visual effect of the Underworld Room.
     pub bgmove: u8,
     /// The first tag. This provides data such as kill conditions.
-    pub tag1: UWRoomTag,
+    pub tag1: RoomLogic,
     /// The second tag. This provides data such as kill conditions.
-    pub tag2: UWRoomTag,
+    pub tag2: RoomLogic,
     /// The pattern/type of the top floor. (Water, Tiled, etc.)
     pub planes1: UWFloorId,
     /// The pattern/type of the bottom floor. (Water, Tiled, etc.)

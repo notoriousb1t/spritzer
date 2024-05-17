@@ -5,7 +5,7 @@ use super::damagesubclass_reader::read_damage_subclasses;
 use super::dungeon_reader::read_dungeons;
 use super::entrance_reader::read_entrances;
 use super::ow_spritelist_reader::read_ow_sprites_and_headers;
-use super::sprite_reader::read_sprites;
+use super::sprite_property_reader::read_sprites;
 use super::spriteset_reader::read_spritesets;
 use super::uw_header_reader::read_uw_headers;
 use super::uw_scene_reader::read_uw_scenes;

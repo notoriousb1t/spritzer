@@ -1,3 +1,8 @@
+use super::can_shuffle_in_dw;
+use super::can_shuffle_in_lw;
+use super::Sprite;
+use super::HORIZONTAL;
+use super::VERTICAL;
 use crate::zelda3::model::can_shuffle_in_ow;
 use crate::zelda3::model::can_shuffle_in_uw;
 use crate::zelda3::model::can_sprite_fly;
@@ -16,43 +21,55 @@ use crate::zelda3::model::SNAKE;
 use crate::zelda3::model::SOUTH;
 use crate::zelda3::model::WEST;
 
-use super::HORIZONTAL;
-use super::VERTICAL;
-
 #[derive(PartialEq, Clone, Copy)]
 #[allow(non_camel_case_types)]
-pub(crate) enum Placement {
-    Area,
-    Room,
-    KillRoom,
+pub(crate) enum Rule {
+    KeyRequired,
+    KillRequired,
+    Overworld,
+    ReduceDifficulty,
+    Underworld,
+    DarkWorld,
+    LightWorld,
 }
 
-/// True if all sprites from the source list can can be replaced with something from the target list.
+/// True if all sprites from the source list can can be replaced with something from the target
+/// list.
 pub(crate) fn is_list_compatible(
     source: &Vec<SpriteId>,
-    target: Option<&Vec<SpriteId>>,
-    placement: Placement,
-    has_key: bool,
+    target: &Vec<SpriteId>,
+    rules: &[Rule],
 ) -> bool {
-    if target.is_none() {
-        return source.is_empty();
+    source
+        .iter()
+        .all(|a| target.iter().any(|b| is_partially_compatible(a, b, rules)))
+}
+
+pub(crate) fn filter_compatible(
+    choices: &[SpriteId],
+    sprite: &Sprite,
+    rules: &[Rule],
+) -> Vec<SpriteId> {
+    let possible_matches = choices
+        .iter()
+        .filter(|it| is_fully_compatible(&sprite.id, it, &rules))
+        .map(|it| *it)
+        .collect::<Vec<_>>();
+
+    if possible_matches.len() > 1 {
+        return possible_matches;
     }
 
-    source.iter().all(|a| {
-        target
-            .unwrap()
-            .iter()
-            .any(|b| is_partially_compatible(a, b, placement, has_key))
-    })
+    // If there is nothing that is fully compatible, use looser rules.
+    return choices
+        .iter()
+        .filter(|&it| is_partially_compatible(&sprite.id, it, &rules))
+        .map(|it| *it)
+        .collect::<Vec<_>>();
 }
 
 /// True if the source can be replaced with the target.
-pub(crate) fn is_fully_compatible(
-    source: &SpriteId,
-    target: &SpriteId,
-    placement: Placement,
-    has_key: bool,
-) -> bool {
+pub(crate) fn is_fully_compatible(source: &SpriteId, target: &SpriteId, rules: &[Rule]) -> bool {
     if source == target {
         return true;
     }
@@ -63,19 +80,26 @@ pub(crate) fn is_fully_compatible(
         return false;
     }
 
-    if placement == Placement::Area {
+    if rules.contains(&Rule::DarkWorld) {
+        return can_shuffle_in_dw(source) && can_shuffle_in_dw(target);
+    }
+    if rules.contains(&Rule::LightWorld) {
+        return can_shuffle_in_lw(source) && can_shuffle_in_lw(target);
+    }
+    if rules.contains(&Rule::Overworld) {
         return can_shuffle_in_ow(source) && can_shuffle_in_ow(target);
     }
+    
     if !(can_shuffle_in_uw(source) && can_shuffle_in_uw(target)) {
         return false;
     }
 
-    if has_key && can_sprite_hold_key(source) {
+    if rules.contains(&Rule::KeyRequired) && can_sprite_hold_key(source) {
         return can_sprite_hold_key(target)
             && get_sprite_vulnerability(source) == get_sprite_vulnerability(target);
     }
 
-    if placement == Placement::KillRoom
+    if rules.contains(&Rule::KillRequired)
         || get_sprite_vulnerability(source) == SpriteVulnerability::Invulnerable
     {
         return get_sprite_vulnerability(source) == get_sprite_vulnerability(target);
@@ -87,8 +111,17 @@ fn is_classification_fully_compatible(source: &SpriteId, target: &SpriteId) -> b
     let source_type = get_sprite_type(source);
     let target_type = get_sprite_type(target);
 
-    if source_type == SpriteType::Object || source_type == SpriteType::Npc {
+    if source_type == SpriteType::Object
+        || source_type == SpriteType::Npc
+        || source_type == SpriteType::Overlord
+        || source_type == SpriteType::Boss
+    {
         return source == target;
+    }
+
+    // Allow creatures to replace enemies and hazards from a classification perspective.
+    if target_type == SpriteType::Creature && (source_type == SpriteType::Enemy || source_type == SpriteType::Hazard) {
+        return true;
     }
 
     if source_type != target_type {
@@ -106,7 +139,10 @@ fn is_classification_partially_compatible(source: &SpriteId, target: &SpriteId) 
     let source_type = get_sprite_type(source);
     let target_type = get_sprite_type(target);
 
-    if source_type == SpriteType::Object || source_type == SpriteType::Npc {
+    if source_type == SpriteType::Object
+        || source_type == SpriteType::Npc
+        || source_type == SpriteType::Overlord
+    {
         return source == target;
     }
 
@@ -177,8 +213,7 @@ fn is_movement_compatible(source_id: &SpriteId, target_id: &SpriteId) -> bool {
 pub(crate) fn is_partially_compatible(
     source: &SpriteId,
     target: &SpriteId,
-    placement: Placement,
-    has_key: bool,
+    rules: &[Rule],
 ) -> bool {
     if source == target {
         return true;
@@ -187,22 +222,30 @@ pub(crate) fn is_partially_compatible(
         return false;
     }
 
-    if placement == Placement::Area {
+    if rules.contains(&Rule::DarkWorld) {
+        return can_shuffle_in_dw(source) && can_shuffle_in_dw(target);
+    }
+    if rules.contains(&Rule::LightWorld) {
+        return can_shuffle_in_lw(source) && can_shuffle_in_lw(target);
+    }
+    if rules.contains(&Rule::Overworld) {
         return can_shuffle_in_ow(source) && can_shuffle_in_ow(target);
     }
+    
     if !(can_shuffle_in_uw(source) && can_shuffle_in_uw(target)) {
         return false;
     }
 
-    if has_key && can_sprite_hold_key(source) {
+    if rules.contains(&Rule::KeyRequired) && can_sprite_hold_key(source) {
         return can_sprite_hold_key(target)
             && get_sprite_vulnerability(source) == get_sprite_vulnerability(target);
     }
 
-    if placement == Placement::KillRoom
+    if rules.contains(&Rule::KillRequired)
         || get_sprite_vulnerability(source) == SpriteVulnerability::Invulnerable
     {
         return get_sprite_vulnerability(source) == get_sprite_vulnerability(target);
     }
+
     get_sprite_vulnerability(target) != SpriteVulnerability::Invulnerable
 }

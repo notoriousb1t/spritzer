@@ -1,5 +1,6 @@
 use std::collections::BTreeMap;
 
+use super::Rule;
 use crate::zelda3::model::get_sprite_challenge;
 use crate::zelda3::model::get_sprite_type;
 use crate::zelda3::model::SpriteChallenge;
@@ -10,10 +11,10 @@ use crate::zelda3::options::Balancing;
 /// Provides weightings to enforce some sort of difficulty for sprite placement when rerolling.
 pub(crate) fn get_weights(
     balancing: &Balancing,
-    is_adjusted: bool,
-    sprite_ids: &[&SpriteId],
+    rules: &[Rule],
+    sprite_ids: &[SpriteId],
 ) -> BTreeMap<SpriteId, usize> {
-    let weight_fn: fn(&SpriteId) -> usize = match is_adjusted {
+    let weight_fn: fn(&SpriteId) -> usize = match rules.contains(&Rule::ReduceDifficulty) {
         true => match balancing {
             Balancing::Random => get_weights_random_adjusted,
             Balancing::Casual => get_weights_casual_adjusted,
@@ -30,7 +31,7 @@ pub(crate) fn get_weights(
     return BTreeMap::from_iter(
         sprite_ids
             .iter()
-            .map(|&sprite_id| (*sprite_id, weight_fn(sprite_id))),
+            .map(|&sprite_id| (sprite_id, weight_fn(&sprite_id))),
     );
 }
 
@@ -62,7 +63,6 @@ fn get_weights_random_adjusted(sprite_id: &SpriteId) -> usize {
         _ => 1,
     }
 }
-
 
 /// Reduce the chance of a bunch of super hard enemies.
 /// The name is a bit of a misnomer, but it is balanced according to
@@ -203,7 +203,6 @@ fn get_weights_hero(sprite_id: &SpriteId) -> usize {
         _ => 0,
     }
 }
-
 
 fn get_weights_hero_adjusted(sprite_id: &SpriteId) -> usize {
     match get_sprite_type(sprite_id) {

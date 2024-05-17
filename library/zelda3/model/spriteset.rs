@@ -1,5 +1,5 @@
-use super::spritesheet_id::SpritesheetId;
 use super::spriteset_id::SpritesetId;
+use super::spritesheet_id::SpritesheetId;
 
 /// Contains up to 4 SpriteSheets that load in individual sprites.
 /// There can only be one loaded at a time, so this must have all the

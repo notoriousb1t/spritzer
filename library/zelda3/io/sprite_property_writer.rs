@@ -3,10 +3,10 @@ use std::collections::BTreeMap;
 use assembly::zelda3::Symbol;
 use common::SnesGame;
 
-use crate::zelda3::model::Sprite;
 use crate::zelda3::model::SpriteId;
+use crate::zelda3::model::SpriteProperties;
 
-pub(super) fn write_sprites(game: &mut SnesGame, sprites: &BTreeMap<SpriteId, Sprite>) {
+pub(super) fn write_sprites(game: &mut SnesGame, sprites: &BTreeMap<SpriteId, SpriteProperties>) {
     for (id, sprite) in sprites.iter() {
         if *id as usize >= 0xF3 {
             // Skip overlords, they aren't real Sprites.

@@ -1,11 +1,12 @@
 use strum_macros::Display;
 use strum_macros::FromRepr;
 
-/// Tags used to indicate conditions for an Underworld Room such as key prize or shutter conditions.
+/// Logic used to indicate conditions for an Underworld Room such as key prize or shutter
+/// conditions.
 #[repr(u8)]
 #[allow(non_camel_case_types)]
 #[derive(Copy, Clone, Debug, Display, Eq, PartialEq, Hash, FromRepr)]
-pub(crate) enum UWRoomTag {
+pub(crate) enum RoomLogic {
     x00_None = 0,
     x01_NW_KILL_ENEMY_TO_OPEN = 1,
     x02_NE_KILL_ENEMY_TO_OPEN = 2,
@@ -72,34 +73,34 @@ pub(crate) enum UWRoomTag {
     x3F_KILL_BOSS_AGAIN = 63,
 }
 
-impl UWRoomTag {
+impl RoomLogic {
     pub fn is_kill_room(self) -> bool {
         matches!(
             self,
-            UWRoomTag::x01_NW_KILL_ENEMY_TO_OPEN
-                | UWRoomTag::x02_NE_KILL_ENEMY_TO_OPEN
-                | UWRoomTag::x03_SW_KILL_ENEMY_TO_OPEN
-                | UWRoomTag::x04_SE_KILL_ENEMY_TO_OPEN
-                | UWRoomTag::x05_W_KILL_ENEMY_TO_OPEN
-                | UWRoomTag::x06_E_KILL_ENEMY_TO_OPEN
-                | UWRoomTag::x07_N_KILL_ENEMY_TO_OPEN
-                | UWRoomTag::x08_S_KILL_ENEMY_TO_OPEN
-                | UWRoomTag::x09_CLEAR_QUADRANT_TO_OPEN
-                | UWRoomTag::x0A_CLEAR_ROOM_TO_OPEN
-                | UWRoomTag::x15_CLEAR_LEVEL_TO_OPEN_DOOR
-                | UWRoomTag::x25_KILL_ENEMY_TO_CLEAR_LEVEL
-                | UWRoomTag::x26_SE_KILL_ENEMY_TO_MOVE_BLOCK
-                | UWRoomTag::x27_TRIGGER_ACTIVATED_CHEST
-                | UWRoomTag::x29_NW_KILL_ENEMY_FOR_CHEST
-                | UWRoomTag::x2A_NE_KILL_ENEMY_FOR_CHEST
-                | UWRoomTag::x2B_SW_KILL_ENEMIES_FOR_CHEST
-                | UWRoomTag::x2C_SE_KILL_ENEMY_FOR_CHEST
-                | UWRoomTag::x2D_W_KILL_ENEMY_FOR_CHEST
-                | UWRoomTag::x2E_E_KILL_ENEMY_FOR_CHEST
-                | UWRoomTag::x2F_N_KILL_ENEMY_FOR_CHEST
-                | UWRoomTag::x30_S_KILL_ENEMY_FOR_CHEST
-                | UWRoomTag::x31_CLEAR_QUADRANT_FOR_CHEST
-                | UWRoomTag::x32_CLEAR_ROOM_FOR_CHEST
+            RoomLogic::x01_NW_KILL_ENEMY_TO_OPEN
+                | RoomLogic::x02_NE_KILL_ENEMY_TO_OPEN
+                | RoomLogic::x03_SW_KILL_ENEMY_TO_OPEN
+                | RoomLogic::x04_SE_KILL_ENEMY_TO_OPEN
+                | RoomLogic::x05_W_KILL_ENEMY_TO_OPEN
+                | RoomLogic::x06_E_KILL_ENEMY_TO_OPEN
+                | RoomLogic::x07_N_KILL_ENEMY_TO_OPEN
+                | RoomLogic::x08_S_KILL_ENEMY_TO_OPEN
+                | RoomLogic::x09_CLEAR_QUADRANT_TO_OPEN
+                | RoomLogic::x0A_CLEAR_ROOM_TO_OPEN
+                | RoomLogic::x15_CLEAR_LEVEL_TO_OPEN_DOOR
+                | RoomLogic::x25_KILL_ENEMY_TO_CLEAR_LEVEL
+                | RoomLogic::x26_SE_KILL_ENEMY_TO_MOVE_BLOCK
+                | RoomLogic::x27_TRIGGER_ACTIVATED_CHEST
+                | RoomLogic::x29_NW_KILL_ENEMY_FOR_CHEST
+                | RoomLogic::x2A_NE_KILL_ENEMY_FOR_CHEST
+                | RoomLogic::x2B_SW_KILL_ENEMIES_FOR_CHEST
+                | RoomLogic::x2C_SE_KILL_ENEMY_FOR_CHEST
+                | RoomLogic::x2D_W_KILL_ENEMY_FOR_CHEST
+                | RoomLogic::x2E_E_KILL_ENEMY_FOR_CHEST
+                | RoomLogic::x2F_N_KILL_ENEMY_FOR_CHEST
+                | RoomLogic::x30_S_KILL_ENEMY_FOR_CHEST
+                | RoomLogic::x31_CLEAR_QUADRANT_FOR_CHEST
+                | RoomLogic::x32_CLEAR_ROOM_FOR_CHEST
         )
     }
 }

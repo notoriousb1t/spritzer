@@ -3,42 +3,32 @@ mod killable_thieves;
 mod moldorm_shuffle;
 mod mushroom_shuffle;
 mod ow_inversion;
-mod ow_sprite_chaotic_shuffle;
-mod ow_sprite_full_shuffle;
-mod ow_sprite_simple_shuffle;
 mod ow_spriteset_shuffle;
 mod shadow_bees;
 mod sprite_base;
+mod sprite_shuffle;
 mod uw_overlord_shuffle;
-mod uw_sprite_chaotic_shuffle;
-mod uw_sprite_full_shuffle;
-mod uw_sprite_simple_shuffle;
 mod uw_spriteset_shuffle;
 
 use log;
-
-use crate::zelda3::features::sprite_base::apply_base_sprite_shuffle_changes;
-use crate::zelda3::model::Z3Model;
-use crate::zelda3::options::OverworldEnemyShuffle;
-use crate::zelda3::options::UnderworldEnemyShuffle;
-use crate::zelda3::options::Z3Options;
 
 use self::dungeon::apply_boss_shuffle;
 use self::killable_thieves::apply_killable_thieves;
 use self::moldorm_shuffle::apply_moldorm_eye_shuffle;
 use self::mushroom_shuffle::apply_mushroom_shuffle;
 use self::ow_inversion::apply_ow_inversion;
-use self::ow_sprite_full_shuffle::apply_ow_sprite_full_shuffle;
-use self::ow_sprite_simple_shuffle::apply_ow_sprite_shuffle;
 use self::ow_spriteset_shuffle::apply_ow_spriteset_shuffle;
 use self::shadow_bees::apply_shadow_bees;
 use self::sprite_base::apply_base_sprite_changes;
+use self::sprite_shuffle::apply_uw_sprites_shuffle;
 use self::uw_overlord_shuffle::apply_uw_overlord_shuffle;
-use self::uw_sprite_chaotic_shuffle::apply_uw_sprites_chaotic_shuffle;
-use self::uw_sprite_full_shuffle::apply_uw_sprites_full_shuffle;
-use self::ow_sprite_chaotic_shuffle::apply_ow_sprites_chaotic_shuffle;
-use self::uw_sprite_simple_shuffle::apply_uw_sprites_simple_shuffle;
 use self::uw_spriteset_shuffle::apply_uw_spriteset_shuffle;
+use crate::zelda3::features::sprite_base::apply_base_sprite_shuffle_changes;
+use crate::zelda3::features::sprite_shuffle::apply_ow_sprites_shuffle;
+use crate::zelda3::model::Z3Model;
+use crate::zelda3::options::OverworldEnemyShuffle;
+use crate::zelda3::options::UnderworldEnemyShuffle;
+use crate::zelda3::options::Z3Options;
 
 pub(crate) fn apply_features(model: &mut Z3Model, options: &Z3Options) {
     log::info!("{}", options);
@@ -110,40 +100,33 @@ pub(crate) fn apply_features(model: &mut Z3Model, options: &Z3Options) {
     }
 
     match options.underworld_enemy_shuffle {
-        UnderworldEnemyShuffle::Simple => {
-            apply_uw_sprites_simple_shuffle(model);
-        }
         UnderworldEnemyShuffle::Full => {
-            apply_uw_sprites_full_shuffle(model);
+            apply_uw_sprites_shuffle(model);
         }
         UnderworldEnemyShuffle::Chaos => {
-            apply_uw_sprites_chaotic_shuffle(model);
+            apply_uw_sprites_shuffle(model);
             apply_uw_overlord_shuffle(model);
         }
         UnderworldEnemyShuffle::Insanity => {
-            apply_uw_sprites_chaotic_shuffle(model);
+            apply_uw_sprites_shuffle(model);
             apply_uw_overlord_shuffle(model);
         }
         _ => {}
     }
 
     match options.overworld_enemy_shuffle {
-        OverworldEnemyShuffle::Simple => {
-            apply_ow_sprite_shuffle(model);
-        }
         OverworldEnemyShuffle::Inverted => {
-            apply_ow_sprite_full_shuffle(model);
+            apply_ow_sprites_shuffle(model);
         }
         OverworldEnemyShuffle::Full => {
-            apply_ow_sprite_full_shuffle(model);
+            apply_ow_sprites_shuffle(model);
         }
         OverworldEnemyShuffle::Chaos => {
-            apply_ow_sprites_chaotic_shuffle(model);
+            apply_ow_sprites_shuffle(model);
         }
         OverworldEnemyShuffle::Insanity => {
-            apply_ow_sprites_chaotic_shuffle(model);
+            apply_ow_sprites_shuffle(model);
         }
         _ => {}
     }
 }
-

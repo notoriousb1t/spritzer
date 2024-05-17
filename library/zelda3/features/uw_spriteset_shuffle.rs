@@ -1,26 +1,55 @@
-use std::cmp::{max, min};
+use std::cmp::max;
+use std::cmp::min;
 use std::collections::btree_map::Entry;
-use std::collections::{BTreeMap, HashSet};
+use std::collections::BTreeMap;
+use std::collections::HashSet;
 
 use log;
-use rand::distributions::{Distribution, WeightedError, WeightedIndex};
+use rand::distributions::Distribution;
+use rand::distributions::WeightedError;
+use rand::distributions::WeightedIndex;
 use rand::prelude::SliceRandom;
 use rand::rngs::StdRng;
 use strum::IntoEnumIterator;
 
-use crate::zelda3::model::{
-    can_shuffle_in_uw, get_sprite_requirements, get_spritesheet_arrangements, get_weight,
-    is_list_compatible, is_restricted_sprite, is_special_damage_sprite,
-    is_spritesheet_permanent_uw, Placement, SpriteId, Spriteset, SpritesetId, SpritesheetId,
-    UWRoomId, Z3Model,
-};
+use crate::zelda3::model::can_shuffle_in_uw;
+use crate::zelda3::model::get_sprite_requirements;
+use crate::zelda3::model::get_spritesheet_arrangements;
+use crate::zelda3::model::get_weight;
+use crate::zelda3::model::is_list_compatible;
+use crate::zelda3::model::is_restricted_sprite;
+use crate::zelda3::model::is_special_damage_sprite;
+use crate::zelda3::model::is_spritesheet_permanent_uw;
+use crate::zelda3::model::Rule;
+use crate::zelda3::model::SpriteId;
+use crate::zelda3::model::Spriteset;
+use crate::zelda3::model::SpritesetId;
+use crate::zelda3::model::SpritesheetId;
+use crate::zelda3::model::UWRoomId;
+use crate::zelda3::model::Z3Model;
 use crate::zelda3::Balancing;
 
 /// Attempt to re-arrange distribution of spritesets.
 pub(crate) fn apply_uw_spriteset_shuffle(model: &mut Z3Model) {
     clear_optional_uw_spritesheets(model);
     fill_spritesets(model);
+    model.prepare_sprite_pool();
     choose_new_spritesets(model);
+
+    let spritesets = SpritesetId::iter()
+        .filter(|it| it.is_underworld())
+        .collect::<Vec<_>>();
+    for spriteset_id in spritesets.iter() {
+        let sheet = model.spritesets.get(&spriteset_id).unwrap();
+        log::debug!(
+            "Spritesheets {} {} {} {} set in ${}",
+            sheet.sheets[0],
+            sheet.sheets[1],
+            sheet.sheets[2],
+            sheet.sheets[3],
+            spriteset_id,
+        );
+    }
 }
 
 /// Clear all non-essential spritesheets.
@@ -54,26 +83,8 @@ fn compute_spriteset_requirements(model: &Z3Model) -> BTreeMap<SpritesetId, Hash
     for room_id in UWRoomId::iter() {
         // Insert/Get an entry into the map based on the spriteset used.
         let header = model.uw_headers.get(&room_id).expect("Header should exist");
-
-        // Determine which placement strategy is required.
-        let placement = match header.tag1.is_kill_room() || header.tag2.is_kill_room() {
-            true => Placement::KillRoom,
-            false => Placement::Room,
-        };
-
         // Get all required sprites from the room.
-        let required_sprites = model
-            .uw_sprites
-            .get(&room_id)
-            .expect("Sprites should exist")
-            .sprites
-            .iter()
-            .map(|sprite| sprite.id)
-            .filter(|sprite_id| {
-                is_restricted_sprite(sprite_id)
-                    || (placement == Placement::KillRoom && is_special_damage_sprite(sprite_id))
-            })
-            .collect::<Vec<_>>();
+        let required_sprites = get_required_sprites(model, room_id);
         let required_sprite_ids = match map.entry(header.spriteset_id) {
             Entry::Vacant(it) => it.insert(HashSet::new()),
             Entry::Occupied(it) => it.into_mut(),
@@ -81,6 +92,30 @@ fn compute_spriteset_requirements(model: &Z3Model) -> BTreeMap<SpritesetId, Hash
         required_sprite_ids.extend(required_sprites);
     }
     map
+}
+
+fn get_required_sprites(model: &Z3Model, room_id: UWRoomId) -> Vec<SpriteId> {
+    // Insert/Get an entry into the map based on the spriteset used.
+    let header = model.uw_headers.get(&room_id).expect("Header should exist");
+
+    // Determine which placement strategy is required.
+    let placement = match header.tag1.is_kill_room() || header.tag2.is_kill_room() {
+        true => Rule::KillRequired,
+        false => Rule::Underworld,
+    };
+
+    model
+        .uw_sprites
+        .get(&room_id)
+        .expect("Sprites should exist")
+        .sprites
+        .iter()
+        .map(|sprite| sprite.id)
+        .filter(|sprite_id| {
+            is_restricted_sprite(sprite_id)
+                || (placement == Rule::KillRequired && is_special_damage_sprite(sprite_id))
+        })
+        .collect::<Vec<_>>()
 }
 
 fn fill_spritesets(model: &mut Z3Model) {
@@ -119,18 +154,6 @@ fn fill_spritesets(model: &mut Z3Model) {
 
         log::error!("Unable to fill spriteset {}", spriteset_id);
     }
-
-    for spriteset_id in spritesets.iter() {
-        let sheet = model.spritesets.get(&spriteset_id).unwrap();
-        log::debug!(
-            "SS ${:02X} -- ${:02X} ${:02X} ${:02X} ${:02X}",
-            *spriteset_id as u8,
-            sheet.sheets[0] as u8,
-            sheet.sheets[1] as u8,
-            sheet.sheets[2] as u8,
-            sheet.sheets[3] as u8,
-        );
-    }
 }
 
 fn create_spritesheet_pool(balancing: Balancing) -> Vec<(usize, [SpritesheetId; 4])> {
@@ -165,7 +188,9 @@ fn fill_spriteset_from_pool(
             }
 
             for i in 0..4 {
-                if spritesheets[i] != SpritesheetId::None {
+                if spritesheets[i] != SpritesheetId::None
+                    && spriteset.sheets[i] == SpritesheetId::None
+                {
                     // Set all spritesheets in their respective slots.
                     spriteset.sheets[i] = spritesheets[i];
                 }
@@ -196,10 +221,8 @@ fn choose_from_pool(
 }
 
 fn choose_new_spritesets(model: &mut Z3Model) {
-    model.prepare_sprite_pool();
-
     let mut rng = model.create_rng();
-    let spritesets = SpritesetId::iter()
+    let spriteset_ids = SpritesetId::iter()
         .filter(|it| it.is_underworld())
         .collect::<Vec<_>>();
 
@@ -210,16 +233,16 @@ fn choose_new_spritesets(model: &mut Z3Model) {
     const WEIGHT_FULL: usize = 32;
     const WEIGHT_EMPTY: usize = 1;
     let mut weights = BTreeMap::from_iter(
-        spritesets
+        spriteset_ids
             .iter()
             .map(|spriteset_id| (*spriteset_id, WEIGHT_FULL)),
     );
 
-    for uw_room_id in UWRoomId::iter() {
+    for room_id in UWRoomId::iter() {
         let header = model
             .uw_headers
-            .get_mut(&uw_room_id)
-            .expect(&format!("UWRoomHeader to exist {}", uw_room_id));
+            .get_mut(&room_id)
+            .expect(&format!("UWRoomHeader to exist {}", room_id));
 
         if let Some(permanent_spritesheet_id) = model
             .spritesets
@@ -233,10 +256,10 @@ fn choose_new_spritesets(model: &mut Z3Model) {
             // There are certain sprites that either aren't present in the room sprite data
             // or use different spritesheet offsets.
             log::debug!(
-                "UW ${:02X} -- found permanent ${:02X} = ${:02X}",
-                uw_room_id as u8,
-                header.spriteset_id as u8,
-                *permanent_spritesheet_id as u8,
+                "UW skipped permanent spritesheet {}: {} in {}",
+                room_id,
+                *permanent_spritesheet_id,
+                header.spriteset_id,
             );
             continue;
         }
@@ -244,48 +267,41 @@ fn choose_new_spritesets(model: &mut Z3Model) {
         // Get the sprites from the room this header is for.
         let uw_sprites = &model
             .uw_sprites
-            .get(&uw_room_id)
+            .get(&room_id)
             .expect("UW Header to have spritelist")
             .sprites;
+
+        // Determine which placement strategy is required.
+        let mut room_rules = vec![Rule::Underworld];
+        if header.tag1.is_kill_room() || header.tag2.is_kill_room() {
+            room_rules.push(Rule::KillRequired);
+        };
+
+        // Check if there is a key in the room.
+        let has_key = uw_sprites.iter().any(|it| it.has_key());
+        if has_key {
+            room_rules.push(Rule::KeyRequired);
+        }
 
         // Get a list of the sprite ids dereferenced.
         let existing_sprite_ids = uw_sprites
             .iter()
             .map(|sprite| sprite.id)
+            .filter(|sprite_id| {
+                is_restricted_sprite(sprite_id)
+                    || (room_rules.contains(&Rule::KillRequired)
+                        && is_special_damage_sprite(sprite_id))
+            })
             .collect::<Vec<_>>();
 
-        let has_special_requirements = existing_sprite_ids
-            .iter()
-            .any(|sprite_id| is_restricted_sprite(sprite_id));
-
-        if has_special_requirements {
-            // Skip rooms with restricted sprites (npcs and bosses)
-            log::debug!(
-                "UW ${:02X} -- found required  ${:02X}",
-                uw_room_id as u8,
-                header.spriteset_id as u8,
-            );
-            continue;
-        }
-
-        // Check if there is a key in the room.
-        let has_key = uw_sprites.iter().any(|it| it.has_key());
-
-        // Determine which placement strategy is required.
-        let placement = match header.tag1.is_kill_room() || header.tag2.is_kill_room() {
-            true => Placement::KillRoom,
-            false => Placement::Room,
-        };
-
         // Find all spritesets capable of switching to this spriteset.
-        let compatible_spritesets = spritesets
+        let compatible_spritesets = spriteset_ids
             .iter()
             .filter(|spriteset| {
                 is_list_compatible(
                     &existing_sprite_ids,
-                    model.sprite_pool.get(&spriteset),
-                    placement,
-                    has_key,
+                    model.sprite_pool.get(&spriteset).unwrap(),
+                    &room_rules,
                 )
             })
             .map(|it| *it)
@@ -294,24 +310,24 @@ fn choose_new_spritesets(model: &mut Z3Model) {
             compatible_spritesets.choose_weighted(&mut rng, |spriteset_id| weights[spriteset_id]);
 
         // Switch spritesets. There should always be at least one match (the original spriteset).
-        if let Ok(new_spriteset_id) = maybe_matching_spriteset.copied() {
+        if let Ok(new_spriteset_id) = maybe_matching_spriteset {
             log::debug!(
-                "UW ${:02X} -- spriteset_id ${:02X} -> ${:02X}",
-                uw_room_id as u8,
-                header.spriteset_id as u8,
-                new_spriteset_id as u8,
+                "UW Spriteset update {}: {} -> {}",
+                room_id,
+                header.spriteset_id,
+                new_spriteset_id,
             );
-            header.spriteset_id = new_spriteset_id;
+            header.spriteset_id = *new_spriteset_id;
 
             // Reduce the weight by half when selected.
             let weight = *weights.get(&new_spriteset_id).unwrap();
             let new_weight = max(WEIGHT_EMPTY, min(weight, weight / 2));
-            weights.insert(new_spriteset_id, new_weight);
+            weights.insert(*new_spriteset_id, new_weight);
         } else {
             log::error!(
-                "UW ${:02X} -- no valid swap for {:02X}",
-                header.id as u8,
-                header.spriteset_id as u8,
+                "UW Spriteset error -- no valid swap {}: {}",
+                header.id,
+                header.spriteset_id,
             );
         }
     }

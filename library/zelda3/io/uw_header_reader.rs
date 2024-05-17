@@ -6,11 +6,11 @@ use common::SnesGame;
 use strum::IntoEnumIterator;
 
 use crate::zelda3::model::PaletteId;
+use crate::zelda3::model::RoomLogic;
 use crate::zelda3::model::SpritesetId;
 use crate::zelda3::model::UWBlocksetId;
 use crate::zelda3::model::UWFloorId;
 use crate::zelda3::model::UWRoomId;
-use crate::zelda3::model::UWRoomTag;
 use crate::zelda3::model::UnderworldRoomHeader;
 
 pub(super) fn read_uw_headers(game: &SnesGame) -> BTreeMap<UWRoomId, UnderworldRoomHeader> {
@@ -44,11 +44,11 @@ fn _read_header(game: &SnesGame, pointer_address: usize, id: UWRoomId) -> Underw
 
     let spriteset_id = SpritesetId::from_room_value(data[3]);
     let bgmove = data[4];
-    let tag1 = UWRoomTag::from_repr(data[5]).expect(&format!(
+    let tag1 = RoomLogic::from_repr(data[5]).expect(&format!(
         "UW ${:02X} tag1 load error ${:02X}",
         id as u8, data[5]
     ));
-    let tag2 = UWRoomTag::from_repr(data[6]).expect(&format!(
+    let tag2 = RoomLogic::from_repr(data[6]).expect(&format!(
         "UW ${:02X} tag2 load error ${:02X}",
         id as u8, data[6]
     ));

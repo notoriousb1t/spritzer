@@ -1,6 +1,6 @@
+use crate::zelda3::model::PaletteIndex;
 use crate::zelda3::model::SpriteId;
 use crate::zelda3::model::Z3Model;
-use crate::zelda3::model::PaletteIndex;
 
 pub(crate) fn apply_shadow_bees(model: &mut Z3Model) {
     if let Some(bee) = model.sprite_settings.get_mut(&SpriteId::x79_BEE) {
