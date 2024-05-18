@@ -1,5 +1,6 @@
 use assembly::zelda3::get_patch_data;
 use common::string_to_hash;
+use common::RomMode;
 use common::RomSize;
 use common::SnesGame;
 use log;
@@ -38,8 +39,10 @@ fn create_game(bytes: &[u8]) -> SnesGame {
         false => bytes.to_vec(),
     };
 
-    // Resize to 4MB to make additional room. Fill with 0xFF.
     let mut game = SnesGame::from_bytes(&bytes);
+    // Set the mode to FastLoRom so the corresponding patches will always work.
+    game.set_mode(RomMode::FastLoRom);
+    // Resize to 4MB to make additional room. Fill with 0xFF.
     game.resize(RomSize::Size4mb);
 
     // Add base patch to the game. This includes direct fixes to the game.
@@ -56,10 +59,10 @@ fn create_game(bytes: &[u8]) -> SnesGame {
 
 fn get_free_space() -> Vec<(u8, u16, u16)> {
     vec![
-        (0x02, 0xFFC7, 0xFFFF),         // Empty Space
-        (0x03, 0xEB8F, 0xFFFF),         // Initially contains Doors and Layout.
+        (0x02, 0xFFC7, 0xFFFF), // Empty Space
+        (0x03, 0xEB8F, 0xFFFF), // Initially contains Doors and Layout.
         (0x09, 0xCB42, 0xEC9C - 0x300), /* Contains Sprites in OW and UW, reserve $300 space at
-                                         * the end for the UW pointer table. */
+                                 * the end for the UW pointer table. */
         (0x0A, 0x8000, 0xB74F), // Initially Contains Doors and Layout.
         (0x0E, 0xFD7E, 0xFF9F), // Empty Space (be careful here, after this is game)
         (0x0F, 0xF4F0, 0xF77F), // Empty Space

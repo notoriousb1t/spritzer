@@ -8,7 +8,7 @@ use log::info;
 use log::LevelFilter;
 use simplelog::ColorChoice;
 use simplelog::CombinedLogger;
-use simplelog::Config;
+use simplelog::ConfigBuilder;
 use simplelog::TermLogger;
 use simplelog::TerminalMode;
 use simplelog::WriteLogger;
@@ -36,13 +36,21 @@ fn setup_logging() {
     CombinedLogger::init(vec![
         TermLogger::new(
             LevelFilter::Info,
-            Config::default(),
+            ConfigBuilder::new()
+                .set_thread_level(LevelFilter::Off)
+                .set_time_level(LevelFilter::Off)
+                .set_location_level(LevelFilter::Off)
+                .build(),
             TerminalMode::Mixed,
             ColorChoice::Auto,
         ),
         WriteLogger::new(
             LevelFilter::Debug,
-            Config::default(),
+            ConfigBuilder::new()
+                .set_thread_level(LevelFilter::Off)
+                .set_time_level(LevelFilter::Off)
+                .set_location_level(LevelFilter::Off)
+                .build(),
             File::create("./library/.build/output.sfc.log").unwrap(),
         ),
     ])
@@ -120,15 +128,15 @@ fn inverted_mode() -> Z3Options {
 /// Useful for testing the preferred experience.
 fn chaos_mode() -> Z3Options {
     Z3Options {
-        boss_shuffle: true,
-        mushroom_shuffle: true,
-        killable_thieves: true,
         overworld_balancing: Balancing::Random,
         overworld_enemy_shuffle: OverworldEnemyShuffle::Chaos,
         underworld_balancing: Balancing::Random,
+        boss_shuffle: false,
         underworld_enemy_shuffle: UnderworldEnemyShuffle::Chaos,
-        seed: "test".to_owned(),
+        killable_thieves: true,
+        mushroom_shuffle: true,
         shadow_bees: true,
+        seed: "test".to_owned()
     }
 }
 

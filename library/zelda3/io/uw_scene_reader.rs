@@ -146,8 +146,8 @@ fn bytes_to_object(bytes: &[u8]) -> UWObject {
 #[cfg(test)]
 mod tests {
     use assembly::zelda3::Symbol;
+    use common::RomMode;
     use common::RomSize;
-    use common::RomType;
     use common::SnesGame;
     use strum::IntoEnumIterator;
 
@@ -177,7 +177,7 @@ mod tests {
     }
 
     fn init_with_empty_doors() -> SnesGame {
-        let mut game = SnesGame::new(RomType::FastLoRom, RomSize::Size4mb);
+        let mut game = SnesGame::new(RomMode::FastLoRom, RomSize::Size4mb);
         let mut ptr_cursor = Symbol::DoorPtrs as usize;
         let mut subroutine_cursor = 0x1F_8780;
         for _ in UWRoomId::iter() {

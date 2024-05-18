@@ -3,12 +3,11 @@ mod killable_thieves;
 mod moldorm_shuffle;
 mod mushroom_shuffle;
 mod ow_inversion;
-mod ow_spriteset_shuffle;
 mod shadow_bees;
 mod sprite_base;
 mod sprite_shuffle;
+mod spriteset_shuffle;
 mod uw_overlord_shuffle;
-mod uw_spriteset_shuffle;
 
 use log;
 
@@ -17,14 +16,14 @@ use self::killable_thieves::apply_killable_thieves;
 use self::moldorm_shuffle::apply_moldorm_eye_shuffle;
 use self::mushroom_shuffle::apply_mushroom_shuffle;
 use self::ow_inversion::apply_ow_inversion;
-use self::ow_spriteset_shuffle::apply_ow_spriteset_shuffle;
 use self::shadow_bees::apply_shadow_bees;
 use self::sprite_base::apply_base_sprite_changes;
-use self::sprite_shuffle::apply_uw_sprites_shuffle;
+use self::sprite_shuffle::shuffle_underworld_sprites;
+use self::spriteset_shuffle::shuffle_overworld_spritesets;
+use self::spriteset_shuffle::shuffle_underworld_spritesets;
 use self::uw_overlord_shuffle::apply_uw_overlord_shuffle;
-use self::uw_spriteset_shuffle::apply_uw_spriteset_shuffle;
 use crate::zelda3::features::sprite_base::apply_base_sprite_shuffle_changes;
-use crate::zelda3::features::sprite_shuffle::apply_ow_sprites_shuffle;
+use crate::zelda3::features::sprite_shuffle::shuffle_overworld_sprites;
 use crate::zelda3::model::Z3Model;
 use crate::zelda3::options::OverworldEnemyShuffle;
 use crate::zelda3::options::UnderworldEnemyShuffle;
@@ -80,10 +79,10 @@ pub(crate) fn apply_features(model: &mut Z3Model, options: &Z3Options) {
     // Doing this first provides more options for overworld.
     match options.underworld_enemy_shuffle {
         UnderworldEnemyShuffle::Chaos => {
-            apply_uw_spriteset_shuffle(model);
+            shuffle_overworld_spritesets(model);
         }
         UnderworldEnemyShuffle::Insanity => {
-            apply_uw_spriteset_shuffle(model);
+            shuffle_overworld_spritesets(model);
         }
         _ => {}
     }
@@ -91,24 +90,24 @@ pub(crate) fn apply_features(model: &mut Z3Model, options: &Z3Options) {
     // Process spriteset shuffling if applicable for Overworld.
     match options.overworld_enemy_shuffle {
         OverworldEnemyShuffle::Chaos => {
-            apply_ow_spriteset_shuffle(model);
+            shuffle_underworld_spritesets(model);
         }
         OverworldEnemyShuffle::Insanity => {
-            apply_ow_spriteset_shuffle(model);
+            shuffle_underworld_spritesets(model);
         }
         _ => {}
     }
 
     match options.underworld_enemy_shuffle {
         UnderworldEnemyShuffle::Full => {
-            apply_uw_sprites_shuffle(model);
+            shuffle_underworld_sprites(model);
         }
         UnderworldEnemyShuffle::Chaos => {
-            apply_uw_sprites_shuffle(model);
-            apply_uw_overlord_shuffle(model);
+            shuffle_underworld_sprites(model);
+            shuffle_overworld_spritesets(model);
         }
         UnderworldEnemyShuffle::Insanity => {
-            apply_uw_sprites_shuffle(model);
+            shuffle_underworld_sprites(model);
             apply_uw_overlord_shuffle(model);
         }
         _ => {}
@@ -116,16 +115,16 @@ pub(crate) fn apply_features(model: &mut Z3Model, options: &Z3Options) {
 
     match options.overworld_enemy_shuffle {
         OverworldEnemyShuffle::Inverted => {
-            apply_ow_sprites_shuffle(model);
+            shuffle_overworld_sprites(model);
         }
         OverworldEnemyShuffle::Full => {
-            apply_ow_sprites_shuffle(model);
+            shuffle_overworld_sprites(model);
         }
         OverworldEnemyShuffle::Chaos => {
-            apply_ow_sprites_shuffle(model);
+            shuffle_overworld_sprites(model);
         }
         OverworldEnemyShuffle::Insanity => {
-            apply_ow_sprites_shuffle(model);
+            shuffle_overworld_sprites(model);
         }
         _ => {}
     }

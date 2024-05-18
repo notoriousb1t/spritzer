@@ -1,43 +1,8 @@
 use super::SpriteId;
 use super::SpritesheetId;
 
-/// Evaluates an array of spritesheets and list of sprite_ids and determines which Spritesheets are
-/// required to render that list of sprites.
-pub(crate) fn get_sprite_requirements(
-    spriteset: [SpritesheetId; 4],
-    sprite_ids: &[SpriteId],
-    is_underworld: bool,
-) -> [SpritesheetId; 4] {
-    let mut spriteset_result = [SpritesheetId::None; 4];
-
-    // Fill with all required spritesheets.
-    if is_underworld {
-        for i in 0..4 {
-            if is_spritesheet_permanent_uw(&spriteset[i]) {
-                spriteset_result[i] = spriteset[i];
-            }
-        }
-    }
-
-    // Gather a list of all known spritesheet arrangements for the required sprites.
-    let sprite_requirements = sprite_ids
-        .iter()
-        .flat_map(|sprite_id| get_spritesheet_arrangements(sprite_id));
-
-    // Walk through each requirement and set it if the original spriteset has it.
-    for requirement in sprite_requirements {
-        for i in 0..4 {
-            if requirement[i] != SpritesheetId::None && requirement[i] == spriteset[i] {
-                spriteset_result[i] = spriteset[i];
-            }
-        }
-    }
-
-    spriteset_result
-}
-
 /// True if the spritesheet cannot be reassigned under any circumstance.
-pub(crate) fn is_spritesheet_permanent_uw(spritesheet_id: &SpritesheetId) -> bool {
+pub(crate) fn is_spritesheet_permanent(spritesheet_id: &SpritesheetId) -> bool {
     match spritesheet_id {
         // Somaria platforms are spawned in, so it is impossible to tell if a room has this without
         // checking tile data.
@@ -468,12 +433,20 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
             SpritesheetId::None,
         ]],
         // SpriteId::x33_RUPEE_PULL
-        SpriteId::x34_SNITCH_YOUNG => vec![[
-            SpritesheetId::None,
-            SpritesheetId::None,
-            SpritesheetId::None,
-            SpritesheetId::x50_CUCCO_FOR_NPCS,
-        ]],
+        SpriteId::x34_SNITCH_YOUNG => vec![
+            [
+                SpritesheetId::None,
+                SpritesheetId::x49_SOLDIERS,
+                SpritesheetId::None,
+                SpritesheetId::x50_CUCCO_FOR_NPCS,
+            ],
+            [
+                SpritesheetId::None,
+                SpritesheetId::xD_SOLDIERS_DW,
+                SpritesheetId::None,
+                SpritesheetId::x50_CUCCO_FOR_NPCS,
+            ],
+        ],
         // SpriteId::x35_INNKEEPER
         SpriteId::x36_WITCH => vec![[
             SpritesheetId::None,
@@ -515,12 +488,20 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
             SpritesheetId::x4A_KAKARIKO,
             SpritesheetId::None,
         ]],
-        SpriteId::x3D_SNITCH_OLD => vec![[
-            SpritesheetId::None,
-            SpritesheetId::None,
-            SpritesheetId::None,
-            SpritesheetId::x50_CUCCO_FOR_NPCS,
-        ]],
+        SpriteId::x3D_SNITCH_OLD => vec![
+            [
+                SpritesheetId::None,
+                SpritesheetId::x49_SOLDIERS,
+                SpritesheetId::None,
+                SpritesheetId::x50_CUCCO_FOR_NPCS,
+            ],
+            [
+                SpritesheetId::None,
+                SpritesheetId::xD_SOLDIERS_DW,
+                SpritesheetId::None,
+                SpritesheetId::x50_CUCCO_FOR_NPCS,
+            ],
+        ],
         SpriteId::x3E_HOARDER_ROCK => vec![
             [
                 SpritesheetId::None,
@@ -1677,12 +1658,7 @@ pub(crate) fn get_spritesheet_arrangements(sprite_id: &SpriteId) -> Vec<[Sprites
             SpritesheetId::x14_FRIENDLY_LYNEL,
         ]],
         // SpriteId::xD1_BUNNY_BEAM
-        SpriteId::xD2_FLOPPING_FISH => vec![[
-            SpritesheetId::None,
-            SpritesheetId::None,
-            SpritesheetId::xC_OCTOROK_ZORA,
-            SpritesheetId::None,
-        ]],
+        // SpriteId::xD2_FLOPPING_FISH
         // SpriteId::xD3_STAL
         SpriteId::xD4_LANDMINE => vec![],
         SpriteId::xD5_DIGGING_GAME_PROPRIETOR => vec![[

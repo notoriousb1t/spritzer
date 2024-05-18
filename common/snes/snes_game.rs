@@ -6,7 +6,7 @@ use strum_macros::FromRepr;
 
 use super::free_space::FreeSpace;
 use super::patch::Patch;
-use super::rom_type::RomType;
+use super::rom_type::RomMode;
 use super::snes_address::bytes_to_int24;
 use super::snes_address::int24_to_bytes;
 use super::snes_address::snes_to_physical;
@@ -18,7 +18,7 @@ const SIZE_ADDRESS: usize = 0xFFD7;
 
 /// Manages reading and writing to the Game data.
 pub struct SnesGame {
-    pub mode: RomType,
+    pub mode: RomMode,
     pub buffer: Vec<u8>,
     pub free_space: Vec<FreeSpace>,
 }
@@ -37,7 +37,7 @@ pub enum RomSize {
 
 impl SnesGame {
     /// Empty configuration for testing purposes.
-    pub fn new(rom_type: RomType, rom_size: RomSize) -> Self {
+    pub fn new(rom_type: RomMode, rom_size: RomSize) -> Self {
         let mut data = vec![0xFFu8; (1 << rom_size as usize) * 1024];
         data[0x7FD5] = rom_type as u8;
         data[0x7FD7] = rom_size as u8;
@@ -46,8 +46,8 @@ impl SnesGame {
 
     /// Constructs a new SNES game and expands it to the correct size.
     pub fn from_bytes(bytes: &[u8]) -> Self {
-        let mode_value = bytes[snes_to_physical(RomType::FastLoRom, TYPE_ADDRESS)];
-        let mode = RomType::from_repr(mode_value)
+        let mode_value = bytes[snes_to_physical(RomMode::FastLoRom, TYPE_ADDRESS)];
+        let mode = RomMode::from_repr(mode_value)
             .expect(&format!("SnesMode {:02X} is invalid", mode_value));
 
         log::info!("Address mode={}", mode);
@@ -77,6 +77,13 @@ impl SnesGame {
 
     pub fn get_game_title(&self) -> &str {
         from_utf8(self.read_all(TITLE_ADDRESS, 21)).expect("SNES game should have title")
+    }
+
+    /// Sets the RomMode. Note, this only sets the flag and allows reading/writing using the
+    /// pointer.
+    pub fn set_mode(&mut self, mode: RomMode) {
+        self.buffer[0x7FD5] = mode as u8;
+        self.mode = mode;
     }
 
     /// Resizes the ROM and updates the header.. Empty space is filled with 0xFF.
@@ -144,19 +151,23 @@ impl SnesGame {
     #[allow(dead_code)]
     pub fn print_bank(&self, bank: usize) {
         let start = snes_to_physical(self.mode, bank << 16);
-        let end = snes_to_physical(self.mode, (bank << 16) | 0x10000);
+        let end = snes_to_physical(self.mode, (bank << 16) + 0x10000);
         let range = &self.buffer[start..end];
 
+        let mut builder = format!("Bank {:02X}", bank);
         for (index, val) in range.iter().enumerate() {
             if index % 16 == 0 {
-                log::debug!(
+                builder.push_str("\n");
+                builder.push_str(&format!(
                     "PC[_{:06X}] @ #_{:06X}: ",
                     start + index,
                     (bank << 16) + index
-                );
+                ));
             }
-            log::debug!(" {:02X}", val);
+            builder.push_str(&format!(" {:02X}", val));
         }
+        builder.push_str("\n");
+        log::debug!("\n{}", builder);
     }
 
     /// Reads the byte from the SNES address.
@@ -217,7 +228,7 @@ impl SnesGame {
     /// This writes at a bank offset of 0x80 when FastLoRom is detected.
     pub fn write_pointer(&mut self, address: usize, snes_location: usize) {
         let offset = match self.mode {
-            RomType::FastLoRom => 0x80_0000,
+            RomMode::FastLoRom => 0x80_0000,
             _ => 0,
         };
         let bytes = &int24_to_bytes(snes_location + offset);
@@ -291,21 +302,21 @@ mod tests {
     use std::vec;
 
     use super::SnesGame;
-    use crate::snes::rom_type::RomType;
+    use crate::snes::rom_type::RomMode;
     use crate::Diff;
     use crate::RomSize;
 
     #[test]
     fn diff_initial_state_returns_empty() {
         // This is a double check that diffing is setup correctly.
-        let game = SnesGame::new(RomType::FastLoRom, RomSize::Size4mb);
+        let game = SnesGame::new(RomMode::FastLoRom, RomSize::Size4mb);
         let original = game.buffer.to_owned();
         assert_eq!(game.diff(&original), vec![]);
     }
 
     #[test]
     fn write_writes() {
-        let mut game = SnesGame::new(RomType::FastLoRom, RomSize::Size4mb);
+        let mut game = SnesGame::new(RomMode::FastLoRom, RomSize::Size4mb);
         let original = game.buffer.to_owned();
         game.write(42, 0);
 
@@ -316,7 +327,7 @@ mod tests {
 
     #[test]
     fn write_crc_writes() {
-        let mut game = SnesGame::new(RomType::FastLoRom, RomSize::Size4mb);
+        let mut game = SnesGame::new(RomMode::FastLoRom, RomSize::Size4mb);
         let original = game.buffer.to_owned();
         game.write_crc();
 

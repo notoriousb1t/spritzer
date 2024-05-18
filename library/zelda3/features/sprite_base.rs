@@ -38,8 +38,6 @@ pub(crate) fn apply_base_sprite_shuffle_changes(model: &mut Z3Model) {
                     // SpriteId::x25_TALKING_TREE => Some(SpriteId::xD8_HEART),
                     // Places a bee somewhere nearby a TOPPO location. (no spritesheet requirements)
                     SpriteId::x4D_TOPPO => Some(SpriteId::x79_BEE),
-                    // Swaps flopping fish for enemy that is already in area in vanilla.
-                    SpriteId::xD2_FLOPPING_FISH => Some(SpriteId::xF_OCTOBALLOON),
                     // Swaps fake master sword for another enemy common to the area in vanilla.
                     SpriteId::xE8_FAKE_MASTER_SWORD => Some(SpriteId::xD_BUZZBLOB),
                     // Remove red spear guard 2 entirely and replace with blue sword guard. This

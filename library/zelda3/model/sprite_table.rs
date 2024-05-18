@@ -232,7 +232,7 @@ pub(crate) fn get_sprite_type(sprite_id: &SpriteId) -> SpriteType {
         SpriteId::xD0_LYNEL => SpriteType::Enemy,
         SpriteId::xD1_BUNNY_BEAM => SpriteType::Hazard,
         SpriteId::xD2_FLOPPING_FISH => SpriteType::Creature,
-        SpriteId::xD3_STAL => SpriteType::Creature,
+        SpriteId::xD3_STAL => SpriteType::Enemy,
         SpriteId::xD4_LANDMINE => SpriteType::Creature,
         SpriteId::xD5_DIGGING_GAME_PROPRIETOR => SpriteType::Npc,
         SpriteId::xD6_GANON => SpriteType::Boss,
@@ -336,18 +336,8 @@ pub(crate) fn can_sprite_fly(sprite_id: &SpriteId) -> bool {
     )
 }
 
-pub(crate) fn is_restricted_sprite(sprite_id: &SpriteId) -> bool {
-    match get_sprite_type(sprite_id) {
-        SpriteType::Npc => true,
-        SpriteType::Object => true,
-        SpriteType::Boss => true,
-        SpriteType::Overlord => true,
-        _ => false,
-    }
-}
-
 /// True if the type implies that it can be shuffled automatically.
-fn can_shuffle_type(sprite_id: &SpriteId) -> bool {
+pub(crate) fn can_shuffle_type(sprite_id: &SpriteId) -> bool {
     matches!(
         get_sprite_type(sprite_id),
         SpriteType::Creature
@@ -382,8 +372,6 @@ pub(crate) fn can_shuffle_in_ow(sprite_id: &SpriteId) -> bool {
     }
 }
 
-
-
 /// This is used to restrict shuffling in the the light overworld.
 pub(crate) fn can_shuffle_in_lw(sprite_id: &SpriteId) -> bool {
     match sprite_id {
@@ -394,6 +382,7 @@ pub(crate) fn can_shuffle_in_lw(sprite_id: &SpriteId) -> bool {
 /// This is used to restrict shuffling in the the dark overworld.
 pub(crate) fn can_shuffle_in_dw(sprite_id: &SpriteId) -> bool {
     match sprite_id {
+        SpriteId::xD2_FLOPPING_FISH => false,
         SpriteId::xD4_LANDMINE => false,
         _ => can_shuffle_in_ow(sprite_id),
     }
@@ -403,7 +392,6 @@ pub(crate) fn can_shuffle_in_dw(sprite_id: &SpriteId) -> bool {
 /// a specific sprite lists, the implied shuffling rules of the type apply.
 pub(crate) fn can_shuffle_in_uw(sprite_id: &SpriteId) -> bool {
     match sprite_id {
-        SpriteId::x82_ANTIFAIRY_CIRCLE => false,
         // Needs investigation
         SpriteId::x8D_ARRGHUS_SPAWN => false,
         // Only should spawn from overlord.
@@ -412,7 +400,9 @@ pub(crate) fn can_shuffle_in_uw(sprite_id: &SpriteId) -> bool {
         SpriteId::x94_PIROGUSU => false,
         // Needs investigation
         SpriteId::xA1_FREEZOR => false,
-        // Graphics loaded in memory only in Overworld.
+        // Graphics loaded in light overworld.
+        SpriteId::xD2_FLOPPING_FISH => false,
+        // Graphics loaded in memory only in Light Overworld.
         SpriteId::xD4_LANDMINE => false,
         // Turn off shuffling for this type since the red spear guard is a better choice.
         SpriteId::x45RedSpearGuard2 => false,
@@ -425,7 +415,7 @@ pub(crate) fn can_shuffle_in_uw(sprite_id: &SpriteId) -> bool {
 /// 1. They move off screen (mostly flying)
 /// 2. They are destroyed without a kill condition (RED BARI, HOARDER)
 /// 3. They inexplicably crash the game (MOBLIN supposedly does this)
-pub(crate) fn can_sprite_hold_key(sprite_id: &SpriteId) -> bool {
+pub(crate) fn can_hold_key(sprite_id: &SpriteId) -> bool {
     match sprite_id {
         // Has a reputation to crash the game.
         SpriteId::x12_MOBLIN => false,
@@ -482,7 +472,7 @@ pub(crate) fn sprite_movement(sprite_id: &SpriteId) -> Option<u8> {
         SpriteId::x7E_FIREBAR_CLOCKWISE => Some(FIXED),
         SpriteId::x7F_FIREBAR_COUNTER_CLOCKWISE => Some(FIXED),
         SpriteId::x80_FIRESNAKE => Some(SNAKE | DIAGONAL),
-        SpriteId::x82_ANTIFAIRY_CIRCLE => Some(DIAGONAL),
+        SpriteId::x82_ANTIFAIRY_CIRCLE => Some(FIXED),
         SpriteId::x8A_SPIKE_BLOCK => Some(HORIZONTAL),
         SpriteId::x93_BUMPER => Some(FIXED),
         SpriteId::x95_EYE_LASER_EAST => Some(EAST),

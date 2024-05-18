@@ -3,10 +3,10 @@ use super::can_shuffle_in_lw;
 use super::Sprite;
 use super::HORIZONTAL;
 use super::VERTICAL;
+use crate::zelda3::model::can_hold_key;
 use crate::zelda3::model::can_shuffle_in_ow;
 use crate::zelda3::model::can_shuffle_in_uw;
 use crate::zelda3::model::can_sprite_fly;
-use crate::zelda3::model::can_sprite_hold_key;
 use crate::zelda3::model::can_sprite_swim;
 use crate::zelda3::model::get_sprite_type;
 use crate::zelda3::model::get_sprite_vulnerability;
@@ -36,40 +36,35 @@ pub(crate) enum Rule {
 /// True if all sprites from the source list can can be replaced with something from the target
 /// list.
 pub(crate) fn is_list_compatible(
-    source: &Vec<SpriteId>,
-    target: &Vec<SpriteId>,
+    sprites: &Vec<Sprite>,
+    choices: &Vec<SpriteId>,
     rules: &[Rule],
 ) -> bool {
-    source
-        .iter()
-        .all(|a| target.iter().any(|b| is_partially_compatible(a, b, rules)))
+    sprites.iter().all(|sprite| {
+        let mut sprite_rules = rules.to_vec();
+        if sprite.has_key() {
+            sprite_rules.push(Rule::KeyRequired);
+        }
+        filter_compatible(sprite.id, &choices, &sprite_rules).len() > 0
+    })
 }
 
 pub(crate) fn filter_compatible(
+    sprite_id: SpriteId,
     choices: &[SpriteId],
-    sprite: &Sprite,
     rules: &[Rule],
 ) -> Vec<SpriteId> {
-    let possible_matches = choices
+    choices
         .iter()
-        .filter(|it| is_fully_compatible(&sprite.id, it, &rules))
+        .filter(|it| {
+            is_fully_compatible(&sprite_id, it, &rules)
+        })
         .map(|it| *it)
-        .collect::<Vec<_>>();
-
-    if possible_matches.len() > 1 {
-        return possible_matches;
-    }
-
-    // If there is nothing that is fully compatible, use looser rules.
-    return choices
-        .iter()
-        .filter(|&it| is_partially_compatible(&sprite.id, it, &rules))
-        .map(|it| *it)
-        .collect::<Vec<_>>();
+        .collect::<Vec<_>>()
 }
 
 /// True if the source can be replaced with the target.
-pub(crate) fn is_fully_compatible(source: &SpriteId, target: &SpriteId, rules: &[Rule]) -> bool {
+fn is_fully_compatible(source: &SpriteId, target: &SpriteId, rules: &[Rule]) -> bool {
     if source == target {
         return true;
     }
@@ -80,22 +75,24 @@ pub(crate) fn is_fully_compatible(source: &SpriteId, target: &SpriteId, rules: &
         return false;
     }
 
-    if rules.contains(&Rule::DarkWorld) {
-        return can_shuffle_in_dw(source) && can_shuffle_in_dw(target);
+    if rules.contains(&Rule::DarkWorld) && !can_shuffle_in_dw(source) || !can_shuffle_in_dw(target)
+    {
+        return false;
     }
-    if rules.contains(&Rule::LightWorld) {
-        return can_shuffle_in_lw(source) && can_shuffle_in_lw(target);
+    if rules.contains(&Rule::LightWorld) && !can_shuffle_in_lw(source) || !can_shuffle_in_lw(target)
+    {
+        return false;
     }
     if rules.contains(&Rule::Overworld) {
         return can_shuffle_in_ow(source) && can_shuffle_in_ow(target);
     }
-    
+
     if !(can_shuffle_in_uw(source) && can_shuffle_in_uw(target)) {
         return false;
     }
 
-    if rules.contains(&Rule::KeyRequired) && can_sprite_hold_key(source) {
-        return can_sprite_hold_key(target)
+    if rules.contains(&Rule::KeyRequired) && can_hold_key(source) {
+        return can_hold_key(target)
             && get_sprite_vulnerability(source) == get_sprite_vulnerability(target);
     }
 
@@ -119,13 +116,30 @@ fn is_classification_fully_compatible(source: &SpriteId, target: &SpriteId) -> b
         return source == target;
     }
 
-    // Allow creatures to replace enemies and hazards from a classification perspective.
-    if target_type == SpriteType::Creature && (source_type == SpriteType::Enemy || source_type == SpriteType::Hazard) {
-        return true;
-    }
-
     if source_type != target_type {
-        return false;
+        // Allow certain types to morph as needed.
+        let is_coercible = match source_type {
+            SpriteType::Creature => match target_type {
+                SpriteType::Enemy => true,
+                SpriteType::Hazard => true,
+                SpriteType::Absorbable => true,
+                _ => false,
+            },
+            SpriteType::Hazard => match target_type {
+                SpriteType::Enemy => true,
+                SpriteType::Creature => true,
+                _ => false,
+            },
+            SpriteType::Enemy => match target_type {
+                SpriteType::Creature => true,
+                _ => false,
+            },
+            _ => false,
+        };
+
+        if !is_coercible {
+            return false;
+        }
     }
 
     // Only replace aquatic things with aquatic things.
@@ -133,32 +147,6 @@ fn is_classification_fully_compatible(source: &SpriteId, target: &SpriteId) -> b
         // Flying creatures may have incompatible placement with other types, so only
         // replace flying creatures with flying creatures
         && can_sprite_fly(source) == can_sprite_fly(target);
-}
-
-fn is_classification_partially_compatible(source: &SpriteId, target: &SpriteId) -> bool {
-    let source_type = get_sprite_type(source);
-    let target_type = get_sprite_type(target);
-
-    if source_type == SpriteType::Object
-        || source_type == SpriteType::Npc
-        || source_type == SpriteType::Overlord
-    {
-        return source == target;
-    }
-
-    if source_type == target_type {
-        return true;
-    }
-
-    let permissive_source = matches!(
-        get_sprite_type(source),
-        SpriteType::Creature | SpriteType::Absorbable | SpriteType::Hazard | SpriteType::Enemy
-    );
-    let permissive_target = matches!(
-        get_sprite_type(target),
-        SpriteType::Creature | SpriteType::Absorbable | SpriteType::Hazard | SpriteType::Enemy
-    );
-    permissive_source && permissive_target
 }
 
 fn is_movement_compatible(source_id: &SpriteId, target_id: &SpriteId) -> bool {
@@ -208,44 +196,4 @@ fn is_movement_compatible(source_id: &SpriteId, target_id: &SpriteId) -> bool {
             _ => false,
         },
     }
-}
-
-pub(crate) fn is_partially_compatible(
-    source: &SpriteId,
-    target: &SpriteId,
-    rules: &[Rule],
-) -> bool {
-    if source == target {
-        return true;
-    }
-    if !is_classification_partially_compatible(source, target) {
-        return false;
-    }
-
-    if rules.contains(&Rule::DarkWorld) {
-        return can_shuffle_in_dw(source) && can_shuffle_in_dw(target);
-    }
-    if rules.contains(&Rule::LightWorld) {
-        return can_shuffle_in_lw(source) && can_shuffle_in_lw(target);
-    }
-    if rules.contains(&Rule::Overworld) {
-        return can_shuffle_in_ow(source) && can_shuffle_in_ow(target);
-    }
-    
-    if !(can_shuffle_in_uw(source) && can_shuffle_in_uw(target)) {
-        return false;
-    }
-
-    if rules.contains(&Rule::KeyRequired) && can_sprite_hold_key(source) {
-        return can_sprite_hold_key(target)
-            && get_sprite_vulnerability(source) == get_sprite_vulnerability(target);
-    }
-
-    if rules.contains(&Rule::KillRequired)
-        || get_sprite_vulnerability(source) == SpriteVulnerability::Invulnerable
-    {
-        return get_sprite_vulnerability(source) == get_sprite_vulnerability(target);
-    }
-
-    get_sprite_vulnerability(target) != SpriteVulnerability::Invulnerable
 }

@@ -1,7 +1,7 @@
 use std::cmp::max;
 use std::cmp::min;
 
-use super::rom_type::RomType;
+use super::rom_type::RomMode;
 
 fn snes_to_pc(address: usize) -> usize {
     (address & 0x7FFF) + ((address / 2) & 0xFF8000)
@@ -20,9 +20,9 @@ pub fn bytes_to_int24(byte_values: [u8; 3]) -> usize {
 }
 
 /// Resolves the address for the ROM mode of the SNES game.
-pub fn snes_to_physical(mode: RomType, address: usize) -> usize {
+pub fn snes_to_physical(mode: RomMode, address: usize) -> usize {
     match mode {
-        RomType::FastLoRom => snes_to_pc(address % 0x80_0000),
+        RomMode::FastLoRom => snes_to_pc(address % 0x80_0000),
         _ => address,
     }
 }

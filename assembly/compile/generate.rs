@@ -6,8 +6,8 @@ use std::path::Path;
 use std::path::PathBuf;
 
 use common::pc_address_to_snes_address;
+use common::RomMode;
 use common::RomSize;
-use common::RomType;
 use common::SnesGame;
 
 use super::fileutils::cleanup_temp_file;
@@ -65,7 +65,7 @@ fn process_mod_asm(project_path: &Path, asm_path: &Path, hash: String) {
     // Create a new file
     println!("cargo:warning=Creating dummy ROM {:?}", &bin_path);
     let mut file = File::create(&bin_path).expect("Could not create dummy file");
-    let game = SnesGame::new(RomType::FastLoRom, RomSize::Size4mb);
+    let game = SnesGame::new(RomMode::FastLoRom, RomSize::Size4mb);
     file.write_all(&game.buffer)
         .expect("File could not be written");
 

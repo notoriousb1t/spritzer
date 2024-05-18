@@ -1,7 +1,7 @@
 use super::sprite::Sprite;
 use super::uw_room_id::UWRoomId;
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub(crate) struct UWSpriteList {
     /// The Underworld Room this block of data describes. DO NOT MODIFY.
     pub room_id: UWRoomId,

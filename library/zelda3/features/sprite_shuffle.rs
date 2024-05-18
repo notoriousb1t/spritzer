@@ -4,6 +4,7 @@ use rand::seq::SliceRandom;
 use strum::IntoEnumIterator;
 
 use crate::zelda3::model::filter_compatible;
+use crate::zelda3::model::get_overworld_rules;
 use crate::zelda3::model::get_sprite_type;
 use crate::zelda3::model::get_weights;
 use crate::zelda3::model::DungeonId;
@@ -16,7 +17,8 @@ use crate::zelda3::model::UWRoomId;
 use crate::zelda3::model::Z3Model;
 use crate::zelda3::Balancing;
 
-pub(crate) fn apply_ow_sprites_shuffle(model: &mut Z3Model) {
+pub(crate) fn shuffle_overworld_sprites(model: &mut Z3Model) {
+    log::info!("Shuffling sprites in overworld");
     model.prepare_sprite_pool();
 
     let balancing = model.ow_balancing;
@@ -30,15 +32,16 @@ pub(crate) fn apply_ow_sprites_shuffle(model: &mut Z3Model) {
             .versions()
             .iter()
             .map(|state| {
+                let room_rules = get_overworld_rules(state.overworld_id);
                 let spriteset_id = state.spriteset_id;
-                let sprites = state.sprites.clone();
                 let sprites = randomize_sprites(
                     model,
                     &mut rng,
                     spriteset_id,
                     balancing,
-                    &[Rule::Overworld],
-                    sprites,
+                    &room_rules,
+                    state.sprites.clone(),
+                    format!("Room = {}, {}", room_id, state.overworld_id),
                 );
                 return (state.overworld_id, sprites);
             })
@@ -47,12 +50,20 @@ pub(crate) fn apply_ow_sprites_shuffle(model: &mut Z3Model) {
         let room = model.ow_rooms.get_mut(&room_id).unwrap();
         for (state_id, sprites) in state_sprites {
             let state = room.get_mut(state_id).unwrap();
+            log::debug!(
+                "updated sprites in room. Room = {}, {}\nFrom = {:#?}\nTo = {:#?}\n",
+                room_id,
+                state.overworld_id,
+                state.sprites,
+                sprites
+            );
             state.sprites = sprites;
         }
     }
 }
 
-pub(crate) fn apply_uw_sprites_shuffle(model: &mut Z3Model) {
+pub(crate) fn shuffle_underworld_sprites(model: &mut Z3Model) {
+    log::info!("Shuffling sprites in underworld");
     model.prepare_sprite_pool();
 
     let balancing = model.uw_balancing;
@@ -97,13 +108,27 @@ pub(crate) fn apply_uw_sprites_shuffle(model: &mut Z3Model) {
             .sprites
             .clone();
 
-        let sprites = randomize_sprites(model, &mut rng, spriteset_id, balancing, &rules, sprites);
+        let sprites = randomize_sprites(
+            model,
+            &mut rng,
+            spriteset_id,
+            balancing,
+            &rules,
+            sprites,
+            format!("Room = {}", room_id),
+        );
 
         let spritelist = model
             .uw_sprites
             .get_mut(&room_id)
             .expect("Sprites should exist");
 
+        log::debug!(
+            "updated sprites in room. Room = {}\nFrom = {:#?}\nTo = {:#?}\n",
+            room_id,
+            spritelist.sprites,
+            sprites
+        );
         spritelist.sprites = sprites;
     }
 }
@@ -115,12 +140,14 @@ fn randomize_sprites(
     balancing: Balancing,
     room_rules: &[Rule],
     sprites: Vec<Sprite>,
+    debug_message: String,
 ) -> Vec<Sprite> {
     if sprites
         .iter()
         .any(|sprite| get_sprite_type(&sprite.id) == SpriteType::Boss)
     {
         // Do not modify boss rooms.
+        log::debug!("Skipping boss room. Debug = {}", debug_message);
         return sprites;
     }
 
@@ -136,14 +163,14 @@ fn randomize_sprites(
             }
 
             // Find the subset of possible choices.
-            let possible_matches = filter_compatible(choices, sprite, &sprite_rules);
+            let possible_matches = filter_compatible(sprite.id, choices, &sprite_rules);
 
             if possible_matches.is_empty() {
                 if sprite.has_key() {
                     // This is a last resort recovery for keys.
                     // If there is no match for something that can hold a key, it is simply dropped
-                    // This was tested in Eastern Palace and the key appears to remain collected.
-                    log::warn!("Key has dropped the Sprite! {}", sprite.id);
+                    // This was tested in Eastern Palace and the key appears to remain collected after pickup.
+                    log::warn!("Key has dropped the Sprite! {} | {}", sprite.id, debug_message);
 
                     let mut new_sprite = sprite.clone();
                     new_sprite.id = sprite.item.unwrap();

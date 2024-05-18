@@ -1,6 +1,6 @@
 use super::sprite_id::SpriteId;
 
-#[derive(Copy, Clone, Eq, PartialEq, Hash)]
+#[derive(Copy, Clone, Eq, PartialEq, Hash, Debug)]
 pub(crate) struct Sprite {
     /// The type of Sprite placed in the Room.
     pub id: SpriteId,

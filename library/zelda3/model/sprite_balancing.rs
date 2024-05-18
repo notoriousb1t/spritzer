@@ -35,23 +35,9 @@ pub(crate) fn get_weights(
     );
 }
 
-// Provides the weighting for a single sprite based on the balancing parameter.
-pub(crate) fn get_weight(balancing: Balancing, sprite_id: SpriteId) -> usize {
-    let weight_fn = match balancing {
-        Balancing::Random => get_weights_random,
-        Balancing::Casual => get_weights_casual,
-        Balancing::Balanced => get_weights_balanced,
-        Balancing::Hero => get_weights_hero,
-    };
-    weight_fn(&sprite_id)
-}
-
 /// Equal chance for randomization. YOLO!
-fn get_weights_random(sprite_id: &SpriteId) -> usize {
-    match get_sprite_challenge(sprite_id) {
-        SpriteChallenge::X0None => 0,
-        _ => 1,
-    }
+fn get_weights_random(_: &SpriteId) -> usize {
+    1
 }
 
 /// YOLO except for adjusted areas like rescue and escape.
@@ -71,7 +57,7 @@ fn get_weights_random_adjusted(sprite_id: &SpriteId) -> usize {
 fn get_weights_balanced(sprite_id: &SpriteId) -> usize {
     match get_sprite_type(sprite_id) {
         SpriteType::Enemy => match get_sprite_challenge(sprite_id) {
-            SpriteChallenge::X0None => 0,
+            SpriteChallenge::X0None => 1,
             SpriteChallenge::X1Easiest => 50,
             SpriteChallenge::X2Easy => 50,
             SpriteChallenge::X3Easier => 30,
@@ -81,7 +67,7 @@ fn get_weights_balanced(sprite_id: &SpriteId) -> usize {
             SpriteChallenge::X7Hardest => 1,
         },
         SpriteType::Hazard => match get_sprite_challenge(sprite_id) {
-            SpriteChallenge::X0None => 0,
+            SpriteChallenge::X0None => 1,
             SpriteChallenge::X1Easiest => 5,
             SpriteChallenge::X2Easy => 5,
             SpriteChallenge::X3Easier => 5,
@@ -90,7 +76,7 @@ fn get_weights_balanced(sprite_id: &SpriteId) -> usize {
             SpriteChallenge::X6Harder => 2,
             SpriteChallenge::X7Hardest => 1,
         },
-        _ => 0,
+        _ => 1,
     }
 }
 
@@ -120,7 +106,7 @@ fn get_weights_balanced_adjusted(sprite_id: &SpriteId) -> usize {
             SpriteChallenge::X6Harder => 0,
             SpriteChallenge::X7Hardest => 0,
         },
-        _ => 0,
+        _ => 1,
     }
 }
 
@@ -147,7 +133,7 @@ fn get_weights_casual(sprite_id: &SpriteId) -> usize {
             SpriteChallenge::X6Harder => 1,
             SpriteChallenge::X7Hardest => 0,
         },
-        _ => 0,
+        _ => 1,
     }
 }
 
@@ -173,7 +159,7 @@ fn get_weights_casual_adjusted(sprite_id: &SpriteId) -> usize {
             SpriteChallenge::X6Harder => 0,
             SpriteChallenge::X7Hardest => 0,
         },
-        _ => 0,
+        _ => 1,
     }
 }
 
@@ -200,7 +186,7 @@ fn get_weights_hero(sprite_id: &SpriteId) -> usize {
             SpriteChallenge::X6Harder => 4,
             SpriteChallenge::X7Hardest => 5,
         },
-        _ => 0,
+        _ => 1,
     }
 }
 
@@ -226,6 +212,6 @@ fn get_weights_hero_adjusted(sprite_id: &SpriteId) -> usize {
             SpriteChallenge::X6Harder => 0,
             SpriteChallenge::X7Hardest => 0,
         },
-        _ => 0,
+        _ => 1,
     }
 }
