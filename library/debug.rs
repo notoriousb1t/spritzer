@@ -136,7 +136,7 @@ fn chaos_mode() -> Z3Options {
         killable_thieves: true,
         mushroom_shuffle: true,
         shadow_bees: true,
-        seed: "test".to_owned()
+        seed: "32nr0v9n0239nf02fn;alsidnff[ 3".to_owned()
     }
 }
 

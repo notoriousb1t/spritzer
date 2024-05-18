@@ -304,15 +304,18 @@ pub(crate) fn get_sprite_type(sprite_id: &SpriteId) -> SpriteType {
 
 /// True if the sprite can swim or has special water capabilities.
 pub(crate) fn can_sprite_swim(sprite_id: &SpriteId) -> bool {
-    matches!(
-        sprite_id,
-        SpriteId::x55_FIREBALL_ZORA
-            | SpriteId::x81_WATER_TEKTITE
-            | SpriteId::x94_PIROGUSU
-            | SpriteId::x9A_KYAMERON
-            | SpriteId::xCF_SWAMOLA
-            | SpriteId::xD2_FLOPPING_FISH
-    )
+    match sprite_id {
+        SpriteId::x55_FIREBALL_ZORA => true,
+        SpriteId::x81_WATER_TEKTITE => true,
+        SpriteId::x94_PIROGUSU => true,
+        SpriteId::x9A_KYAMERON => true,
+        SpriteId::xCF_SWAMOLA => true,
+        SpriteId::xD2_FLOPPING_FISH => true,
+        _ => match get_sprite_type(sprite_id) {
+            SpriteType::Hazard => true,
+            _ => false,
+        },
+    }
 }
 
 /// True if the sprite is flying -- although this mostly a signal
@@ -333,6 +336,8 @@ pub(crate) fn can_sprite_fly(sprite_id: &SpriteId) -> bool {
             | SpriteId::x85_YELLOW_STALFOS
             | SpriteId::x2_STALFOS_HEAD
             | SpriteId::x4C_GELDMAN
+            | SpriteId::xA0_HAUNTED_GROVE_BIRD
+            | SpriteId::x59_LOST_WOODS_BIRD
     )
 }
 

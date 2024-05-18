@@ -1,4 +1,5 @@
 use std::collections::btree_map::Entry;
+use std::collections::BTreeMap;
 
 use rand::prelude::SliceRandom;
 use rand::rngs::StdRng;
@@ -38,6 +39,8 @@ pub(super) fn shuffle_overworld_spritesets(model: &mut Z3Model) {
         .filter(|it| !it.is_underworld())
         .collect::<Vec<_>>();
 
+    clear_spritesets(model, &spriteset_ids);
+
     fill_spritesets(
         model,
         spriteset_ids,
@@ -47,81 +50,8 @@ pub(super) fn shuffle_overworld_spritesets(model: &mut Z3Model) {
     );
 
     let sprite_pool = calculate_sprite_pool(model);
-
     for room_id in OWRoomId::iter() {
-        if is_overworld_room_locked(room_id) {
-            log::debug!(
-                "Skipping spriteset shuffle because of permanent spriteset. Room = {}",
-                room_id
-            );
-            continue;
-        }
-
-        let room = model.ow_rooms.get_mut(&room_id).unwrap();
-        for screen in room.versions_mut() {
-            if room_id == OWRoomId::x16_WITCHS_HUT
-                && screen.overworld_id == OWStateId::DARK_WORLD_V1
-            {
-                log::info!("here");
-            }
-
-            // Pass any spritesets with required spritesheets (turtle rock, somaria platform for
-            // example).
-            let spriteset_id = screen.spriteset_id;
-            let spriteset = model.spritesets.get(&spriteset_id).unwrap();
-            if spriteset.sheets.iter().any(is_spritesheet_permanent) {
-                log::debug!(
-                    "Skipping spriteset shuffle because of permanent spritesheet. Room = {}",
-                    room_id
-                );
-                continue;
-            }
-
-            // Pass any rooms which have permanent sprites (objects, npcs, special damage type
-            // enemies)
-            let rules = get_overworld_rules(screen.overworld_id);
-            if has_special_requirements(screen.sprites.clone(), &rules) {
-                log::debug!(
-                    "Skipping spriteset shuffle because of sprite requirements. Room = {}, {}",
-                    room_id,
-                    screen.overworld_id
-                );
-                continue;
-            }
-
-            // Compute the list of compatible spritesets.
-            let spriteset_pool = sprite_pool
-                .iter()
-                .filter(|(spriteset_id, sprites)| {
-                    !spriteset_id.is_underworld()
-                        && is_list_compatible(&screen.sprites, &sprites, &rules)
-                })
-                .map(|(spriteset_id, _)| *spriteset_id)
-                .collect::<Vec<_>>();
-
-            if spriteset_pool.is_empty() {
-                log::debug!(
-                    "Skipping spriteset shuffle because there are no valid swaps. Room = {}",
-                    room_id
-                );
-                continue;
-            }
-
-            if let Some(spriteset_id) = spriteset_pool.choose(rng) {
-                log::info!(
-                    "Spriteset shuffle success. Room = {}. From = {}, To = {}",
-                    room_id,
-                    screen.spriteset_id,
-                    *spriteset_id
-                );
-                screen.spriteset_id = *spriteset_id;
-            } else {
-                log::debug!(
-                    "Skipping spriteset shuffle because RNG failed. Room = {}",
-                    room_id
-                );
-            }
-        }
+        choose_overworld_room_spriteset(model, rng, room_id, &sprite_pool);
     }
 }
 
@@ -134,6 +64,8 @@ pub(super) fn shuffle_underworld_spritesets(model: &mut Z3Model) {
         .filter(|it| it.is_underworld())
         .collect::<Vec<_>>();
 
+    clear_spritesets(model, &spriteset_ids);
+
     fill_spritesets(
         model,
         spriteset_ids,
@@ -143,93 +75,8 @@ pub(super) fn shuffle_underworld_spritesets(model: &mut Z3Model) {
     );
 
     let sprite_pool = calculate_sprite_pool(model);
-
     for room_id in UWRoomId::iter() {
-        if is_underworld_room_locked(room_id) {
-            log::debug!(
-                "Skipping spriteset shuffle because of permanent spriteset. Room = {}",
-                room_id
-            );
-            continue;
-        }
-
-        let header = model.uw_headers.get_mut(&room_id).unwrap();
-        let screen = model.uw_sprites.get_mut(&room_id).unwrap();
-
-        // Pass any spritesets with required spritesheets (turtle rock, somaria platform for
-        // example).
-        let spriteset_id = header.spriteset_id;
-        let spriteset = model.spritesets.get(&spriteset_id).unwrap();
-        if spriteset.sheets.iter().any(is_spritesheet_permanent) {
-            log::debug!(
-                "Skipping spriteset shuffle because of permanent spritesheet. Room = {}",
-                room_id
-            );
-            continue;
-        }
-
-        // If the room is part of escape or rescue, artificially lower the difficulty because this
-        // could be a standard run and there are some rooms that are painful given the
-        // number of pests normally there or impossible to kill with just the arrows.
-        let is_rescue = model
-            .dungeons
-            .iter()
-            .find(|(dungeon_id, dungeon)| {
-                (**dungeon_id == DungeonId::X00_Sewers
-                    || **dungeon_id == DungeonId::X02_HyruleCastle)
-                    && dungeon.rooms.contains(&room_id)
-            })
-            .is_some();
-
-        // Pass any rooms which have permanent sprites (objects, npcs, special damage type enemies)
-        let mut rules = vec![Rule::Underworld];
-        if header.tag1.is_kill_room() || header.tag2.is_kill_room() {
-            rules.push(Rule::KillRequired);
-        };
-        if is_rescue {
-            rules.push(Rule::ReduceDifficulty);
-        }
-
-        if has_special_requirements(screen.sprites.clone(), &rules) {
-            log::debug!(
-                "Skipping spriteset shuffle because of sprite requirements. Room = {}",
-                room_id
-            );
-            continue;
-        }
-
-        // Compute the list of compatible spritesets.
-        let spriteset_pool = sprite_pool
-            .iter()
-            .filter(|(spriteset_id, sprites)| {
-                spriteset_id.is_underworld()
-                    && is_list_compatible(&screen.sprites, &sprites, &rules)
-            })
-            .map(|(spriteset_id, _)| *spriteset_id)
-            .collect::<Vec<_>>();
-
-        if spriteset_pool.is_empty() {
-            log::debug!(
-                "Skipping spriteset shuffle because there are no valid swaps. Room = {}",
-                room_id
-            );
-            continue;
-        }
-
-        if let Some(spriteset_id) = spriteset_pool.choose(rng) {
-            log::info!(
-                "Spriteset shuffle success. Room = {}. From = {}, To = {}",
-                room_id,
-                header.spriteset_id,
-                *spriteset_id
-            );
-            header.spriteset_id = *spriteset_id;
-        } else {
-            log::debug!(
-                "Skipping spriteset shuffle because RNG failed. Room = {}",
-                room_id
-            );
-        }
+        choose_underworld_room_spriteset(model, rng, room_id, &sprite_pool);
     }
 }
 
@@ -242,10 +89,24 @@ fn is_overworld_room_locked(room_id: OWRoomId) -> bool {
 
 fn is_underworld_room_locked(room_id: UWRoomId) -> bool {
     match room_id {
-        UWRoomId::x61_HYRULE_CASTLE_MAIN_ENTRANCE_ROOM => true,
-        UWRoomId::x62_HYRULE_CASTLE_EAST_ENTRANCE_ROOM => true,
-        UWRoomId::xDB_THIEVES_TOWN_MAIN_SOUTH_WEST_ENTRANCE_ROOM => true,
         _ => false,
+    }
+}
+
+fn clear_spritesets(model: &mut Z3Model, spritesets: &Vec<SpritesetId>) {
+    for spriteset_id in spritesets.iter() {
+        // Ensure there is an entry.
+        let spriteset = match model.spritesets.entry(*spriteset_id) {
+            Entry::Vacant(it) => it.insert(Spriteset {
+                id: *spriteset_id,
+                sheets: [SpritesheetId::None; 4],
+            }),
+            Entry::Occupied(it) => it.into_mut(),
+        };
+        // Compute the possible sprites given the spriteset arrangement.
+        let possible_sprite_ids = get_possible_sprites(spriteset.sheets, |_| true);
+        // Set only the spritesheets required to render the required sprites.
+        spriteset.sheets = get_sprite_requirements(spriteset.sheets, &possible_sprite_ids);
     }
 }
 
@@ -277,6 +138,14 @@ fn fill_spriteset(
 ) -> [SpritesheetId; 4] {
     let mut updated_spritesheets = initial_spritesheets.clone();
 
+    let filter = if rules.contains(&Rule::Overworld) {
+        can_shuffle_in_ow
+    } else if rules.contains(&Rule::Underworld) {
+        can_shuffle_in_uw
+    } else {
+        can_shuffle_type
+    };
+
     // Attempt at most 16 times to find replacements for empty spritesheets.
     for counter in 0..16 {
         if is_spriteset_full(updated_spritesheets) {
@@ -285,7 +154,7 @@ fn fill_spriteset(
 
         for sprite_type in [SpriteType::Enemy, SpriteType::Hazard, SpriteType::Creature] {
             // Determine how many of this type of sprite are possible with the current spritesheets.
-            let matching_type_count = get_possible_sprites(updated_spritesheets, rules)
+            let matching_type_count = get_possible_sprites(updated_spritesheets, filter)
                 .iter()
                 .filter(|sprite_id| get_sprite_type(sprite_id) == sprite_type)
                 .count();
@@ -318,10 +187,10 @@ fn fill_spriteset(
                             updated_spritesheets[i] = replacement[i];
                         }
                     }
-                },
+                }
                 Err(msg) => {
                     panic!("{}", msg);
-                },
+                }
             }
 
             if is_spriteset_full(updated_spritesheets) {
@@ -337,6 +206,38 @@ fn is_spriteset_full(spritesheets: [SpritesheetId; 4]) -> bool {
     spritesheets
         .iter()
         .all(|spritesheet| *spritesheet != SpritesheetId::None)
+}
+
+/// Evaluates an array of spritesheets and list of sprite_ids and determines which Spritesheets are
+/// required to render that list of sprites.
+pub(crate) fn get_sprite_requirements(
+    spriteset: [SpritesheetId; 4],
+    sprite_ids: &[SpriteId],
+) -> [SpritesheetId; 4] {
+    let mut spriteset_result = [SpritesheetId::None; 4];
+
+    // Fill with all required spritesheets.
+    for i in 0..4 {
+        if is_spritesheet_permanent(&spriteset[i]) {
+            spriteset_result[i] = spriteset[i];
+        }
+    }
+
+    // Gather a list of all known spritesheet arrangements for the required sprites.
+    let sprite_requirements = sprite_ids
+        .iter()
+        .flat_map(|sprite_id| get_spritesheet_arrangements(sprite_id));
+
+    // Walk through each requirement and set it if the original spriteset has it.
+    for requirement in sprite_requirements {
+        for i in 0..4 {
+            if requirement[i] != SpritesheetId::None && requirement[i] == spriteset[i] {
+                spriteset_result[i] = spriteset[i];
+            }
+        }
+    }
+
+    spriteset_result
 }
 
 fn get_possible_spritesheets(
@@ -371,15 +272,10 @@ fn get_possible_spritesheets(
         .collect::<Vec<_>>()
 }
 
-fn get_possible_sprites(spritesheets: [SpritesheetId; 4], rules: &[Rule]) -> Vec<SpriteId> {
-    let filter = if rules.contains(&Rule::Overworld) {
-        can_shuffle_in_ow
-    } else if rules.contains(&Rule::Overworld) {
-        can_shuffle_in_uw
-    } else {
-        can_shuffle_type
-    };
-
+fn get_possible_sprites(
+    spritesheets: [SpritesheetId; 4],
+    filter: fn(&SpriteId) -> bool,
+) -> Vec<SpriteId> {
     SpriteId::iter()
         .filter(filter)
         .map(|sprite_id| (sprite_id, get_spritesheet_arrangements(&sprite_id)))
@@ -415,5 +311,175 @@ fn is_required_sprite(sprite_id: &SpriteId, rules: &[Rule]) -> bool {
             }
         }
         _ => false,
+    }
+}
+
+fn choose_overworld_room_spriteset(
+    model: &mut Z3Model,
+    rng: &mut StdRng,
+    room_id: OWRoomId,
+    sprite_pool: &BTreeMap<SpritesetId, Vec<SpriteId>>,
+) {
+    if is_overworld_room_locked(room_id) {
+        log::debug!(
+            "Skipping spriteset shuffle because of permanent spriteset. Room = {}",
+            room_id
+        );
+        return;
+    }
+
+    let room = model.ow_rooms.get_mut(&room_id).unwrap();
+    for screen in room.versions_mut() {
+        if room_id == OWRoomId::x16_WITCHS_HUT && screen.overworld_id == OWStateId::DARK_WORLD_V1 {
+            log::info!("here");
+        }
+
+        // Pass any spritesets with required spritesheets (turtle rock, somaria platform for
+        // example).
+        let spriteset_id = screen.spriteset_id;
+        let spriteset = model.spritesets.get(&spriteset_id).unwrap();
+        if spriteset.sheets.iter().any(is_spritesheet_permanent) {
+            log::debug!(
+                "Skipping spriteset shuffle because of permanent spritesheet. Room = {}",
+                room_id
+            );
+            return;
+        }
+
+        // Pass any rooms which have permanent sprites (objects, npcs, special damage type
+        // enemies)
+        let rules = get_overworld_rules(screen.overworld_id);
+        if has_special_requirements(screen.sprites.clone(), &rules) {
+            log::debug!(
+                "Skipping spriteset shuffle because of sprite requirements. Room = {}, {}",
+                room_id,
+                screen.overworld_id
+            );
+            return;
+        }
+
+        // Compute the list of compatible spritesets.
+        let spriteset_pool = sprite_pool
+            .iter()
+            .filter(|(spriteset_id, sprites)| {
+                !spriteset_id.is_underworld()
+                    && is_list_compatible(&screen.sprites, &sprites, &rules)
+            })
+            .map(|(spriteset_id, _)| *spriteset_id)
+            .collect::<Vec<_>>();
+
+        if spriteset_pool.is_empty() {
+            log::debug!(
+                "Skipping spriteset shuffle because there are no valid swaps. Room = {}",
+                room_id
+            );
+            return;
+        }
+
+        if let Some(spriteset_id) = spriteset_pool.choose(rng) {
+            log::info!(
+                "Spriteset shuffle success. Room = {}. From = {}, To = {}",
+                room_id,
+                screen.spriteset_id,
+                *spriteset_id
+            );
+            screen.spriteset_id = *spriteset_id;
+        } else {
+            log::debug!(
+                "Skipping spriteset shuffle because RNG failed. Room = {}",
+                room_id
+            );
+        }
+    }
+}
+
+fn choose_underworld_room_spriteset(
+    model: &mut Z3Model,
+    rng: &mut StdRng,
+    room_id: UWRoomId,
+    sprite_pool: &BTreeMap<SpritesetId, Vec<SpriteId>>,
+) {
+    if is_underworld_room_locked(room_id) {
+        log::debug!(
+            "Skipping spriteset shuffle because of permanent spriteset. Room = {}",
+            room_id
+        );
+        return;
+    }
+
+    let header = model.uw_headers.get_mut(&room_id).unwrap();
+    let screen = model.uw_sprites.get_mut(&room_id).unwrap();
+
+    // Pass any spritesets with required spritesheets (turtle rock, somaria platform for
+    // example).
+    let spriteset_id = header.spriteset_id;
+    let spriteset = model.spritesets.get(&spriteset_id).unwrap();
+    if spriteset.sheets.iter().any(is_spritesheet_permanent) {
+        log::debug!(
+            "Skipping spriteset shuffle because of permanent spritesheet. Room = {}",
+            room_id
+        );
+        return;
+    }
+
+    // If the room is part of escape or rescue, artificially lower the difficulty because this
+    // could be a standard run and there are some rooms that are painful given the
+    // number of pests normally there or impossible to kill with just the arrows.
+    let is_rescue = model
+        .dungeons
+        .iter()
+        .find(|(dungeon_id, dungeon)| {
+            (**dungeon_id == DungeonId::X00_Sewers || **dungeon_id == DungeonId::X02_HyruleCastle)
+                && dungeon.rooms.contains(&room_id)
+        })
+        .is_some();
+
+    // Pass any rooms which have permanent sprites (objects, npcs, special damage type enemies)
+    let mut rules = vec![Rule::Underworld];
+    if header.tag1.is_kill_room() || header.tag2.is_kill_room() {
+        rules.push(Rule::KillRequired);
+    };
+    if is_rescue {
+        rules.push(Rule::ReduceDifficulty);
+    }
+
+    if has_special_requirements(screen.sprites.clone(), &rules) {
+        log::debug!(
+            "Skipping spriteset shuffle because of sprite requirements. Room = {}",
+            room_id
+        );
+        return;
+    }
+
+    // Compute the list of compatible spritesets.
+    let spriteset_pool = sprite_pool
+        .iter()
+        .filter(|(spriteset_id, sprites)| {
+            spriteset_id.is_underworld() && is_list_compatible(&screen.sprites, &sprites, &rules)
+        })
+        .map(|(spriteset_id, _)| *spriteset_id)
+        .collect::<Vec<_>>();
+
+    if spriteset_pool.is_empty() {
+        log::debug!(
+            "Skipping spriteset shuffle because there are no valid swaps. Room = {}",
+            room_id
+        );
+        return;
+    }
+
+    if let Some(spriteset_id) = spriteset_pool.choose(rng) {
+        log::info!(
+            "Spriteset shuffle success. Room = {}. From = {}, To = {}",
+            room_id,
+            header.spriteset_id,
+            *spriteset_id
+        );
+        header.spriteset_id = *spriteset_id;
+    } else {
+        log::debug!(
+            "Skipping spriteset shuffle because RNG failed. Room = {}",
+            room_id
+        );
     }
 }
