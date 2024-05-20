@@ -61,6 +61,7 @@ fn get_free_space() -> Vec<(u8, u16, u16)> {
     vec![
         (0x02, 0xFFC7, 0xFFFF), // Empty Space
         (0x03, 0xEB8F, 0xFFFF), // Initially contains Doors and Layout.
+        (0x04, 0xF1E2, 0xFCE0), // Initially contains Room Headers and Pointers in vanilla, these are moved to 0x40.
         (0x09, 0xCB42, 0xEC9C - 0x300), /* Contains Sprites in OW and UW, reserve $300 space at
                                  * the end for the UW pointer table. */
         (0x0A, 0x8000, 0xB74F), // Initially Contains Doors and Layout.
@@ -71,6 +72,7 @@ fn get_free_space() -> Vec<(u8, u16, u16)> {
         (0x1C, 0xF3D5, 0xF500), // Empty Space.
         (0x1C, 0xFD8E, 0xFFFF), // Empty Space.
         (0x1F, 0x878A, 0xFFFF), // Initially Contains Doors and Layout.
+        (0x36, 0x8000, 0xFFFF), // Empty space from resizing to fast lorom.
     ]
 }
 

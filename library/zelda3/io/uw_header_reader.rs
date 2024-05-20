@@ -20,66 +20,66 @@ pub(super) fn read_uw_headers(game: &SnesGame) -> BTreeMap<UWRoomId, UnderworldR
 
     let mut values: Vec<(UWRoomId, UnderworldRoomHeader)> = vec![];
     for id in UWRoomId::iter() {
-        values.push((id, _read_header(game, header_pointer, id)));
+        // Find the address of the Dungeon Room and read in graphics block and tags.
+        let header_address = game.read_pointer_int16(header_pointer + (id as usize * 2));
+        let data = game.read_all(header_address, 14);
+
+        values.push((id, bytes_to_room_header(&data, id)));
     }
     BTreeMap::from_iter(values)
 }
 
-fn _read_header(game: &SnesGame, pointer_address: usize, id: UWRoomId) -> UnderworldRoomHeader {
-    // Find the address of the Dungeon Room and read in graphics block and tags.
-    let header_address = game.read_pointer_int16(pointer_address + (id as usize * 2));
-    let data = game.read_all(header_address, 14);
-
+fn bytes_to_room_header(data: &[u8], id: UWRoomId) -> UnderworldRoomHeader {
     // Read in the graphics block which controls the spritesheets
     // and tags which declare behaviors.
     let bg2_property = data[0];
     let palette_id: PaletteId = PaletteId::from_repr(data[1]).expect(&format!(
         "UW ${:02X} palette load error ${:02X}",
-        id as u8, data[1]
+        id as u16, data[1]
     ));
     let blockset_id = UWBlocksetId::from_repr(data[2]).expect(&format!(
         "UW ${:02X} spriteset load error ${:02X}",
-        id as u8, data[2]
+        id as u16, data[2]
     ));
 
     let spriteset_id = SpritesetId::from_room_value(data[3]);
     let bgmove = data[4];
     let tag1 = RoomLogic::from_repr(data[5]).expect(&format!(
         "UW ${:02X} tag1 load error ${:02X}",
-        id as u8, data[5]
+        id as u16, data[5]
     ));
     let tag2 = RoomLogic::from_repr(data[6]).expect(&format!(
         "UW ${:02X} tag2 load error ${:02X}",
-        id as u8, data[6]
+        id as u16, data[6]
     ));
     let floor_upper = UWFloorId::from_repr(data[7]).expect(&format!(
         "UW ${:02X} floor upper load error ${:02X}",
-        id as u8, data[7]
+        id as u16, data[7]
     ));
 
     let floor_lower = UWFloorId::from_repr(data[8]).expect(&format!(
         "UW ${:02X} floor lower load error ${:02X}",
-        id as u8, data[8]
+        id as u16, data[8]
     ));
     let warp = UWRoomId::from_repr(data[9] as u16).expect(&format!(
         "UW ${:02X} warp/pit load error ${:02X}",
-        id as u8, data[9]
+        id as u16, data[9]
     ));
     let stairs0 = UWRoomId::from_repr(data[10] as u16).expect(&format!(
         "UW ${:02X} stairs slot 0 load error ${:02X}",
-        id as u8, data[10]
+        id as u16, data[10]
     ));
     let stairs1 = UWRoomId::from_repr(data[11] as u16).expect(&format!(
         "UW ${:02X} stairs slot 1 load error ${:02X}",
-        id as u8, data[11]
+        id as u16, data[11]
     ));
     let stairs2 = UWRoomId::from_repr(data[12] as u16).expect(&format!(
         "UW ${:02X} stairs slot 2 load error ${:02X}",
-        id as u8, data[12]
+        id as u16, data[12]
     ));
     let stairs3 = UWRoomId::from_repr(data[13] as u16).expect(&format!(
         "UW ${:02X} stairs slot 3 load error ${:02X}",
-        id as u8, data[13]
+        id as u16, data[13]
     ));
 
     UnderworldRoomHeader {

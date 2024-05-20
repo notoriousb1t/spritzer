@@ -307,3 +307,9 @@ pub(crate) enum UWRoomId {
     x126_CHECKER_BOARD_CAVE = 294,
     x127_HAMMER_PEG_CAVE = 295,
 }
+
+impl Into<u16> for UWRoomId {
+    fn into(self) -> u16 {
+        self as u16
+    }
+}

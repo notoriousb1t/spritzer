@@ -104,3 +104,9 @@ impl RoomLogic {
         )
     }
 }
+
+impl Into<u8> for RoomLogic {
+    fn into(self) -> u8 {
+        self as u8
+    }
+}

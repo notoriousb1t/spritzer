@@ -48,3 +48,9 @@ pub(crate) enum PaletteId {
     x27_MIMICS_CAVE = 39,
     x28_GANONS_TOWER = 40,
 }
+
+impl Into<u8> for PaletteId {
+    fn into(self) -> u8 {
+        self as u8
+    }
+}

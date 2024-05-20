@@ -27,3 +27,9 @@ pub(crate) enum UWBlocksetId {
     x13_GANON = 0x13,
     x14_CAVE = 0x14,
 }
+
+impl Into<u8> for UWBlocksetId {
+    fn into(self) -> u8 {
+        self as u8
+    }
+}

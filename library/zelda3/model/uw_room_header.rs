@@ -39,3 +39,9 @@ pub(crate) struct UnderworldRoomHeader {
     /// The destination for stairs 3
     pub stairs3: UWRoomId,
 }
+
+impl Into<u8> for UWFloorId {
+    fn into(self) -> u8 {
+        self as u8
+    }
+}

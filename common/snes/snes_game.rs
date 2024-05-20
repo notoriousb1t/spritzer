@@ -98,6 +98,24 @@ impl SnesGame {
         }
     }
 
+    /// Mark the next contiguous region in the bank as being allocated for some data.
+    pub fn allocate(&mut self, bank: u8, size: u16) -> Option<usize> {
+        for space in self.free_space.iter_mut() {
+            if bank != space.bank {
+                continue;
+            }
+            if space.exhausted || size > space.capacity() as u16 {
+                continue;
+            }
+            let maybe_position = space.allocate(size);
+            if maybe_position.is_none() {
+                continue;
+            }
+            return maybe_position;
+        }
+        None
+    }
+
     /// This fills all known freespace with 0s and merges declared freespace.
     pub fn deallocate(&mut self) {
         // Sort free space to the larger banks are used first. The general wisdom is that SNES games
