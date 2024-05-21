@@ -1,5 +1,5 @@
 use common::SnesGame;
-use log::debug;
+use log;
 
 use crate::zelda3::io::damageclass_writer::write_damage_classes;
 use crate::zelda3::io::damagesubclass_writer::write_damage_subclasses;
@@ -32,10 +32,30 @@ pub(crate) fn write_model(game: &mut SnesGame, model: &Z3Model) {
     write_uw_scenes(game, &model.uw_scenes);
     write_entrances(game, &model.uw_entrances);
 
-    debug!("Capacity");
-    for space in game.free_space.iter() {
-        debug!("    {:02X} has {} bytes", space.bank, space.capacity());
-    }
-
     game.patch(&model.patches);
+
+    log_freespace_report(game);
+    // log_banks(game);
+}
+
+fn log_freespace_report(game: &SnesGame) {
+    let mut freespace_report = "".to_owned();
+    for space in game.free_space.iter() {
+        freespace_report.push_str(
+            format!(
+                "\n    Bank ${:02X} has {} remaining",
+                space.bank,
+                space.capacity()
+            )
+            .as_str(),
+        );
+    }
+    log::debug!("Capacity:{}", freespace_report);
+}
+
+#[allow(dead_code)]
+fn log_banks(game: &SnesGame) {
+    for bank in 0..0x41 {
+        game.print_bank(bank);
+    }
 }

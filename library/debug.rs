@@ -131,12 +131,12 @@ fn chaos_mode() -> Z3Options {
         overworld_balancing: Balancing::Random,
         overworld_enemy_shuffle: OverworldEnemyShuffle::Chaos,
         underworld_balancing: Balancing::Random,
-        boss_shuffle: false,
+        boss_shuffle: true,
         underworld_enemy_shuffle: UnderworldEnemyShuffle::Chaos,
         killable_thieves: true,
         mushroom_shuffle: true,
         shadow_bees: true,
-        seed: "32nr0v9n0239nf02fn;alsidnff[ 3".to_owned()
+        seed: "kholdstare".to_owned()
     }
 }
 

@@ -6,9 +6,9 @@ use rand::rngs::StdRng;
 use strum::IntoEnumIterator;
 
 use crate::zelda3::model::calculate_sprite_pool;
-use crate::zelda3::model::can_shuffle_in_ow;
-use crate::zelda3::model::can_shuffle_in_uw;
-use crate::zelda3::model::can_shuffle_type;
+use crate::zelda3::model::can_place_in_ow;
+use crate::zelda3::model::can_place_in_uw;
+use crate::zelda3::model::can_place_sprite;
 use crate::zelda3::model::get_overworld_rules;
 use crate::zelda3::model::get_sprite_type;
 use crate::zelda3::model::get_spritesheet_arrangements;
@@ -139,11 +139,11 @@ fn fill_spriteset(
     let mut updated_spritesheets = initial_spritesheets.clone();
 
     let filter = if rules.contains(&Rule::Overworld) {
-        can_shuffle_in_ow
+        can_place_in_ow
     } else if rules.contains(&Rule::Underworld) {
-        can_shuffle_in_uw
+        can_place_in_uw
     } else {
-        can_shuffle_type
+        can_place_sprite
     };
 
     // Attempt at most 16 times to find replacements for empty spritesheets.
@@ -246,11 +246,11 @@ fn get_possible_spritesheets(
     rules: &[Rule],
 ) -> Vec<(SpriteId, [SpritesheetId; 4])> {
     let filter = if rules.contains(&Rule::Overworld) {
-        can_shuffle_in_ow
+        can_place_in_ow
     } else if rules.contains(&Rule::Overworld) {
-        can_shuffle_in_uw
+        can_place_in_uw
     } else {
-        can_shuffle_type
+        can_place_sprite
     };
 
     SpriteId::iter()

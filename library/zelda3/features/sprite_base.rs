@@ -76,7 +76,12 @@ fn update_settings(model: &mut Z3Model) {
         // This makes sure the game and randomizer are aligned on what is killable for the
         // purposes of underworld kill rooms. Many sprites aren't flagged because they don't occur
         // in kill rooms in vanilla, but are effectively unkillable (or shouldn't count)
-        sprite.statis = get_sprite_vulnerability(&sprite.id) == SpriteVulnerability::Invulnerable;
+        // Thief should always be considered non-killable for the purpose of kill room logic because
+        // it is sometimes killable, and sometimes not depending on settings, but it shouldn't be considered
+        // invulnerable for the purpose of placement. So it is possible with this exception that a room full 
+        // of thieves with a shutter door would open immediately (but that is also really funny).
+        sprite.statis = sprite.id == SpriteId::xC4_THIEF
+            || get_sprite_vulnerability(&sprite.id) == SpriteVulnerability::Invulnerable;
 
         match sprite_type {
             SpriteType::Enemy => {

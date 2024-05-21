@@ -1,11 +1,11 @@
-use super::can_shuffle_in_dw;
-use super::can_shuffle_in_lw;
+use super::can_place_in_dw;
+use super::can_place_in_lw;
 use super::Sprite;
 use super::HORIZONTAL;
 use super::VERTICAL;
 use crate::zelda3::model::can_hold_key;
-use crate::zelda3::model::can_shuffle_in_ow;
-use crate::zelda3::model::can_shuffle_in_uw;
+use crate::zelda3::model::can_place_in_ow;
+use crate::zelda3::model::can_place_in_uw;
 use crate::zelda3::model::can_sprite_fly;
 use crate::zelda3::model::can_sprite_swim;
 use crate::zelda3::model::get_sprite_type;
@@ -75,19 +75,19 @@ fn is_fully_compatible(source: &SpriteId, target: &SpriteId, rules: &[Rule]) -> 
         return false;
     }
 
-    if rules.contains(&Rule::DarkWorld) && !can_shuffle_in_dw(source) || !can_shuffle_in_dw(target)
+    if rules.contains(&Rule::DarkWorld) && !can_place_in_dw(source) || !can_place_in_dw(target)
     {
         return false;
     }
-    if rules.contains(&Rule::LightWorld) && !can_shuffle_in_lw(source) || !can_shuffle_in_lw(target)
+    if rules.contains(&Rule::LightWorld) && !can_place_in_lw(source) || !can_place_in_lw(target)
     {
         return false;
     }
     if rules.contains(&Rule::Overworld) {
-        return can_shuffle_in_ow(source) && can_shuffle_in_ow(target);
+        return can_place_in_ow(source) && can_place_in_ow(target);
     }
 
-    if !(can_shuffle_in_uw(source) && can_shuffle_in_uw(target)) {
+    if !(can_place_in_uw(source) && can_place_in_uw(target)) {
         return false;
     }
 

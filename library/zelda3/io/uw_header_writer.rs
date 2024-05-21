@@ -18,12 +18,12 @@ pub(super) fn write_uw_headers(
         .allocate(MOVED_HEADER_BANK, 2 * TOTAL_ROOM_COUNT)
         .expect("Could not find freespace to write Underworld Header Table");
 
-    // Write new pointer values to 0x36_8000 to reference start of room headers.
+    // Write new pointer values to 0x8000 to reference start of room headers.
     game.write(Symbol::UWHeaderBank.into(), MOVED_HEADER_BANK);
     game.write_pointer(Symbol::UWHeaderRef0.into(), room_header_table_pointer);
 
     for room in headers.values() {
-        // Write the data to the next available place in 0x36.
+        // Write the data to the next available place in this bank.
         let room_header_pointer = game
             .write_data(&[MOVED_HEADER_BANK], &header_to_bytes(&room))
             .expect("Could not write room header");

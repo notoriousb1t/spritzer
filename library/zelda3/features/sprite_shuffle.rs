@@ -50,13 +50,6 @@ pub(crate) fn shuffle_overworld_sprites(model: &mut Z3Model) {
         let room = model.ow_rooms.get_mut(&room_id).unwrap();
         for (state_id, sprites) in state_sprites {
             let state = room.get_mut(state_id).unwrap();
-            log::debug!(
-                "updated sprites in room. Room = {}, {}\nFrom = {:#?}\nTo = {:#?}\n",
-                room_id,
-                state.overworld_id,
-                state.sprites,
-                sprites
-            );
             state.sprites = sprites;
         }
     }
@@ -122,13 +115,6 @@ pub(crate) fn shuffle_underworld_sprites(model: &mut Z3Model) {
             .uw_sprites
             .get_mut(&room_id)
             .expect("Sprites should exist");
-
-        log::debug!(
-            "updated sprites in room. Room = {}\nFrom = {:#?}\nTo = {:#?}\n",
-            room_id,
-            spritelist.sprites,
-            sprites
-        );
         spritelist.sprites = sprites;
     }
 }

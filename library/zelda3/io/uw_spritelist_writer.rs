@@ -11,6 +11,7 @@ const STOP_MARKER: u8 = 0xFF;
 const _OVERLORD_OFFSET: u16 = 0x100;
 const SMALL_KEY_MARKER: u8 = 0xFE;
 const BIG_KEY_MARKER: u8 = 0xFD;
+const MOVED_BANK: u8 = 0x09;
 
 pub(super) fn write_uw_spritelists(
     game: &mut SnesGame,
@@ -80,7 +81,7 @@ fn _write_sprites(game: &mut SnesGame, room: &UWSpriteList) {
             );
             // Add End marker.
             buffer.push(STOP_MARKER);
-            game.write_data(&[0x09], &buffer).unwrap()
+            game.write_data(&[MOVED_BANK], &buffer).unwrap()
         }
         false => Symbol::UWRoomEmpty.into(),
     };

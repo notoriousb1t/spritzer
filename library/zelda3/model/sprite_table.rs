@@ -143,7 +143,7 @@ pub(crate) fn get_sprite_type(sprite_id: &SpriteId) -> SpriteType {
         SpriteId::x79_BEE => SpriteType::Absorbable,
         SpriteId::x7A_AGAHNIM => SpriteType::Boss,
         SpriteId::x7B_AGAHNIM_ENERGY_BALL => SpriteType::Object,
-        SpriteId::x7C_FloatingStalfosHead => SpriteType::Enemy,
+        SpriteId::x7C_FloatingStalfosHead => SpriteType::Hazard,
         SpriteId::x7D_BIG_SPIKE => SpriteType::Hazard,
         SpriteId::x7E_FIREBAR_CLOCKWISE => SpriteType::Hazard,
         SpriteId::x7F_FIREBAR_COUNTER_CLOCKWISE => SpriteType::Hazard,
@@ -215,9 +215,7 @@ pub(crate) fn get_sprite_type(sprite_id: &SpriteId) -> SpriteType {
         SpriteId::xC1_AGAHNIM_TELEPORTING => SpriteType::Npc,
         SpriteId::xC2_BOULDER => SpriteType::Object,
         SpriteId::xC3_GIBO => SpriteType::Enemy,
-        // This one is weird, but thieves are invulnerable with some settings, so set thief to
-        // be equivalent to a creature (no statis and can be safely ignored)
-        SpriteId::xC4_THIEF => SpriteType::Creature,
+        SpriteId::xC4_THIEF => SpriteType::Enemy,
         SpriteId::xC5_MEDUSA => SpriteType::Hazard,
         SpriteId::xC6_MEDUSA_FOUR_WAY => SpriteType::Hazard,
         SpriteId::xC7_Hokkubokku_Pokey => SpriteType::Enemy,
@@ -341,8 +339,8 @@ pub(crate) fn can_sprite_fly(sprite_id: &SpriteId) -> bool {
     )
 }
 
-/// True if the type implies that it can be shuffled automatically.
-pub(crate) fn can_shuffle_type(sprite_id: &SpriteId) -> bool {
+/// True if the type can be placed in some context.
+pub(crate) fn can_place_sprite(sprite_id: &SpriteId) -> bool {
     matches!(
         get_sprite_type(sprite_id),
         SpriteType::Creature
@@ -355,7 +353,7 @@ pub(crate) fn can_shuffle_type(sprite_id: &SpriteId) -> bool {
 
 /// This is used to restrict shuffling in the overworld. If there isn't
 /// a specific sprite lists, the implied shuffling rules of the type apply.
-pub(crate) fn can_shuffle_in_ow(sprite_id: &SpriteId) -> bool {
+pub(crate) fn can_place_in_ow(sprite_id: &SpriteId) -> bool {
     match sprite_id {
         // Toppo spawning on a cave/entrance will allow for the message
         // he says to occur at the same time as teleporting. This crashes
@@ -373,29 +371,35 @@ pub(crate) fn can_shuffle_in_ow(sprite_id: &SpriteId) -> bool {
         SpriteId::x45RedSpearGuard2 => false,
         // Needs investigation
         SpriteId::xA1_FREEZOR => false,
-        _ => can_shuffle_type(sprite_id),
+        // These animals are hard coded in haunted grove and don't move.
+        SpriteId::x9E_HAUNTED_GROVE_OSTRICH => false,
+        // These animals are hard coded in haunted grove and don't move.
+        SpriteId::x9F_HAUNTED_GROVE_RABBIT => false,
+        _ => can_place_sprite(sprite_id),
     }
 }
 
 /// This is used to restrict shuffling in the the light overworld.
-pub(crate) fn can_shuffle_in_lw(sprite_id: &SpriteId) -> bool {
+pub(crate) fn can_place_in_lw(sprite_id: &SpriteId) -> bool {
     match sprite_id {
-        _ => can_shuffle_in_ow(sprite_id),
+        _ => can_place_in_ow(sprite_id),
     }
 }
 
 /// This is used to restrict shuffling in the the dark overworld.
-pub(crate) fn can_shuffle_in_dw(sprite_id: &SpriteId) -> bool {
+pub(crate) fn can_place_in_dw(sprite_id: &SpriteId) -> bool {
     match sprite_id {
+        // Graphics loaded in memory only in lightworld.
         SpriteId::xD2_FLOPPING_FISH => false,
+        // Graphics loaded in memory only in lightworld.
         SpriteId::xD4_LANDMINE => false,
-        _ => can_shuffle_in_ow(sprite_id),
+        _ => can_place_in_ow(sprite_id),
     }
 }
 
 /// This is used to restrict shuffling in the underworld. If there isn't
 /// a specific sprite lists, the implied shuffling rules of the type apply.
-pub(crate) fn can_shuffle_in_uw(sprite_id: &SpriteId) -> bool {
+pub(crate) fn can_place_in_uw(sprite_id: &SpriteId) -> bool {
     match sprite_id {
         // Needs investigation
         SpriteId::x8D_ARRGHUS_SPAWN => false,
@@ -403,7 +407,8 @@ pub(crate) fn can_shuffle_in_uw(sprite_id: &SpriteId) -> bool {
         SpriteId::x90_WALLMASTER => false,
         // Only should spawn from overlord.
         SpriteId::x94_PIROGUSU => false,
-        // Needs investigation
+        // The tile it generates from has a collision box, so without an ASM fix or a lot of tile logic, 
+        // this isn't safe to place.
         SpriteId::xA1_FREEZOR => false,
         // Graphics loaded in light overworld.
         SpriteId::xD2_FLOPPING_FISH => false,
@@ -411,7 +416,14 @@ pub(crate) fn can_shuffle_in_uw(sprite_id: &SpriteId) -> bool {
         SpriteId::xD4_LANDMINE => false,
         // Turn off shuffling for this type since the red spear guard is a better choice.
         SpriteId::x45RedSpearGuard2 => false,
-        _ => can_shuffle_type(sprite_id),
+        // The behavior is glitchy and this doubles up the possibility of anti-fairies (not fun).
+        SpriteId::x77_ANTIFAIRY_2 => false,
+        // This has the potential to block an area, making it impassible.
+        SpriteId::x93_BUMPER => false,
+        // Honestly, it isn't fun when a whole room gets replaced with these. There is also a potential
+        // for unwinnable rooms. Disable for now.
+        SpriteId::x7D_BIG_SPIKE => false,
+        _ => can_place_sprite(sprite_id),
     }
 }
 
@@ -422,7 +434,9 @@ pub(crate) fn can_shuffle_in_uw(sprite_id: &SpriteId) -> bool {
 /// 3. They inexplicably crash the game (MOBLIN supposedly does this)
 pub(crate) fn can_hold_key(sprite_id: &SpriteId) -> bool {
     match sprite_id {
-        // Has a reputation to crash the game.
+        // Exits the screen.
+        SpriteId::x0_RAVEN => false,
+        // Has a reputation to crash the game. Requires verification, though and perhaps an ASM fix.
         SpriteId::x12_MOBLIN => false,
         // Loses the key.
         SpriteId::x17_HOARDER => false,
@@ -434,12 +448,6 @@ pub(crate) fn can_hold_key(sprite_id: &SpriteId) -> bool {
         SpriteId::x4C_GELDMAN => false,
         // Exits the screen.
         SpriteId::x6F_KEESE => false,
-        // There isn't a guarantee that this is killable without bombs
-        // and you may not have the sword. In particular, it can be difficult
-        // to complete the standard mode if a stalfos knight is holding the
-        // key in the path of escape, it can be impossible to leave without
-        // a boomerang/sword and a bomb.
-        SpriteId::x91_STALFOS_KNIGHT => false,
         // Exits the screen.
         SpriteId::x85_YELLOW_STALFOS => false,
         // Needs investigation.
@@ -472,6 +480,7 @@ pub(crate) fn sprite_movement(sprite_id: &SpriteId) -> Option<u8> {
         SpriteId::x67_MOVING_CANNON_WEST => Some(WEST),
         SpriteId::x68_MOVING_CANNON_SOUTH => Some(SOUTH),
         SpriteId::x69_MOVING_CANNON_NORTH => Some(NORTH),
+        SpriteId::x7C_FloatingStalfosHead => Some(DIAGONAL | FIXED),
         SpriteId::x77_ANTIFAIRY_2 => Some(DIAGONAL),
         SpriteId::x7D_BIG_SPIKE => Some(HORIZONTAL | VERTICAL),
         SpriteId::x7E_FIREBAR_CLOCKWISE => Some(FIXED),
