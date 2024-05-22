@@ -14,10 +14,8 @@ incsrc killable_hooks.asm
 incsrc goriya_hooks.asm
 incsrc moldorm_hooks.asm
 
-; Code goes in bank $29 (fast lorom location is $69). This seems to be uncontested.
-; Start at position 60 since there is a series of $6B at the start of the bank that
-; is of unknown use. Maybe it is used for settings or something.
-org $698060
+; Code goes in bank $36. This avoids conflicts with Enemizer and Archipelago/z3randomizer code.
+org $B68000
 incsrc blind.asm
 incsrc killable.asm
 incsrc goriya.asm

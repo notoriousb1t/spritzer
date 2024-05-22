@@ -21,7 +21,7 @@ use spritzer::zelda3::Z3Options;
 fn main() {
     setup_logging();
 
-    let options = chaos_mode();
+    let options = chaos_mode("kholdstare".to_owned());
     let current_dir = std::env::current_dir().expect(&format!("Could not get current directory"));
     let input_path = current_dir.join("./library/.testdata/p8.sfc");
     let input_bytes = read_file(input_path.as_ref());
@@ -81,7 +81,7 @@ fn write_file(file_path: &Path, data: &[u8]) {
 }
 
 /// Useful when testing basic patches / world flattening.
-fn base_options() -> Z3Options {
+fn base_options(seed: String) -> Z3Options {
     Z3Options {
         boss_shuffle: false,
         mushroom_shuffle: false,
@@ -90,13 +90,13 @@ fn base_options() -> Z3Options {
         overworld_enemy_shuffle: OverworldEnemyShuffle::Vanilla,
         underworld_balancing: Balancing::Random,
         underworld_enemy_shuffle: UnderworldEnemyShuffle::Vanilla,
-        seed: "test".to_owned(),
+        seed,
         shadow_bees: false,
     }
 }
 
 /// Useful for testing easier runs.
-fn easy_mode() -> Z3Options {
+fn easy_mode(seed: String) -> Z3Options {
     Z3Options {
         boss_shuffle: false,
         mushroom_shuffle: false,
@@ -105,13 +105,13 @@ fn easy_mode() -> Z3Options {
         overworld_enemy_shuffle: OverworldEnemyShuffle::Chaos,
         underworld_balancing: Balancing::Casual,
         underworld_enemy_shuffle: UnderworldEnemyShuffle::Chaos,
-        seed: "test".to_owned(),
+        seed,
         shadow_bees: false,
     }
 }
 
 /// Useful for testing Inverted overworld mode.
-fn inverted_mode() -> Z3Options {
+fn inverted_mode(seed: String) -> Z3Options {
     Z3Options {
         boss_shuffle: true,
         mushroom_shuffle: true,
@@ -120,28 +120,28 @@ fn inverted_mode() -> Z3Options {
         overworld_enemy_shuffle: OverworldEnemyShuffle::Inverted,
         underworld_balancing: Balancing::Balanced,
         underworld_enemy_shuffle: UnderworldEnemyShuffle::Chaos,
-        seed: "test".to_owned(),
+        seed,
         shadow_bees: false,
     }
 }
 
 /// Useful for testing the preferred experience.
-fn chaos_mode() -> Z3Options {
+fn chaos_mode(seed: String) -> Z3Options {
     Z3Options {
         overworld_balancing: Balancing::Random,
         overworld_enemy_shuffle: OverworldEnemyShuffle::Chaos,
         underworld_balancing: Balancing::Random,
-        boss_shuffle: true,
+        boss_shuffle: false,
         underworld_enemy_shuffle: UnderworldEnemyShuffle::Chaos,
         killable_thieves: true,
         mushroom_shuffle: true,
         shadow_bees: true,
-        seed: "kholdstare".to_owned()
+        seed,
     }
 }
 
 /// Useful for testing the preferred experience.
-fn balanced_mode() -> Z3Options {
+fn balanced_mode(seed: String) -> Z3Options {
     Z3Options {
         boss_shuffle: true,
         mushroom_shuffle: false,
@@ -150,13 +150,13 @@ fn balanced_mode() -> Z3Options {
         overworld_enemy_shuffle: OverworldEnemyShuffle::Full,
         underworld_balancing: Balancing::Balanced,
         underworld_enemy_shuffle: UnderworldEnemyShuffle::Full,
-        seed: "test".to_owned(),
+        seed,
         shadow_bees: false,
     }
 }
 
 /// Stop trying so hard!
-fn hard_mode() -> Z3Options {
+fn hard_mode(seed: String) -> Z3Options {
     Z3Options {
         boss_shuffle: true,
         mushroom_shuffle: true,
@@ -165,7 +165,7 @@ fn hard_mode() -> Z3Options {
         overworld_enemy_shuffle: OverworldEnemyShuffle::Insanity,
         underworld_balancing: Balancing::Hero,
         underworld_enemy_shuffle: UnderworldEnemyShuffle::Insanity,
-        seed: "test".to_owned(),
+        seed,
         shadow_bees: true,
     }
 }

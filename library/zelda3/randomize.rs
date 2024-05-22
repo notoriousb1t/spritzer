@@ -72,8 +72,7 @@ fn get_free_space() -> Vec<(u8, u16, u16)> {
         (0x1C, 0xF3D5, 0xF500), // Empty Space.
         (0x1C, 0xFD8E, 0xFFFF), // Empty Space.
         (0x1F, 0x878A, 0xFFFF), // Initially Contains Doors and Layout.
-        (0x2A, 0x8060, 0xFFFF), // Empty space from resizing to fast lorom. Used for Underground sprites. Some space is reserved for asm.
-        (0x36, 0x8000, 0xFFFF), // Empty space from resizing to fast lorom. Used for Underground sprites.
+        (0x2A, 0x8000, 0xFFFF), // Empty space from resizing to fast lorom.
     ]
 }
 

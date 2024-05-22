@@ -18,7 +18,6 @@ use crate::zelda3::model::is_special_damage_sprite;
 use crate::zelda3::model::is_spritesheet_permanent;
 use crate::zelda3::model::DungeonId;
 use crate::zelda3::model::OWRoomId;
-use crate::zelda3::model::OWStateId;
 use crate::zelda3::model::Rule;
 use crate::zelda3::model::Sprite;
 use crate::zelda3::model::SpriteId;
@@ -89,6 +88,8 @@ fn is_overworld_room_locked(room_id: OWRoomId) -> bool {
 
 fn is_underworld_room_locked(room_id: UWRoomId) -> bool {
     match room_id {
+        // Without this, there would be sad pandas out there.
+        UWRoomId::x108_CHICKEN_HOUSE => true,
         _ => false,
     }
 }
@@ -303,6 +304,7 @@ fn is_required_sprite(sprite_id: &SpriteId, rules: &[Rule]) -> bool {
         SpriteType::Object => true,
         SpriteType::Boss => true,
         SpriteType::Overlord => true,
+        SpriteType::Creature => *sprite_id == SpriteId::xB_CUCCO,
         SpriteType::Enemy => {
             if rules.contains(&Rule::KillRequired) {
                 is_special_damage_sprite(sprite_id)
@@ -330,10 +332,6 @@ fn choose_overworld_room_spriteset(
 
     let room = model.ow_rooms.get_mut(&room_id).unwrap();
     for screen in room.versions_mut() {
-        if room_id == OWRoomId::x16_WITCHS_HUT && screen.overworld_id == OWStateId::DARK_WORLD_V1 {
-            log::info!("here");
-        }
-
         // Pass any spritesets with required spritesheets (turtle rock, somaria platform for
         // example).
         let spriteset_id = screen.spriteset_id;
@@ -377,7 +375,7 @@ fn choose_overworld_room_spriteset(
         }
 
         if let Some(spriteset_id) = spriteset_pool.choose(rng) {
-            log::info!(
+            log::debug!(
                 "Spriteset shuffle success. Room = {}. From = {}, To = {}",
                 room_id,
                 screen.spriteset_id,

@@ -43,7 +43,7 @@ pub fn detect_game(buffer: &[u8]) -> GameInfo {
     if title.starts_with("ZELDANODENSETSU") {
         GameInfo {
             version: GameVersion::ZeldaJp,
-            supported: false,
+            supported: true,
         }
     } else if title.starts_with("THE LEGEND OF ZELDA") {
         GameInfo {

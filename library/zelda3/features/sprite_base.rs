@@ -115,10 +115,6 @@ fn update_color_index(model: &mut Z3Model) {
         // Stablize color to something that works better across rooms. (blue)
         sprite.palette = PaletteIndex::XCBlue;
     }
-    if let Some(sprite) = model.sprite_settings.get_mut(&SpriteId::x9B_WIZZROBE) {
-        // Stablize color to something that works better across rooms. (red)
-        sprite.palette = PaletteIndex::XBRed;
-    }
     if let Some(sprite) = model.sprite_settings.get_mut(&SpriteId::x83_GREEN_EYEGORE) {
         // Stablize color to something that works better across rooms. (blue) Without this change,
         // there are palette combinations that result in green eyegores being red and that

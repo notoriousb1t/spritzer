@@ -12,9 +12,11 @@ use super::snes_address::int24_to_bytes;
 use super::snes_address::snes_to_physical;
 use crate::Diff;
 
-const TITLE_ADDRESS: usize = 0xFFC0;
-const TYPE_ADDRESS: usize = 0xFFD5;
-const SIZE_ADDRESS: usize = 0xFFD7;
+const SIZE_ADDRESS: usize = 0x7FD7;
+const TITLE_ADDRESS: usize = 0x7FC0;
+const TYPE_ADDRESS: usize = 0x7FD5;
+const HIROM_HEADER_OFFSET: usize = 0x8000;
+const EXHIROM_HEADER_OFFSET: usize = 0x408000;
 
 /// Manages reading and writing to the Game data.
 pub struct SnesGame {
@@ -36,17 +38,18 @@ pub enum RomSize {
 }
 
 impl SnesGame {
-    /// Empty configuration for testing purposes.
+    /// Empty configuration for testing purposes. This defaults to SlowLoRom.
     pub fn new(rom_type: RomMode, rom_size: RomSize) -> Self {
         let mut data = vec![0xFFu8; (1 << rom_size as usize) * 1024];
-        data[0x7FD5] = rom_type as u8;
-        data[0x7FD7] = rom_size as u8;
+        data[TYPE_ADDRESS] = rom_type as u8;
+        data[SIZE_ADDRESS] = rom_size as u8;
         Self::from_bytes(&mut data)
     }
 
-    /// Constructs a new SNES game and expands it to the correct size.
+    /// Constructs a new SNES game from the bytes provided.
     pub fn from_bytes(bytes: &[u8]) -> Self {
-        let mode_value = bytes[snes_to_physical(RomMode::FastLoRom, TYPE_ADDRESS)];
+        // Use SlowLoRom addressing to figure out the mode.
+        let mode_value = bytes[snes_to_physical(RomMode::SlowLoRom, TYPE_ADDRESS)];
         let mode = RomMode::from_repr(mode_value)
             .expect(&format!("SnesMode {:02X} is invalid", mode_value));
 
@@ -65,24 +68,36 @@ impl SnesGame {
     }
 
     pub fn get_size(&self) -> RomSize {
-        let value = self.read(SIZE_ADDRESS);
+        let value = self.read(SIZE_ADDRESS + self.get_header_offset());
         return RomSize::from_repr(value).expect(&format!("SnesSize {:02X} is invalid", value));
     }
 
     pub fn set_game_title(&mut self, title: &str) {
         let values = title.as_bytes().into_iter().cloned().collect::<Vec<_>>();
 
-        self.write_all(TITLE_ADDRESS, &values);
+        self.write_all(TITLE_ADDRESS + self.get_header_offset(), &values);
     }
 
     pub fn get_game_title(&self) -> &str {
-        from_utf8(self.read_all(TITLE_ADDRESS, 21)).expect("SNES game should have title")
+        from_utf8(self.read_all(TITLE_ADDRESS + self.get_header_offset(), 21)).expect("Error reading title")
+    }
+
+    fn get_header_offset(&self) -> usize {
+        match self.mode {
+            RomMode::SlowLoRom => 0,
+            RomMode::SlowHiRom => HIROM_HEADER_OFFSET,
+            RomMode::Sa1Rom => HIROM_HEADER_OFFSET,
+            RomMode::FastLoRom => HIROM_HEADER_OFFSET,
+            RomMode::FastHiRom => HIROM_HEADER_OFFSET,
+            RomMode::Sdd1Rom => HIROM_HEADER_OFFSET,
+            RomMode::ExHiRom => EXHIROM_HEADER_OFFSET,
+        }
     }
 
     /// Sets the RomMode. Note, this only sets the flag and allows reading/writing using the
     /// pointer.
     pub fn set_mode(&mut self, mode: RomMode) {
-        self.buffer[0x7FD5] = mode as u8;
+        self.buffer[TYPE_ADDRESS] = mode as u8;
         self.mode = mode;
     }
 
@@ -93,8 +108,8 @@ impl SnesGame {
             log::info!("Resizing skipped {} <= {}", new_size, self.buffer.len());
         } else {
             log::info!("Resizing game {} >= {}", new_size, self.buffer.len());
-            self.buffer.resize(new_size, 0x0);
-            self.write(SIZE_ADDRESS, size as u8);
+            self.buffer.resize(new_size, 0xFF);
+            self.write(SIZE_ADDRESS + self.get_header_offset(), size as u8);
         }
     }
 
