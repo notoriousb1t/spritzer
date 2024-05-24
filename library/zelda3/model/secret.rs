@@ -13,7 +13,7 @@ pub(crate) struct PotSecret {
     /// True if the item is on the lower layer.
     pub(crate) z: bool,
     /// The item or object under the pot.
-    pub(crate) secret: Secret,
+    pub(crate) secret: Option<Secret>,
 }
 
 #[repr(u8)]

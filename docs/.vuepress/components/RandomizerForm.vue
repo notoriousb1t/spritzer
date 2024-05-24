@@ -81,6 +81,13 @@
         </div>
       </div>
 
+      <div class="randomizer-option-field" role="presentation">
+        <label>Pot Shuffle</label>
+        <div>
+          <a-switch v-model:checked="opts.pot_shuffle" />
+        </div>
+      </div>
+
       <div class="randomize-option-footer">
         <a-button type="primary" shape="round" size="large" @click="processZelda3()">Roll Game</a-button>
       </div>

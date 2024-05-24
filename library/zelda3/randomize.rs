@@ -6,7 +6,6 @@ use common::SnesGame;
 use log;
 
 use super::io::write_model;
-use super::model::Secret;
 use crate::zelda3::features::apply_features;
 use crate::zelda3::io::read_model;
 use crate::zelda3::model::Z3Model;
@@ -106,13 +105,14 @@ mod tests {
     #[test]
     #[ignore]
     fn randomization_causes_deltas() {
-        let original = get_file_as_byte_vec("./.testdata/p8.sfc");
+        let original = get_file_as_byte_vec("./testdata/p8.sfc");
         let options = Z3Options {
             seed: "kholdstare".to_owned(),
             overworld_balancing: Balancing::Balanced,
             overworld_enemy_shuffle: OverworldEnemyShuffle::Chaos,
             underworld_balancing: Balancing::Balanced,
             boss_shuffle: true,
+            pot_shuffle: true,
             underworld_enemy_shuffle: UnderworldEnemyShuffle::Full,
             ..Z3Options::default()
         };
@@ -126,7 +126,7 @@ mod tests {
     #[ignore]
     fn zero_deltas_for_exact_options() {
         // This is manual test that can be run on
-        let original = get_file_as_byte_vec("./.testdata/p8.sfc");
+        let original = get_file_as_byte_vec("./testdata/p8.sfc");
         let options = Z3Options {
             seed: "test".to_owned(),
             underworld_balancing: Balancing::Random,
@@ -173,6 +173,7 @@ mod tests {
             killable_thieves: true,
             mushroom_shuffle: true,
             shadow_bees: true,
+            pot_shuffle: true,
             ..Z3Options::default()
         })
     }
@@ -189,6 +190,7 @@ mod tests {
             killable_thieves: true,
             mushroom_shuffle: true,
             shadow_bees: true,
+            pot_shuffle: true,
             ..Z3Options::default()
         })
     }
@@ -258,7 +260,8 @@ mod tests {
         // Start with explicit list of tests.
         let mut seeds: Vec<String> = vec![
             "test".to_owned(),
-            "saofinsdofinsdofinsodifnsoidf".to_owned(),
+            "kholdstare".to_owned(),
+            "moldorm8".to_owned(),
         ];
         let mut rng = StdRng::seed_from_u64(0);
         for i in 0..100 {
@@ -277,7 +280,7 @@ mod tests {
     }
 
     fn get_test_model() -> Z3Model {
-        let bytes = get_file_as_byte_vec("./.testdata/p8.sfc");
+        let bytes = get_file_as_byte_vec("./testdata/p8.sfc");
         let game = create_game(&bytes);
         read_model(&game)
     }

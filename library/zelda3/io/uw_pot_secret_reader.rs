@@ -43,7 +43,7 @@ fn read_pot_secrets(game: &SnesGame, secrets_pointer: usize) -> Vec<PotSecret> {
             x,
             y,
             z,
-            secret,
+            secret: Some(secret),
         });
 
         cursor += RECORD_SIZE;

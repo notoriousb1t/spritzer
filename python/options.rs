@@ -22,6 +22,8 @@ pub struct OptionsPy {
     #[pyo3(get, set)]
     pub overworld_enemy_shuffle: String,
     #[pyo3(get, set)]
+    pub pot_shuffle: bool,
+    #[pyo3(get, set)]
     pub shadow_bees: bool,
     #[pyo3(get, set)]
     pub underworld_balancing: String,
@@ -40,6 +42,7 @@ impl OptionsPy {
             mushroom_shuffle: false,
             overworld_balancing: Balancing::Random.to_string(),
             overworld_enemy_shuffle: OverworldEnemyShuffle::Vanilla.to_string(),
+            pot_shuffle: false,
             shadow_bees: false,
             underworld_balancing: Balancing::Random.to_string(),
             underworld_enemy_shuffle: UnderworldEnemyShuffle::Vanilla.to_string(),
@@ -56,6 +59,7 @@ pub(crate) fn convert_to_options(value: &OptionsPy) -> Z3Options {
         overworld_balancing: Balancing::from_str(&value.overworld_balancing).unwrap(),
         overworld_enemy_shuffle: OverworldEnemyShuffle::from_str(&value.overworld_enemy_shuffle)
             .unwrap(),
+        pot_shuffle: value.pot_shuffle,
         shadow_bees: value.shadow_bees,
         underworld_balancing: Balancing::from_str(&value.underworld_balancing).unwrap(),
         underworld_enemy_shuffle: UnderworldEnemyShuffle::from_str(&value.underworld_enemy_shuffle)

@@ -84,6 +84,7 @@ fn write_file(file_path: &Path, data: &[u8]) {
 fn base_options(seed: String) -> Z3Options {
     Z3Options {
         boss_shuffle: false,
+        pot_shuffle: true,
         mushroom_shuffle: false,
         killable_thieves: false,
         overworld_balancing: Balancing::Random,
@@ -99,6 +100,7 @@ fn base_options(seed: String) -> Z3Options {
 fn easy_mode(seed: String) -> Z3Options {
     Z3Options {
         boss_shuffle: false,
+        pot_shuffle: true,
         mushroom_shuffle: false,
         killable_thieves: true,
         overworld_balancing: Balancing::Casual,
@@ -115,6 +117,7 @@ fn inverted_mode(seed: String) -> Z3Options {
     Z3Options {
         boss_shuffle: true,
         mushroom_shuffle: true,
+        pot_shuffle: true,
         killable_thieves: true,
         overworld_balancing: Balancing::Balanced,
         overworld_enemy_shuffle: OverworldEnemyShuffle::Inverted,
@@ -132,6 +135,7 @@ fn chaos_mode(seed: String) -> Z3Options {
         overworld_enemy_shuffle: OverworldEnemyShuffle::Chaos,
         underworld_balancing: Balancing::Random,
         boss_shuffle: false,
+        pot_shuffle: true,
         underworld_enemy_shuffle: UnderworldEnemyShuffle::Chaos,
         killable_thieves: true,
         mushroom_shuffle: true,
@@ -146,6 +150,7 @@ fn balanced_mode(seed: String) -> Z3Options {
         boss_shuffle: true,
         mushroom_shuffle: false,
         killable_thieves: true,
+        pot_shuffle: true,
         overworld_balancing: Balancing::Balanced,
         overworld_enemy_shuffle: OverworldEnemyShuffle::Full,
         underworld_balancing: Balancing::Balanced,
@@ -161,6 +166,7 @@ fn hard_mode(seed: String) -> Z3Options {
         boss_shuffle: true,
         mushroom_shuffle: true,
         killable_thieves: true,
+        pot_shuffle: true,
         overworld_balancing: Balancing::Hero,
         overworld_enemy_shuffle: OverworldEnemyShuffle::Insanity,
         underworld_balancing: Balancing::Hero,

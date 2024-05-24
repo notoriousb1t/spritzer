@@ -5,7 +5,7 @@ use std::vec;
 use assembly::zelda3::Symbol;
 use common::{int24_to_bytes, SnesGame};
 
-use crate::zelda3::model::{PotSecret, Secret, UWRoomId};
+use crate::zelda3::model::{PotSecret, UWRoomId};
 
 pub(super) fn write_uw_pot_secrets(
     game: &mut SnesGame,
@@ -14,7 +14,9 @@ pub(super) fn write_uw_pot_secrets(
     // It isn't great that this is hard coded in the function, but probably more
     // trouble to undo this.
     const BANK: u8 = 0x01;
-    game.mark(BANK, 0xDDE7, 0xE6B0);
+    // There is an underlying assumption that omitting pointers for rooms 128-13F is safe,
+    // it appears to be and that allows reclaiming some bytes that are effectively unused.
+    game.mark(BANK, 0xDDB9, 0xE6B0);
 
     let mut header_pointer_map: BTreeMap<Vec<u8>, usize> = BTreeMap::new();
     let mut pointers = vec![];
@@ -43,13 +45,17 @@ fn secrets_to_bytes(pot_secrets: &[PotSecret]) -> Vec<u8> {
     let mut bytes = vec![];
 
     for pot_secret in pot_secrets {
+        if pot_secret.secret.is_none() {
+            continue;
+        }
+
         let position = ((if pot_secret.z { 1 } else { 0 }) << 15)
             | ((pot_secret.y as usize & 0b111111) << 7)
             | ((pot_secret.x as usize & 0b111111) << 1);
         let position_bytes = int24_to_bytes(position);
         bytes.push(position_bytes[2]);
         bytes.push(position_bytes[1]);
-        bytes.push(pot_secret.secret as u8);
+        bytes.push(pot_secret.secret.unwrap() as u8);
     }
 
     bytes.push(0xFF);

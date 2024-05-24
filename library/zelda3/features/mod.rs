@@ -3,6 +3,7 @@ mod killable_thieves;
 mod moldorm_shuffle;
 mod mushroom_shuffle;
 mod ow_inversion;
+mod pot_secret_shuffle;
 mod shadow_bees;
 mod sprite_base;
 mod sprite_shuffle;
@@ -10,6 +11,8 @@ mod spriteset_shuffle;
 mod uw_overlord_shuffle;
 
 use log;
+use pot_secret_shuffle::add_pot_tricks;
+use pot_secret_shuffle::shuffle_pot_secrets;
 
 use self::dungeon::apply_boss_shuffle;
 use self::killable_thieves::apply_killable_thieves;
@@ -98,6 +101,7 @@ pub(crate) fn apply_features(model: &mut Z3Model, options: &Z3Options) {
         _ => {}
     }
 
+    // Apply sprite shuffle for underworld.
     match options.underworld_enemy_shuffle {
         UnderworldEnemyShuffle::Full => {
             shuffle_underworld_sprites(model);
@@ -113,6 +117,7 @@ pub(crate) fn apply_features(model: &mut Z3Model, options: &Z3Options) {
         _ => {}
     }
 
+    // Apply sprite shuffle for overworld.
     match options.overworld_enemy_shuffle {
         OverworldEnemyShuffle::Inverted => {
             shuffle_overworld_sprites(model);
@@ -127,5 +132,14 @@ pub(crate) fn apply_features(model: &mut Z3Model, options: &Z3Options) {
             shuffle_overworld_sprites(model);
         }
         _ => {}
+    }
+
+    if options.pot_shuffle {
+        shuffle_pot_secrets(model);
+
+        // If pot shuffling is happening, also add pot tricks.
+        if sprites_will_change {
+            add_pot_tricks(model);
+        }
     }
 }

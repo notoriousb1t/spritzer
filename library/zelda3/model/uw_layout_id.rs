@@ -1,6 +1,7 @@
 use strum_macros::FromRepr;
 
 // Defines a region of an underworld room.
+#[derive(PartialEq, Eq)]
 pub(crate) enum Quadrant {
     TopLeft = 0,
     TopRight = 1,
