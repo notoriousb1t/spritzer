@@ -23,11 +23,11 @@ fn main() {
 
     let options = chaos_mode("kholdstare".to_owned());
     let current_dir = std::env::current_dir().expect(&format!("Could not get current directory"));
-    let input_path = current_dir.join("./library/.testdata/p8.sfc");
+    let input_path = current_dir.join("./library/testdata/p8.sfc");
     let input_bytes = read_file(input_path.as_ref());
 
     let output_bytes = randomize_zelda3(&input_bytes, &options);
-    let output_path = current_dir.join("./library/.build/output.sfc");
+    let output_path = current_dir.join("./library/build/output.sfc");
 
     write_file(output_path.as_path(), &output_bytes);
 }
@@ -51,7 +51,7 @@ fn setup_logging() {
                 .set_time_level(LevelFilter::Off)
                 .set_location_level(LevelFilter::Off)
                 .build(),
-            File::create("./library/.build/output.sfc.log").unwrap(),
+            File::create("./library/build/output.sfc.log").unwrap(),
         ),
     ])
     .expect("Logger failed to setup");

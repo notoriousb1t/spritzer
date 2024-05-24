@@ -5,11 +5,11 @@ use std::vec;
 use assembly::zelda3::Symbol;
 use common::{int24_to_bytes, SnesGame};
 
-use crate::zelda3::model::{PotSecret, UWRoomId};
+use crate::zelda3::model::{PotSecret, Secret, UWRoomId};
 
 pub(super) fn write_uw_pot_secrets(
     game: &mut SnesGame,
-    spritelists: &BTreeMap<UWRoomId, Vec<PotSecret>>,
+    pot_secrets: &BTreeMap<UWRoomId, Vec<PotSecret>>,
 ) {
     // It isn't great that this is hard coded in the function, but probably more
     // trouble to undo this.
@@ -18,7 +18,7 @@ pub(super) fn write_uw_pot_secrets(
 
     let mut header_pointer_map: BTreeMap<Vec<u8>, usize> = BTreeMap::new();
     let mut pointers = vec![];
-    for secrets in spritelists.values() {
+    for secrets in pot_secrets.values() {
         let bytes = secrets_to_bytes(&secrets);
         let pointer = match header_pointer_map.entry(bytes.to_owned()) {
             Entry::Vacant(it) => {
@@ -47,8 +47,8 @@ fn secrets_to_bytes(pot_secrets: &[PotSecret]) -> Vec<u8> {
             | ((pot_secret.y as usize & 0b111111) << 7)
             | ((pot_secret.x as usize & 0b111111) << 1);
         let position_bytes = int24_to_bytes(position);
-        bytes.push(position_bytes[1]);
         bytes.push(position_bytes[2]);
+        bytes.push(position_bytes[1]);
         bytes.push(pot_secret.secret as u8);
     }
 

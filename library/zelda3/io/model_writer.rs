@@ -31,7 +31,7 @@ pub(crate) fn write_model(game: &mut SnesGame, model: &Z3Model) {
     write_ow_sprites_and_headers(game, &model.ow_rooms);
     write_uw_headers(game, &model.uw_headers);
     write_uw_spritelists(game, &model.uw_sprites);
-    // write_uw_pot_secrets(game, &model.uw_pot_secrets);
+    write_uw_pot_secrets(game, &model.uw_pot_secrets);
     write_uw_scenes(game, &model.uw_scenes);
     write_entrances(game, &model.uw_entrances);
 
