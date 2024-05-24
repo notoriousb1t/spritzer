@@ -7,8 +7,6 @@ use super::uw_room_id::UWRoomId;
 
 #[derive(Clone)]
 pub(crate) struct UnderworldRoomHeader {
-    /// The Underworld Room this block of data describes. DO NOT MODIFY.
-    pub id: UWRoomId,
     /// True if the lights are out for this Underworld Room.
     pub bg2_property: u8,
     /// The palette to load for the Underworld Room.

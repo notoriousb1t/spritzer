@@ -83,7 +83,6 @@ fn bytes_to_room_header(data: &[u8], id: UWRoomId) -> UnderworldRoomHeader {
     ));
 
     UnderworldRoomHeader {
-        id,
         bg2_property,
         palette_id,
         blockset_id,

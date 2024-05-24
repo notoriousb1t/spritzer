@@ -21,6 +21,7 @@ use super::UWRoomId;
 use super::UWScene;
 use super::UWSpriteList;
 use super::UnderworldRoomHeader;
+use super::PotSecret;
 use crate::zelda3::options::Balancing;
 
 #[derive(Clone)]
@@ -59,6 +60,8 @@ pub(crate) struct Z3Model {
     pub uw_entrances: BTreeMap<EntranceId, Entrance>,
     /// The general metadata about a room.
     pub uw_headers: BTreeMap<UWRoomId, UnderworldRoomHeader>,
+    /// The pot items contained in an underground room.
+    pub uw_pot_secrets: BTreeMap<UWRoomId, Vec<PotSecret>>,
     /// A list of remaining spritesets that can be mapped to underworld sprite sheets
     pub uw_spritesets_unused: Vec<SpritesetId>,
     /// The current set of rooms in caves, dungeons, etc. in the underworld
@@ -85,6 +88,7 @@ impl Z3Model {
             uw_balancing: Balancing::Random,
             uw_entrances: BTreeMap::default(),
             uw_headers: BTreeMap::default(),
+            uw_pot_secrets: BTreeMap::default(),
             uw_scenes: BTreeMap::default(),
             uw_sprites: BTreeMap::default(),
             uw_spritesets_unused: create_free_uw_spriteset_list(),

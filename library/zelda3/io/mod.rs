@@ -17,6 +17,8 @@ mod spriteset_reader;
 mod spriteset_writer;
 mod uw_header_reader;
 mod uw_header_writer;
+mod uw_pot_secret_reader;
+mod uw_pot_secret_writer;
 mod uw_scene_reader;
 mod uw_scene_writer;
 mod uw_spritelist_reader;

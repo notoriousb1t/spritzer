@@ -19,4 +19,5 @@ pub_DamageSubclass = $0DB8F1
 pub_SpriteSettings = $0DB080
 pub_LayoutPtrs = $1F8000
 pub_DoorPtrs = $1F83C0
+pub_PotSecretPtrs = $1E6C0
 SpritePrep_Boss = $068F23

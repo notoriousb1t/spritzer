@@ -1,4 +1,4 @@
-//! 40f393ab568b08510ca9d14c9608ba6642533a4f3d1200a8be19ae40af9ee651
+//! 59d712162aac402bb8ab50ee27c9a802dbdd945ec68c1cd92a80e44b2677a4da
 //! Generated from asm file. Remove top line to regenerate. 
 #![allow(dead_code, non_camel_case_types)]use strum_macros::{Display, EnumIter, FromRepr};
 
@@ -17,6 +17,7 @@ pub enum Symbol {
     OwSpecialGraphics = 0x2E575,
     OwSpecialPalette = 0x2E596,
     OwSpritePtrs = 0x9C881,
+    PotSecretPtrs = 0x1E6C0,
     RoomData_SpritePointers_Ref0 = 0x9C298,
     RoomSpritesEnd = 0x9EC9C,
     RoomSpritesStart = 0x9CB42,
