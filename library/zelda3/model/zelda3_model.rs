@@ -13,6 +13,7 @@ use super::Entrance;
 use super::EntranceId;
 use super::OWRoom;
 use super::OWRoomId;
+use super::OWSecrets;
 use super::SpriteId;
 use super::SpriteProperties;
 use super::Spriteset;
@@ -21,13 +22,14 @@ use super::UWRoomId;
 use super::UWScene;
 use super::UWSpriteList;
 use super::UnderworldRoomHeader;
-use super::PotSecret;
+use super::Secret;
 use crate::zelda3::options::Balancing;
 
 #[derive(Clone)]
 pub(crate) struct Z3Model {
     /// The seed hash.
     pub seed: u64,
+    pub ow_secrets: BTreeMap<OWRoomId, OWSecrets>,
     /// Used to manually override sections for debugging purpose. Do not use this to deliver
     /// features.
     pub debug_string: String,
@@ -61,7 +63,7 @@ pub(crate) struct Z3Model {
     /// The general metadata about a room.
     pub uw_headers: BTreeMap<UWRoomId, UnderworldRoomHeader>,
     /// The pot items contained in an underground room.
-    pub uw_pot_secrets: BTreeMap<UWRoomId, Vec<PotSecret>>,
+    pub uw_pot_secrets: BTreeMap<UWRoomId, Vec<Secret>>,
     /// A list of remaining spritesets that can be mapped to underworld sprite sheets
     pub uw_spritesets_unused: Vec<SpritesetId>,
     /// The current set of rooms in caves, dungeons, etc. in the underworld
@@ -79,6 +81,7 @@ impl Z3Model {
             damage_subclasses: [DamageSubclass::default(); 10],
             dungeons: BTreeMap::default(),
             ow_balancing: Balancing::Random,
+            ow_secrets: BTreeMap::default(),
             ow_rooms: BTreeMap::default(),
             ow_spritesets_unused: create_free_ow_spriteset_list(),
             patches: Vec::new(),

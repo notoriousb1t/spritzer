@@ -1,10 +1,11 @@
-//! 2d59051ec79b45c4d1e9d02b0a57d6aec416b78cf8f0156409c31b0e28ef681f
+//! 21181866ec744dafc82d4cc18e4f00009a9108b78fb2d87be7e36ab531284d35
 //! Generated from asm file. Remove top line to regenerate. 
 #![allow(dead_code, non_camel_case_types)]use strum_macros::{Display, EnumIter, FromRepr};
 
 #[repr(usize)]
 #[derive(Copy, Clone, Eq, PartialEq, Hash, Debug, Display, EnumIter, FromRepr)]
 pub enum Symbol {
+    BushSecretPtrs = 0x1BC8B9,
     DamageClass = 0x6F42D,
     DamageSubclass = 0xDB8F1,
     DoorPtrs = 0x1F83C0,

@@ -1,7 +1,7 @@
 use rand::prelude::SliceRandom;
 use strum::IntoEnumIterator;
 
-use crate::zelda3::model::{PotSecret, Quadrant, Secret, UWLayout, UWObjectId, UWRoomId, Z3Model};
+use crate::zelda3::model::{Secret, Quadrant, HiddenItem, UWLayout, UWObjectId, UWRoomId, Z3Model};
 
 pub(super) fn add_pot_tricks(_model: &mut Z3Model) {}
 
@@ -20,30 +20,30 @@ pub(super) fn shuffle_pot_secrets(model: &mut Z3Model) {
 
         // At most there are 4 areas possible in a room, so iterate over that number. This means
         // some of the loops are operating on empty collections. (which is fine)
-        let mut results: Vec<PotSecret> = vec![];
+        let mut results: Vec<Secret> = vec![];
         for group_number in 0..4usize {
             // Inside of the group, convert back to a pot secret and only operate on this group number.
-            let mut pot_group: Vec<PotSecret> = all_pots
+            let mut pot_group: Vec<Secret> = all_pots
                 .iter()
                 .filter(|pot| pot.group == group_number)
-                .map(|pot| PotSecret {
+                .map(|pot| Secret {
                     x: pot.x,
                     y: pot.y,
-                    z: pot.z,
-                    secret: pot.secret,
+                    is_lower_layer: pot.z,
+                    item: pot.secret,
                 })
                 .collect();
             // Create a copy of all secrets in the same order as the group.
-            let mut shuffled_secrets: Vec<Option<Secret>> =
-                pot_group.iter().map(|pot| pot.secret).collect();
+            let mut shuffled_secrets: Vec<Option<HiddenItem>> =
+                pot_group.iter().map(|pot| pot.item).collect();
             // Shuffle the secrets.
             shuffled_secrets.shuffle(&mut rng);
             // Reassign the secret to the pot which in most cases, creates an empty pot.
             for (i, secret) in shuffled_secrets.iter().enumerate() {
-                pot_group[i].secret = *secret;
+                pot_group[i].item = *secret;
             }
             // Add only the pots that have secrets to the results.
-            results.extend(pot_group.iter().filter(|it| it.secret.is_some()));
+            results.extend(pot_group.iter().filter(|it| it.item.is_some()));
         }
 
         if results.len() > secrets.len() {
@@ -59,7 +59,7 @@ pub(super) fn shuffle_pot_secrets(model: &mut Z3Model) {
     }
 }
 
-fn get_all_pots(layout: &UWLayout, secrets: &Vec<PotSecret>) -> Vec<Pot> {
+fn get_all_pots(layout: &UWLayout, secrets: &Vec<Secret>) -> Vec<Pot> {
     // Get the layout groups for this layout. This is used to group each pot secret
     // so they can be shuffled in groups unlikely to break logic.
     let layout_groups = layout.layout.quadrant_groups();
@@ -87,8 +87,8 @@ fn get_all_pots(layout: &UWLayout, secrets: &Vec<PotSecret>) -> Vec<Pot> {
                         .unwrap();
                     let secret = secrets
                         .iter()
-                        .filter(|it| it.secret.is_some() && obj.x == it.x && obj.y == it.y)
-                        .map(|it| it.secret.unwrap())
+                        .filter(|it| it.item.is_some() && obj.x == it.x && obj.y == it.y)
+                        .map(|it| it.item.unwrap())
                         .next();
                     Pot {
                         x: obj.x,
@@ -107,6 +107,6 @@ struct Pot {
     x: u8,
     y: u8,
     z: bool,
-    secret: Option<Secret>,
+    secret: Option<HiddenItem>,
     group: usize,
 }

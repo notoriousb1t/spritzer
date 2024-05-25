@@ -12,7 +12,7 @@ use crate::zelda3::io::uw_scene_writer::write_uw_scenes;
 use crate::zelda3::io::uw_spritelist_writer::write_uw_spritelists;
 use crate::zelda3::model::Z3Model;
 
-use super::uw_pot_secret_writer::write_uw_pot_secrets;
+use super::secret_writer::{write_bush_secrets, write_pot_secrets};
 
 pub(crate) fn write_model(game: &mut SnesGame, model: &Z3Model) {
     // Clear all known freespace and fill with 0s.
@@ -31,7 +31,8 @@ pub(crate) fn write_model(game: &mut SnesGame, model: &Z3Model) {
     write_ow_sprites_and_headers(game, &model.ow_rooms);
     write_uw_headers(game, &model.uw_headers);
     write_uw_spritelists(game, &model.uw_sprites);
-    write_uw_pot_secrets(game, &model.uw_pot_secrets);
+    write_pot_secrets(game, &model.uw_pot_secrets);
+    write_bush_secrets(game, &model.ow_secrets);
     write_uw_scenes(game, &model.uw_scenes);
     write_entrances(game, &model.uw_entrances);
 

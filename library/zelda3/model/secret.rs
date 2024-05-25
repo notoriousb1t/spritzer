@@ -1,24 +1,26 @@
 use strum_macros::FromRepr;
 
-
+#[derive(Clone)]
+pub(crate) struct OWSecrets {
+    pub(crate) light_world: Vec<Secret>,
+    pub(crate) dark_world: Vec<Secret>,
+}
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
-pub(crate) struct PotSecret {
-    /// The x coordinate of the Pot. This must line up with a pot in the
-    /// scene/layout
+pub(crate) struct Secret {
+    /// The x coordinate of the Secret. This must line up with layout objects.
     pub(crate) x: u8,
-    /// The y coordinate of the Pot. This must line up with a pot in the
-    /// scene/layout
+    /// The y coordinate of the Secret. This must line up with layout objects.
     pub(crate) y: u8,
-    /// True if the item is on the lower layer.
-    pub(crate) z: bool,
+    /// True if the item is on the lower layer. This is only true in dungeons.
+    pub(crate) is_lower_layer: bool,
     /// The item or object under the pot.
-    pub(crate) secret: Option<Secret>,
+    pub(crate) item: Option<HiddenItem>,
 }
 
 #[repr(u8)]
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, FromRepr)]
-pub(crate) enum Secret {
+pub(crate) enum HiddenItem {
     X01GreenRupee = 0x01,
     X02RockCrab = 0x02,
     X03Bee = 0x03,

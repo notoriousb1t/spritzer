@@ -10,7 +10,7 @@ use super::spriteset_reader::read_spritesets;
 use super::uw_header_reader::read_uw_headers;
 use super::uw_scene_reader::read_uw_scenes;
 use super::uw_spritelist_reader::read_uw_spritelists;
-use super::uw_pot_secret_reader::read_uw_pot_secrets;
+use super::secret_reader::{read_bush_secrets, read_pot_secrets};
 use crate::zelda3::model::Z3Model;
 
 pub(crate) fn read_model(game: &SnesGame) -> Z3Model {
@@ -28,6 +28,7 @@ pub(crate) fn read_model(game: &SnesGame) -> Z3Model {
     model.uw_headers = read_uw_headers(game);
     model.uw_sprites = read_uw_spritelists(game);
     model.uw_entrances = read_entrances(game);
-    model.uw_pot_secrets = read_uw_pot_secrets(game);
+    model.ow_secrets = read_bush_secrets(game);
+    model.uw_pot_secrets = read_pot_secrets(game);
     model
 }
