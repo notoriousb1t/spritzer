@@ -25,7 +25,7 @@ pub(crate) fn apply_moldorm_eye_shuffle(model: &mut Z3Model) {
     // There is always at least one eye since the loop is a 0 based decrementing loop.
     model
         .patches
-        .push(Patch::of(Symbol::Moldorm_EyeCount.into(), eye_count - 1));
+        .push(Patch::of(Symbol::MoldormEyeCount.into(), eye_count - 1));
 }
 
 fn check_for_debug_string(seed: &str) -> Option<u8> {

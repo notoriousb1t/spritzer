@@ -1,8 +1,7 @@
-; Based on Enemizer code.
-
-Moldorm_AddEyes: {
+; Draws each eye.
+Moldorm_AddEyes:
 	PHX
-	LDX.b pub_Moldorm_EyeCount
+	LDX.b pub_MoldormEyeCount
 	TAX
 
 	; Draw eyes in a circle. Decrement from number of eyes - 1.
@@ -20,6 +19,5 @@ Moldorm_AddEyes: {
 		DEX
 		BPL .next_eye
 	
-	PLX
-	RTL
-}
+		PLX
+		RTL

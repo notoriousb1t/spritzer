@@ -28,6 +28,10 @@ pub(super) fn write_ow_sprites_and_headers(
 
 fn write_headers(game: &mut SnesGame, rooms: &[&OWRoom]) {
     for room in rooms.iter() {
+        if room.id == OWRoomId::x40_MASTER_SWORD_UNDER_BRIDGE {
+            continue;
+        }
+
         for state in room.states() {
             for overworld_id in get_affected_state_ids(room, state.overworld_id) {
                 game.write(

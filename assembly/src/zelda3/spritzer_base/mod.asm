@@ -7,15 +7,14 @@ incsrc ../ram.asm
 incsrc ../rom.asm
 
 ; Hooks (should be limited to direct replacements or labeling addresses)
-incsrc overworld_fixes.asm
-incsrc ancilla_hooks.asm
-incsrc blind_hooks.asm
-incsrc killable_hooks.asm
+incsrc hooks.asm
 incsrc goriya_hooks.asm
-incsrc moldorm_hooks.asm
+incsrc fixes.asm
 
-; Code goes in bank $36. This avoids conflicts with Enemizer and Archipelago/z3randomizer code.
+; New Code goes in bank $36. This avoids conflicts with Archipelago and ALTTPR.
 org $B68000
+incsrc settings.asm
+incsrc boss.asm
 incsrc blind.asm
 incsrc killable.asm
 incsrc goriya.asm

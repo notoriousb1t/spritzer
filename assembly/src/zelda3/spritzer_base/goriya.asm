@@ -6,7 +6,7 @@
 ; the best way to do variants for other types of enemies/creatures. The biggest barrier to
 ; to doing this currently is that each variant would need a separate enum and would have to 
 ; be changed to not use repru8 directly in rust code.
-
+SpritePrep_LoadProperties = $0DB818
 
 SpritePrep_EyegoreOrGoriya:
     ; Load sprite at x index and perform special loading if it is a a goriya code.

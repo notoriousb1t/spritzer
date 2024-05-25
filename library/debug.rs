@@ -21,7 +21,7 @@ use spritzer::zelda3::Z3Options;
 fn main() {
     setup_logging();
 
-    let options = chaos_mode("kholdstare".to_owned());
+    let options = chaos_mode("moldorm1".to_owned());
     let current_dir = std::env::current_dir().expect(&format!("Could not get current directory"));
     let input_path = current_dir.join("./library/testdata/p8.sfc");
     let input_bytes = read_file(input_path.as_ref());
@@ -134,7 +134,7 @@ fn chaos_mode(seed: String) -> Z3Options {
         overworld_balancing: Balancing::Random,
         overworld_enemy_shuffle: OverworldEnemyShuffle::Chaos,
         underworld_balancing: Balancing::Random,
-        boss_shuffle: false,
+        boss_shuffle: true,
         pot_shuffle: true,
         underworld_enemy_shuffle: UnderworldEnemyShuffle::Chaos,
         killable_thieves: true,

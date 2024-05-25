@@ -12,7 +12,7 @@ pub(super) fn write_uw_pot_secrets(
     pot_secrets: &BTreeMap<UWRoomId, Vec<PotSecret>>,
 ) {
     // It isn't great that this is hard coded in the function, but probably more
-    // trouble to undo this.
+    // trouble not to hardcode it.
     const BANK: u8 = 0x01;
     // There is an underlying assumption that omitting pointers for rooms 128-13F is safe,
     // it appears to be and that allows reclaiming some bytes that are effectively unused.

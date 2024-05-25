@@ -25,6 +25,10 @@ pub(crate) fn shuffle_overworld_sprites(model: &mut Z3Model) {
     let mut rng = model.create_rng();
 
     for room_id in OWRoomId::iter() {
+        if room_id == OWRoomId::x40_MASTER_SWORD_UNDER_BRIDGE {
+            continue;
+        }
+
         // Recalculate sprites for all versions of the room and get a list of the sprites for each
         // room state and the state id.
         let room = model.ow_rooms.get(&room_id).unwrap();

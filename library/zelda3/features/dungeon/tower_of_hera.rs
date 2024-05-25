@@ -24,8 +24,8 @@ pub(crate) fn relayout_hera_boss(model: &mut Z3Model) {
 
     // Invalidate hera tower check when the layout is changed to 2x2.
     model.patches.push(Patch::of(
-        Symbol::AncillaAdd_FallingPrize_hera_room_id.into(),
-        0xFE,
+        Symbol::IsHeraPrizeCentered.into(),
+        0,
     ));
 
     // Borrow the fairy room for the stairs so we can borrow the warp.

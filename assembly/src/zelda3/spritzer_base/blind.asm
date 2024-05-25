@@ -1,3 +1,6 @@
+SpritePrep_Blind_PrepareBattle = $1DA081
+SpritePrep_Blind_Maidenless = $1DA090
+
 SpritePrep_Blind_CheckMaidenless:
     LDA !ROOM_ID
     CMP.b #$AC

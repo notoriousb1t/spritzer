@@ -2,7 +2,6 @@
 ; Originally sourced from Enemizer, but with a lot of changes. This converts all goriyas to red goriyas
 ; except for mimic cave which must be completable without requiring bow.
 ; Additionally, all goriyas shoot fireballs now and are identified by $B8.
-SpritePrep_LoadProperties = $0DB818
 
 ; Replace SpritePrep_Eyegore JSL call.
 org $0691B6
@@ -47,23 +46,23 @@ db $14, $07, !SPRITE_RED_EYEGORE
 org $09DB1C
 db $1C, $03, !SPRITE_GREEN_EYEGORE
 org $09DB1F
-db $1C, $0C, !SPRITE_RED_EYEGORE
+db $1C, $0C, !SPRITE_GREEN_EYEGORE
 
 ; Replace Eyegore Sprites in Room 0x4B (POD) with Goriya.
 org $09DEEB
-db $04, $07, !SPRITE_RED_EYEGORE
+db $04, $07, !SPRITE_GREEN_EYEGORE
 org $09DEF4
-db $08, $04, !SPRITE_GREEN_EYEGORE
+db $08, $04, !SPRITE_RED_EYEGORE
 org $09DEF7
-db $08, $0B, !SPRITE_RED_EYEGORE
+db $08, $0B, !SPRITE_GREEN_EYEGORE
 
 ; Replace Eyegore Sprites in Room 0x6B (GT) with Goriya.
 org $09E199
 db $06, $0A, !SPRITE_RED_EYEGORE
 org $09E19C
-db $09, $06, !SPRITE_RED_EYEGORE
+db $09, $06, !SPRITE_GORIYA
 org $09E1A5
-db $18, $03, !SPRITE_RED_EYEGORE
+db $18, $03, !SPRITE_GORIYA
 org $09E1AE
 db $1B, $0C, !SPRITE_GORIYA
 org $09E1B1
