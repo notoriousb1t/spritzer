@@ -1,6 +1,5 @@
 use std::collections::BTreeMap;
 
-use assembly::zelda3::Symbol;
 use common::SnesGame;
 
 use super::entrance_utils::BLOCKSET_SIZE;
@@ -23,15 +22,16 @@ use super::entrance_utils::X_COORDINATE_SIZE;
 use super::entrance_utils::Y_COORDINATE_SIZE;
 use crate::zelda3::model::Entrance;
 use crate::zelda3::model::EntranceId;
+use crate::zelda3::options::Addresses;
 
-pub(super) fn write_entrances(game: &mut SnesGame, entrances: &BTreeMap<EntranceId, Entrance>) {
+pub(super) fn write_entrances(game: &mut SnesGame, addresses: &Addresses, entrances: &BTreeMap<EntranceId, Entrance>) {
     for entrance in entrances.values() {
-        write_entrance(game, entrance);
+        write_entrance(game, addresses, entrance);
     }
 }
 
-fn write_entrance(game: &mut SnesGame, entrance: &Entrance) {
-    let mut cursor = Symbol::Entrances as usize;
+fn write_entrance(game: &mut SnesGame, addresses: &Addresses, entrance: &Entrance) {
+    let mut cursor = addresses.entrances;
     let offset = entrance.id as usize;
 
     game.write_int16(cursor + (offset * ROOM_SIZE), entrance.room_id as u16);

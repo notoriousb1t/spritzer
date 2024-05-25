@@ -108,3 +108,9 @@ pub(crate) enum SpritesheetId {
     x64_FollowerZelda = 100,
     x65_FollowerOldManMaiden = 101,
 }
+
+impl Into<u8> for SpritesheetId {
+    fn into(self) -> u8 {
+        self as u8
+    }
+}

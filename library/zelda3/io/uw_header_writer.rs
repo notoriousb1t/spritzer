@@ -1,16 +1,17 @@
 use std::collections::btree_map::Entry;
 use std::collections::BTreeMap;
 
-use assembly::zelda3::Symbol;
 use common::SnesGame;
 
 use crate::zelda3::model::UWRoomId;
 use crate::zelda3::model::UnderworldRoomHeader;
+use crate::zelda3::Addresses;
 
 const MOVED_HEADER_BANK: u8 = 0x2A;
 
 pub(super) fn write_uw_headers(
-    game: &mut SnesGame,
+    game: &mut SnesGame, 
+    addresses: &Addresses,
     headers: &BTreeMap<UWRoomId, UnderworldRoomHeader>,
 ) {
     // Write the data first and try to collapse header with complete overlaps
@@ -44,8 +45,8 @@ pub(super) fn write_uw_headers(
         .expect("Could not find freespace to write Underworld Header Table");
 
     // Update the 2 references to the UW header pointer table.
-    game.write(Symbol::UWHeaderBank.into(), MOVED_HEADER_BANK);
-    game.write_pointer(Symbol::UWHeaderRef0.into(), room_header_table_pointer);
+    game.write(addresses.uwheader_bank, MOVED_HEADER_BANK);
+    game.write_pointer(addresses.uwheader_ref0, room_header_table_pointer);
 
     // Write the pointers table.
     for (i, pointer) in pointers.iter().enumerate() {

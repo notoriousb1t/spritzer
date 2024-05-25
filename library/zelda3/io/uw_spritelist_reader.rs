@@ -1,6 +1,5 @@
 use std::collections::BTreeMap;
 
-use assembly::zelda3::Symbol;
 use common::SnesGame;
 use strum::IntoEnumIterator;
 
@@ -8,23 +7,24 @@ use crate::zelda3::model::Sprite;
 use crate::zelda3::model::SpriteId;
 use crate::zelda3::model::UWRoomId;
 use crate::zelda3::model::UWSpriteList;
+use crate::zelda3::Addresses;
 
 const STOP_MARKER: u8 = 0xFF;
 const _OVERLORD_OFFSET: u16 = 0x100;
 const SMALL_KEY_MARKER: u8 = 0xFE;
 const BIG_KEY_MARKER: u8 = 0xFD;
 
-pub(super) fn read_uw_spritelists(game: &SnesGame) -> BTreeMap<UWRoomId, UWSpriteList> {
+pub(super) fn read_uw_spritelists(game: &SnesGame, addresses: &Addresses) -> BTreeMap<UWRoomId, UWSpriteList> {
     let mut values: Vec<(UWRoomId, UWSpriteList)> = vec![];
     for id in UWRoomId::iter() {
-        values.push((id, _read_room(game, id)));
+        values.push((id, _read_room(game, addresses, id)));
     }
     BTreeMap::from_iter(values)
 }
 
-fn _read_room(game: &SnesGame, room_id: UWRoomId) -> UWSpriteList {
+fn _read_room(game: &SnesGame, addresses: &Addresses, room_id: UWRoomId) -> UWSpriteList {
     let base_address =
-        game.read_pointer_int16(Symbol::UwSpritePtrs as usize + (room_id as usize * 2));
+        game.read_pointer_int16(addresses.uwsprite_ptrs + (room_id as usize * 2));
     let sorted = game.read(base_address) > 0;
     let sprites = _read_sprites(game, base_address);
 

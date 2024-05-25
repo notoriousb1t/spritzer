@@ -14,41 +14,42 @@ use crate::zelda3::model::OWStateId;
 use crate::zelda3::model::Sprite;
 use crate::zelda3::model::SpriteId;
 use crate::zelda3::model::SpritesetId;
+use crate::zelda3::options::Addresses;
 
 const STOP_MARKER: u8 = 0xFF;
 
 /// Returns OW Sprite List for each OW Room.
-pub(super) fn read_ow_sprites_and_headers(game: &SnesGame) -> BTreeMap<OWRoomId, OWRoom> {
+pub(super) fn read_ow_sprites_and_headers(game: &SnesGame, addresses: &Addresses) -> BTreeMap<OWRoomId, OWRoom> {
     let mut values: Vec<(OWRoomId, OWRoom)> = vec![];
     for id in OWRoomId::iter() {
-        values.push((id, read_room(game, id)));
+        values.push((id, read_room(game, addresses, id)));
     }
     BTreeMap::from_iter(values)
 }
 
-fn read_room(game: &SnesGame, id: OWRoomId) -> OWRoom {
+fn read_room(game: &SnesGame, addresses: &Addresses, id: OWRoomId) -> OWRoom {
     let lw_v0: Option<OWRoomState> = match id {
-        OWRoomId::x1B_HYRULE_CASTLE => Some(read_room_state(game, id, OWStateId::LIGHT_WORLD_V0)),
+        OWRoomId::x1B_HYRULE_CASTLE => Some(read_room_state(game, addresses, id, OWStateId::LIGHT_WORLD_V0)),
         OWRoomId::x2B_FOREST_BETWEEN_HAUNTED_GROVE_AND_LINKS_HOUSE => {
-            Some(read_room_state(game, id, OWStateId::LIGHT_WORLD_V0))
+            Some(read_room_state(game, addresses, id, OWStateId::LIGHT_WORLD_V0))
         }
-        OWRoomId::x2C_LINKS_HOUSE => Some(read_room_state(game, id, OWStateId::LIGHT_WORLD_V0)),
+        OWRoomId::x2C_LINKS_HOUSE => Some(read_room_state(game, addresses, id, OWStateId::LIGHT_WORLD_V0)),
         _ => None,
     };
 
-    let lw_v1 = read_room_state(game, id, OWStateId::LIGHT_WORLD_V1);
+    let lw_v1 = read_room_state(game, addresses, id, OWStateId::LIGHT_WORLD_V1);
 
     let lw_post_aga = match id {
-        OWRoomId::x1B_HYRULE_CASTLE => Some(read_room_state(game, id, OWStateId::LIGHT_WORLD_V2)),
+        OWRoomId::x1B_HYRULE_CASTLE => Some(read_room_state(game, addresses, id, OWStateId::LIGHT_WORLD_V2)),
         OWRoomId::x2_LUMBER_JACK_HOUSE => {
-            Some(read_room_state(game, id, OWStateId::LIGHT_WORLD_V2))
+            Some(read_room_state(game, addresses, id, OWStateId::LIGHT_WORLD_V2))
         }
         _ => None,
     };
     let dw: Option<OWRoomState> = match id {
         OWRoomId::x40_MASTER_SWORD_UNDER_BRIDGE => None,
         OWRoomId::x41_ZORAS_DOMAIN => None,
-        _ => Some(read_room_state(game, id, OWStateId::DARK_WORLD_V1)),
+        _ => Some(read_room_state(game, addresses, id, OWStateId::DARK_WORLD_V1)),
     };
 
     OWRoom {
@@ -61,13 +62,13 @@ fn read_room(game: &SnesGame, id: OWRoomId) -> OWRoom {
 }
 
 // Reads an Area from the ROM and returns it as a data class.
-fn read_room_state(game: &SnesGame, id: OWRoomId, overworld_id: OWStateId) -> OWRoomState {
+fn read_room_state(game: &SnesGame, addresses: &Addresses, id: OWRoomId, overworld_id: OWStateId) -> OWRoomState {
     // Resolve the sprite graphics and sprite palette id.
-    let spriteset_id_value = game.read(get_sprite_graphics_address(id, overworld_id));
+    let spriteset_id_value = game.read(get_sprite_graphics_address(addresses, id, overworld_id));
     let spriteset_id = SpritesetId::from_repr(spriteset_id_value)
         .expect(&format!("Invalid Spriteset {}", spriteset_id_value));
-    let sprite_palette_id = game.read(get_palette_address(id, overworld_id));
-    let sprites = read_sprites(game, id, overworld_id);
+    let sprite_palette_id = game.read(get_palette_address(addresses, id, overworld_id));
+    let sprites = read_sprites(game, addresses, id, overworld_id);
 
     OWRoomState {
         overworld_id,
@@ -79,10 +80,11 @@ fn read_room_state(game: &SnesGame, id: OWRoomId, overworld_id: OWStateId) -> OW
 
 fn read_sprites(
     game: &SnesGame,
+    addresses: &Addresses,
     overworld_area_id: OWRoomId,
     overworld_id: OWStateId,
 ) -> Vec<Sprite> {
-    let sprite_address = get_sprite_pointer(overworld_area_id, overworld_id);
+    let sprite_address = get_sprite_pointer(addresses, overworld_area_id, overworld_id);
     // Find the base address of Overworld Sprites in this Overworld Area.
     let sprite_table_base_address = game.read_pointer_int16(sprite_address);
 

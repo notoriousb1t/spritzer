@@ -2,7 +2,6 @@ use std::collections::hash_map::Entry;
 use std::collections::BTreeMap;
 use std::collections::HashMap;
 
-use assembly::zelda3::Symbol;
 use common::SnesGame;
 
 use crate::zelda3::model::UWDoorList;
@@ -11,12 +10,13 @@ use crate::zelda3::model::UWLayoutId;
 use crate::zelda3::model::UWObject;
 use crate::zelda3::model::UWRoomId;
 use crate::zelda3::model::UWScene;
+use crate::zelda3::Addresses;
 
 const STOP_MARKER: u8 = 0xFF;
 const LAYER_MARKER: u8 = 0xFF;
 const END_MARKER: u8 = 0xF0;
 
-pub(super) fn write_uw_scenes(game: &mut SnesGame, scenes: &BTreeMap<UWRoomId, UWScene>) {
+pub(super) fn write_uw_scenes(game: &mut SnesGame, addresses: &Addresses, scenes: &BTreeMap<UWRoomId, UWScene>) {
     // Group room ids that have exact layouts, objects, and entrances.
     let mut map: HashMap<&UWScene, Vec<UWRoomId>> = HashMap::new();
     let mut scenes_tuples = scenes.iter().collect::<Vec<_>>();
@@ -59,11 +59,11 @@ pub(super) fn write_uw_scenes(game: &mut SnesGame, scenes: &BTreeMap<UWRoomId, U
 
             for id in ids.iter() {
                 game.write_pointer(
-                    Symbol::LayoutPtrs as usize + (*id as usize * 3),
+                    addresses.layout_ptrs + (*id as usize * 3),
                     layout_location,
                 );
                 game.write_pointer(
-                    Symbol::DoorPtrs as usize + (*id as usize * 3),
+                    addresses.door_ptrs + (*id as usize * 3),
                     entrance_location,
                 );
             }

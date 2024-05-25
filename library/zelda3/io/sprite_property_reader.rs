@@ -1,6 +1,5 @@
 use std::collections::BTreeMap;
 
-use assembly::zelda3::Symbol;
 use common::SnesGame;
 use strum::IntoEnumIterator;
 
@@ -8,16 +7,20 @@ use crate::zelda3::model::PaletteIndex;
 use crate::zelda3::model::SpriteId;
 use crate::zelda3::model::SpriteProperties;
 use crate::zelda3::model::X0_NO_DAMAGE;
+use crate::zelda3::Addresses;
 
-pub(crate) fn read_sprites(game: &SnesGame) -> BTreeMap<SpriteId, SpriteProperties> {
+pub(crate) fn read_sprites(
+    game: &SnesGame,
+    addresses: &Addresses,
+) -> BTreeMap<SpriteId, SpriteProperties> {
     let mut values: Vec<(SpriteId, SpriteProperties)> = vec![];
     for id in SpriteId::iter() {
-        values.push((id, _read_sprite(game, id)));
+        values.push((id, _read_sprite(game, addresses, id)));
     }
     BTreeMap::from_iter(values)
 }
 
-fn _read_sprite(game: &SnesGame, id: SpriteId) -> SpriteProperties {
+fn _read_sprite(game: &SnesGame, addresses: &Addresses, id: SpriteId) -> SpriteProperties {
     if id as usize >= 0xF3 {
         // Addresses above this value are overlords, this is not applicable.
         return SpriteProperties {
@@ -62,17 +65,17 @@ fn _read_sprite(game: &SnesGame, id: SpriteId) -> SpriteProperties {
             tile_hitbox: 0,
         };
     }
-    let settings_0_byte = game.read(Symbol::SpriteSettings as usize + id as usize);
+    let settings_0_byte = game.read(addresses.sprite_settings + id as usize);
     let display_allocation = settings_0_byte & 0b1_1111;
     let collisions_alt = (settings_0_byte & 0b10_0000) != 0;
     let master_sword_only = (settings_0_byte & 0b100_0000) != 0;
     let harmless = (settings_0_byte & 0b1000_0000) != 0;
 
     // Read from health points table. 0xFF is interpreted as None.
-    let hp = game.read(Symbol::SpriteSettings as usize + 0xF3 + id as usize);
+    let hp = game.read(addresses.sprite_settings + 0xF3 + id as usize);
 
     // The damage settings of a sprite
-    let settings_2_byte = game.read(Symbol::SpriteSettings as usize + (0xF3 * 2) + id as usize);
+    let settings_2_byte = game.read(addresses.sprite_settings + (0xF3 * 2) + id as usize);
     let subclass = settings_2_byte & 0b1111;
     let boss_prep_preserved = (settings_2_byte & 0b1_0000) != 0;
     let immune_to_powder = (settings_2_byte & 0b10_0000) != 0;
@@ -80,7 +83,7 @@ fn _read_sprite(game: &SnesGame, id: SpriteId) -> SpriteProperties {
     let ignore_recoil_collision = (settings_2_byte & 0b1000_0000) != 0;
 
     // Draw flags and imperviousness
-    let settings_3_byte = game.read(Symbol::SpriteSettings as usize + (0xF3 * 3) + id as usize);
+    let settings_3_byte = game.read(addresses.sprite_settings + (0xF3 * 3) + id as usize);
     let name_table = settings_3_byte & 0b1;
     let palette = PaletteIndex::from_repr((settings_3_byte & 0b1110) >> 1).unwrap();
     let draw_shadow: bool = (settings_3_byte & 0b1_0000) != 0;
@@ -89,14 +92,14 @@ fn _read_sprite(game: &SnesGame, id: SpriteId) -> SpriteProperties {
     let custom_death_animation: bool = (settings_3_byte & 0b1000_0000) != 0;
 
     // Collision, kill room, killed off screen, hitbox
-    let settings_4_byte = game.read(Symbol::SpriteSettings as usize + (0xF3 * 4) + id as usize);
+    let settings_4_byte = game.read(addresses.sprite_settings + (0xF3 * 4) + id as usize);
     let hitbox = settings_4_byte & 0b1_1111;
     let preserved_offscreen = (settings_4_byte & 0b10_0000) != 0;
     let statis = (settings_4_byte & 0b100_0000) != 0;
     let collision_on_single_layer = (settings_4_byte & 0b1000_0000) != 0;
 
     // Settings group 5
-    let settings_5_byte = game.read(Symbol::SpriteSettings as usize + (0xF3 * 5) + id as usize);
+    let settings_5_byte = game.read(addresses.sprite_settings + (0xF3 * 5) + id as usize);
     let allow_pits = (settings_5_byte & 0b1) != 0;
     let boss_death_animation = (settings_5_byte & 0b10) != 0;
     let slashable = (settings_5_byte & 0b0100) != 0;
@@ -104,7 +107,7 @@ fn _read_sprite(game: &SnesGame, id: SpriteId) -> SpriteProperties {
     let tile_hitbox = (settings_5_byte & 0b1111_0000) >> 4;
 
     // Settings group 6
-    let settings_6_byte = game.read(Symbol::SpriteSettings as usize + (0xF3 * 6) + id as usize);
+    let settings_6_byte = game.read(addresses.sprite_settings + (0xF3 * 6) + id as usize);
     let prize_pack = settings_6_byte & 0b1111;
     let boss_damage_sfx = (settings_6_byte & 0b1_0000) != 0;
     let blockable = (settings_6_byte & 0b10_0000) != 0;
@@ -112,7 +115,7 @@ fn _read_sprite(game: &SnesGame, id: SpriteId) -> SpriteProperties {
     let limit_moving_floor_pit_interaction = (settings_6_byte & 0b1000_0000) != 0;
 
     // Settings group 7
-    let settings_7_byte = game.read(Symbol::SpriteSettings as usize + (0xF3 * 7) + id as usize);
+    let settings_7_byte = game.read(addresses.sprite_settings + (0xF3 * 7) + id as usize);
     let stay_active_offscreen = (settings_7_byte & 0b1) != 0;
     let die_off_screen = (settings_7_byte & 0b10) != 0;
     let moveable_unused = (settings_7_byte & 0b100) != 0;

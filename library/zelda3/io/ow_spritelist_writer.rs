@@ -2,7 +2,6 @@ use std::collections::hash_map::Entry;
 use std::collections::BTreeMap;
 use std::collections::HashMap;
 
-use assembly::zelda3::Symbol;
 use common::SnesGame;
 
 use super::ow_spritelist_utils::get_palette_address;
@@ -12,21 +11,23 @@ use crate::zelda3::model::OWRoom;
 use crate::zelda3::model::OWRoomId;
 use crate::zelda3::model::OWStateId;
 use crate::zelda3::model::Sprite;
+use crate::zelda3::Addresses;
 
 const STOP_MARKER: u8 = 0xFF;
 
 pub(super) fn write_ow_sprites_and_headers(
     game: &mut SnesGame,
+    addresses: &Addresses,
     rooms: &BTreeMap<OWRoomId, OWRoom>,
 ) {
     let mut rooms = rooms.values().collect::<Vec<_>>();
     rooms.sort_by_key(|room| room.id);
 
-    write_headers(game, &rooms);
-    write_spritelists(game, &rooms);
+    write_headers(game,addresses, &rooms);
+    write_spritelists(game, addresses, &rooms);
 }
 
-fn write_headers(game: &mut SnesGame, rooms: &[&OWRoom]) {
+fn write_headers(game: &mut SnesGame, addresses: &Addresses, rooms: &[&OWRoom]) {
     for room in rooms.iter() {
         if room.id == OWRoomId::x40_MASTER_SWORD_UNDER_BRIDGE {
             continue;
@@ -35,11 +36,11 @@ fn write_headers(game: &mut SnesGame, rooms: &[&OWRoom]) {
         for state in room.states() {
             for overworld_id in get_affected_state_ids(room, state.overworld_id) {
                 game.write(
-                    get_sprite_graphics_address(room.id, overworld_id),
+                    get_sprite_graphics_address(addresses, room.id, overworld_id),
                     state.spriteset_id as u8,
                 );
                 game.write(
-                    get_palette_address(room.id, overworld_id),
+                    get_palette_address(addresses, room.id, overworld_id),
                     state.sprite_palette_id,
                 );
             }
@@ -47,7 +48,7 @@ fn write_headers(game: &mut SnesGame, rooms: &[&OWRoom]) {
     }
 }
 
-fn write_spritelists(game: &mut SnesGame, rooms: &[&OWRoom]) {
+fn write_spritelists(game: &mut SnesGame, addresses: &Addresses, rooms: &[&OWRoom]) {
     // Group room + state by sprites since identical sprite lists can be written as a single one
     // and pointed to by multiple states.
     let mut map: HashMap<Vec<Sprite>, Vec<(OWRoomId, OWStateId)>> = HashMap::default();
@@ -88,11 +89,11 @@ fn write_spritelists(game: &mut SnesGame, rooms: &[&OWRoom]) {
                 bytes.push(STOP_MARKER);
                 game.write_data(&[0x09], &bytes).unwrap()
             }
-            false => Symbol::OWRoomEmpty.into(),
+            false => addresses.owroom_empty,
         };
 
         for (room_id, ow_id) in update_list.iter() {
-            game.write_pointer_int16(get_sprite_pointer(*room_id, *ow_id), sprites_location);
+            game.write_pointer_int16(get_sprite_pointer(addresses, *room_id, *ow_id), sprites_location);
         }
     }
 }

@@ -2,13 +2,14 @@ use std::collections::btree_map::Entry;
 use std::collections::BTreeMap;
 use std::vec;
 
-use assembly::zelda3::Symbol;
 use common::{int24_to_bytes, SnesGame};
 
 use crate::zelda3::model::{OWRoomId, OWSecrets, Secret, UWRoomId};
+use crate::zelda3::Addresses;
 
 pub(super) fn write_pot_secrets(
-    game: &mut SnesGame,
+    game: &mut SnesGame, 
+    addresses: &Addresses,
     pot_secrets: &BTreeMap<UWRoomId, Vec<Secret>>,
 ) {
     // It isn't great that this is hard coded in the function, but probably more
@@ -34,7 +35,7 @@ pub(super) fn write_pot_secrets(
         pointers.push(pointer);
     }
 
-    let table_pointer = game.read_pointer_int24(Symbol::PotSecretPtrs.into());
+    let table_pointer = game.read_pointer_int24(addresses.pot_secret_ptrs);
     // Write the pointers table.
     for (i, pointer) in pointers.iter().enumerate() {
         game.write_pointer_int16(table_pointer + (i * 2), *pointer);
@@ -43,6 +44,7 @@ pub(super) fn write_pot_secrets(
 
 pub(super) fn write_bush_secrets(
     game: &mut SnesGame,
+    addresses: &Addresses,
     secrets_map: &BTreeMap<OWRoomId, OWSecrets>,
 ) {
     // Mark the area as writable.
@@ -72,7 +74,7 @@ pub(super) fn write_bush_secrets(
         }
     }
 
-    let table_pointer = game.read_pointer_int24(Symbol::BushSecretPtrs.into());
+    let table_pointer = game.read_pointer_int24(addresses.bush_secret_ptrs);
     // Write the pointers table.
     for (room_id, pointer) in lw_pointers.iter() {
         game.write_pointer_int16(table_pointer + (*room_id as usize * 2), *pointer);

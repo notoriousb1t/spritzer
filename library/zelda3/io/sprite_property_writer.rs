@@ -1,12 +1,16 @@
 use std::collections::BTreeMap;
 
-use assembly::zelda3::Symbol;
 use common::SnesGame;
 
 use crate::zelda3::model::SpriteId;
 use crate::zelda3::model::SpriteProperties;
+use crate::zelda3::Addresses;
 
-pub(super) fn write_sprites(game: &mut SnesGame, sprites: &BTreeMap<SpriteId, SpriteProperties>) {
+pub(super) fn write_sprites(
+    game: &mut SnesGame,
+    addresses: &Addresses,
+    sprites: &BTreeMap<SpriteId, SpriteProperties>,
+) {
     for (id, sprite) in sprites.iter() {
         if *id as usize >= 0xF3 {
             // Skip overlords, they aren't real Sprites.
@@ -14,7 +18,7 @@ pub(super) fn write_sprites(game: &mut SnesGame, sprites: &BTreeMap<SpriteId, Sp
         }
 
         game.write(
-            Symbol::SpriteSettings as usize + *id as usize,
+            addresses.sprite_settings + *id as usize,
             (sprite.display_allocation)
                 | (if sprite.collisions_alt { 0b10_0000 } else { 0 })
                 | (if sprite.master_sword_only {
@@ -24,12 +28,9 @@ pub(super) fn write_sprites(game: &mut SnesGame, sprites: &BTreeMap<SpriteId, Sp
                 })
                 | (if sprite.harmless { 0b1000_0000 } else { 0 }),
         );
+        game.write(addresses.sprite_settings + 0xF3 + *id as usize, sprite.hp);
         game.write(
-            Symbol::SpriteSettings as usize + 0xF3 + *id as usize,
-            sprite.hp,
-        );
-        game.write(
-            Symbol::SpriteSettings as usize + (0xF3 * 2) + *id as usize,
+            addresses.sprite_settings + (0xF3 * 2) + *id as usize,
             sprite.subclass
                 | (if sprite.boss_prep_preserved {
                     0b1_0000
@@ -49,7 +50,7 @@ pub(super) fn write_sprites(game: &mut SnesGame, sprites: &BTreeMap<SpriteId, Sp
                 }),
         );
         game.write(
-            Symbol::SpriteSettings as usize + (0xF3 * 3) + *id as usize,
+            addresses.sprite_settings + (0xF3 * 3) + *id as usize,
             (sprite.name_table)
                 | ((sprite.palette as u8) << 1)
                 | (if sprite.draw_shadow { 0b1_0000 } else { 0 })
@@ -62,7 +63,7 @@ pub(super) fn write_sprites(game: &mut SnesGame, sprites: &BTreeMap<SpriteId, Sp
                 }),
         );
         game.write(
-            Symbol::SpriteSettings as usize + (0xF3 * 4) + *id as usize,
+            addresses.sprite_settings + (0xF3 * 4) + *id as usize,
             (sprite.hitbox & 0b11111)
                 | (if sprite.preserved_offscreen {
                     0b10_0000
@@ -77,7 +78,7 @@ pub(super) fn write_sprites(game: &mut SnesGame, sprites: &BTreeMap<SpriteId, Sp
                 }),
         );
         game.write(
-            Symbol::SpriteSettings as usize + (0xF3 * 5) + *id as usize,
+            addresses.sprite_settings + (0xF3 * 5) + *id as usize,
             (if sprite.allow_pits { 0b1 } else { 0 })
                 | (if sprite.boss_death_animation { 0b10 } else { 0 })
                 | (if sprite.slashable { 0b100 } else { 0 })
@@ -85,7 +86,7 @@ pub(super) fn write_sprites(game: &mut SnesGame, sprites: &BTreeMap<SpriteId, Sp
                 | ((sprite.tile_hitbox & 0b1111) << 4),
         );
         game.write(
-            Symbol::SpriteSettings as usize + (0xF3 * 6) + *id as usize,
+            addresses.sprite_settings + (0xF3 * 6) + *id as usize,
             (sprite.prize_pack & 0b1111)
                 | (if sprite.boss_damage_sfx { 0b1_0000 } else { 0 })
                 | (if sprite.blockable { 0b10_0000 } else { 0 })
@@ -101,7 +102,7 @@ pub(super) fn write_sprites(game: &mut SnesGame, sprites: &BTreeMap<SpriteId, Sp
                 }),
         );
         game.write(
-            Symbol::SpriteSettings as usize + (0xF3 * 7) + *id as usize,
+            addresses.sprite_settings + (0xF3 * 7) + *id as usize,
             (if sprite.stay_active_offscreen { 0b1 } else { 0 })
                 | (if sprite.die_off_screen { 0b10 } else { 0 })
                 | (if sprite.moveable_unused { 0b100 } else { 0 })

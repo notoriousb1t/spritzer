@@ -1,13 +1,13 @@
 use std::collections::BTreeMap;
 
-use assembly::zelda3::Symbol;
 use common::SnesGame;
 use strum::IntoEnumIterator;
 
 use crate::zelda3::model::{HiddenItem, OWRoomId, OWSecrets, Secret, UWRoomId};
+use crate::zelda3::Addresses;
 
-pub(super) fn read_pot_secrets(game: &SnesGame) -> BTreeMap<UWRoomId, Vec<Secret>> {
-    let table_pointer = game.read_pointer_int24(Symbol::PotSecretPtrs.into());
+pub(super) fn read_pot_secrets(game: &SnesGame, addresses: &Addresses) -> BTreeMap<UWRoomId, Vec<Secret>> {
+    let table_pointer = game.read_pointer_int24(addresses.pot_secret_ptrs);
 
     let mut values: Vec<(UWRoomId, Vec<Secret>)> = vec![];
     for id in UWRoomId::iter() {
@@ -17,8 +17,8 @@ pub(super) fn read_pot_secrets(game: &SnesGame) -> BTreeMap<UWRoomId, Vec<Secret
     BTreeMap::from_iter(values)
 }
 
-pub(super) fn read_bush_secrets(game: &SnesGame) -> BTreeMap<OWRoomId, OWSecrets> {
-    let table_pointer = game.read_pointer_int24(Symbol::BushSecretPtrs.into());
+pub(super) fn read_bush_secrets(game: &SnesGame, addresses: &Addresses) -> BTreeMap<OWRoomId, OWSecrets> {
+    let table_pointer = game.read_pointer_int24(addresses.bush_secret_ptrs);
 
     let mut values: Vec<(OWRoomId, OWSecrets)> = vec![];
     for id in OWRoomId::iter() {

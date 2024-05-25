@@ -1,6 +1,5 @@
 use std::collections::BTreeMap;
 
-use assembly::zelda3::Symbol;
 use common::bytes_to_int24;
 use common::SnesGame;
 use strum::IntoEnumIterator;
@@ -12,10 +11,11 @@ use crate::zelda3::model::UWBlocksetId;
 use crate::zelda3::model::UWFloorId;
 use crate::zelda3::model::UWRoomId;
 use crate::zelda3::model::UnderworldRoomHeader;
+use crate::zelda3::Addresses;
 
-pub(super) fn read_uw_headers(game: &SnesGame) -> BTreeMap<UWRoomId, UnderworldRoomHeader> {
-    let header_16bit_ptr = game.read_all(Symbol::UWHeaderRef0.into(), 2);
-    let header_bank = game.read(Symbol::UWHeaderBank.into());
+pub(super) fn read_uw_headers(game: &SnesGame, addresses: &Addresses) -> BTreeMap<UWRoomId, UnderworldRoomHeader> {
+    let header_16bit_ptr = game.read_all(addresses.uwheader_ref0, 2);
+    let header_bank = game.read(addresses.uwheader_bank);
     let header_pointer = bytes_to_int24([header_bank, header_16bit_ptr[1], header_16bit_ptr[0]]);
 
     let mut values: Vec<(UWRoomId, UnderworldRoomHeader)> = vec![];

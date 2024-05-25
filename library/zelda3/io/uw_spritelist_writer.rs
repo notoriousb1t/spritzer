@@ -1,11 +1,11 @@
 use std::collections::BTreeMap;
 
-use assembly::zelda3::Symbol;
 use common::SnesGame;
 
 use crate::zelda3::model::SpriteId;
 use crate::zelda3::model::UWRoomId;
 use crate::zelda3::model::UWSpriteList;
+use crate::zelda3::Addresses;
 
 const STOP_MARKER: u8 = 0xFF;
 const _OVERLORD_OFFSET: u16 = 0x100;
@@ -15,19 +15,20 @@ const MOVED_BANK: u8 = 0x09;
 
 pub(super) fn write_uw_spritelists(
     game: &mut SnesGame,
+    addresses: &Addresses,
     spritelists: &BTreeMap<UWRoomId, UWSpriteList>,
 ) {
     // Move the room header references to point to the new location.
     game.write_pointer_int16(
-        Symbol::RoomData_SpritePointers_Ref0.into(),
-        Symbol::RoomSpritesEnd as usize - 0x300,
+        addresses.room_data_sprite_pointers_ref0,
+        addresses.room_sprites_end - 0x300,
     );
     for room in spritelists.values() {
-        _write_sprites(game, room);
+        _write_sprites(game, addresses, room);
     }
 }
 
-fn _write_sprites(game: &mut SnesGame, room: &UWSpriteList) {
+fn _write_sprites(game: &mut SnesGame, addresses: &Addresses, room: &UWSpriteList) {
     let mut buffer: Vec<u8> = vec![];
 
     // Rewrite new Dungeon Sprites.
@@ -83,13 +84,13 @@ fn _write_sprites(game: &mut SnesGame, room: &UWSpriteList) {
             buffer.push(STOP_MARKER);
             game.write_data(&[MOVED_BANK], &buffer).unwrap()
         }
-        false => Symbol::UWRoomEmpty.into(),
+        false => addresses.uwroom_empty,
     };
 
     // Write on top of where the sprites used to start. The room sprite pointers are moved in
     // front of all sprites so the overworld and underworld can share space.
     game.write_pointer_int16(
-        Symbol::RoomSpritesEnd as usize - 0x300 + (room.room_id as usize * 2),
+        addresses.room_sprites_end - 0x300 + (room.room_id as usize * 2),
         sprites_location,
     );
 }

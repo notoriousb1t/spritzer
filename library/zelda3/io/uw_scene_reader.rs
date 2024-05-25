@@ -1,6 +1,5 @@
 use std::collections::BTreeMap;
 
-use assembly::zelda3::Symbol;
 use common::SnesGame;
 use strum::IntoEnumIterator;
 
@@ -14,15 +13,16 @@ use crate::zelda3::model::UWLayoutId;
 use crate::zelda3::model::UWObject;
 use crate::zelda3::model::UWRoomId;
 use crate::zelda3::model::UWScene;
+use crate::zelda3::Addresses;
 
 const STOP_MARKER: u8 = 0xFF;
 const LAYER_MARKER: u8 = 0xFF;
 const END_MARKER: u8 = 0xF0;
 
-pub(super) fn read_uw_scenes(game: &SnesGame) -> BTreeMap<UWRoomId, UWScene> {
+pub(super) fn read_uw_scenes(game: &SnesGame, addresses: &Addresses) -> BTreeMap<UWRoomId, UWScene> {
     BTreeMap::from_iter(UWRoomId::iter().map(|id| {
-        let layout = read_layout(game, id);
-        let doors = read_doors(game, id);
+        let layout = read_layout(game, addresses, id);
+        let doors = read_doors(game, addresses, id);
         (id, UWScene { layout, doors })
     }))
 }
@@ -30,8 +30,8 @@ pub(super) fn read_uw_scenes(game: &SnesGame) -> BTreeMap<UWRoomId, UWScene> {
 /// Read an underworld layout
 /// Note: The same layout may be referenced by multiple rooms. Any change will cause a new
 /// record to be written instead of sharing the changes.
-fn read_layout(game: &SnesGame, id: UWRoomId) -> UWLayout {
-    let base_address = game.read_pointer_int24(Symbol::LayoutPtrs as usize + (id as usize * 3));
+fn read_layout(game: &SnesGame, addresses: &Addresses, id: UWRoomId) -> UWLayout {
+    let base_address = game.read_pointer_int24(addresses.layout_ptrs + (id as usize * 3));
     let mut index = base_address;
 
     let preamble_bytes = game.read_all(base_address, 2);
@@ -67,8 +67,8 @@ fn read_layout(game: &SnesGame, id: UWRoomId) -> UWLayout {
     }
 }
 
-fn read_doors(game: &SnesGame, id: UWRoomId) -> UWDoorList {
-    let door_address = game.read_pointer_int24(Symbol::DoorPtrs as usize + (id as usize * 3));
+fn read_doors(game: &SnesGame, addresses: &Addresses, id: UWRoomId) -> UWDoorList {
+    let door_address = game.read_pointer_int24(addresses.door_ptrs + (id as usize * 3));
     let mut index = door_address;
     let mut doors = vec![];
     loop {
@@ -145,7 +145,6 @@ fn bytes_to_object(bytes: &[u8]) -> UWObject {
 
 #[cfg(test)]
 mod tests {
-    use assembly::zelda3::Symbol;
     use common::RomMode;
     use common::RomSize;
     use common::SnesGame;
@@ -158,19 +157,22 @@ mod tests {
     use crate::zelda3::model::UWLayoutId;
     use crate::zelda3::model::UWObject;
     use crate::zelda3::model::UWRoomId;
+    use crate::zelda3::Addresses;
 
     #[test]
     fn read_empty() {
         let game = init_with_empty_doors();
-        let doors = read_doors(&game, UWRoomId::x00_GANON);
+        let addresses = Addresses::for_version(crate::zelda3::GameVersion::ZeldaJp);
+        let doors = read_doors(&game, &addresses, UWRoomId::x00_GANON);
         assert_eq!(doors.len(), 0);
     }
 
     #[test]
     fn read_door_list() {
         let game = init_with_sample_doors();
-        let room_without_doors = read_doors(&game, UWRoomId::x01_HYRULE_CASTLE_NORTH_CORRIDOR);
-        let room_with_doors = read_doors(&game, UWRoomId::x00_GANON);
+        let addresses = Addresses::for_version(crate::zelda3::GameVersion::ZeldaJp);
+        let room_without_doors = read_doors(&game, &addresses, UWRoomId::x01_HYRULE_CASTLE_NORTH_CORRIDOR);
+        let room_with_doors = read_doors(&game, &addresses, UWRoomId::x00_GANON);
 
         assert_eq!(room_without_doors.len(), 0);
         assert_eq!(room_with_doors.len(), 12);
@@ -178,7 +180,8 @@ mod tests {
 
     fn init_with_empty_doors() -> SnesGame {
         let mut game = SnesGame::new(RomMode::FastLoRom, RomSize::Size4mb);
-        let mut ptr_cursor = Symbol::DoorPtrs as usize;
+        let addresses = Addresses::for_version(crate::zelda3::GameVersion::ZeldaJp);
+        let mut ptr_cursor = addresses.door_ptrs;
         let mut subroutine_cursor = 0x1F_8780;
         for _ in UWRoomId::iter() {
             // Add pointers to the empty position for each room.
@@ -194,11 +197,12 @@ mod tests {
 
     fn init_with_sample_doors() -> SnesGame {
         let mut game = init_with_empty_doors();
+        let addresses = Addresses::for_version(crate::zelda3::GameVersion::ZeldaJp);
         let all_doors_bytes = get_sample_bytes();
         let cursor = 0x1F_8780;
         game.write_all(cursor, &all_doors_bytes);
         // Rewrite the door pointers for ganon.
-        game.write_pointer(Symbol::DoorPtrs as usize, cursor);
+        game.write_pointer(addresses.door_ptrs, cursor);
         game
     }
 

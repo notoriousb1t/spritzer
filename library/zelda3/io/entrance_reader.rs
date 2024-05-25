@@ -1,6 +1,5 @@
 use std::collections::BTreeMap;
 
-use assembly::zelda3::Symbol;
 use common::SnesGame;
 use strum::IntoEnumIterator;
 
@@ -27,13 +26,14 @@ use crate::zelda3::model::Entrance;
 use crate::zelda3::model::EntranceId;
 use crate::zelda3::model::UWBlocksetId;
 use crate::zelda3::model::UWRoomId;
+use crate::zelda3::options::Addresses;
 
-pub(super) fn read_entrances(game: &SnesGame) -> BTreeMap<EntranceId, Entrance> {
-    BTreeMap::from_iter(EntranceId::iter().map(|id: EntranceId| (id, read_entrance(game, id))))
+pub(super) fn read_entrances(game: &SnesGame, addresses: &Addresses) -> BTreeMap<EntranceId, Entrance> {
+    BTreeMap::from_iter(EntranceId::iter().map(|id: EntranceId| (id, read_entrance(game, addresses, id))))
 }
 
-fn read_entrance(game: &SnesGame, entrance_id: EntranceId) -> Entrance {
-    let mut cursor = Symbol::Entrances as usize;
+fn read_entrance(game: &SnesGame, addresses: &Addresses, entrance_id: EntranceId) -> Entrance {
+    let mut cursor = addresses.entrances;
     let offset = entrance_id as usize;
 
     let room_id = game.read_int16(cursor + (offset * ROOM_SIZE));
