@@ -12,9 +12,6 @@ This document is intended to capture maintainers notes about this sub project.
 
 ## Notes
 
-1. As noted, in [CONTRIBUTORS](../CONTRIBUTORS.md), the current Rust script only supports performing ASM 
-   development on Windows. A PR is welcome to add Linux support and documentation. 
-   Outside of ASM development, any environment can be used.
 1. The file `generate.rs` handles recompilation of game diffs. This is run as part of compilation of the assembly project and
    generates Rust code including the symbol locations and the diffs to apply. To regenerate, remove the hash at the top of the 
    generated rust file and save. If you are running Rust Analyzer, this should automatically happen if there are no Asar 

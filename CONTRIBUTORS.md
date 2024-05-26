@@ -28,13 +28,14 @@ The following describes how to run Spritzer locally
 
 ### Building `assembly` files
 
-> IMPORTANT: This is only necessary when modifying `.asm` files. The instructions are written for a Windows environent, but a Pull Request to add instructions for Linux/MacOS are welcome
+> IMPORTANT: This is only required when modifying `.asm` files
 
-1. Download a recent copy of `asar.exe` [ASAR](https://github.com/RPGHacker/asar) and place it in the ./assembly directory
-1. Remove the first line from the generated .rs file (i.e. spritzer_base.rs)
+1. Download a recent copy of `asar.exe` (Windows) or `asar` (Linux) [ASAR](https://github.com/RPGHacker/asar) and place it in the ./assembly directory
+1. For Linux, run `chmod +x asar` in the assembly directory
+1. Remove the first line from the generated .rs file (i.e. spritzer_base.rs) and save.
 1. Run `cargo build` to see the output of the operation.
 
-   Rust Analyzer will also rebuild the file automatically. If an error condition occurs, pause the Rust Analyzer Studio in Visual Studio Code and then run `cargo build`
+   Rust Analyzer will usually rebuild the file automatically. If an error condition occurs, pause the Rust Analyzer Studio in Visual Studio Code and then run `cargo build` from the assembly directory
 
 Please see [./assembly/README.md](./assembly/README.md) for additional maintainers notes.
 
