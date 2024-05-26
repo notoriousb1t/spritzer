@@ -1,7 +1,8 @@
 use std::fmt::Display;
 
-use assembly::zelda3::Symbol;
 use common::SnesGame;
+
+use super::Addresses;
 
 pub enum GameVersion {
     UNKNOWN = 0,
@@ -32,6 +33,7 @@ impl Display for GameVersion {
 }
 
 pub struct GameInfo {
+    pub(crate) addresses: Addresses,
     pub version: GameVersion,
     pub supported: bool,
 }
@@ -42,42 +44,51 @@ pub fn detect_game(buffer: &[u8]) -> GameInfo {
 
     if title.starts_with("ZELDANODENSETSU") {
         GameInfo {
+            addresses: Addresses::for_version(GameVersion::ZeldaJp),
             version: GameVersion::ZeldaJp,
             supported: true,
         }
     } else if title.starts_with("THE LEGEND OF ZELDA") {
         GameInfo {
+            addresses: Addresses::for_version(GameVersion::ZeldaUs),
             version: GameVersion::ZeldaUs,
             supported: false,
         }
     } else if title.starts_with("AP") {
-        let room_header_bank = game.read(Symbol::UWHeaderBank.into());
+        let addresses = Addresses::for_version(GameVersion::Archipelago);
+        let room_header_bank = game.read(addresses.uwheader_bank);
         if room_header_bank == 0x36 {
             return GameInfo {
+                addresses: Addresses::for_version(GameVersion::ArchipelagoEnemizer),
                 version: GameVersion::ArchipelagoEnemizer,
                 supported: false,
             };
         }
 
         GameInfo {
+            addresses: Addresses::for_version(GameVersion::Archipelago),
             version: GameVersion::Archipelago,
             supported: true,
         }
     } else if title.starts_with("VT") {
-        let room_header_bank = game.read(Symbol::UWHeaderBank.into());
+        let addresses = Addresses::for_version(GameVersion::Alttpr);
+        let room_header_bank = game.read(addresses.uwheader_bank);
         if room_header_bank == 0x36 {
             return GameInfo {
+                addresses: Addresses::for_version(GameVersion::AlttprEnemizer),
                 version: GameVersion::AlttprEnemizer,
                 supported: false,
             };
         }
 
         GameInfo {
+            addresses: Addresses::for_version(GameVersion::Alttpr),
             version: GameVersion::Alttpr,
             supported: true,
         }
     } else {
         GameInfo {
+            addresses: Addresses::for_version(GameVersion::UNKNOWN),
             version: GameVersion::UNKNOWN,
             supported: false,
         }

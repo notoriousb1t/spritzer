@@ -1,4 +1,4 @@
-use assembly::zelda3::Symbol;
+use assembly::zelda3::SettingAddress;
 
 use crate::zelda3::GameVersion;
 
@@ -31,28 +31,28 @@ pub(crate) struct Addresses {
 impl Addresses {
     pub(crate) fn for_version(version: GameVersion) -> Addresses {
         match version {
-            GameVersion::UNKNOWN => panic!("Unsupported version"),
+            GameVersion::UNKNOWN => get_jp_addresses(),
             GameVersion::ZeldaJp => get_jp_addresses(),
-            GameVersion::ZeldaUs => panic!("Unsupported version"),
+            GameVersion::ZeldaUs => get_jp_addresses(),
             GameVersion::Archipelago => get_jp_addresses(),
             GameVersion::Alttpr => get_jp_addresses(),
-            GameVersion::ArchipelagoEnemizer => panic!("Unsupported version"),
-            GameVersion::AlttprEnemizer => panic!("Unsupported version"),
+            GameVersion::ArchipelagoEnemizer => get_jp_addresses(),
+            GameVersion::AlttprEnemizer => get_jp_addresses(),
         }
     }
 }
 
 fn get_jp_addresses() -> Addresses {
     Addresses {
+        enable_killable_thief: SettingAddress::EnableKillableThief.into(),
+        is_hera_prize_centered: SettingAddress::IsHeraPrizeCentered.into(),
+        moldorm_eye_count: SettingAddress::MoldormEyeCount.into(),
         bush_secret_ptrs: 0x1BC8B9,
         damage_class: 0x06F42D,
         damage_subclass: 0x0DB8F1,
         door_ptrs: 0x1F83C0,
-        enable_killable_thief: Symbol::EnableKillableThief.into(),
         entrances: 0x02C577,
-        is_hera_prize_centered: Symbol::IsHeraPrizeCentered.into(),
         layout_ptrs: 0x1F8000,
-        moldorm_eye_count: Symbol::MoldormEyeCount.into(),
         owspecial_graphics: 0x02E575,
         owspecial_palette: 0x02E596,
         owsprite_ptrs: 0x09C881,

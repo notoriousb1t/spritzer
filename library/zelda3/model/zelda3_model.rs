@@ -5,6 +5,7 @@ use rand::rngs::StdRng;
 use rand::SeedableRng;
 
 use super::calculate_sprite_pool;
+use super::game_settings::GameSettings;
 use super::DamageClass;
 use super::DamageSubclass;
 use super::Dungeon;
@@ -70,6 +71,8 @@ pub(crate) struct Z3Model {
     pub uw_sprites: BTreeMap<UWRoomId, UWSpriteList>,
     /// The layouts and doors associated with an underworld room.
     pub uw_scenes: BTreeMap<UWRoomId, UWScene>,
+    /// In game settings applied to the binary.
+    pub game_settings: GameSettings,
 }
 
 impl Z3Model {
@@ -95,6 +98,7 @@ impl Z3Model {
             uw_scenes: BTreeMap::default(),
             uw_sprites: BTreeMap::default(),
             uw_spritesets_unused: create_free_uw_spriteset_list(),
+            game_settings: GameSettings::default(),
         }
     }
 

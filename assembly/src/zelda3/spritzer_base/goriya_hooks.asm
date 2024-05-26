@@ -1,7 +1,8 @@
 
-; Originally sourced from Enemizer, but with a lot of changes. This converts all goriyas to red goriyas
-; except for mimic cave which must be completable without requiring bow.
-; Additionally, all goriyas shoot fireballs now and are identified by $B8.
+; Originally sourced from Enemizer, but with a lot of changes. This converts all goriyas to blue goriyas
+; Blue goriyas shoot fireballs and are vulnerable to most items. This is simpler than special casing
+; Goriyas by room like they are in the vanilla game. Places where red goriyas were used as logical locks
+; are replaced by Red Eyegores.
 
 ; Replace SpritePrep_Eyegore JSL call.
 org $0691B6

@@ -1,5 +1,6 @@
 target/
 testdata/
+assembly/asar
 
 # Vue Press
 pkg/

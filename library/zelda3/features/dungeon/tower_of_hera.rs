@@ -1,6 +1,3 @@
-use assembly::zelda3::Symbol;
-use common::Patch;
-
 use crate::zelda3::model::UWLayoutId;
 use crate::zelda3::model::UWObject;
 use crate::zelda3::model::UWObjectId;
@@ -23,10 +20,7 @@ pub(crate) fn relayout_hera_boss(model: &mut Z3Model) {
     hera_scene.layout.layout = UWLayoutId::X0_FourCorners;
 
     // Invalidate hera tower check when the layout is changed to 2x2.
-    model.patches.push(Patch::of(
-        Symbol::IsHeraPrizeCentered.into(),
-        0,
-    ));
+    model.game_settings.is_hera_prize_centered = false;
 
     // Borrow the fairy room for the stairs so we can borrow the warp.
     let fairy_room = model

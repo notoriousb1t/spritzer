@@ -7,7 +7,6 @@ use log;
 
 use super::detect_game;
 use super::io::write_model;
-use super::Addresses;
 use crate::zelda3::features::apply_features;
 use crate::zelda3::io::read_model;
 use crate::zelda3::model::Z3Model;
@@ -16,8 +15,7 @@ use crate::zelda3::options::Z3Options;
 pub fn randomize_zelda3(bytes: &[u8], options: &Z3Options) -> Vec<u8> {
     let mut game: SnesGame = create_game(bytes);
     let game_info = detect_game(&game.buffer);
-    let addresses = Addresses::for_version(game_info.version);
-    let mut model: Z3Model = read_model(&game, &addresses);
+    let mut model: Z3Model = read_model(&game, &game_info.addresses);
 
     // Copy options onto the model.
     model.debug_string = options.seed.to_string();
@@ -26,7 +24,7 @@ pub fn randomize_zelda3(bytes: &[u8], options: &Z3Options) -> Vec<u8> {
     model.ow_balancing = options.overworld_balancing;
     
     apply_features(&mut model, options);
-    write_model(&mut game, &addresses, &model);
+    write_model(&mut game, &game_info.addresses, &model);
 
     game.write_crc();
     game.buffer
@@ -106,7 +104,6 @@ mod tests {
     use crate::zelda3::options::Z3Options;
     use crate::zelda3::randomize::create_game;
     use crate::zelda3::randomize_zelda3;
-    use crate::zelda3::Addresses;
 
     #[test]
     #[ignore]
@@ -289,8 +286,7 @@ mod tests {
         let bytes = get_file_as_byte_vec("./testdata/p8.sfc");
         let game = create_game(&bytes);
         let game_info = detect_game(&bytes);
-        let addresses = Addresses::for_version(game_info.version);
-        read_model(&game, &addresses)
+        read_model(&game, &game_info.addresses)
     }
 
     fn assert_sprite_configuration_is_valid(

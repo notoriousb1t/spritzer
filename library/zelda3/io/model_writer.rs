@@ -13,7 +13,7 @@ use crate::zelda3::io::uw_spritelist_writer::write_uw_spritelists;
 use crate::zelda3::model::Z3Model;
 use crate::zelda3::options::Addresses;
 
-use super::secret_writer::{write_bush_secrets, write_pot_secrets};
+use super::{game_settings_writer::write_game_settings, secret_writer::{write_bush_secrets, write_pot_secrets}};
 
 pub(crate) fn write_model(game: &mut SnesGame, addresses: &Addresses, model: &Z3Model) {
     // Clear all known freespace and fill with 0s.
@@ -24,6 +24,7 @@ pub(crate) fn write_model(game: &mut SnesGame, addresses: &Addresses, model: &Z3
 
     // Note: each of these types as a corresponding writer suffixed module
     // that implements write_objects() for the inferred type.
+    write_game_settings(game, addresses, &model.game_settings);
     write_damage_subclasses(game, addresses, &model.damage_subclasses);
     write_damage_classes(game, addresses, &model.damage_classes);
     write_sprites(game, addresses, &model.sprite_settings);

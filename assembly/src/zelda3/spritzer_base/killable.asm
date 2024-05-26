@@ -11,7 +11,7 @@ Killable:
     JMP Killable_return
 
 Killable_Thief:
-    LDA.b pub_EnableKillableThief
+    LDA.b setting_EnableKillableThief
     CMP.b #$01
     BEQ Killable_EyeGore_Green
     JMP Killable_return

@@ -1,39 +1,17 @@
-//! 21181866ec744dafc82d4cc18e4f00009a9108b78fb2d87be7e36ab531284d35
+//! 4f6e5918cf5f0345125ce907f737dff576b3ff58babed3e27528182aec3e11db
 //! Generated from asm file. Remove top line to regenerate. 
 #![allow(dead_code, non_camel_case_types)]use strum_macros::{Display, EnumIter, FromRepr};
 
 #[repr(usize)]
 #[derive(Copy, Clone, Eq, PartialEq, Hash, Debug, Display, EnumIter, FromRepr)]
-pub enum Symbol {
-    BushSecretPtrs = 0x1BC8B9,
-    DamageClass = 0x6F42D,
-    DamageSubclass = 0xDB8F1,
-    DoorPtrs = 0x1F83C0,
+pub enum SettingAddress {
     EnableKillableThief = 0xB68000,
-    Entrances = 0x2C577,
     IsHeraPrizeCentered = 0xB68001,
-    LayoutPtrs = 0x1F8000,
     MoldormEyeCount = 0x1DDBB3,
-    OWRoomEmpty = 0x9CB41,
-    OwSpecialGraphics = 0x2E575,
-    OwSpecialPalette = 0x2E596,
-    OwSpritePtrs = 0x9C881,
-    PotSecretPtrs = 0x1E6C0,
-    RoomData_SpritePointers_Ref0 = 0x9C298,
-    RoomSpritesEnd = 0x9EC9C,
-    RoomSpritesStart = 0x9CB42,
-    SpriteSettings = 0xDB080,
-    Spriteset = 0xDB97,
-    UWHeaderBank = 0x1B5E7,
-    UWHeaderRef0 = 0x1B5DD,
-    UWRoomEmpty = 0x9EC9D,
-    UwGraphics = 0xFA41,
-    UwHeaderPtrs = 0x4F1E2,
-    UwSpritePtrs = 0x9D62E,
 }
 
-impl From<Symbol> for usize {
-    fn from(value: Symbol) -> usize {
+impl From<SettingAddress> for usize {
+    fn from(value: SettingAddress) -> usize {
         value as usize
     }
 }

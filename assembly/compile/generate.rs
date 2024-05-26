@@ -18,7 +18,7 @@ use super::fileutils::read_lines;
 use super::fileutils::replace_segment;
 use super::snes_data::get_snes_deltas;
 
-const PUB_SYMBOL_PREFIX: &str = "pub_";
+const SETTING_PREFIX: &str = "setting_";
 
 pub fn generate_asar_bindings(project_path: &Path) {
     println!("cargo:warning=Crawling {:?}", project_path);
@@ -53,7 +53,7 @@ fn rebuild_if_necessary(project_path: &Path, asm_path: &Path) {
 fn process_mod_asm(project_path: &Path, asm_path: &Path, hash: String) {
     println!("cargo:warning=Processing ASM {:?}", asm_path);
 
-    let asar_cmd = get_windows_asar(project_path);
+    let asar_cmd = get_asar_path(project_path);
     println!("cargo:warning=Asar command: {:?}", asar_cmd);
 
     let bin_path = asm_path.with_extension("bin");
@@ -127,13 +127,13 @@ fn generate_rust_file(
         "#[derive(Copy, Clone, Eq, PartialEq, Hash, Debug, Display, EnumIter, FromRepr)]\n",
     );
     // Define all the values as Name = SNES_ADDRESS_USIZE.
-    output.push_str("pub enum Symbol {\n");
+    output.push_str("pub enum SettingAddress {\n");
     for (symbol_name, location) in symbols {
-        if symbol_name.starts_with(PUB_SYMBOL_PREFIX) {
+        if symbol_name.starts_with(SETTING_PREFIX) {
             output.push_str(
                 format!(
                     "    {} = {:#02X},\n",
-                    symbol_name.strip_prefix(PUB_SYMBOL_PREFIX).unwrap(),
+                    symbol_name.strip_prefix(SETTING_PREFIX).unwrap(),
                     location
                 )
                 .as_str(),
@@ -143,8 +143,8 @@ fn generate_rust_file(
     output.push_str("}\n\n");
 
     // Add in an implicit operator for usize since these are used primarily as addresses.
-    output.push_str("impl From<Symbol> for usize {\n");
-    output.push_str("    fn from(value: Symbol) -> usize {\n");
+    output.push_str("impl From<SettingAddress> for usize {\n");
+    output.push_str("    fn from(value: SettingAddress) -> usize {\n");
     output.push_str("        value as usize\n");
     output.push_str("    }\n");
     output.push_str("}\n\n");
@@ -188,9 +188,10 @@ fn extract_symbols(path: &Path) -> Vec<(String, usize)> {
     symbols
 }
 
-/// Gets the asar program on windows. This should be located in the asar directory.
-fn get_windows_asar(project_path: &Path) -> PathBuf {
-    project_path.join("asar.exe")
+/// The binary should be present in the assembly folder.
+/// Either asar.exe for windows or asar for linux.
+fn get_asar_path(project_path: &Path) -> PathBuf {
+    project_path.join("asar")
 }
 
 fn get_hash_from_rust_file(path: &Path) -> String {

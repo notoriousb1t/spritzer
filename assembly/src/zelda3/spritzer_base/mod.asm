@@ -4,7 +4,6 @@
 ; Symbols
 incsrc ../ids.asm
 incsrc ../ram.asm
-incsrc ../rom.asm
 
 ; Hooks (should be limited to direct replacements or labeling addresses)
 incsrc hooks.asm
@@ -15,7 +14,6 @@ incsrc fixes.asm
 org $B68000
 incsrc settings.asm
 incsrc boss.asm
-incsrc blind.asm
 incsrc killable.asm
 incsrc goriya.asm
 incsrc moldorm.asm

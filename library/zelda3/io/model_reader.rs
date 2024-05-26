@@ -4,6 +4,7 @@ use super::damageclass_reader::read_damage_classes;
 use super::damagesubclass_reader::read_damage_subclasses;
 use super::dungeon_reader::read_dungeons;
 use super::entrance_reader::read_entrances;
+use super::game_settings_reader::read_game_settings;
 use super::ow_spritelist_reader::read_ow_sprites_and_headers;
 use super::sprite_property_reader::read_sprites;
 use super::spriteset_reader::read_spritesets;
@@ -19,6 +20,7 @@ pub(crate) fn read_model(game: &SnesGame, addresses: &Addresses) -> Z3Model {
     let mut model = Z3Model::default();
     // Note: each of these types as a corresponding reader suffixed module
     // that implements read_objects() for the inferred type.
+    model.game_settings = read_game_settings(game, addresses);
     model.damage_classes = read_damage_classes(game, addresses);
     model.damage_subclasses = read_damage_subclasses(game, addresses);
     model.ow_rooms = read_ow_sprites_and_headers(game, addresses);

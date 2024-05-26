@@ -19,5 +19,12 @@ NOP #08
 
 ; The number of eyes Moldorm has.
 org $1DDBB3
-pub_MoldormEyeCount:
+setting_MoldormEyeCount:
 db $07
+
+; ; Intercept the normal Load accumular from pointer and load from the 24 bit address instead.
+; ; This only needs to happen once per room load, so it shouldn't be intensive.
+; org $09C297
+; JSL UnderworldSpriteList_LoadPointer
+; NOP 
+; NOP

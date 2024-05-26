@@ -1,15 +1,9 @@
-use assembly::zelda3::Symbol;
-use common::Patch;
-
 use crate::zelda3::model::SpriteId;
 use crate::zelda3::model::Z3Model;
 
 pub(crate) fn apply_killable_thieves(model: &mut Z3Model) {
-    model.patches.push(Patch::of(
-        Symbol::EnableKillableThief.into(),
-        0x1,
-    ));
-
+    model.game_settings.is_killable_thief = true;
+    // TODO: move this into ASM since it can be applied unconditionally.
     if let Some(thief) = model.sprite_settings.get_mut(&SpriteId::xC4_THIEF) {
         thief.hp = 4;
     }

@@ -18,6 +18,8 @@ mod sprite_property_writer;
 mod spriteset_reader;
 mod spriteset_writer;
 mod uw_header_reader;
+mod game_settings_reader;
+mod game_settings_writer;
 mod uw_header_writer;
 mod uw_scene_reader;
 mod uw_scene_writer;

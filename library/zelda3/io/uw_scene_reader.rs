@@ -151,28 +151,28 @@ mod tests {
     use strum::IntoEnumIterator;
 
     use super::STOP_MARKER;
+    use crate::zelda3::detect_game;
     use crate::zelda3::io::uw_scene_reader::bytes_to_object;
     use crate::zelda3::io::uw_scene_reader::bytes_to_preamble;
     use crate::zelda3::io::uw_scene_reader::read_doors;
     use crate::zelda3::model::UWLayoutId;
     use crate::zelda3::model::UWObject;
     use crate::zelda3::model::UWRoomId;
-    use crate::zelda3::Addresses;
 
     #[test]
     fn read_empty() {
         let game = init_with_empty_doors();
-        let addresses = Addresses::for_version(crate::zelda3::GameVersion::ZeldaJp);
-        let doors = read_doors(&game, &addresses, UWRoomId::x00_GANON);
+        let game_info = detect_game(&game.buffer);
+        let doors = read_doors(&game, &game_info.addresses, UWRoomId::x00_GANON);
         assert_eq!(doors.len(), 0);
     }
 
     #[test]
     fn read_door_list() {
         let game = init_with_sample_doors();
-        let addresses = Addresses::for_version(crate::zelda3::GameVersion::ZeldaJp);
-        let room_without_doors = read_doors(&game, &addresses, UWRoomId::x01_HYRULE_CASTLE_NORTH_CORRIDOR);
-        let room_with_doors = read_doors(&game, &addresses, UWRoomId::x00_GANON);
+        let game_info = detect_game(&game.buffer);
+        let room_without_doors = read_doors(&game, &game_info.addresses, UWRoomId::x01_HYRULE_CASTLE_NORTH_CORRIDOR);
+        let room_with_doors = read_doors(&game, &game_info.addresses, UWRoomId::x00_GANON);
 
         assert_eq!(room_without_doors.len(), 0);
         assert_eq!(room_with_doors.len(), 12);
@@ -180,8 +180,8 @@ mod tests {
 
     fn init_with_empty_doors() -> SnesGame {
         let mut game = SnesGame::new(RomMode::FastLoRom, RomSize::Size4mb);
-        let addresses = Addresses::for_version(crate::zelda3::GameVersion::ZeldaJp);
-        let mut ptr_cursor = addresses.door_ptrs;
+        let game_info = detect_game(&game.buffer);
+        let mut ptr_cursor = game_info.addresses.door_ptrs;
         let mut subroutine_cursor = 0x1F_8780;
         for _ in UWRoomId::iter() {
             // Add pointers to the empty position for each room.
@@ -197,12 +197,12 @@ mod tests {
 
     fn init_with_sample_doors() -> SnesGame {
         let mut game = init_with_empty_doors();
-        let addresses = Addresses::for_version(crate::zelda3::GameVersion::ZeldaJp);
+        let game_info = detect_game(&game.buffer);
         let all_doors_bytes = get_sample_bytes();
         let cursor = 0x1F_8780;
         game.write_all(cursor, &all_doors_bytes);
         // Rewrite the door pointers for ganon.
-        game.write_pointer(addresses.door_ptrs, cursor);
+        game.write_pointer(game_info.addresses.door_ptrs, cursor);
         game
     }
 

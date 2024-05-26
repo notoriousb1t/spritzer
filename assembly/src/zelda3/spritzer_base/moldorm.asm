@@ -1,7 +1,7 @@
 ; Draws each eye.
 Moldorm_AddEyes:
 	PHX
-	LDX.b pub_MoldormEyeCount
+	LDX.b setting_MoldormEyeCount
 	TAX
 
 	; Draw eyes in a circle. Decrement from number of eyes - 1.
