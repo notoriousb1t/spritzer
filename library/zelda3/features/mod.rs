@@ -1,5 +1,4 @@
 mod dungeon;
-mod killable_thieves;
 mod moldorm_shuffle;
 mod mushroom_shuffle;
 mod ow_inversion;
@@ -15,7 +14,6 @@ use pot_secret_shuffle::add_pot_tricks;
 use pot_secret_shuffle::shuffle_pot_secrets;
 
 use self::dungeon::apply_boss_shuffle;
-use self::killable_thieves::apply_killable_thieves;
 use self::moldorm_shuffle::apply_moldorm_eye_shuffle;
 use self::mushroom_shuffle::apply_mushroom_shuffle;
 use self::ow_inversion::apply_ow_inversion;
@@ -35,21 +33,19 @@ use crate::zelda3::options::Z3Options;
 pub(crate) fn apply_features(model: &mut Z3Model, options: &Z3Options) {
     log::info!("{}", options);
 
-    let sprites_will_change = options.underworld_enemy_shuffle != UnderworldEnemyShuffle::Vanilla
-        || options.overworld_enemy_shuffle != OverworldEnemyShuffle::Vanilla
-        || options.boss_shuffle;
-
-    // Apply common changes that are needed to make sprites work well in most situations.
-    apply_base_sprite_changes(model);
+    if options.killable_thieves {
+        model.game_settings.is_killable_thief = true;
+    }
 
     // This is too small to be an option and has no effect on gameplay, so just enable it
     // unconditionally.
     apply_moldorm_eye_shuffle(model);
 
-    if options.killable_thieves {
-        // Make thieves killable (this can happen at any point in this function)
-        apply_killable_thieves(model);
-    }
+    let sprites_will_change = options.underworld_enemy_shuffle != UnderworldEnemyShuffle::Vanilla
+        || options.overworld_enemy_shuffle != OverworldEnemyShuffle::Vanilla
+        || options.boss_shuffle
+        || options.overworld_inverted;
+
     if options.shadow_bees {
         // Why are you punching yourself?
         apply_shadow_bees(model);
@@ -60,13 +56,16 @@ pub(crate) fn apply_features(model: &mut Z3Model, options: &Z3Options) {
         apply_mushroom_shuffle(model);
     }
 
+    // Apply common changes that are needed to make sprites work well in most situations.
+    apply_base_sprite_changes(model);
+
     if sprites_will_change {
         // This transformer performs some simplification to the overworld to
         // add additional enemy slots and bonk points. Some NPCs may move as a result.
         apply_base_sprite_shuffle_changes(model);
     }
 
-    if options.overworld_enemy_shuffle == OverworldEnemyShuffle::Inverted {
+    if options.overworld_inverted {
         // Invert spritesets between worlds preserving NPCs and objects and the
         // perform a full shuffle as possible. This flips enemies between worlds
         // wherever it is safe. In the future, this may be more curated.
@@ -119,8 +118,10 @@ pub(crate) fn apply_features(model: &mut Z3Model, options: &Z3Options) {
 
     // Apply sprite shuffle for overworld.
     match options.overworld_enemy_shuffle {
-        OverworldEnemyShuffle::Inverted => {
-            shuffle_overworld_sprites(model);
+        OverworldEnemyShuffle::Vanilla => {
+            if options.overworld_inverted {
+                shuffle_overworld_sprites(model);
+            }
         }
         OverworldEnemyShuffle::Full => {
             shuffle_overworld_sprites(model);
@@ -131,7 +132,6 @@ pub(crate) fn apply_features(model: &mut Z3Model, options: &Z3Options) {
         OverworldEnemyShuffle::Insanity => {
             shuffle_overworld_sprites(model);
         }
-        _ => {}
     }
 
     if options.pot_shuffle {

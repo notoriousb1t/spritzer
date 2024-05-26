@@ -25,6 +25,7 @@ pub struct Z3WasmOptions {
     pub boss_shuffle: bool,
     pub killable_thieves: bool,
     pub mushroom_shuffle: bool,
+    pub overworld_inverted: bool,
     pub pot_shuffle: bool,
     pub shadow_bees: bool,
     pub(crate) seed: String,

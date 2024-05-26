@@ -12,8 +12,7 @@ Killable:
 
 Killable_Thief:
     LDA.b setting_EnableKillableThief
-    CMP.b #$01
-    BEQ Killable_EyeGore_Green
+    BNE Killable_EyeGore_Green
     JMP Killable_return
 
 Killable_EyeGore_Green:

@@ -82,6 +82,13 @@
       </div>
 
       <div class="randomizer-option-field" role="presentation">
+        <label>Overworld Inverted</label>
+        <div>
+          <a-switch v-model:checked="opts.overworld_inverted" />
+        </div>
+      </div>
+
+      <div class="randomizer-option-field" role="presentation">
         <label>Pot Shuffle</label>
         <div>
           <a-switch v-model:checked="opts.pot_shuffle" />

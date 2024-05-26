@@ -6,6 +6,10 @@ JSL SpritePrep_Blind_CheckMaidenless
 org $06EDA6
 JSL Killable
 
+; Set thief health to 2. This should have no effect when thieves are not killable.
+org $0DB237
+db $2
+
 ; Replaces a comparison for hera tower and a compare and routes to 
 ; a new subroutine.
 org $098C0D

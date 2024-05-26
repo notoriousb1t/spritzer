@@ -36,6 +36,7 @@ pub fn process_zelda3(buffer: &[u8], options: Z3WasmOptions) -> Vec<u8> {
         mushroom_shuffle: options.mushroom_shuffle,
         overworld_balancing: Balancing::from_str(&options.ow_balancing)
             .expect("Overworld Balancing should be valid"),
+        overworld_inverted: options.overworld_inverted,
         overworld_enemy_shuffle: OverworldEnemyShuffle::from_str(&options.ow_enemy_shuffle)
             .expect("Overworld Enemy Shuffle should be valid"),
         pot_shuffle: options.pot_shuffle,
@@ -81,6 +82,7 @@ pub fn detect_options(buffer: &[u8]) -> DetectOptionsResult {
             boss_shuffle: false,
             killable_thieves: true,
             mushroom_shuffle: true,
+            overworld_inverted: false,
             ow_balancing: Balancing::Balanced.to_string(),
             ow_enemy_shuffle_options,
             pot_shuffle: true,

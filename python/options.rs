@@ -10,6 +10,7 @@ use spritzer::zelda3::Z3Options;
 /// Note: please use primitives instead of enums, etc.
 #[pyclass(name = "Options")]
 pub struct OptionsPy {
+    #[pyo3(get, set)]
     pub seed: String,
     #[pyo3(get, set)]
     pub boss_shuffle: bool,
@@ -19,6 +20,8 @@ pub struct OptionsPy {
     pub mushroom_shuffle: bool,
     #[pyo3(get, set)]
     pub overworld_balancing: String,
+    #[pyo3(get, set)]
+    pub overworld_inverted: bool,
     #[pyo3(get, set)]
     pub overworld_enemy_shuffle: String,
     #[pyo3(get, set)]
@@ -41,6 +44,7 @@ impl OptionsPy {
             killable_thieves: false,
             mushroom_shuffle: false,
             overworld_balancing: Balancing::Random.to_string(),
+            overworld_inverted: false,
             overworld_enemy_shuffle: OverworldEnemyShuffle::Vanilla.to_string(),
             pot_shuffle: false,
             shadow_bees: false,
@@ -56,6 +60,7 @@ pub(crate) fn convert_to_options(value: &OptionsPy) -> Z3Options {
         boss_shuffle: value.boss_shuffle,
         killable_thieves: value.killable_thieves,
         mushroom_shuffle: value.mushroom_shuffle,
+        overworld_inverted: value.overworld_inverted,
         overworld_balancing: Balancing::from_str(&value.overworld_balancing).unwrap(),
         overworld_enemy_shuffle: OverworldEnemyShuffle::from_str(&value.overworld_enemy_shuffle)
             .unwrap(),

@@ -25,7 +25,6 @@ Enemy Shuffle controls which enemies/etc. appear within the overworld
 
 1. **Vanilla** - Changes to the enemies placed are avoided
 1. **Full** - Sprites are rerolled in place. Generally enemies that appear together in the original game stay together.
-1. **Inverted** - (experimental) Dark and light world enemies may be swapped and rerolled. Kakariko NPCs are moved to the dark world except for Bottle Salesman, who is moved to Lumberjack's house to preserve item logic.
 1. **Chaos** - Sprites are regrouped and rerolled randomly. The overworld contains all normal enemies and hazards from both the overworld and underworld.
 1. **Insanity** - TBD - Currently the same as Chaos
 
@@ -43,6 +42,11 @@ Shuffles the location of the overworld Mushroom location in the Lost Woods. The 
 
 Shuffles the bosses while preserving item logic. 
 
+
+### Overworld Inverted
+
+Dark and light world enemies may be swapped and rerolled. Kakariko NPCs are moved to the dark world except for Bottle Salesman, who is moved to Lumberjack's house to preserve item logic for item randomizers. When this is enabled and 
+Overworld Shuffle is set to Vanilla, sprites are shuffled in the overworld as if Full was set.
 
 ### Underworld Balancing
 

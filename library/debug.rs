@@ -21,7 +21,7 @@ use spritzer::zelda3::Z3Options;
 fn main() {
     setup_logging();
 
-    let options = chaos_mode("moldorm1".to_owned());
+    let options = inverted_mode("infdsoindfiondfinodfsnio".to_owned());
     let current_dir = std::env::current_dir().expect(&format!("Could not get current directory"));
     let input_path = current_dir.join("./library/testdata/p8.sfc");
     let input_bytes = read_file(input_path.as_ref());
@@ -88,6 +88,7 @@ fn base_options(seed: String) -> Z3Options {
         mushroom_shuffle: false,
         killable_thieves: false,
         overworld_balancing: Balancing::Random,
+        overworld_inverted: false,
         overworld_enemy_shuffle: OverworldEnemyShuffle::Vanilla,
         underworld_balancing: Balancing::Random,
         underworld_enemy_shuffle: UnderworldEnemyShuffle::Vanilla,
@@ -103,6 +104,7 @@ fn easy_mode(seed: String) -> Z3Options {
         pot_shuffle: true,
         mushroom_shuffle: false,
         killable_thieves: true,
+        overworld_inverted: false,
         overworld_balancing: Balancing::Casual,
         overworld_enemy_shuffle: OverworldEnemyShuffle::Chaos,
         underworld_balancing: Balancing::Casual,
@@ -112,19 +114,20 @@ fn easy_mode(seed: String) -> Z3Options {
     }
 }
 
-/// Useful for testing Inverted overworld mode.
+/// Useful for testing the preferred experience.
 fn inverted_mode(seed: String) -> Z3Options {
     Z3Options {
+        overworld_balancing: Balancing::Random,
+        overworld_enemy_shuffle: OverworldEnemyShuffle::Vanilla,
+        overworld_inverted: true,
+        underworld_balancing: Balancing::Random,
         boss_shuffle: true,
-        mushroom_shuffle: true,
         pot_shuffle: true,
+        underworld_enemy_shuffle: UnderworldEnemyShuffle::Vanilla,
         killable_thieves: true,
-        overworld_balancing: Balancing::Balanced,
-        overworld_enemy_shuffle: OverworldEnemyShuffle::Inverted,
-        underworld_balancing: Balancing::Balanced,
-        underworld_enemy_shuffle: UnderworldEnemyShuffle::Chaos,
+        mushroom_shuffle: true,
+        shadow_bees: true,
         seed,
-        shadow_bees: false,
     }
 }
 
@@ -133,6 +136,7 @@ fn chaos_mode(seed: String) -> Z3Options {
     Z3Options {
         overworld_balancing: Balancing::Random,
         overworld_enemy_shuffle: OverworldEnemyShuffle::Chaos,
+        overworld_inverted: false,
         underworld_balancing: Balancing::Random,
         boss_shuffle: true,
         pot_shuffle: true,
@@ -152,6 +156,7 @@ fn balanced_mode(seed: String) -> Z3Options {
         killable_thieves: true,
         pot_shuffle: true,
         overworld_balancing: Balancing::Balanced,
+        overworld_inverted: false,
         overworld_enemy_shuffle: OverworldEnemyShuffle::Full,
         underworld_balancing: Balancing::Balanced,
         underworld_enemy_shuffle: UnderworldEnemyShuffle::Full,
@@ -168,6 +173,7 @@ fn hard_mode(seed: String) -> Z3Options {
         killable_thieves: true,
         pot_shuffle: true,
         overworld_balancing: Balancing::Hero,
+        overworld_inverted: false,
         overworld_enemy_shuffle: OverworldEnemyShuffle::Insanity,
         underworld_balancing: Balancing::Hero,
         underworld_enemy_shuffle: UnderworldEnemyShuffle::Insanity,

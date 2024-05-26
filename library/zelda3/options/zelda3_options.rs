@@ -30,10 +30,9 @@ impl Balancing {
 )]
 pub enum OverworldEnemyShuffle {
     Vanilla = 0,
-    Inverted = 2,
-    Full = 3,
-    Chaos = 4,
-    Insanity = 5,
+    Full = 1,
+    Chaos = 2,
+    Insanity = 3,
 }
 
 impl OverworldEnemyShuffle {
@@ -49,9 +48,9 @@ impl OverworldEnemyShuffle {
 )]
 pub enum UnderworldEnemyShuffle {
     Vanilla = 0,
-    Full = 2,
-    Chaos = 3,
-    Insanity = 4,
+    Full = 1,
+    Chaos = 2,
+    Insanity = 3,
 }
 
 impl UnderworldEnemyShuffle {
@@ -67,6 +66,7 @@ pub struct Z3Options {
     pub boss_shuffle: bool,
     pub mushroom_shuffle: bool,
     pub killable_thieves: bool,
+    pub overworld_inverted: bool,
     pub overworld_balancing: Balancing,
     pub overworld_enemy_shuffle: OverworldEnemyShuffle,
     pub pot_shuffle: bool,
@@ -85,6 +85,7 @@ impl Z3Options {
             killable_thieves: false,
             pot_shuffle: false,
             overworld_balancing: Balancing::Random,
+            overworld_inverted: false,
             overworld_enemy_shuffle: OverworldEnemyShuffle::Vanilla,
             shadow_bees: false,
             underworld_balancing: Balancing::Random,
