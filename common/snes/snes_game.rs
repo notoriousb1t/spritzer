@@ -303,7 +303,7 @@ impl SnesGame {
 
         let mut start_position = None;
         for space in self.free_space.iter_mut() {
-            if bank == space.bank {
+            if bank != space.bank {
                 continue;
             }
             if space.exhausted || values.len() > space.capacity() as usize {

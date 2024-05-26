@@ -244,15 +244,15 @@ mod tests {
                 }
             }
 
-            for room in model.uw_sprites.values() {
+            for (room_id, room) in model.uw_sprites.iter() {
                 let sprite_ids = room.sprites.iter().map(|it| it.id).collect::<Vec<_>>();
-                let header = model.uw_headers.get(&room.room_id).unwrap();
+                let header = model.uw_headers.get(&room_id).unwrap();
 
                 assert_sprite_configuration_is_valid(
                     &model,
                     header.spriteset_id,
                     &sprite_ids,
-                    format!("Seed: {} | UWRoom: {}", options.seed, &room.room_id),
+                    format!("Seed: {} | UWRoom: {}", options.seed, &room_id),
                 );
             }
         }

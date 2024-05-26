@@ -24,7 +24,6 @@ pub(crate) struct Addresses {
     pub(crate) uwgraphics: usize,
     pub(crate) uwheader_bank: usize,
     pub(crate) uwheader_ref0: usize,
-    pub(crate) uwroom_empty: usize,
     pub(crate) uwsprite_ptrs: usize,
 }
 
@@ -65,7 +64,6 @@ fn get_jp_addresses() -> Addresses {
         uwgraphics: 0x00FA41,
         uwheader_bank: 0x01B5E7,
         uwheader_ref0: 0x01B5DD,
-        uwroom_empty: 0x09EC9D,
         uwsprite_ptrs: 0x09D62E,
     }
 }

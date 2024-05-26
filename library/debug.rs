@@ -21,7 +21,7 @@ use spritzer::zelda3::Z3Options;
 fn main() {
     setup_logging();
 
-    let options = inverted_mode("infdsoindfiondfinodfsnio".to_owned());
+    let options = chaos_mode("infdsoindfiondfinodfsnio".to_owned());
     let current_dir = std::env::current_dir().expect(&format!("Could not get current directory"));
     let input_path = current_dir.join("./library/testdata/p8.sfc");
     let input_bytes = read_file(input_path.as_ref());
@@ -138,7 +138,7 @@ fn chaos_mode(seed: String) -> Z3Options {
         overworld_enemy_shuffle: OverworldEnemyShuffle::Chaos,
         overworld_inverted: false,
         underworld_balancing: Balancing::Random,
-        boss_shuffle: true,
+        boss_shuffle: false,
         pot_shuffle: true,
         underworld_enemy_shuffle: UnderworldEnemyShuffle::Chaos,
         killable_thieves: true,

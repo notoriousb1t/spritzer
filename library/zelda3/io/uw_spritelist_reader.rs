@@ -29,7 +29,6 @@ fn _read_room(game: &SnesGame, addresses: &Addresses, room_id: UWRoomId) -> UWSp
     let sprites = _read_sprites(game, base_address);
 
     UWSpriteList {
-        room_id,
         sorted,
         sprites,
     }
