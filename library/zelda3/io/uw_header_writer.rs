@@ -28,7 +28,7 @@ pub(super) fn write_uw_headers(
         let pointer = match header_pointer_map.entry(bytes) {
             Entry::Vacant(it) => {
                 let room_header_pointer = game
-                    .write_data(&[MOVED_HEADER_BANK], &bytes)
+                    .write_data(MOVED_HEADER_BANK, &bytes)
                     .expect("Could not write room header");
                 *it.insert(room_header_pointer)
             }

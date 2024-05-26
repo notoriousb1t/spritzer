@@ -82,7 +82,7 @@ fn _write_sprites(game: &mut SnesGame, addresses: &Addresses, room: &UWSpriteLis
             );
             // Add End marker.
             buffer.push(STOP_MARKER);
-            game.write_data(&[MOVED_BANK], &buffer).unwrap()
+            game.write_data(MOVED_BANK, &buffer).unwrap()
         }
         false => addresses.uwroom_empty,
     };

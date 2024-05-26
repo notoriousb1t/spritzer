@@ -26,7 +26,7 @@ pub(super) fn write_pot_secrets(
         let pointer = match header_pointer_map.entry(bytes.to_owned()) {
             Entry::Vacant(it) => {
                 let secrets_pointer = game
-                    .write_data(&[BANK], &bytes)
+                    .write_data(BANK, &bytes)
                     .expect("Could not write pot secrets");
                 *it.insert(secrets_pointer)
             }
@@ -60,7 +60,7 @@ pub(super) fn write_bush_secrets(
             let pointer = match header_pointer_map.entry(bytes.to_owned()) {
                 Entry::Vacant(it) => {
                     let secrets_pointer = game
-                        .write_data(&[BANK], &bytes)
+                        .write_data(BANK, &bytes)
                         .expect("Could not write bush secrets");
                     *it.insert(secrets_pointer)
                 }

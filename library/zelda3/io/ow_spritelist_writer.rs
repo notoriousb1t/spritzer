@@ -14,6 +14,7 @@ use crate::zelda3::model::Sprite;
 use crate::zelda3::Addresses;
 
 const STOP_MARKER: u8 = 0xFF;
+const BANK: u8 = 0x09;
 
 pub(super) fn write_ow_sprites_and_headers(
     game: &mut SnesGame,
@@ -87,7 +88,7 @@ fn write_spritelists(game: &mut SnesGame, addresses: &Addresses, rooms: &[&OWRoo
         let sprites_location = match !bytes.is_empty() {
             true => {
                 bytes.push(STOP_MARKER);
-                game.write_data(&[0x09], &bytes).unwrap()
+                game.write_data(BANK, &bytes).unwrap()
             }
             false => addresses.owroom_empty,
         };

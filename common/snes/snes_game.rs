@@ -220,7 +220,7 @@ impl SnesGame {
         let start: usize = snes_to_physical(self.mode, address % 0x80_0000);
         let mut result = [0; N];
         for i in 0..N {
-            result[i] = self.buffer[start+i];
+            result[i] = self.buffer[start + i];
         }
         result
     }
@@ -295,15 +295,15 @@ impl SnesGame {
     /// can be accessed via long addresses such as JSL and JML.
     /// Returns None if there was insufficient space
     /// Returns Some(long_address) if successful.
-    pub fn write_data(&mut self, banks: &[u8], values: &[u8]) -> Option<usize> {
+    pub fn write_data(&mut self, bank: u8, values: &[u8]) -> Option<usize> {
         if values.len() > 0xFFFF {
-            log::debug!("Check bank {:?} for {} bytes", banks, values.len());
+            log::debug!("Check bank {:?} for {} bytes", bank, values.len());
             panic!("The values cannot fit into a single bank!");
         }
 
         let mut start_position = None;
         for space in self.free_space.iter_mut() {
-            if !banks.contains(&space.bank) {
+            if bank == space.bank {
                 continue;
             }
             if space.exhausted || values.len() > space.capacity() as usize {

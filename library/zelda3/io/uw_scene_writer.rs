@@ -53,7 +53,7 @@ pub(super) fn write_uw_scenes(game: &mut SnesGame, addresses: &Addresses, scenes
         if let Some(bank) = game.find_capacity(scene_bytes.len()) {
             // Write the bytes all at once because multiple freespace objects may exist in the
             // same bank. Writing both at once guarantees contiguous record.
-            let layout_location = game.write_data(&[bank], &scene_bytes).unwrap();
+            let layout_location = game.write_data(bank, &scene_bytes).unwrap();
             // The entrance location should follow the layout information.
             let entrance_location = layout_location + layout_bytes.len();
 
