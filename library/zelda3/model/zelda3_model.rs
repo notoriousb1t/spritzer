@@ -37,7 +37,7 @@ pub(crate) struct Z3Model {
     /// Contains the main damage table for computing damaged against Link.
     pub damage_classes: [DamageClass; 10],
     /// The amount of damage each weapon type creates at base value.
-    pub damage_subclasses: [DamageSubclass; 10],
+    pub damage_subclasses: [DamageSubclass; 8],
     /// A lookup of associated underworld areas.
     pub dungeons: BTreeMap<DungeonId, Dungeon>,
     /// The general difficulty of randomization of sprites in the overworld
@@ -81,7 +81,7 @@ impl Z3Model {
             seed: 0,
             debug_string: "".to_owned(),
             damage_classes: [DamageClass::default(); 10],
-            damage_subclasses: [DamageSubclass::default(); 10],
+            damage_subclasses: [DamageSubclass::default(); 8],
             dungeons: BTreeMap::default(),
             ow_balancing: Balancing::Random,
             ow_secrets: BTreeMap::default(),

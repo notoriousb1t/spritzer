@@ -34,14 +34,14 @@ fn read_layout(game: &SnesGame, addresses: &Addresses, id: UWRoomId) -> UWLayout
     let base_address = game.read_pointer_int24(addresses.layout_ptrs + (id as usize * 3));
     let mut index = base_address;
 
-    let preamble_bytes = game.read_all(base_address, 2);
-    let (floor1, floor2, layout, aux0) = bytes_to_preamble(preamble_bytes);
+    let preamble_bytes = game.read_all::<2>(base_address);
+    let (floor1, floor2, layout, aux0) = bytes_to_preamble(&preamble_bytes);
     index += 2;
 
     let mut layers: Vec<Vec<UWObject>> = vec![vec![], vec![], vec![]];
     let mut layer_index = 0;
     loop {
-        let bytes = game.read_all(index, 3);
+        let bytes = game.read_all::<3>(index);
 
         if bytes[0] == LAYER_MARKER && bytes[1] == LAYER_MARKER {
             layer_index += 1;
@@ -52,7 +52,7 @@ fn read_layout(game: &SnesGame, addresses: &Addresses, id: UWRoomId) -> UWLayout
             break;
         }
 
-        layers[layer_index].push(bytes_to_object(bytes));
+        layers[layer_index].push(bytes_to_object(&bytes));
 
         // Move to the next value.
         index += 3;
@@ -72,7 +72,7 @@ fn read_doors(game: &SnesGame, addresses: &Addresses, id: UWRoomId) -> UWDoorLis
     let mut index = door_address;
     let mut doors = vec![];
     loop {
-        let bytes = game.read_all(index, 2);
+        let bytes = game.read_all::<2>(index);
         if bytes[0] == STOP_MARKER && bytes[1] == STOP_MARKER {
             break;
         }
@@ -95,7 +95,7 @@ fn read_doors(game: &SnesGame, addresses: &Addresses, id: UWRoomId) -> UWDoorLis
 
 /// This splits the preamble containing the floor types and layout into their
 /// own integers.
-fn bytes_to_preamble(bytes: &[u8]) -> (u8, u8, UWLayoutId, u8) {
+fn bytes_to_preamble(bytes: &[u8; 2]) -> (u8, u8, UWLayoutId, u8) {
     let byte0 = bytes[0];
     let floor1 = byte0 & 0b1111;
     let floor2 = byte0 >> 4;
@@ -110,7 +110,7 @@ fn bytes_to_preamble(bytes: &[u8]) -> (u8, u8, UWLayoutId, u8) {
 }
 
 /// Converts a room object into a model representation. There are 3 subtypes.
-fn bytes_to_object(bytes: &[u8]) -> UWObject {
+fn bytes_to_object(bytes: &[u8; 3]) -> UWObject {
     if bytes[2] >= 0xF8 {
         // Subtype 3
         let id: u16 = 0x200

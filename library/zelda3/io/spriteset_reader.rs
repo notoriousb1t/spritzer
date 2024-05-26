@@ -20,14 +20,14 @@ pub(super) fn read_spritesets(
 }
 
 fn _read_spriteset(game: &SnesGame, addresses: &Addresses, id: SpritesetId) -> Spriteset {
-    let bytes = game.read_all(addresses.spriteset + (id as usize * 4), 4);
+    let bytes = game.read_all::<4>(addresses.spriteset + (id as usize * 4));
     Spriteset {
         id,
         sheets: bytes_to_spritesheets(bytes),
     }
 }
 
-fn bytes_to_spritesheets(bytes: &[u8]) -> [SpritesheetId; 4] {
+fn bytes_to_spritesheets(bytes: [u8; 4]) -> [SpritesheetId; 4] {
     [
         SpritesheetId::from_repr(bytes[0]).expect(&format!(
             "Spritesheet ${:02X} id failure in slot 0",

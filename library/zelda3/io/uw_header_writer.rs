@@ -14,18 +14,21 @@ pub(super) fn write_uw_headers(
     addresses: &Addresses,
     headers: &BTreeMap<UWRoomId, UnderworldRoomHeader>,
 ) {
+    // Declare this space as available for writing.
+    game.mark(MOVED_HEADER_BANK, 0x8000, 0xFFFF);
+
     // Write the data first and try to collapse header with complete overlaps
     let mut header_pointer_map: BTreeMap<[u8; 14], usize> = BTreeMap::new();
     let mut pointers = vec![];
     for room in headers.values() {
         // Write the data to the next available place in this bank.
-        let bytes = &header_to_bytes(&room);
+        let bytes = header_to_bytes(&room);
 
         // If the exact header exists already, reuse the existing pointer.
-        let pointer = match header_pointer_map.entry(*bytes) {
+        let pointer = match header_pointer_map.entry(bytes) {
             Entry::Vacant(it) => {
                 let room_header_pointer = game
-                    .write_data(&[MOVED_HEADER_BANK], bytes)
+                    .write_data(&[MOVED_HEADER_BANK], &bytes)
                     .expect("Could not write room header");
                 *it.insert(room_header_pointer)
             }

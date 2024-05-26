@@ -78,8 +78,9 @@ impl SnesGame {
         self.write_all(TITLE_ADDRESS + self.get_header_offset(), &values);
     }
 
-    pub fn get_game_title(&self) -> &str {
-        from_utf8(self.read_all(TITLE_ADDRESS + self.get_header_offset(), 21)).expect("Error reading title")
+    pub fn get_game_title(&self) -> String {
+        let bytes = self.read_all::<21>(TITLE_ADDRESS + self.get_header_offset());
+        from_utf8(&bytes).expect("Error reading title").to_owned()
     }
 
     fn get_header_offset(&self) -> usize {
@@ -210,14 +211,18 @@ impl SnesGame {
 
     /// Reads a 16-bit integer from the address.
     pub fn read_int16(&self, address: usize) -> u16 {
-        let data = self.read_all(address, 2);
+        let data = self.read_all::<2>(address);
         ((data[1] as u16) << 8) | data[0] as u16
     }
 
     /// Reads the byte from the SNES address.
-    pub fn read_all(&self, address: usize, count: usize) -> &[u8] {
-        let index = snes_to_physical(self.mode, address % 0x80_0000);
-        &self.buffer[index..(index + count)]
+    pub fn read_all<const N: usize>(&self, address: usize) -> [u8; N] {
+        let start: usize = snes_to_physical(self.mode, address % 0x80_0000);
+        let mut result = [0; N];
+        for i in 0..N {
+            result[i] = self.buffer[start+i];
+        }
+        result
     }
 
     /// Reads a local pointer from the address and returns the address.

@@ -14,7 +14,7 @@ use crate::zelda3::model::UnderworldRoomHeader;
 use crate::zelda3::Addresses;
 
 pub(super) fn read_uw_headers(game: &SnesGame, addresses: &Addresses) -> BTreeMap<UWRoomId, UnderworldRoomHeader> {
-    let header_16bit_ptr = game.read_all(addresses.uwheader_ref0, 2);
+    let header_16bit_ptr = game.read_all::<2>(addresses.uwheader_ref0);
     let header_bank = game.read(addresses.uwheader_bank);
     let header_pointer = bytes_to_int24([header_bank, header_16bit_ptr[1], header_16bit_ptr[0]]);
 
@@ -22,14 +22,14 @@ pub(super) fn read_uw_headers(game: &SnesGame, addresses: &Addresses) -> BTreeMa
     for id in UWRoomId::iter() {
         // Find the address of the Dungeon Room and read in graphics block and tags.
         let header_address = game.read_pointer_int16(header_pointer + (id as usize * 2));
-        let data = game.read_all(header_address, 14);
+        let data = game.read_all::<14>(header_address);
 
-        values.push((id, bytes_to_room_header(&data, id)));
+        values.push((id, bytes_to_room_header(data, id)));
     }
     BTreeMap::from_iter(values)
 }
 
-fn bytes_to_room_header(data: &[u8], id: UWRoomId) -> UnderworldRoomHeader {
+fn bytes_to_room_header(data: [u8; 14], id: UWRoomId) -> UnderworldRoomHeader {
     // Read in the graphics block which controls the spritesheets
     // and tags which declare behaviors.
     let bg2_property = data[0];
