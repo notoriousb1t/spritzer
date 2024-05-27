@@ -17,7 +17,6 @@ use crate::zelda3::model::SpriteId;
 use crate::zelda3::model::SpriteInfo;
 use crate::zelda3::model::SpritesetId;
 use crate::zelda3::model::SpritesheetId;
-use crate::zelda3::model::UWFloorId;
 use crate::zelda3::model::UWObject;
 use crate::zelda3::model::UWObjectId;
 use crate::zelda3::model::UWRoomId;
@@ -164,28 +163,28 @@ fn update_arena(model: &mut Z3Model, rng: &mut StdRng, source_id: DungeonId, tar
 /// Change the floors if the encounter requires it.
 fn align_floors_if_necessary(model: &mut Z3Model, target_boss: UWRoomId, encounter: &Encounter) {
     if let Some(floor1) = encounter.floor1 {
-        // Update the floor1 if specified. Update both places it is configured.
-        let headers = model.uw_headers.get_mut(&target_boss).unwrap();
-        headers.planes2 = UWFloorId::from_repr(floor1).unwrap();
-
         let scene = model.uw_scenes.get_mut(&target_boss).unwrap();
         scene.layout.floor1 = floor1;
     }
     if let Some(floor2) = encounter.floor2 {
-        // Update the floor2 if specified. Update both places it is configured.
-        let headers = model.uw_headers.get_mut(&target_boss).unwrap();
-        headers.planes1 = UWFloorId::from_repr(floor2).unwrap();
-
         let scene = model.uw_scenes.get_mut(&target_boss).unwrap();
         scene.layout.floor2 = floor2;
     }
-    if let Some(bg2_property) = encounter.bg2_property {
+    if let Some(bg2) = encounter.bg2 {
         let headers = model.uw_headers.get_mut(&target_boss).unwrap();
-        headers.bg2_property = bg2_property;
+        headers.bg2 = bg2;
     }
-    if let Some(bgmove) = encounter.bgmove {
+    if let Some(collision) = encounter.collision {
         let headers = model.uw_headers.get_mut(&target_boss).unwrap();
-        headers.bgmove = bgmove;
+        headers.collision = collision;
+    }
+    if let Some(light) = encounter.light {
+        let headers = model.uw_headers.get_mut(&target_boss).unwrap();
+        headers.light = light;
+    }
+    if let Some(effect) = encounter.effect {
+        let headers = model.uw_headers.get_mut(&target_boss).unwrap();
+        headers.effect = effect;
     }
 }
 

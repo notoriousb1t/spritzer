@@ -8,3 +8,12 @@ pub(crate) struct UWScene {
     /// Describes the entrances of a room.
     pub doors: UWDoorList,
 }
+
+impl UWScene {
+    pub(crate) fn default() -> UWScene {
+        UWScene {
+            layout: UWLayout::default(),
+            doors: UWDoorList::new(),
+        }
+    }
+}

@@ -5,15 +5,20 @@ use common::SnesGame;
 use strum::IntoEnumIterator;
 
 use crate::zelda3::model::PaletteId;
+use crate::zelda3::model::RoomBackground;
+use crate::zelda3::model::RoomCollision;
+use crate::zelda3::model::RoomEffect;
 use crate::zelda3::model::RoomLogic;
 use crate::zelda3::model::SpritesetId;
 use crate::zelda3::model::UWBlocksetId;
-use crate::zelda3::model::UWFloorId;
 use crate::zelda3::model::UWRoomId;
 use crate::zelda3::model::UnderworldRoomHeader;
 use crate::zelda3::Addresses;
 
-pub(super) fn read_uw_headers(game: &SnesGame, addresses: &Addresses) -> BTreeMap<UWRoomId, UnderworldRoomHeader> {
+pub(super) fn read_uw_headers(
+    game: &SnesGame,
+    addresses: &Addresses,
+) -> BTreeMap<UWRoomId, UnderworldRoomHeader> {
     let header_16bit_ptr = game.read_all::<2>(addresses.uwheader_ref0);
     let header_bank = game.read(addresses.uwheader_bank);
     let header_pointer = bytes_to_int24([header_bank, header_16bit_ptr[1], header_16bit_ptr[0]]);
@@ -32,7 +37,14 @@ pub(super) fn read_uw_headers(game: &SnesGame, addresses: &Addresses) -> BTreeMa
 fn bytes_to_room_header(data: [u8; 14], id: UWRoomId) -> UnderworldRoomHeader {
     // Read in the graphics block which controls the spritesheets
     // and tags which declare behaviors.
-    let bg2_property = data[0];
+    let bg2 = RoomBackground::from_repr(data[0] >> 5).expect(&format!(
+        "UW ${:02X} invalid room background ${:02X}",
+        id as u16, data[0] >> 5
+    ));
+    let collision =
+        RoomCollision::from_repr((data[0] & 0b11100) >> 2).expect("Invalid room collision");
+    let light = (data[0] & 0b1) == 0b1;
+
     let palette_id: PaletteId = PaletteId::from_repr(data[1]).expect(&format!(
         "UW ${:02X} palette load error ${:02X}",
         id as u16, data[1]
@@ -43,7 +55,7 @@ fn bytes_to_room_header(data: [u8; 14], id: UWRoomId) -> UnderworldRoomHeader {
     ));
 
     let spriteset_id = SpritesetId::from_room_value(data[3]);
-    let bgmove = data[4];
+    let effect = RoomEffect::from_repr(data[4]).expect("Invalid room effect");
     let tag1 = RoomLogic::from_repr(data[5]).expect(&format!(
         "UW ${:02X} tag1 load error ${:02X}",
         id as u16, data[5]
@@ -52,15 +64,13 @@ fn bytes_to_room_header(data: [u8; 14], id: UWRoomId) -> UnderworldRoomHeader {
         "UW ${:02X} tag2 load error ${:02X}",
         id as u16, data[6]
     ));
-    let floor_upper = UWFloorId::from_repr(data[7]).expect(&format!(
-        "UW ${:02X} floor upper load error ${:02X}",
-        id as u16, data[7]
-    ));
 
-    let floor_lower = UWFloorId::from_repr(data[8]).expect(&format!(
-        "UW ${:02X} floor lower load error ${:02X}",
-        id as u16, data[8]
-    ));
+    let holewarp_plane = data[7] & 0b11;
+    let stairs1_plane = (data[7] >> 2) & 0b11;
+    let stairs2_plane = (data[7] >> 4) & 0b11;
+    let stairs3_plane = (data[7] >> 6) & 0b11;
+    let stairs4_plane = data[8] & 0b11;
+
     let warp = UWRoomId::from_repr(data[9] as u16).expect(&format!(
         "UW ${:02X} warp/pit load error ${:02X}",
         id as u16, data[9]
@@ -83,19 +93,24 @@ fn bytes_to_room_header(data: [u8; 14], id: UWRoomId) -> UnderworldRoomHeader {
     ));
 
     UnderworldRoomHeader {
-        bg2_property,
+        bg2,
+        collision,
+        light,
         palette_id,
         blockset_id,
         spriteset_id,
-        bgmove,
+        effect,
         tag1,
         tag2,
-        planes1: floor_upper,
-        planes2: floor_lower,
-        warp,
-        stairs0,
-        stairs1,
-        stairs2,
-        stairs3,
+        holewarp_plane,
+        stairs1_plane,
+        stairs2_plane,
+        stairs3_plane,
+        stairs4_plane,
+        holewarp: warp,
+        stairs1: stairs0,
+        stairs2: stairs1,
+        stairs3: stairs2,
+        stairs4: stairs3,
     }
 }

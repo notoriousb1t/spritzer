@@ -1,5 +1,6 @@
+use crate::zelda3::model::RoomBackground;
+use crate::zelda3::model::RoomEffect;
 use crate::zelda3::model::SpriteId;
-use crate::zelda3::model::UWFloorId;
 use crate::zelda3::model::UWObject;
 use crate::zelda3::model::UWObjectId;
 use crate::zelda3::model::UWRoomId;
@@ -63,9 +64,14 @@ pub(crate) fn relayout_swamp_water_treadmill_room(model: &mut Z3Model) {
         .uw_headers
         .get_mut(&UWRoomId::x16_SWAMP_PALACE_SWIMMING_TREADMILL)
         .unwrap();
-    header.planes2 = UWFloorId::x00_GROUND_NEUTRAL;
-    header.planes1 = UWFloorId::x00_GROUND_NEUTRAL;
-    header.bg2_property = 0;
+    header.holewarp_plane = 0;
+    header.stairs1_plane = 0;
+    header.stairs2_plane = 0;
+    header.stairs3_plane = 0;
+    header.stairs4_plane = 0;
+    header.effect = RoomEffect::Nothing;
+    header.bg2 = RoomBackground::Off;
+    header.light = false;
 }
 
 pub(crate) fn relayout_swamp_hidden_chest_room(model: &mut Z3Model) {

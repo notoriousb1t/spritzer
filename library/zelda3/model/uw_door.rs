@@ -14,3 +14,13 @@ pub(crate) struct UWDoor {
     /// The placement of the door. There are 12 slots.
     pub position: UWDoorPosition,
 }
+
+impl UWDoor {
+    pub(crate) fn default() -> UWDoor {
+        UWDoor {
+            style: UWDoorStyle::X00_NormalDoor,
+            direction: UWDoorDirection::X0_North,
+            position: UWDoorPosition::X00_Position00,
+        }
+    }
+}

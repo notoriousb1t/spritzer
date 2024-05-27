@@ -10,7 +10,7 @@ use crate::zelda3::Addresses;
 const MOVED_HEADER_BANK: u8 = 0x2A;
 
 pub(super) fn write_uw_headers(
-    game: &mut SnesGame, 
+    game: &mut SnesGame,
     addresses: &Addresses,
     headers: &BTreeMap<UWRoomId, UnderworldRoomHeader>,
 ) {
@@ -32,16 +32,14 @@ pub(super) fn write_uw_headers(
                     .expect("Could not write room header");
                 *it.insert(room_header_pointer)
             }
-            Entry::Occupied(val) => {
-                *val.get()
-            }
+            Entry::Occupied(val) => *val.get(),
         };
 
         // Add the pointer to the list, so they can be written after all data
         // is writtern.
         pointers.push(pointer);
     }
-    
+
     // Allocate enough space to store the pointers.
     let room_header_table_pointer = game
         .allocate(MOVED_HEADER_BANK, 2 * pointers.len() as u16)
@@ -53,28 +51,28 @@ pub(super) fn write_uw_headers(
 
     // Write the pointers table.
     for (i, pointer) in pointers.iter().enumerate() {
-        game.write_pointer_int16(
-            room_header_table_pointer + (i * 2),
-            *pointer,
-        );
+        game.write_pointer_int16(room_header_table_pointer + (i * 2), *pointer);
     }
 }
 
 fn header_to_bytes(room: &UnderworldRoomHeader) -> [u8; 14] {
     [
-        room.bg2_property,
+        ((room.bg2 as u8 & 0b111) << 5) + (((room.collision as u8) & 0b111) << 2) + room.light as u8,
         room.palette_id as u8,
         room.blockset_id as u8,
         room.spriteset_id.get_room_value(),
-        room.bgmove,
+        room.effect as u8,
         room.tag1 as u8,
         room.tag2 as u8,
-        room.planes1 as u8,
-        room.planes2 as u8,
-        room.warp as u8,
-        room.stairs0 as u8,
+        ((room.stairs3_plane * 0b11) << 6)
+            | ((room.stairs2_plane * 0b11) << 4)
+            | ((room.stairs1_plane * 0b11) << 2)
+            | (room.holewarp_plane * 0b11),
+        (room.stairs4_plane * 0b11) as u8,
+        room.holewarp as u8,
         room.stairs1 as u8,
         room.stairs2 as u8,
         room.stairs3 as u8,
+        room.stairs4 as u8,
     ]
 }

@@ -47,19 +47,19 @@ pub(crate) fn relayout_hera_boss(model: &mut Z3Model) {
         .uw_headers
         .get_mut(&UWRoomId::x17_TOWER_OF_HERA_MOLDORM_FALL_ROOM)
         .unwrap();
-    hera_fall_room_header.stairs0 = UWRoomId::xA7_TOWER_OF_HERA_FAIRY_ROOM;
+    hera_fall_room_header.stairs1 = UWRoomId::xA7_TOWER_OF_HERA_FAIRY_ROOM;
 
     // Change the fairy room to warp to the boss room.
     let hera_fairy_room_header = model
         .uw_headers
         .get_mut(&UWRoomId::xA7_TOWER_OF_HERA_FAIRY_ROOM)
         .unwrap();
-    hera_fairy_room_header.warp = UWRoomId::x07_TOWER_OF_HERA_MOLDORM_BOSS;
+    hera_fairy_room_header.holewarp = UWRoomId::x07_TOWER_OF_HERA_MOLDORM_BOSS;
     // Kind of stupid, but the stairs down keep going to 0xC0.
-    hera_fairy_room_header.stairs0 = UWRoomId::x17_TOWER_OF_HERA_MOLDORM_FALL_ROOM;
     hera_fairy_room_header.stairs1 = UWRoomId::x17_TOWER_OF_HERA_MOLDORM_FALL_ROOM;
     hera_fairy_room_header.stairs2 = UWRoomId::x17_TOWER_OF_HERA_MOLDORM_FALL_ROOM;
     hera_fairy_room_header.stairs3 = UWRoomId::x17_TOWER_OF_HERA_MOLDORM_FALL_ROOM;
+    hera_fairy_room_header.stairs4 = UWRoomId::x17_TOWER_OF_HERA_MOLDORM_FALL_ROOM;
 }
 
 fn get_hera_boss_objects() -> Vec<UWObject> {

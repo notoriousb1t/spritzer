@@ -8,6 +8,7 @@ use crate::zelda3::model::UWDoorDirection;
 use crate::zelda3::model::UWDoorList;
 use crate::zelda3::model::UWDoorPosition;
 use crate::zelda3::model::UWDoorStyle;
+use crate::zelda3::model::UWFloorId;
 use crate::zelda3::model::UWLayout;
 use crate::zelda3::model::UWLayoutId;
 use crate::zelda3::model::UWObject;
@@ -59,8 +60,8 @@ fn read_layout(game: &SnesGame, addresses: &Addresses, id: UWRoomId) -> UWLayout
     }
 
     UWLayout {
-        floor1,
-        floor2,
+        floor1: UWFloorId::from_repr(floor1).expect("Invalid floor id"),
+        floor2: UWFloorId::from_repr(floor2).expect("Invalid floor id"),
         layout,
         layers,
         aux0,

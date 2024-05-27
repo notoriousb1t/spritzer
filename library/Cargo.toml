@@ -12,6 +12,7 @@ strum_macros = "0.26.1"
 rand = "0.8.5"
 getrandom = { version = "0.2", features = ["js"] }
 simplelog = {version = "^0.12.1", features = ["paris"], optional = true}
+binary-reader = "0.4.5"
 
 [features]
 build-binary = ["simplelog"]

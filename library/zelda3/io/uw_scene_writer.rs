@@ -91,8 +91,8 @@ fn layout_to_bytes(layout: &UWLayout) -> Vec<u8> {
     let mut bytes: Vec<u8> = vec![];
     // Write floors and layout back to the general layout.
     bytes.extend(layout_preamble_to_bytes(
-        layout.floor1,
-        layout.floor2,
+        layout.floor1 as u8,
+        layout.floor2 as u8,
         layout.layout,
         layout.aux0,
     ));

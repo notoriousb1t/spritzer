@@ -1,3 +1,4 @@
+mod chest;
 mod damage;
 mod dungeon;
 mod dungeon_blockset_id;
@@ -43,6 +44,7 @@ mod uw_sprite_list;
 mod uw_tile_collision;
 mod zelda3_model;
 
+pub(crate) use chest::*;
 pub(crate) use damage::*;
 pub(crate) use dungeon::*;
 pub(crate) use dungeon_blockset_id::*;
