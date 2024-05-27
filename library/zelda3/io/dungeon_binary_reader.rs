@@ -4,6 +4,8 @@ use binary_reader::BinaryReader;
 
 use crate::zelda3::model::{Chest, HiddenItem, PaletteId, RoomBackground, RoomCollision, RoomEffect, RoomLogic, Secret, Sprite, SpriteId, SpritesetId, UWBlocksetId, UWFloorId, UWLayoutId, UWRoomId, UWScene, UWSpriteList, UnderworldRoomHeader};
 
+use super::uw_scene_reader::bytes_to_scene;
+
 
 /// Deserializes dungeon file data. This uses the same format as ZScream dungeon exporting.
 pub(crate) fn read_dungeon_binary(byte: &[u8]) -> Result<ImportedDungeon, std::io::Error> {
@@ -15,9 +17,9 @@ pub(crate) fn read_dungeon_binary(byte: &[u8]) -> Result<ImportedDungeon, std::i
         let room_id = UWRoomId::from_repr(binary_reader.read_i32()? as u16).expect("Invalid room id");
         let room = ImportedRoom::default();
 
-        let object_count = binary_reader.read_i32()? as usize;
-        let objects_data = binary_reader.read(object_count).expect("Decoding error");
-        room.loadTilesObjectsFromArray(objects_data);
+        let object_byte_count = binary_reader.read_i32()? as usize;
+        let scene_data = binary_reader.read(object_byte_count).expect("Decoding error");
+        room.scene = bytes_to_scene(scene_data);
 
         let sprite_count = binary_reader.read_u8()?;
         
@@ -74,8 +76,7 @@ pub(crate) fn read_dungeon_binary(byte: &[u8]) -> Result<ImportedDungeon, std::i
         }
 
         for k in 0..0x1000 {
-            let _ = binary_reader.read_u8()?;
-            // room.collisionMap[k] = binary_reader.read_u8()?;
+            let _collision_map = binary_reader.read_u8()?;
         }
 
         room.header.damagepit = binary_reader.read_bool()?;
@@ -96,7 +97,8 @@ pub(crate) fn read_dungeon_binary(byte: &[u8]) -> Result<ImportedDungeon, std::i
 
         room.spritelist.sorted = binary_reader.read_bool()?;
         room.header.palette_id = PaletteId::from_repr(binary_reader.read_u8()?).expect("Invalid palette id");
-        room.header.messageid = binary_reader.read_u8()?;
+        let _messageid = binary_reader.read_u8()?;
+
         room.header.effect = RoomEffect::from_repr(binary_reader.read_u8()?).expect("Invalid effect");
         room.scene.layout.floor1 = UWFloorId::from_repr(binary_reader.read_u8()?).expect("Invalid floor id");
         room.scene.layout.floor2 = UWFloorId::from_repr(binary_reader.read_u8()?).expect("Invalid floor id");

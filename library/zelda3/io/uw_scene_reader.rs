@@ -1,6 +1,7 @@
 use std::collections::BTreeMap;
 
 use common::SnesGame;
+use rand::seq;
 use strum::IntoEnumIterator;
 
 use crate::zelda3::model::UWDoor;
@@ -30,7 +31,6 @@ pub(super) fn read_uw_scenes(
 fn read_scene_from_game(game: &SnesGame, addresses: &Addresses, id: UWRoomId) -> UWScene {
     let layout_address = game.read_pointer_int24(addresses.layout_ptrs + (id as usize * 3));
     let door_address = game.read_pointer_int24(addresses.door_ptrs + (id as usize * 3));
-
     let layout_data = game
         .read_until(layout_address, &[END_MARKER, LAYER_MARKER])
         .expect("Layout decoding error");
@@ -41,6 +41,25 @@ fn read_scene_from_game(game: &SnesGame, addresses: &Addresses, id: UWRoomId) ->
     let layout = bytes_to_layout(&layout_data);
     let doors = bytes_to_doors(&door_data);
     UWScene { layout, doors }
+}
+
+pub(super) fn bytes_to_scene(data: &[u8]) -> UWScene {
+    let layout_end =
+        find_sequence(data, &[END_MARKER, LAYER_MARKER]).expect("Scene decoding error");
+    let layout = bytes_to_layout(&data[..layout_end]);
+    let doors = bytes_to_doors(&data[(layout_end + 1)..]);
+    UWScene { layout, doors }
+}
+
+fn find_sequence(data: &[u8], sequence: &[u8]) -> Option<usize> {
+    if data.is_empty() || data.len() < sequence.len() {
+        return None;
+    }
+    data.windows(sequence.len())
+        .position(|window| {
+            window == sequence
+        })
+        .map(|pos| pos + sequence.len())
 }
 
 /// Read an underworld layout
