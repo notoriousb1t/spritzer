@@ -15,8 +15,8 @@ pub(crate) fn read_dungeon_binary(byte: &[u8]) -> Result<ImportedDungeon, std::i
         let room_id = UWRoomId::from_repr(binary_reader.read_i32()? as u16).expect("Invalid room id");
         let room = ImportedRoom::default();
 
-        let nbr_objects = binary_reader.read_i32()?;
-        let objects_data = binary_reader.read_bytes(nbr_objects)?;
+        let object_count = binary_reader.read_i32()? as usize;
+        let objects_data = binary_reader.read(object_count).expect("Decoding error");
         room.loadTilesObjectsFromArray(objects_data);
 
         let sprite_count = binary_reader.read_u8()?;

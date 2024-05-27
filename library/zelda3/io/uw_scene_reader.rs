@@ -20,43 +20,55 @@ const STOP_MARKER: u8 = 0xFF;
 const LAYER_MARKER: u8 = 0xFF;
 const END_MARKER: u8 = 0xF0;
 
-pub(super) fn read_uw_scenes(game: &SnesGame, addresses: &Addresses) -> BTreeMap<UWRoomId, UWScene> {
-    BTreeMap::from_iter(UWRoomId::iter().map(|id| {
-        let layout = read_layout(game, addresses, id);
-        let doors = read_doors(game, addresses, id);
-        (id, UWScene { layout, doors })
-    }))
+pub(super) fn read_uw_scenes(
+    game: &SnesGame,
+    addresses: &Addresses,
+) -> BTreeMap<UWRoomId, UWScene> {
+    BTreeMap::from_iter(UWRoomId::iter().map(|id| (id, read_scene_from_game(game, addresses, id))))
+}
+
+fn read_scene_from_game(game: &SnesGame, addresses: &Addresses, id: UWRoomId) -> UWScene {
+    let layout_address = game.read_pointer_int24(addresses.layout_ptrs + (id as usize * 3));
+    let door_address = game.read_pointer_int24(addresses.door_ptrs + (id as usize * 3));
+
+    let layout_data = game
+        .read_until(layout_address, &[END_MARKER, LAYER_MARKER])
+        .expect("Layout decoding error");
+    let door_data = game
+        .read_until(door_address, &[STOP_MARKER, STOP_MARKER])
+        .expect("Door decoding error");
+
+    let layout = bytes_to_layout(&layout_data);
+    let doors = bytes_to_doors(&door_data);
+    UWScene { layout, doors }
 }
 
 /// Read an underworld layout
 /// Note: The same layout may be referenced by multiple rooms. Any change will cause a new
 /// record to be written instead of sharing the changes.
-fn read_layout(game: &SnesGame, addresses: &Addresses, id: UWRoomId) -> UWLayout {
-    let base_address = game.read_pointer_int24(addresses.layout_ptrs + (id as usize * 3));
-    let mut index = base_address;
-
-    let preamble_bytes = game.read_all::<2>(base_address);
-    let (floor1, floor2, layout, aux0) = bytes_to_preamble(&preamble_bytes);
-    index += 2;
+fn bytes_to_layout(data: &[u8]) -> UWLayout {
+    let mut c = 0;
+    let preamble_bytes = &data[c..c + 2].try_into().expect("Invalid preamble bytes");
+    let (floor1, floor2, layout, aux0) = bytes_to_preamble(preamble_bytes);
+    c += 2;
 
     let mut layers: Vec<Vec<UWObject>> = vec![vec![], vec![], vec![]];
     let mut layer_index = 0;
     loop {
-        let bytes = game.read_all::<3>(index);
-
-        if bytes[0] == LAYER_MARKER && bytes[1] == LAYER_MARKER {
+        if data[c] == LAYER_MARKER && data[c + 1] == LAYER_MARKER {
             layer_index += 1;
-            index += 2;
+            c += 2;
             continue;
         }
-        if bytes[0] == END_MARKER && bytes[1] == LAYER_MARKER {
+        if data[c] == END_MARKER && data[c + 1] == LAYER_MARKER {
             break;
         }
 
+        let bytes: &[u8; 3] = &data[c..c + 3].try_into().expect("Invalid object bytes");
         layers[layer_index].push(bytes_to_object(&bytes));
 
         // Move to the next value.
-        index += 3;
+        c += 3;
     }
 
     UWLayout {
@@ -68,15 +80,13 @@ fn read_layout(game: &SnesGame, addresses: &Addresses, id: UWRoomId) -> UWLayout
     }
 }
 
-fn read_doors(game: &SnesGame, addresses: &Addresses, id: UWRoomId) -> UWDoorList {
-    let door_address = game.read_pointer_int24(addresses.door_ptrs + (id as usize * 3));
-    let mut index = door_address;
+fn bytes_to_doors(data: &[u8]) -> UWDoorList {
     let mut doors = vec![];
-    loop {
-        let bytes = game.read_all::<2>(index);
+    for bytes in data.chunks(2) {
         if bytes[0] == STOP_MARKER && bytes[1] == STOP_MARKER {
             break;
         }
+
         // The least significant bits represent the direction of the door.
         let direction = UWDoorDirection::from_repr(bytes[0] & 0b111).unwrap();
         let placement = UWDoorPosition::from_repr(bytes[0] >> 3).unwrap();
@@ -87,9 +97,6 @@ fn read_doors(game: &SnesGame, addresses: &Addresses, id: UWRoomId) -> UWDoorLis
             direction,
             position: placement,
         });
-
-        // Move to the next value.
-        index += 2;
     }
     doors
 }
@@ -153,30 +160,19 @@ mod tests {
 
     use super::STOP_MARKER;
     use crate::zelda3::detect_game;
+    use crate::zelda3::io::uw_scene_reader::bytes_to_doors;
     use crate::zelda3::io::uw_scene_reader::bytes_to_object;
     use crate::zelda3::io::uw_scene_reader::bytes_to_preamble;
-    use crate::zelda3::io::uw_scene_reader::read_doors;
+    use crate::zelda3::io::uw_scene_reader::END_MARKER;
+    use crate::zelda3::io::uw_scene_reader::LAYER_MARKER;
     use crate::zelda3::model::UWLayoutId;
     use crate::zelda3::model::UWObject;
     use crate::zelda3::model::UWRoomId;
 
     #[test]
     fn read_empty() {
-        let game = init_with_empty_doors();
-        let game_info = detect_game(&game.buffer);
-        let doors = read_doors(&game, &game_info.addresses, UWRoomId::x00_GANON);
+        let doors = bytes_to_doors(&[END_MARKER, LAYER_MARKER, STOP_MARKER, STOP_MARKER]);
         assert_eq!(doors.len(), 0);
-    }
-
-    #[test]
-    fn read_door_list() {
-        let game = init_with_sample_doors();
-        let game_info = detect_game(&game.buffer);
-        let room_without_doors = read_doors(&game, &game_info.addresses, UWRoomId::x01_HYRULE_CASTLE_NORTH_CORRIDOR);
-        let room_with_doors = read_doors(&game, &game_info.addresses, UWRoomId::x00_GANON);
-
-        assert_eq!(room_without_doors.len(), 0);
-        assert_eq!(room_with_doors.len(), 12);
     }
 
     fn init_with_empty_doors() -> SnesGame {

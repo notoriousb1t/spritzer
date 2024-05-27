@@ -1,3 +1,4 @@
+use std::cmp::min;
 use std::str::from_utf8;
 
 use log;
@@ -223,6 +224,25 @@ impl SnesGame {
             result[i] = self.buffer[start + i];
         }
         result
+    }
+
+    pub fn read_until(&self, address: usize, sequence: &[u8]) -> Option<Vec<u8>> {
+        let mut result = vec![];
+        let start = snes_to_physical(self.mode, address);
+        let end = min(start + 0x8000, self.buffer.len());
+        for cursor in start..end {
+            result.push(self.buffer[cursor]);
+
+            if result.len() < sequence.len() {
+                continue;
+            }
+
+            let pos = result.len() - sequence.len();
+            if &result[pos..] == sequence {
+                return Some(result);
+            }
+        }
+        None
     }
 
     /// Reads a local pointer from the address and returns the address.
