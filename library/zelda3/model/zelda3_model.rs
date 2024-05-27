@@ -61,6 +61,8 @@ pub(crate) struct Z3Model {
     pub uw_balancing: Balancing,
     /// Contains all known entrances.
     pub uw_entrances: BTreeMap<EntranceId, Entrance>,
+    /// A list of all rooms with pit damage
+    pub pit_damage: [UWRoomId; 57],
     /// The general metadata about a room.
     pub uw_headers: BTreeMap<UWRoomId, UnderworldRoomHeader>,
     /// The pot items contained in an underground room.
@@ -97,6 +99,7 @@ impl Z3Model {
             uw_pot_secrets: BTreeMap::default(),
             uw_scenes: BTreeMap::default(),
             uw_sprites: BTreeMap::default(),
+            pit_damage: [UWRoomId::x05_EMPTY_CLONE_ROOM1; 57],
             uw_spritesets_unused: create_free_uw_spriteset_list(),
             game_settings: GameSettings::default(),
         }

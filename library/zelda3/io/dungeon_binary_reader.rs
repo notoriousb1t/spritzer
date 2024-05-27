@@ -12,10 +12,11 @@ pub(crate) fn read_dungeon_binary(byte: &[u8]) -> Result<ImportedDungeon, std::i
     let mut binary_reader = BinaryReader::from_u8(byte);
     let room_count = binary_reader.read_i32()?;
     let mut imported_dungeon = ImportedDungeon::default();
+    let mut pit_damage_rooms = vec![];
 
-    for i in 0..room_count {
+    for _ in 0..room_count {
         let room_id = UWRoomId::from_repr(binary_reader.read_i32()? as u16).expect("Invalid room id");
-        let room = ImportedRoom::default();
+        let mut room = ImportedRoom::default();
 
         let object_byte_count = binary_reader.read_i32()? as usize;
         let scene_data = binary_reader.read(object_byte_count).expect("Decoding error");
@@ -24,7 +25,7 @@ pub(crate) fn read_dungeon_binary(byte: &[u8]) -> Result<ImportedDungeon, std::i
         let sprite_count = binary_reader.read_u8()?;
         
         for j in 0..sprite_count {
-            let roomindex = binary_reader.read_i16()?;
+            let _roomindex = binary_reader.read_i16()?;
             let id_value = binary_reader.read_u8()?;
             let x = binary_reader.read_u8()?;
             let y = binary_reader.read_u8()?;
@@ -65,7 +66,7 @@ pub(crate) fn read_dungeon_binary(byte: &[u8]) -> Result<ImportedDungeon, std::i
         }
 
         let chest_count = binary_reader.read_u8()?;
-        for j in 0..chest_count {
+        for _ in 0..chest_count {
             let x = binary_reader.read_u8()?;
             let y = binary_reader.read_u8()?;
             let item = binary_reader.read_u8()?;
@@ -75,11 +76,15 @@ pub(crate) fn read_dungeon_binary(byte: &[u8]) -> Result<ImportedDungeon, std::i
             });
         }
 
-        for k in 0..0x1000 {
+        for _ in 0..0x1000 {
             let _collision_map = binary_reader.read_u8()?;
         }
 
-        room.header.damagepit = binary_reader.read_bool()?;
+        let has_pit_damage = binary_reader.read_bool()?;
+        if has_pit_damage {
+            pit_damage_rooms.push(room_id);
+        }
+
         room.header.holewarp = UWRoomId::from_repr(binary_reader.read_u8()? as u16).expect("Invalid room id");
         room.header.stairs1 = UWRoomId::from_repr(binary_reader.read_u8()? as u16).expect("Invalid room id");
         room.header.stairs2 = UWRoomId::from_repr(binary_reader.read_u8()? as u16).expect("Invalid room id");
@@ -106,22 +111,24 @@ pub(crate) fn read_dungeon_binary(byte: &[u8]) -> Result<ImportedDungeon, std::i
         room.header.light = binary_reader.read_bool()?;
         room.header.blockset_id =  UWBlocksetId::from_repr(binary_reader.read_u8()?).expect("Invalid Blockset Id");
         room.scene.layout.layout = UWLayoutId::from_repr(binary_reader.read_u8()?).expect("Invalid layout id");
-
-        
         imported_dungeon.rooms.insert(room_id, room);
     }
+
+    imported_dungeon.pit_damage = pit_damage_rooms;
     
     Ok(imported_dungeon)
 }
 
 pub(crate) struct ImportedDungeon {
     rooms: BTreeMap<UWRoomId, ImportedRoom>,
+    pit_damage: Vec<UWRoomId>,
 }
 
 impl ImportedDungeon {
     pub(crate) fn default() -> ImportedDungeon {
         ImportedDungeon {
             rooms: BTreeMap::default(),
+            pit_damage: vec![],
         }
     }
 }

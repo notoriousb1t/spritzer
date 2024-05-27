@@ -26,6 +26,8 @@ mod uw_scene_reader;
 mod uw_scene_writer;
 mod uw_spritelist_reader;
 mod uw_spritelist_writer;
+mod pit_damage_reader;
+mod pit_damage_writer;
 
 pub(crate) use model_reader::*;
 pub(crate) use model_writer::*;

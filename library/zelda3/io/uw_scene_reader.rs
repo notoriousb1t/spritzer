@@ -18,7 +18,6 @@ use crate::zelda3::model::UWScene;
 use crate::zelda3::Addresses;
 
 const STOP_MARKER: u8 = 0xFF;
-const LAYER_MARKER: u8 = 0xFF;
 const END_MARKER: u8 = 0xF0;
 
 pub(super) fn read_uw_scenes(
@@ -32,7 +31,7 @@ fn read_scene_from_game(game: &SnesGame, addresses: &Addresses, id: UWRoomId) ->
     let layout_address = game.read_pointer_int24(addresses.layout_ptrs + (id as usize * 3));
     let door_address = game.read_pointer_int24(addresses.door_ptrs + (id as usize * 3));
     let layout_data = game
-        .read_until(layout_address, &[END_MARKER, LAYER_MARKER])
+        .read_until(layout_address, &[END_MARKER, STOP_MARKER])
         .expect("Layout decoding error");
     let door_data = game
         .read_until(door_address, &[STOP_MARKER, STOP_MARKER])
@@ -45,7 +44,7 @@ fn read_scene_from_game(game: &SnesGame, addresses: &Addresses, id: UWRoomId) ->
 
 pub(super) fn bytes_to_scene(data: &[u8]) -> UWScene {
     let layout_end =
-        find_sequence(data, &[END_MARKER, LAYER_MARKER]).expect("Scene decoding error");
+        find_sequence(data, &[END_MARKER, STOP_MARKER]).expect("Scene decoding error");
     let layout = bytes_to_layout(&data[..layout_end]);
     let doors = bytes_to_doors(&data[(layout_end + 1)..]);
     UWScene { layout, doors }
@@ -74,12 +73,12 @@ fn bytes_to_layout(data: &[u8]) -> UWLayout {
     let mut layers: Vec<Vec<UWObject>> = vec![vec![], vec![], vec![]];
     let mut layer_index = 0;
     loop {
-        if data[c] == LAYER_MARKER && data[c + 1] == LAYER_MARKER {
+        if data[c] == STOP_MARKER && data[c + 1] == STOP_MARKER {
             layer_index += 1;
             c += 2;
             continue;
         }
-        if data[c] == END_MARKER && data[c + 1] == LAYER_MARKER {
+        if data[c] == END_MARKER && data[c + 1] == STOP_MARKER {
             break;
         }
 
@@ -178,19 +177,18 @@ mod tests {
     use strum::IntoEnumIterator;
 
     use super::STOP_MARKER;
+    use super::END_MARKER;
     use crate::zelda3::detect_game;
     use crate::zelda3::io::uw_scene_reader::bytes_to_doors;
     use crate::zelda3::io::uw_scene_reader::bytes_to_object;
     use crate::zelda3::io::uw_scene_reader::bytes_to_preamble;
-    use crate::zelda3::io::uw_scene_reader::END_MARKER;
-    use crate::zelda3::io::uw_scene_reader::LAYER_MARKER;
     use crate::zelda3::model::UWLayoutId;
     use crate::zelda3::model::UWObject;
     use crate::zelda3::model::UWRoomId;
 
     #[test]
     fn read_empty() {
-        let doors = bytes_to_doors(&[END_MARKER, LAYER_MARKER, STOP_MARKER, STOP_MARKER]);
+        let doors = bytes_to_doors(&[END_MARKER, STOP_MARKER, STOP_MARKER, STOP_MARKER]);
         assert_eq!(doors.len(), 0);
     }
 
